@@ -1,0 +1,12 @@
+VER 3 0100000000000001 "Charge" "INV_MISC_QUESTIONMARK"
+#show
+/cast [@mouseover] Charge
+END
+VER 3 0100000000000002 "Taunt" "INV_MISC_QUESTIONMARK"
+#show
+/cast [@mouseover] Taunt
+END
+VER 3 0100000000000003 "Throw" "INV_MISC_QUESTIONMARK"
+#show
+/cast [@mouseover] Heroic Throw
+END

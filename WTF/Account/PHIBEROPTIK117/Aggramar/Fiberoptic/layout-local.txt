@@ -1,0 +1,22 @@
+Version: 1
+Frame: SkadaBarWindowSkada 2
+FrameLevel: 1
+Anchor: RIGHT
+X: -356
+Y: 12
+W: 201
+H: 122
+Frame: SkadaBarWindowSkada
+FrameLevel: 1
+Anchor: CENTER
+X: 357
+Y: 199
+W: 196
+H: 122
+Frame: ColorPickerFrame
+FrameLevel: 1
+Anchor: CENTER
+X: 0
+Y: 0
+W: 365
+H: 240

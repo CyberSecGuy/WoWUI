@@ -1,0 +1,32 @@
+VER 3 0100000000000002 "Charge" "INV_MISC_QUESTIONMARK"
+#show
+/cast [@mouseover, exists, nodead][] Charge
+END
+VER 3 0100000000000004 "HAM" "INV_MISC_QUESTIONMARK"
+#show
+/cast Battle Cry
+/cast Avatar
+/cast Bloodbath
+END
+VER 3 0100000000000001 "Leap" "INV_MISC_QUESTIONMARK"
+#show
+/cast [@cursor] Heroic Leap
+END
+VER 3 0100000000000005 "No Look Interrup" "INV_MISC_QUESTIONMARK"
+#show Pummel
+/cast [@mouseover] Charge
+/cast [@mouseover] Pummel
+/target [@mouseover]
+END
+VER 3 0100000000000003 "Throw" "INV_MISC_QUESTIONMARK"
+#show
+/cast [@mouseover] Heroic Throw
+END
+VER 3 0100000000000006 "Trinket 1" "INV_MISC_QUESTIONMARK"
+#show
+/use 13
+END
+VER 3 0100000000000007 "Trinket 2" "INV_MISC_QUESTIONMARK"
+#show
+/use 14
+END

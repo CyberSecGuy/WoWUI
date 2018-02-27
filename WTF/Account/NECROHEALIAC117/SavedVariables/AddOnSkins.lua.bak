@@ -1,0 +1,29 @@
+
+AddOnSkinsDB = {
+	["profileKeys"] = {
+		["Brawlerdrood - Stormrage"] = "Brawlerdrood - Stormrage",
+		["Fyburr - Stormrage"] = "BenikUI",
+		["Jinaleigh - Aggramar"] = "Jinaleigh - Aggramar",
+	},
+	["profiles"] = {
+		["BenikUI"] = {
+			["EmbedMain"] = "Skada",
+			["EmbedLeft"] = "Skada",
+			["EmbedRight"] = "Skada",
+			["EmbedSystem"] = false,
+			["DBMSkinHalf"] = true,
+			["ParchmentRemover"] = true,
+			["SkadaBackdrop"] = false,
+			["TransparentEmbed"] = true,
+			["EmbedFrameStrata"] = "2-LOW",
+			["EmbedBelowTop"] = false,
+			["EmbedSystemDual"] = true,
+		},
+		["Brawlerdrood - Stormrage"] = {
+		},
+		["Fyburr - Stormrage"] = {
+		},
+		["Jinaleigh - Aggramar"] = {
+		},
+	},
+}

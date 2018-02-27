@@ -1,0 +1,10 @@
+## Interface: 70300
+## Author: p3lim
+## Version: 70300.44-Release
+## Title: Bonus Roll Preview
+## Notes: Easily see what the bonus loot roll can yield
+## OptionalDeps: Wasabi, LibStub
+## SavedVariables: BonusRollPreviewDB
+
+
+BonusRollPreview.xml

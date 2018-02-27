@@ -1,0 +1,25 @@
+
+HandyNotesDB = {
+	["profileKeys"] = {
+		["Dealhunter - Stormrage"] = "Dealhunter - Stormrage",
+		["Phiber - Stormrage"] = "Phiber - Stormrage",
+	},
+	["profiles"] = {
+		["Dealhunter - Stormrage"] = {
+		},
+		["Phiber - Stormrage"] = {
+		},
+	},
+}
+HandyNotes_HandyNotesDB = {
+	["profileKeys"] = {
+		["Dealhunter - Stormrage"] = "Dealhunter - Stormrage",
+		["Phiber - Stormrage"] = "Phiber - Stormrage",
+	},
+	["profiles"] = {
+		["Dealhunter - Stormrage"] = {
+		},
+		["Phiber - Stormrage"] = {
+		},
+	},
+}

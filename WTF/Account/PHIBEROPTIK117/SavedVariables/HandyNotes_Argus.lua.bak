@@ -1,0 +1,11 @@
+
+HandyNotesArgusDB = {
+	["profileKeys"] = {
+		["Dealhunter - Stormrage"] = "Default",
+		["Phiber - Stormrage"] = "Default",
+	},
+	["profiles"] = {
+		["Default"] = {
+		},
+	},
+}

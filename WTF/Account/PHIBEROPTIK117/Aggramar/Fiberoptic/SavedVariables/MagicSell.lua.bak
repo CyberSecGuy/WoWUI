@@ -1,0 +1,20 @@
+
+MagicSellDB = {
+	["Enabled"] = true,
+	["MinFree"] = 1,
+	["Count"] = 0,
+	["SoldCount"] = 0,
+	["MaxVal"] = 500,
+	["SellCount"] = 0,
+	["Sell"] = true,
+	["SellValue"] = 0,
+	["Silent"] = false,
+	["DellTrashList"] = false,
+	["Version"] = 99,
+	["TrashList"] = {
+	},
+	["Value"] = 0,
+	["useMinFree"] = true,
+	["useMaxVal"] = true,
+	["SoldValue"] = 0,
+}

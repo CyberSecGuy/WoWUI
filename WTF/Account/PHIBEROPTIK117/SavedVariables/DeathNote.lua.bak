@@ -1,0 +1,58 @@
+
+DeathNoteDB = {
+	["profileKeys"] = {
+		["Fiber - Stormrage"] = "Fiber - Stormrage",
+		["Brawlerdrood - Bleeding Hollow"] = "Brawlerdrood - Bleeding Hollow",
+		["Onedemonboi - Stormrage"] = "Onedemonboi - Stormrage",
+		["Fibur - Stormrage"] = "Fibur - Stormrage",
+		["Voidbro - Stormrage"] = "Voidbro - Stormrage",
+		["Phibro - Stormrage"] = "Phibro - Stormrage",
+		["Phiber - Stormrage"] = "Phiber - Stormrage",
+		["Phiberoptik - Stormrage"] = "Phiberoptik - Stormrage",
+		["Fibear - Stormrage"] = "Fibear - Stormrage",
+		["Conessanah - Moon Guard"] = "Conessanah - Moon Guard",
+		["Deafnight - Stormrage"] = "Deafnight - Stormrage",
+		["Garrancy - Moon Guard"] = "Garrancy - Moon Guard",
+		["Fyburr - Bleeding Hollow"] = "Fyburr - Bleeding Hollow",
+		["Demonboi - Stormrage"] = "Demonboi - Stormrage",
+	},
+	["profiles"] = {
+		["Fiber - Stormrage"] = {
+			["searchbox_text"] = "",
+		},
+		["Brawlerdrood - Bleeding Hollow"] = {
+		},
+		["Onedemonboi - Stormrage"] = {
+		},
+		["Fibur - Stormrage"] = {
+		},
+		["Voidbro - Stormrage"] = {
+		},
+		["Phibro - Stormrage"] = {
+		},
+		["Phiber - Stormrage"] = {
+			["searchbox_text"] = "",
+			["display"] = {
+				["w"] = 700.000061035156,
+				["y"] = 78.9998779296875,
+				["h"] = 500.000061035156,
+				["namelist"] = 2,
+				["x"] = -354.000106811523,
+			},
+		},
+		["Phiberoptik - Stormrage"] = {
+		},
+		["Fibear - Stormrage"] = {
+		},
+		["Conessanah - Moon Guard"] = {
+		},
+		["Deafnight - Stormrage"] = {
+		},
+		["Garrancy - Moon Guard"] = {
+		},
+		["Fyburr - Bleeding Hollow"] = {
+		},
+		["Demonboi - Stormrage"] = {
+		},
+	},
+}

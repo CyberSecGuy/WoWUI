@@ -1,0 +1,30 @@
+## Interface: 70100
+## Title: |cff00ff00TradeSkillMaster_Shopping|r
+## Notes: Provides an interface for easily viewing, buying, and posting items.
+## Author: Sapu94, Bart39
+## Dependencies: TradeSkillMaster
+## Version: b16e982
+## SavedVariables: TradeSkillMaster_ShoppingDB
+
+Locale\enUS.lua
+Locale\deDE.lua
+Locale\esES.lua
+Locale\esMX.lua
+Locale\frFR.lua
+Locale\koKR.lua
+Locale\ruRU.lua
+Locale\zhCN.lua
+Locale\zhTW.lua
+Locale\ptBR.lua
+
+TradeSkillMaster_Shopping.lua
+
+modules\AuctionTab.lua
+modules\AuctionTab_Frame.lua
+modules\AuctionTab_Util.lua
+modules\AuctionTab_Saved.lua
+modules\AuctionTab_Other.lua
+modules\Options.lua
+
+
+## X-TSM: 20453
