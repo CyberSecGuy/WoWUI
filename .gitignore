@@ -1,0 +1,21 @@
+# Junk WoW Folders
+Cache/
+Data/
+Logs/
+Screenshots/
+Utils/
+
+# Junk WoW Files
+.build.info
+.curseclient
+.patch.result
+.product.db
+dbghelp.dll
+Launcher.db
+WoW.mfil
+
+# EXE Files
+World of Warcraft Launcher.exe
+Wow.exe
+Wow-64.exe
+BlizzardError.exe
