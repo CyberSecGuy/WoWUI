@@ -30,6 +30,8 @@ L['ShiftClick to toggle chat'] = true
 L['Camera rotation'] = true
 L['iLevel'] = true
 L['Show item level per slot, on the character info frame'] = true
+L['Inside the item slot'] = true
+L['Outside the item slot'] = true
 
 -- Flight mode
 L['Exit FlightMode'] = true
@@ -118,7 +120,6 @@ L['Dashboards'] = true
 L['Enable the System Dashboard.'] = true
 L['Enable the Tokens Dashboard.'] = true
 L['Enable/Disable '] = true
-L['Flash on updates'] = true
 L['Framerate drop has been reported with Zygor Guides\nand the Memory module while in an instance.\nMemory module updates have been temporarily disabled.'] = true
 L['Latency (MS)'] = true
 L['Memory: '] = true
@@ -256,5 +257,4 @@ L['Shadow & Light'] = true
 L['Skada'] = true
 L['Square Minimap Buttons'] = true
 L['TinyDPS'] = true
-L['Zygor Guides'] = true
 L['oRA3'] = true

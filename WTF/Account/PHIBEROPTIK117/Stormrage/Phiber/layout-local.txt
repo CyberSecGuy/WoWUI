@@ -6,17 +6,3 @@ X: 0
 Y: 0
 W: 365
 H: 240
-Frame: ItemRefTooltip
-FrameLevel: 1
-Anchor: CENTER
-X: -274
-Y: -91
-W: 227
-H: 211
-Frame: BigWigsInfoBox
-FrameLevel: 1
-Anchor: CENTER
-X: -367
-Y: -44
-W: 150
-H: 100

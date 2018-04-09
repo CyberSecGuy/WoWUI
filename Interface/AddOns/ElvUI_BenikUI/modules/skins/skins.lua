@@ -181,7 +181,7 @@ local function styleFreeBlizzardFrames()
 		QuestLogPopupDetailFrame:Style('Outside')
 		QuestNPCModel.backdrop:Style('Outside')
 		
-		if IsAddOnLoaded('AddOnSkins') then
+		if BUI.AS then
 			QuestDetailScrollFrame:SetTemplate('Transparent')
 			QuestProgressScrollFrame:SetTemplate('Transparent')
 			QuestRewardScrollFrame:HookScript('OnUpdate', function(self)
@@ -351,21 +351,6 @@ local function styleGarrison()
 	S:HandleButton(_G["GarrisonRecruitSelectFrame"].FollowerSelection.Recruit3.HireRecruits)
 end
 
-local function tweakObjectiveTrackerButtonFont()
-	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.objectiveTracker ~= true then return end
-
-	local button = _G["ObjectiveTrackerFrame"].HeaderMenu.MinimizeButton
-	button:Size(16, 12)
-	button.text:FontTemplate(E['media'].buiVisitor, 10)
-	button.text:Point('CENTER', button, 'CENTER', 0, 1)
-
-	if E.db.benikui.general.shadows then
-		if not button.shadow then
-			button:CreateShadow('Default')
-		end
-	end
-end
-
 -- Map styling fix
 local function FixMapStyle()
 	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.worldmap ~= true then return end
@@ -400,7 +385,7 @@ end
 
 local function styleAddons()
 	-- LocationLite
-	if IsAddOnLoaded('ElvUI_LocLite') and E.db.benikuiSkins.elvuiAddons.loclite then
+	if BUI.LL and E.db.benikuiSkins.elvuiAddons.loclite then
 		local framestoskin = {_G["LocationLitePanel"], _G["XCoordsLite"], _G["YCoordsLite"]}
 		for _, frame in pairs(framestoskin) do
 			if frame then
@@ -410,7 +395,7 @@ local function styleAddons()
 	end
 
 	-- LocationPlus
-	if IsAddOnLoaded('ElvUI_LocPlus') and E.db.benikuiSkins.elvuiAddons.locplus then
+	if BUI.LP and E.db.benikuiSkins.elvuiAddons.locplus then
 		local framestoskin = {_G["LeftCoordDtPanel"], _G["RightCoordDtPanel"], _G["LocationPlusPanel"], _G["XCoordsPanel"], _G["YCoordsPanel"]}
 		for _, frame in pairs(framestoskin) do
 			if frame then
@@ -420,7 +405,7 @@ local function styleAddons()
 	end
 
 	-- Shadow & Light
-	if IsAddOnLoaded('ElvUI_SLE') and E.db.benikuiSkins.elvuiAddons.sle then
+	if BUI.SLE and E.db.benikuiSkins.elvuiAddons.sle then
 		local sleFrames = {_G["SLE_BG_1"], _G["SLE_BG_2"], _G["SLE_BG_3"], _G["SLE_BG_4"], _G["SLE_DataPanel_1"], _G["SLE_DataPanel_2"], _G["SLE_DataPanel_3"], _G["SLE_DataPanel_4"], _G["SLE_DataPanel_5"], _G["SLE_DataPanel_6"], _G["SLE_DataPanel_7"], _G["SLE_DataPanel_8"], _G["SLE_RaidMarkerBar"].backdrop, _G["SLE_SquareMinimapButtonBar"], _G["SLE_LocationPanel"], _G["SLE_LocationPanel_X"], _G["SLE_LocationPanel_Y"], _G["SLE_LocationPanel_RightClickMenu1"], _G["SLE_LocationPanel_RightClickMenu2"], _G["InspectArmory"]}
 		for _, frame in pairs(sleFrames) do
 			if frame then
@@ -430,7 +415,7 @@ local function styleAddons()
 	end
 
 	-- SquareMinimapButtons
-	if IsAddOnLoaded('ProjectAzilroka') and _G.ProjectAzilroka.db['SMB'] and E.db.benikuiSkins.elvuiAddons.smb then
+	if BUI.PA and _G.ProjectAzilroka.db['SMB'] and E.db.benikuiSkins.elvuiAddons.smb then
 		local smbFrame = _G["SquareMinimapButtonBar"]
 		if smbFrame then
 			smbFrame:Style('Outside')
@@ -458,7 +443,7 @@ local function styleAddons()
 	end
 
 	-- stAddonManager
-	if IsAddOnLoaded('ProjectAzilroka') and _G.ProjectAzilroka.db['stAM'] and E.db.benikuiSkins.elvuiAddons.stam then
+	if BUI.PA and _G.ProjectAzilroka.db['stAM'] and E.db.benikuiSkins.elvuiAddons.stam then
 		local stFrame = _G["stAMFrame"]
 		if stFrame then
 			stFrame:Style('Outside')
@@ -471,7 +456,6 @@ function BUIS:init()
 	styleFreeBlizzardFrames()
 	styleAddons()
 	styleGarrison()
-	tweakObjectiveTrackerButtonFont()
 
 	local reason = select(5, GetAddOnInfo("GarrisonCommander"))
 	if reason == "DISABLED" or reason == "MISSING" then 

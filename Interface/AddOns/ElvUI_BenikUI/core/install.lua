@@ -5,7 +5,6 @@ local format, checkTable = format, next
 local tinsert, twipe, tsort, tconcat = table.insert, table.wipe, table.sort, table.concat
 local _G = _G
 
-local IsAddOnLoaded = IsAddOnLoaded
 local ReloadUI = ReloadUI
 local FCF_SetLocked = FCF_SetLocked
 local FCF_DockFrame, FCF_UnDockFrame = FCF_DockFrame, FCF_UnDockFrame
@@ -509,7 +508,7 @@ local function SetupActionbars(layout)
 end
 
 local function SetupUnitframes(layout)
-	E.db["general"]["decimalLenght"] = 2
+	E.db["general"]["decimalLength"] = 2
 	if layout == 'v1' then
 		E.db["benikui"]["unitframes"]["player"]["detachPortrait"] = false
 		E.db["benikui"]["unitframes"]["player"]["portraitStyle"] = false
@@ -1711,79 +1710,85 @@ local profilesFailed = format('|cff00c0fa%s |r', L["BenikUI didn't find any supp
 
 local function SetupAddons()
 	-- BigWigs
-	if IsAddOnLoaded('BigWigs') then
+	if BUI:IsAddOnEnabled('BigWigs') then
 		BUI:LoadBigWigsProfile()
 		tinsert(addonNames, 'BigWigs')
 	end
 
 	-- DBM
-	if IsAddOnLoaded('DBM-Core') then
+	if BUI:IsAddOnEnabled('DBM-Core') then
 		BUI:LoadDBMProfile()
 		tinsert(addonNames, 'Deadly Boss Mods')
 	end
 
 	-- Details
-	if IsAddOnLoaded('Details') then
+	if BUI:IsAddOnEnabled('Details') then
 		BUI:LoadDetailsProfile()
 		tinsert(addonNames, 'Details')
 	end
 
+	-- InFlight
+	if BUI:IsAddOnEnabled('InFlight_Load') then
+		BUI:LoadInFlightProfile()
+		tinsert(addonNames, 'InFlight')
+	end
+
 	-- Location Lite
-	if IsAddOnLoaded('ElvUI_LocLite') then
+	if BUI.LL then
 		BUI:LoadLocationLiteProfile()
 		tinsert(addonNames, 'Location Lite')
 	end
 
 	-- Location Plus
-	if IsAddOnLoaded('ElvUI_LocPlus') then
+	if BUI.LP then
 		BUI:LoadLocationPlusProfile()
 		tinsert(addonNames, 'Location Plus')
 	end
 
 	-- MikScrollingBattleText
-	if IsAddOnLoaded('MikScrollingBattleText') then
+	if BUI:IsAddOnEnabled('MikScrollingBattleText') then
 		BUI:LoadMSBTProfile()
 		tinsert(addonNames, "Mik's Scrolling Battle Text")
 	end
 
 	-- Pawn
-	if IsAddOnLoaded('Pawn') then
+	if BUI:IsAddOnEnabled('Pawn') then
 		BUI:LoadPawnProfile()
 		tinsert(addonNames, 'Pawn')
 	end
 
 	-- Recount
-	if IsAddOnLoaded('Recount') then
+	if BUI:IsAddOnEnabled('Recount') then
 		BUI:LoadRecountProfile()
 		tinsert(addonNames, 'Recount')
 	end
 
 	-- Skada
-	if IsAddOnLoaded('Skada') then
+	if BUI:IsAddOnEnabled('Skada') then
 		BUI:LoadSkadaProfile()
 		tinsert(addonNames, 'Skada')
 	end
 
 	-- SquareMinimapButtons
-	if (IsAddOnLoaded('ProjectAzilroka') and _G.ProjectAzilroka.db['SMB']) then
+	if (BUI.PA and _G.ProjectAzilroka.db['SMB']) then
 		BUI:LoadSMBProfile()
 		tinsert(addonNames, 'Square Minimap Buttons')
 	end
 
 	-- stAddOnManager
-	if (IsAddOnLoaded('ProjectAzilroka') and _G.ProjectAzilroka.db['stAM']) then
+	if (BUI.PA and _G.ProjectAzilroka.db['stAM']) then
 		BUI:LoadStamProfile()
 		tinsert(addonNames, 'stAddOnManager')
 	end
 
 	-- ElvUI_VisualAuraTimers
-	if IsAddOnLoaded('ElvUI_VisualAuraTimers') then
+	if BUI:IsAddOnEnabled('ElvUI_VisualAuraTimers') then
 		BUI:LoadVATProfile()
 		tinsert(addonNames, 'ElvUI VisualAuraTimers')
 	end
 
 	-- AddOnSkins
-	if IsAddOnLoaded('AddOnSkins') then
+	if BUI.AS then
 		BUI:LoadAddOnSkinsProfile()
 		tinsert(addonNames, 'AddOnSkins')
 	end
@@ -1808,30 +1813,37 @@ end
 
 local function SetupDataTexts(role)
 	-- Data Texts
-	E.db["datatexts"]["panels"]["BuiLeftChatDTPanel"]["right"] = 'BuiMail'
-	if IsAddOnLoaded('ElvUI_LocPlus') then
+	if BUI.LP then
 		E.db["datatexts"]["panels"]["RightCoordDtPanel"] = 'Time'
-		E.db["datatexts"]["panels"]["LeftCoordDtPanel"] = 'Spec Switch (BenikUI)'
-		E.db["datatexts"]["panels"]["BuiRightChatDTPanel"]["left"] = 'Versatility'
-	else
-		E.db["datatexts"]["panels"]["BuiRightChatDTPanel"]["left"] = 'Spec Switch (BenikUI)'
+
+		if IsAddOnLoaded("AtlasLoot") then
+			E.db["datatexts"]["panels"]["LeftCoordDtPanel"] = 'AtlasLoot'
+		else
+			E.db["datatexts"]["panels"]["LeftCoordDtPanel"] = 'Quick Join'
+		end
 	end
+
 	if role == 'tank' then
 		E.db["datatexts"]["panels"]["BuiLeftChatDTPanel"]["left"] = 'Attack Power'
 		E.db["datatexts"]["panels"]["BuiMiddleDTPanel"]["left"] = 'Avoidance'
+		E.db["datatexts"]["panels"]["BuiMiddleDTPanel"]["right"] = 'Armor'
 	elseif role == 'dpsMelee' then
 		E.db["datatexts"]["panels"]["BuiLeftChatDTPanel"]["left"] = 'Attack Power'
 		E.db["datatexts"]["panels"]["BuiMiddleDTPanel"]["left"] = 'Haste'
+		E.db["datatexts"]["panels"]["BuiMiddleDTPanel"]["right"] = 'Crit Chance'
 	elseif role == 'healer' or 'dpsCaster' then
 		E.db["datatexts"]["panels"]["BuiLeftChatDTPanel"]["left"] = 'Spell/Heal Power'
 		E.db["datatexts"]["panels"]["BuiMiddleDTPanel"]["left"] = 'Haste'
+		E.db["datatexts"]["panels"]["BuiMiddleDTPanel"]["right"] = 'Crit Chance'
 	end
-	E.db["datatexts"]["panels"]["BuiLeftChatDTPanel"]["middle"] = 'Orderhall (BenikUI)'
 
+	E.db["datatexts"]["panels"]["BuiLeftChatDTPanel"]["middle"] = 'Orderhall (BenikUI)'
+	E.db["datatexts"]["panels"]["BuiLeftChatDTPanel"]["right"] = 'BuiMail'
+
+	E.db["datatexts"]["panels"]["BuiRightChatDTPanel"]["left"] = 'Spec Switch (BenikUI)'
 	E.db["datatexts"]["panels"]["BuiRightChatDTPanel"]["right"] = 'Gold'
 	E.db["datatexts"]["panels"]["BuiRightChatDTPanel"]["middle"] = 'Bags'
 
-	E.db["datatexts"]["panels"]["BuiMiddleDTPanel"]["right"] = 'Crit Chance'
 	E.db["datatexts"]["panels"]["BuiMiddleDTPanel"]["middle"] = 'Mastery'
 
 	PluginInstallStepComplete.message = BUI.Title..L['DataTexts Set']

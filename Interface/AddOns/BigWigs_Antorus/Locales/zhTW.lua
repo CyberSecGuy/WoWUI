@@ -21,7 +21,7 @@ if L then
 
 	L.gifts = "天之賜：%s，海之賜：%s"
 	L.burst = "|T1778229:15:15:0:0:64:64:4:60:4:60|t驟發：%s" -- short for Soulburst
-	L.bomb = "|T1778228:15:15:0:0:64:64:4:60:4:60|t|T137002:0|t炸彈（%d）：%s - " -- short for Soulbomb
+	L.bomb = "|T1778228:15:15:0:0:64:64:4:60:4:60|t炸彈（%d）：|T137002:0|t%s - " -- short for Soulbomb
 
 	L.sky_say = "{rt5}爆擊精通" -- short for Critical Strike/Mastery (stats)
 	L.sea_say = "{rt6}加速臨機" -- short for Haste/Versatility (stats)
@@ -76,6 +76,7 @@ if L then
 	L.worldExplosion_desc = "替崩裂世界的爆炸顯示計時器。"
 	L.platform_active = "%s啟動！" -- Platform: Xoroth Active!
 	L.add_killed = "%s擊殺！"
+	L.achiev = "「傳送門攻防戰」成就減益" -- Achievement 11928
 end
 
 L = BigWigs:NewBossLocale("Kin'garoth", "zhTW")

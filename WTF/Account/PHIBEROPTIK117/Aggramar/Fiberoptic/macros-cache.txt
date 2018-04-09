@@ -1,6 +1,0 @@
-VER 3 0100000000000001 "Disenchant" "INV_MISC_QUESTIONMARK"
-#show
-/cast Disenchant
-/use item:115995
-/use item:115993 
-END

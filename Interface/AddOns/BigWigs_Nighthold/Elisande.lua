@@ -12,7 +12,7 @@
 -- Module Declaration
 --
 
-local mod, CL = BigWigs:NewBoss("Grand Magistrix Elisande", 1088, 1743)
+local mod, CL = BigWigs:NewBoss("Grand Magistrix Elisande", 1530, 1743)
 if not mod then return end
 mod:RegisterEnableMob(106643, 111151) -- Elisande, Midnight Siphoner
 mod.engageId = 1872
@@ -352,8 +352,9 @@ end
 -- Event Handlers
 --
 
-function mod:Warmup(_, msg)
+function mod:Warmup(event, msg)
 	if msg == L.elisande_trigger then
+		self:UnregisterEvent(event)
 		self:Bar("boss_active", 68, L.boss_active, L.boss_active_icon)
 	end
 end
@@ -481,20 +482,19 @@ function mod:CHAT_MSG_MONSTER_YELL(event, msg)
 		end
 
 	-- Should be in DelphuricBeamCast XXX remove if confirmed
-	--[[elseif msg:find(L.beam_msg) then
-		self:Message(209244, "Urgent", "Alert")
-		beamCount = beamCount + 1
-		if not savedBeamCount or beamCount < savedBeamCount then
-			local t = timers[209244][beamCount]
-			if t then
-				self:Bar(209244, t, CL.count:format(self:SpellName(209244), beamCount))
-			end
-		end]]
+	--elseif msg:find(L.beam_msg) then
+	--	self:Message(209244, "Urgent", "Alert")
+	--	beamCount = beamCount + 1
+	--	if not savedBeamCount or beamCount < savedBeamCount then
+	--		local t = timers[209244][beamCount]
+	--		if t then
+	--			self:Bar(209244, t, CL.count:format(self:SpellName(209244), beamCount))
+	--		end
+	--	end
 
 	-- Should be in StartSingularityTimer XXX remove if confirmed
-	--[[elseif msg:find(L.singularity_msg) and phase == 2 or phase == 3 then -- Mythic only, zones apears 2s after the message.
-		self:ScheduleTimer("Message", 2, 209170, "Attention", "Info", self:SpellName(209170))
-		]]
+	--elseif msg:find(L.singularity_msg) and phase == 2 or phase == 3 then -- Mythic only, zones apears 2s after the message.
+	--	self:ScheduleTimer("Message", 2, 209170, "Attention", "Info", self:SpellName(209170))
 	end
 end
 

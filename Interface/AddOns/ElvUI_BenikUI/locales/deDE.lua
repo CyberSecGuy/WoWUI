@@ -30,6 +30,8 @@ L['ShiftClick to toggle chat'] = "Shift Klick um Chat umzuschalten"
 L['Camera rotation'] = "Kamerarotation"
 L['iLevel'] = true --No need to translate
 L['Show item level per slot, on the character info frame'] = "Zeigt das Itemlevel pro Slot, im Spielerfenster"
+L['Inside the item slot'] = "Innerhalb des Ausrüstungsplatz"
+L['Outside the item slot'] = "Ausserhalb des Ausrüstungsplatz"
 
 -- Flight mode
 L['Exit FlightMode'] = "Verlasse den Flugmodus"
@@ -118,7 +120,6 @@ L['Dashboards'] = true --No need to translate
 L['Enable the System Dashboard.'] = "Aktiviert das System Dashboard."
 L['Enable the Tokens Dashboard.'] = "Aktivert das Abzeichen Dashboard."
 L['Enable/Disable '] = "Aktivieren/Deaktivieren"
-L['Flash on updates'] = "Beim Updaten blinken"
 L['Framerate drop has been reported with Zygor Guides\nand the Memory module while in an instance.\nMemory module updates have been temporarily disabled.'] = "Es wurde berichtet dass die Bildrate sinkt mit Zygor Guide\nund dem Speicher Modul während man in einer Instanz ist.\nSpeicher Modul Aktualisierung wird vorübergehend deaktiviert."
 L['Latency (MS)'] = "Latenz (MS)"
 L['Memory: '] = "Speicher"
@@ -242,7 +243,7 @@ L["Thu"] = "Do"
 L["Fri"] = "Fr"
 L["Sat"] = "Sa"
 
--- Addon friendly names
+-- Addon friendly names (no need to translate)
 L['Altoholic'] = true
 L['AtlasLoot'] = true
 L['Clique'] = true
@@ -255,5 +256,4 @@ L['Shadow & Light'] = true
 L['Skada'] = true
 L['Square Minimap Buttons'] = true
 L['TinyDPS'] = true
-L['Zygor Guides'] = true
 L['oRA3'] = true

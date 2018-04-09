@@ -221,6 +221,8 @@ L["Evade"] = "Избегание"
 L["Event"] = "Событие"
 L["Event(s)"] = "Событие(я)"
 L["Every Frame"] = "Каждый кадр"
+--[[Translation missing --]]
+--[[ L["Extend Outside"] = ""--]] 
 L["Extra Amount"] = "Доп-е количество"
 L["Extra Attacks"] = "Дополнительные атаки"
 L["Extra Spell Name"] = "Доп-е название заклинания"
@@ -307,11 +309,15 @@ L["Is Exactly"] = "Точное совпадение"
 L["Is Moving"] = "Двигается"
 L["Is Off Hand"] = "Левая рука"
 L["is useable"] = "Можно использовать"
+--[[Translation missing --]]
+--[[ L["It might not work correctly with your version!"] = ""--]] 
 L["Item"] = "Предмет"
 L["Item Count"] = "Кол-во предметов"
 L["Item Equipped"] = "Предмет надет"
 L["Item Set Equipped"] = "Комплект предметов надет"
 L["Item Set Id"] = "ID комплекта предметов"
+--[[Translation missing --]]
+--[[ L["Keep Inside"] = ""--]] 
 L["Lava"] = "Лава"
 L["Leaving"] = "Выход"
 L["Leech"] = "Похищение"
@@ -376,6 +382,8 @@ L["Not on Cooldown"] = "Не перезаряжается"
 L["Not On Threat Table"] = "Не в списке угроз"
 L["Note, that cross realm transmission is not possible"] = [=[Обратите внимание, что передача между игровыми 
 мирами невозможна!]=]
+L["Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate."] = [=[Примечание. Этот тип триггера оценивает расстояние до хитбокса единицы. Фактическое расстояние до дружественных игроков
+обычно на 3 метра больше оценки.]=]
 L["Number"] = "Количество"
 L["Number Affected"] = "Кол-во задействованных"
 L["Off Hand"] = "Левая рука"
@@ -496,8 +504,12 @@ L["Shift-Click to resume"] = "Shift+Клик возобновить"
 L["Shoulder"] = "Плечо"
 L["Show"] = "Показать"
 L["Show Absorb"] = "Показать поглощение"
+--[[Translation missing --]]
+--[[ L["Show CD of Charge"] = ""--]] 
 L["Show Code"] = "Показать код"
 L["Show Global Cooldown"] = "Показать общее время восстановления (GCD)"
+--[[Translation missing --]]
+--[[ L["Show if Charges"] = ""--]] 
 L["Show Incoming Heal"] = "Показать входящее исцеление"
 L["Shrink"] = "Сжатие"
 L["Skull"] = "Череп"
@@ -557,6 +569,8 @@ L["Tanking But Not Highest"] = "Танкует, но не макс. угроза
 L["Target"] = "Цель"
 L["Thick Outline"] = "Толстый контур"
 L["This aura contains custom Lua code."] = "Эта индикация содержит пользовательский код Lua."
+--[[Translation missing --]]
+--[[ L["This aura was created with a newer version of WeakAuras."] = ""--]] 
 L["Threat Situation"] = "Положение в списке угроз"
 L["Tier "] = "Тир"
 L["Timed"] = "По истечении времени"
@@ -590,8 +604,6 @@ L["Unit is Unit"] = "Является др-й единицей"
 L["Up"] = "Вверх"
 L["Values/Remaining Time above this value are displayed as full progress."] = "Значения/Оставшееся время выше указанного числа отображаются как полный прогресс."
 L["Values/Remaining Time below this value are displayed as no progress."] = "Значения/Оставшееся время ниже указанного числа отображаются как нулевой прогресс."
-L["Version error received higher"] = "Эта индикация несовместима с вашей версией WeakAuras. Она создана в версии %s, а вы используете версию %s. Пожалуйста, обновите WeakAuras."
-L["Version error received lower"] = "Эта индикация несовместима с вашей версией WeakAuras. Она создана в версии %s, а вы используете версию %s. Пожалуйста, посоветуйте автору или человеку, от которого вы ее получили, обновить WeakAuras."
 L["Version: "] = "Версия: "
 L["Waist"] = "Пояс"
 L["Weapon"] = "Оружие"
@@ -601,7 +613,9 @@ L["Width"] = "Ширина"
 L["Wobble"] = "Колебание"
 L["Wrap"] = "Переносить слова"
 L["Wrist"] = "Запястье"
+L["X-Offset"] = "Смещение по X"
 L["Yell"] = "Крик"
+L["Y-Offset"] = "Смещение по Y"
 L["Zone"] = "Игровая зона"
 L["Zone ID"] = "ID игровой зоны"
 L["Zone ID List"] = "Список ID игровых зон"

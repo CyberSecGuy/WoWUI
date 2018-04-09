@@ -31,7 +31,6 @@ menuFrame:CreateWideShadow()
 
 local LOCATION_WIDTH = 400
 local classColor = E.myclass == 'PRIEST' and E.PriestColors or (CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[E.myclass] or RAID_CLASS_COLORS[E.myclass])
-local CAMERA_SPEED = 0.035
 
 local function AutoColoring()
 	local pvpType = GetZonePVPInfo()
@@ -134,9 +133,6 @@ function BFM:SetFlightMode(status)
 	if(InCombatLockdown()) then return end
 
 	if(status) then
-		if E.db.benikui.misc.flightMode.cameraRotation then
-			MoveViewLeftStart(CAMERA_SPEED);
-		end
 		self.FlightMode:Show()
 		E.UIParent:Hide()
 
@@ -168,7 +164,7 @@ function BFM:SetFlightMode(status)
 		LeftChatPanel:Point("BOTTOMLEFT", self.FlightMode.bottom, "TOPLEFT", 24, 24)
 		
 		-- Hide SquareMinimapButtonBar
-		if (IsAddOnLoaded('ProjectAzilroka') and _G.ProjectAzilroka.db['SMB']) then
+		if (BUI.PA and _G.ProjectAzilroka.db['SMB'] and not BUI.SLE) then
 			_G.SquareMinimapButtons:CancelAllTimers()
 			SquareMinimapButtonBar:SetAlpha(0)
 		end
@@ -200,7 +196,7 @@ function BFM:SetFlightMode(status)
 
 		-- Enable Blizz location messsages.
 		-- Added support for LocationPlus & LocationLite
-		if (IsAddOnLoaded('ElvUI_LocPlus') and E.db.locplus.zonetext) or (IsAddOnLoaded('ElvUI_LocLite') and not E.db.loclite.zonetext) then
+		if (BUI.LP and E.db.locplus.zonetext) or (BUI.LL and not E.db.loclite.zonetext) then
 			ZoneTextFrame:UnregisterAllEvents()
 		else
 			ZoneTextFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
@@ -227,7 +223,7 @@ function BFM:SetFlightMode(status)
 			end
 		end
 
-		if IsAddOnLoaded('AddOnSkins') then
+		if BUI.AS then
 			local AS = unpack(AddOnSkins) or nil
 			if AS.db.EmbedSystem or AS.db.EmbedSystemDual then AS:Embed_Show() end
 		end
@@ -243,7 +239,7 @@ function BFM:SetFlightMode(status)
 		LeftChatPanel:Point("BOTTOMLEFT", LeftChatMover, "BOTTOMLEFT")
 
 		-- Show SquareMinimapButtonBar
-		if (IsAddOnLoaded('ProjectAzilroka') and _G.ProjectAzilroka.db['SMB']) then
+		if (BUI.PA and _G.ProjectAzilroka.db['SMB'] and not BUI.SLE) then
 			_G.SquareMinimapButtons:ScheduleRepeatingTimer('GrabMinimapButtons', 5)
 			SquareMinimapButtonBar:SetAlpha(1)
 		end
@@ -283,7 +279,7 @@ function BFM:OnEvent(event, ...)
 end
 
 function BFM:Toggle()
-	if(E.db.benikui.misc.flightMode.enable) then
+	if(E.db.benikui.misc.flightMode) then
 		self:RegisterEvent("UPDATE_BONUS_ACTIONBAR", "OnEvent")
 		self:RegisterEvent("UPDATE_MULTI_CAST_ACTIONBAR", "OnEvent")
 		self:RegisterEvent("LFG_PROPOSAL_SHOW", "OnEvent")
@@ -308,7 +304,8 @@ function BFM:Initialize()
 	self.FlightMode.top:SetFrameLevel(0)
 	self.FlightMode.top:SetFrameStrata("HIGH")
 	self.FlightMode.top:SetPoint("TOP", self.FlightMode, "TOP", 0, E.Border)
-	self.FlightMode.top:SetTemplate('Transparent')
+	self.FlightMode.top:SetTemplate('Transparent', true, true)
+	self.FlightMode.top:SetBackdropBorderColor(.3, .3, .3, 1)
 	self.FlightMode.top:CreateWideShadow()
 	self.FlightMode.top:Width(GetScreenWidth() + (E.Border*2))
 	self.FlightMode.top:Height(40)
@@ -384,7 +381,8 @@ function BFM:Initialize()
 	-- Location frame
 	self.FlightMode.top.location = CreateFrame('Frame', 'FlightModeLocation', self.FlightMode.top)
 	self.FlightMode.top.location:SetFrameLevel(1)
-	self.FlightMode.top.location:SetTemplate('Default', true)
+	self.FlightMode.top.location:SetTemplate('Default', true, true)
+	self.FlightMode.top.location:SetBackdropBorderColor(.3, .3, .3, 1)
 	self.FlightMode.top.location:CreateWideShadow()
 	self.FlightMode.top.location:Point("TOP", self.FlightMode.top, "CENTER", 0, 6)
 	self.FlightMode.top.location:Width(LOCATION_WIDTH)
@@ -397,9 +395,10 @@ function BFM:Initialize()
 
 	-- Coords X frame
 	self.FlightMode.top.location.x = CreateFrame('Frame', nil, self.FlightMode.top.location)
-	self.FlightMode.top.location.x:SetTemplate('Default', true)
+	self.FlightMode.top.location.x:SetTemplate('Default', true, true)
+	self.FlightMode.top.location.x:SetBackdropBorderColor(.3, .3, .3, 1)
 	self.FlightMode.top.location.x:CreateWideShadow()
-	self.FlightMode.top.location.x:Point("RIGHT", self.FlightMode.top.location, "LEFT", (E.PixelMode and -8 or -10), 0)
+	self.FlightMode.top.location.x:Point("RIGHT", self.FlightMode.top.location, "LEFT", (E.PixelMode and -4 or -6), 0)
 	self.FlightMode.top.location.x:Width(60)
 	self.FlightMode.top.location.x:Height(40)
 
@@ -409,9 +408,10 @@ function BFM:Initialize()
 
 	-- Coords Y frame
 	self.FlightMode.top.location.y = CreateFrame('Frame', nil, self.FlightMode.top.location)
-	self.FlightMode.top.location.y:SetTemplate('Default', true)
+	self.FlightMode.top.location.y:SetTemplate('Default', true, true)
+	self.FlightMode.top.location.y:SetBackdropBorderColor(.3, .3, .3, 1)
 	self.FlightMode.top.location.y:CreateWideShadow()
-	self.FlightMode.top.location.y:Point("LEFT", self.FlightMode.top.location, "RIGHT", (E.PixelMode and 8 or 10), 0)
+	self.FlightMode.top.location.y:Point("LEFT", self.FlightMode.top.location, "RIGHT", (E.PixelMode and 4 or 6), 0)
 	self.FlightMode.top.location.y:Width(60)
 	self.FlightMode.top.location.y:Height(40)
 
@@ -422,7 +422,8 @@ function BFM:Initialize()
 	-- Bottom frame
 	self.FlightMode.bottom = CreateFrame("Frame", nil, self.FlightMode)
 	self.FlightMode.bottom:SetFrameLevel(0)
-	self.FlightMode.bottom:SetTemplate("Transparent")
+	self.FlightMode.bottom:SetTemplate('Transparent', true, true)
+	self.FlightMode.bottom:SetBackdropBorderColor(.3, .3, .3, 1)
 	self.FlightMode.bottom:CreateWideShadow()
 	self.FlightMode.bottom:Point("BOTTOM", self.FlightMode, "BOTTOM", 0, -E.Border)
 	self.FlightMode.bottom:Width(GetScreenWidth() + (E.Border*2))
@@ -616,7 +617,8 @@ function BFM:Initialize()
 	-- Time flying
 	self.FlightMode.bottom.timeFlying = CreateFrame('Frame', nil, self.FlightMode.bottom)
 	self.FlightMode.bottom.timeFlying:Point("RIGHT", self.FlightMode.bottom, "RIGHT", -10, 0)
-	self.FlightMode.bottom.timeFlying:SetTemplate("Default")
+	self.FlightMode.bottom.timeFlying:SetTemplate("Default", true, true)
+	self.FlightMode.bottom.timeFlying:SetBackdropBorderColor(.3, .3, .3, 1)
 	self.FlightMode.bottom.timeFlying:Size(70,30)	
 	self.FlightMode.bottom.timeFlying.txt = self.FlightMode.bottom.timeFlying:CreateFontString(nil, 'OVERLAY')
 	self.FlightMode.bottom.timeFlying.txt:FontTemplate(nil, 14)
@@ -627,7 +629,8 @@ function BFM:Initialize()
 	-- fps
 	self.FlightMode.bottom.fps = CreateFrame('Frame', nil, self.FlightMode.bottom)
 	self.FlightMode.bottom.fps:Point('RIGHT', self.FlightMode.bottom.timeFlying, 'LEFT', -10, 0)
-	self.FlightMode.bottom.fps:SetTemplate("Default")
+	self.FlightMode.bottom.fps:SetTemplate("Default", true, true)
+	self.FlightMode.bottom.fps:SetBackdropBorderColor(.3, .3, .3, 1)
 	self.FlightMode.bottom.fps:Size(70,30)
 	self.FlightMode.bottom.fps.txt = self.FlightMode.bottom.fps:CreateFontString(nil, 'OVERLAY')
 	self.FlightMode.bottom.fps.txt:FontTemplate(nil, 14)

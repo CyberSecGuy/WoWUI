@@ -1,8 +1,8 @@
 
 ServerHopSettings = {
-	["Y"] = 209.999664306641,
-	["X"] = 166.999710083008,
-	["POINT"] = "BOTTOMLEFT",
+	["Y"] = 0,
+	["X"] = 0,
+	["POINT"] = "CENTER",
 	["ISSHOWN"] = false,
 	["DEFAULT_MODE"] = true,
 }

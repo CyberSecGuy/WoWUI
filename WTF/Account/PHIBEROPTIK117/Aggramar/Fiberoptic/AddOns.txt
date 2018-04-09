@@ -1,4 +1,0 @@
-TradeSkillMaster_Additions: disabled
-TradeSkillMaster_WoWuction: disabled
-HandyNotes: disabled
-HandyNotes_Argus: disabled

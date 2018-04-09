@@ -1,0 +1,2079 @@
+
+SkadaPerCharDB = {
+	["total"] = {
+		["healingabsorbed"] = 0,
+		["dispells"] = 1,
+		["ccbreaks"] = 0,
+		["time"] = 138,
+		["interrupts"] = 0,
+		["damage"] = 7375,
+		["players"] = {
+			{
+				["healingabsorbed"] = 0,
+				["class"] = "DRUID",
+				["damaged"] = {
+				},
+				["auras"] = {
+					["Moonfire"] = {
+						["uptime"] = 94,
+						["active"] = 0,
+						["auratype"] = "DEBUFF",
+						["school"] = 64,
+						["name"] = "Moonfire",
+						["id"] = 164812,
+					},
+				},
+				["role"] = "NONE",
+				["time"] = 147,
+				["interrupts"] = 0,
+				["power"] = {
+				},
+				["overhealing"] = 145,
+				["healingspells"] = {
+					["Swift Hand of Justice"] = {
+						["shielding"] = 0,
+						["id"] = 59913,
+						["healing"] = 115,
+						["min"] = 0,
+						["name"] = "Swift Hand of Justice",
+						["max"] = 9,
+						["critical"] = 0,
+						["absorbed"] = 0,
+						["overhealing"] = 145,
+						["hits"] = 34,
+					},
+				},
+				["damage"] = 7199,
+				["damagespells"] = {
+					["Tarindrella: Entangling Roots"] = {
+						["hitmin"] = 1,
+						["id"] = 33844,
+						["min"] = 1,
+						["hitamount"] = 2,
+						["hitmax"] = 1,
+						["hit"] = 2,
+						["school"] = 8,
+						["max"] = 1,
+						["totalhits"] = 2,
+						["damage"] = 2,
+					},
+					["Moonfire"] = {
+						["hitmin"] = 17,
+						["criticalamount"] = 552,
+						["id"] = 164812,
+						["criticalmin"] = 35,
+						["hitamount"] = 3660,
+						["critical"] = 9,
+						["min"] = 17,
+						["criticalmax"] = 82,
+						["hitmax"] = 43,
+						["hit"] = 130,
+						["school"] = 64,
+						["max"] = 82,
+						["totalhits"] = 139,
+						["damage"] = 4212,
+					},
+					["Solar Wrath"] = {
+						["hitmin"] = 66,
+						["criticalamount"] = 452,
+						["id"] = 190984,
+						["criticalmin"] = 133,
+						["hitamount"] = 2533,
+						["critical"] = 3,
+						["min"] = 66,
+						["criticalmax"] = 160,
+						["hitmax"] = 84,
+						["hit"] = 34,
+						["school"] = 8,
+						["max"] = 160,
+						["totalhits"] = 37,
+						["damage"] = 2985,
+					},
+				},
+				["shielding"] = 0,
+				["damagetaken"] = 272,
+				["deathlog"] = {
+					{
+						["ts"] = 1523235797.819,
+						["amount"] = -9,
+						["hp"] = 450,
+						["srcname"] = "Gnarlpine Gardener",
+						["spellid"] = 88163,
+					}, -- [1]
+					{
+						["hp"] = 432,
+						["amount"] = -7,
+						["ts"] = 1523235708.078,
+						["spellid"] = 88163,
+						["srcname"] = "Gnarlpine Warrior",
+					}, -- [2]
+					{
+						["absorb"] = 0,
+						["hp"] = 432,
+						["amount"] = 7,
+						["ts"] = 1523235708.628,
+						["spellid"] = 59913,
+						["srcname"] = "Fiberboi",
+					}, -- [3]
+					{
+						["hp"] = 432,
+						["amount"] = -7,
+						["ts"] = 1523235717.849,
+						["spellid"] = 88163,
+						["srcname"] = "Gnarlpine Warrior",
+					}, -- [4]
+					{
+						["hp"] = 425,
+						["amount"] = -7,
+						["ts"] = 1523235719.856,
+						["spellid"] = 88163,
+						["srcname"] = "Gnarlpine Warrior",
+					}, -- [5]
+					{
+						["hp"] = 418,
+						["amount"] = -6,
+						["ts"] = 1523235721.783,
+						["spellid"] = 88163,
+						["srcname"] = "Gnarlpine Warrior",
+					}, -- [6]
+					{
+						["absorb"] = 0,
+						["hp"] = 421,
+						["amount"] = 9,
+						["ts"] = 1523235722.623,
+						["spellid"] = 59913,
+						["srcname"] = "Fiberboi",
+					}, -- [7]
+					{
+						["ts"] = 1523235749.147,
+						["amount"] = -9,
+						["spellid"] = 88163,
+						["hp"] = 450,
+						["srcname"] = "Gnarlpine Gardener",
+					}, -- [8]
+					{
+						["ts"] = 1523235751.157,
+						["amount"] = -10,
+						["hp"] = 441,
+						["spellid"] = 88163,
+						["srcname"] = "Gnarlpine Gardener",
+					}, -- [9]
+					{
+						["absorb"] = 0,
+						["hp"] = 440,
+						["amount"] = 9,
+						["ts"] = 1523235751.357,
+						["spellid"] = 59913,
+						["srcname"] = "Fiberboi",
+					}, -- [10]
+					{
+						["ts"] = 1523235755.667,
+						["amount"] = -7,
+						["hp"] = 440,
+						["spellid"] = 88163,
+						["srcname"] = "Gnarlpine Warrior",
+					}, -- [11]
+					{
+						["ts"] = 1523235758.327,
+						["amount"] = -7,
+						["hp"] = 426,
+						["spellid"] = 41057,
+						["srcname"] = "Gnarlpine Warrior",
+					}, -- [12]
+					{
+						["ts"] = 1523235758.327,
+						["absorb"] = 0,
+						["amount"] = 9,
+						["hp"] = 435,
+						["srcname"] = "Fiberboi",
+						["spellid"] = 59913,
+					}, -- [13]
+					{
+						["absorb"] = 0,
+						["hp"] = 450,
+						["amount"] = 0,
+						["ts"] = 1523235765.824,
+						["spellid"] = 59913,
+						["srcname"] = "Fiberboi",
+					}, -- [14]
+					{
+						["absorb"] = 0,
+						["ts"] = 1523235773.67,
+						["amount"] = 0,
+						["hp"] = 450,
+						["spellid"] = 59913,
+						["srcname"] = "Fiberboi",
+					}, -- [15]
+					["pos"] = 2,
+				},
+				["id"] = "Player-76-09B7E798",
+				["healing"] = 115,
+				["damagetakenspells"] = {
+					["Poison"] = {
+						["crushing"] = 0,
+						["id"] = 11918,
+						["min"] = 1,
+						["school"] = 8,
+						["critical"] = 0,
+						["glancing"] = 0,
+						["absorbed"] = 0,
+						["name"] = "Poison",
+						["blocked"] = 0,
+						["totalhits"] = 4,
+						["resisted"] = 0,
+						["max"] = 1,
+						["damage"] = 4,
+					},
+					["Whirlwind"] = {
+						["crushing"] = 0,
+						["id"] = 41057,
+						["min"] = 7,
+						["school"] = 1,
+						["critical"] = 0,
+						["glancing"] = 0,
+						["absorbed"] = 0,
+						["name"] = "Whirlwind",
+						["blocked"] = 0,
+						["totalhits"] = 1,
+						["resisted"] = 0,
+						["max"] = 7,
+						["damage"] = 7,
+					},
+					["Attack"] = {
+						["crushing"] = 0,
+						["id"] = 6603,
+						["min"] = 5,
+						["school"] = 1,
+						["critical"] = 0,
+						["glancing"] = 0,
+						["absorbed"] = 0,
+						["name"] = "Attack",
+						["blocked"] = 0,
+						["totalhits"] = 36,
+						["resisted"] = 0,
+						["max"] = 10,
+						["damage"] = 261,
+					},
+				},
+				["healed"] = {
+					["Player-76-09B7E798"] = {
+						["role"] = "NONE",
+						["name"] = "Fiberboi",
+						["amount"] = 115,
+						["class"] = "DRUID",
+						["shielding"] = 0,
+					},
+				},
+				["ffdamagedonetargets"] = {
+				},
+				["name"] = "Fiberboi",
+				["ffdamagedonespells"] = {
+				},
+				["ffdamagedone"] = 0,
+				["dispells"] = 0,
+				["ccbreaks"] = 0,
+				["maxhp"] = 304,
+			}, -- [1]
+			{
+				["healingabsorbed"] = 0,
+				["ffdamagedonespells"] = {
+				},
+				["damaged"] = {
+				},
+				["dispells"] = 1,
+				["role"] = "NONE",
+				["time"] = 14,
+				["interrupts"] = 0,
+				["power"] = {
+				},
+				["overhealing"] = 0,
+				["damage"] = 176,
+				["damagespells"] = {
+					["Nature's Bite: Attack"] = {
+						["hitmin"] = 4,
+						["criticalamount"] = 30,
+						["id"] = 6603,
+						["criticalmin"] = 10,
+						["hitamount"] = 146,
+						["critical"] = 3,
+						["min"] = 4,
+						["criticalmax"] = 10,
+						["hitmax"] = 6,
+						["hit"] = 30,
+						["school"] = 1,
+						["max"] = 10,
+						["totalhits"] = 33,
+						["damage"] = 176,
+					},
+				},
+				["healingspells"] = {
+				},
+				["damagetaken"] = 0,
+				["deathlog"] = {
+				},
+				["id"] = "Creature-0-3779-1-21414-49480-00004AB6F9",
+				["maxhp"] = 0,
+				["shielding"] = 0,
+				["damagetakenspells"] = {
+				},
+				["healing"] = 0,
+				["healed"] = {
+				},
+				["name"] = "Tarindrella",
+				["ffdamagedonetargets"] = {
+				},
+				["ffdamagedone"] = 0,
+				["auras"] = {
+					["Entangling Roots"] = {
+						["school"] = 8,
+						["name"] = "Entangling Roots",
+						["active"] = 0,
+						["id"] = 33844,
+						["auratype"] = "DEBUFF",
+						["uptime"] = 9,
+					},
+				},
+				["ccbreaks"] = 0,
+			}, -- [2]
+		},
+		["deaths"] = 0,
+		["mobs"] = {
+			["Spider"] = {
+				["players"] = {
+					["Fiberboi"] = {
+						["taken"] = 103,
+						["done"] = 0,
+						["role"] = "NONE",
+						["class"] = "DRUID",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 103,
+				["done"] = 0,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Nightsaber"] = {
+				["players"] = {
+					["Fiberboi"] = {
+						["taken"] = 360,
+						["done"] = 11,
+						["role"] = "NONE",
+						["class"] = "DRUID",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 360,
+				["done"] = 11,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Strigid Owl"] = {
+				["players"] = {
+					["Fiberboi"] = {
+						["taken"] = 547,
+						["done"] = 15,
+						["role"] = "NONE",
+						["class"] = "DRUID",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 547,
+				["done"] = 15,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Gnarlpine Corruption Totem"] = {
+				["players"] = {
+					["Fiberboi"] = {
+						["taken"] = 101,
+						["done"] = 0,
+						["role"] = "NONE",
+						["class"] = "DRUID",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 101,
+				["done"] = 0,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Webwood Spider"] = {
+				["players"] = {
+					["Tarindrella"] = {
+						["taken"] = 178,
+						["done"] = 0,
+						["role"] = "NONE",
+					},
+					["Fiberboi"] = {
+						["taken"] = 1996,
+						["done"] = 84,
+						["role"] = "NONE",
+						["class"] = "DRUID",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 2174,
+				["done"] = 84,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Gnarlpine Gardener"] = {
+				["players"] = {
+					["Fiberboi"] = {
+						["taken"] = 672,
+						["done"] = 28,
+						["role"] = "NONE",
+						["class"] = "DRUID",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 672,
+				["done"] = 28,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Webwood Lurker"] = {
+				["players"] = {
+					["Fiberboi"] = {
+						["taken"] = 1093,
+						["done"] = 71,
+						["role"] = "NONE",
+						["class"] = "DRUID",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 1093,
+				["done"] = 71,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Gnarlpine Ursa"] = {
+				["players"] = {
+					["Fiberboi"] = {
+						["taken"] = 263,
+						["done"] = 0,
+						["role"] = "NONE",
+						["class"] = "DRUID",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 263,
+				["done"] = 0,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Gnarlpine Warrior"] = {
+				["players"] = {
+					["Fiberboi"] = {
+						["taken"] = 1612,
+						["done"] = 41,
+						["role"] = "NONE",
+						["class"] = "DRUID",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 1612,
+				["done"] = 41,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Githyiss the Vile"] = {
+				["players"] = {
+					["Fiberboi"] = {
+						["taken"] = 450,
+						["done"] = 22,
+						["role"] = "NONE",
+						["class"] = "DRUID",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 450,
+				["done"] = 22,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+		},
+		["mobtaken"] = 7375,
+		["power"] = {
+		},
+		["healing"] = 115,
+		["overhealing"] = 145,
+		["shielding"] = 0,
+		["ffdamagedone"] = 0,
+		["starttime"] = 1523234539,
+		["name"] = "Total",
+		["damagetaken"] = 272,
+		["auras"] = {
+		},
+		["mobhdone"] = 0,
+		["last_action"] = 1523234539,
+		["mobdone"] = 272,
+	},
+	["sets"] = {
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["time"] = 16,
+			["interrupts"] = 0,
+			["endtime"] = 1523235758,
+			["damagetaken"] = 33,
+			["damage"] = 407,
+			["players"] = {
+				{
+					["last"] = 1523235758,
+					["healingabsorbed"] = 0,
+					["class"] = "DRUID",
+					["damaged"] = {
+						["Gnarlpine Gardener"] = 216,
+						["Gnarlpine Warrior"] = 191,
+					},
+					["auras"] = {
+						["Moonfire"] = {
+							["school"] = 64,
+							["name"] = "Moonfire",
+							["active"] = 0,
+							["id"] = 164812,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 9,
+						},
+					},
+					["role"] = "NONE",
+					["time"] = 13,
+					["interrupts"] = 0,
+					["power"] = {
+					},
+					["overhealing"] = 0,
+					["damage"] = 407,
+					["damagespells"] = {
+						["Moonfire"] = {
+							["hitmin"] = 21,
+							["id"] = 164812,
+							["min"] = 21,
+							["hitamount"] = 323,
+							["hitmax"] = 43,
+							["hit"] = 9,
+							["school"] = 64,
+							["max"] = 43,
+							["totalhits"] = 9,
+							["damage"] = 323,
+						},
+						["Solar Wrath"] = {
+							["hitmin"] = 84,
+							["id"] = 190984,
+							["min"] = 84,
+							["hitamount"] = 84,
+							["hitmax"] = 84,
+							["hit"] = 1,
+							["school"] = 8,
+							["max"] = 84,
+							["totalhits"] = 1,
+							["damage"] = 84,
+						},
+					},
+					["healingspells"] = {
+						["Swift Hand of Justice"] = {
+							["shielding"] = 0,
+							["id"] = 59913,
+							["healing"] = 18,
+							["min"] = 9,
+							["name"] = "Swift Hand of Justice",
+							["max"] = 9,
+							["critical"] = 0,
+							["absorbed"] = 0,
+							["overhealing"] = 0,
+							["hits"] = 2,
+						},
+					},
+					["damagetaken"] = 33,
+					["shielding"] = 0,
+					["id"] = "Player-76-09B7E798",
+					["first"] = 1523235745,
+					["healing"] = 18,
+					["damagetakenspells"] = {
+						["Whirlwind"] = {
+							["crushing"] = 0,
+							["id"] = 41057,
+							["min"] = 7,
+							["school"] = 1,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["absorbed"] = 0,
+							["name"] = "Whirlwind",
+							["blocked"] = 0,
+							["totalhits"] = 1,
+							["resisted"] = 0,
+							["max"] = 7,
+							["damage"] = 7,
+						},
+						["Attack"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["min"] = 7,
+							["school"] = 1,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["absorbed"] = 0,
+							["name"] = "Attack",
+							["blocked"] = 0,
+							["totalhits"] = 3,
+							["resisted"] = 0,
+							["max"] = 10,
+							["damage"] = 26,
+						},
+					},
+					["healed"] = {
+						["Player-76-09B7E798"] = {
+							["role"] = "NONE",
+							["name"] = "Fiberboi",
+							["amount"] = 18,
+							["class"] = "DRUID",
+							["shielding"] = 0,
+						},
+					},
+					["ffdamagedonetargets"] = {
+					},
+					["name"] = "Fiberboi",
+					["ffdamagedonespells"] = {
+					},
+					["ffdamagedone"] = 0,
+					["maxhp"] = 450,
+					["dispells"] = 0,
+					["ccbreaks"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Gnarlpine Gardener"] = {
+					["players"] = {
+						["Fiberboi"] = {
+							["taken"] = 216,
+							["done"] = 19,
+							["role"] = "NONE",
+							["class"] = "DRUID",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 216,
+					["done"] = 19,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+				["Gnarlpine Warrior"] = {
+					["players"] = {
+						["Fiberboi"] = {
+							["taken"] = 191,
+							["done"] = 14,
+							["role"] = "NONE",
+							["class"] = "DRUID",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 191,
+					["done"] = 14,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 407,
+			["power"] = {
+			},
+			["healing"] = 18,
+			["overhealing"] = 0,
+			["shielding"] = 0,
+			["ffdamagedone"] = 0,
+			["starttime"] = 1523235742,
+			["name"] = "Gnarlpine Gardener (2)",
+			["mobname"] = "Gnarlpine Gardener",
+			["auras"] = {
+			},
+			["mobhdone"] = 0,
+			["last_action"] = 1523235742,
+			["mobdone"] = 33,
+		}, -- [1]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["time"] = 7,
+			["interrupts"] = 0,
+			["endtime"] = 1523235724,
+			["damagetaken"] = 20,
+			["damage"] = 258,
+			["players"] = {
+				{
+					["last"] = 1523235722,
+					["healingabsorbed"] = 0,
+					["class"] = "DRUID",
+					["damaged"] = {
+						["Gnarlpine Warrior"] = 258,
+					},
+					["auras"] = {
+						["Moonfire"] = {
+							["school"] = 64,
+							["name"] = "Moonfire",
+							["active"] = 0,
+							["id"] = 164812,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 3,
+						},
+					},
+					["role"] = "NONE",
+					["time"] = 5,
+					["interrupts"] = 0,
+					["power"] = {
+					},
+					["overhealing"] = 0,
+					["damage"] = 258,
+					["damagespells"] = {
+						["Moonfire"] = {
+							["hitmin"] = 20,
+							["id"] = 164812,
+							["min"] = 20,
+							["hitamount"] = 100,
+							["hitmax"] = 40,
+							["hit"] = 3,
+							["school"] = 64,
+							["max"] = 40,
+							["totalhits"] = 3,
+							["damage"] = 100,
+						},
+						["Solar Wrath"] = {
+							["hitmin"] = 79,
+							["id"] = 190984,
+							["min"] = 79,
+							["hitamount"] = 158,
+							["hitmax"] = 79,
+							["hit"] = 2,
+							["school"] = 8,
+							["max"] = 79,
+							["totalhits"] = 2,
+							["damage"] = 158,
+						},
+					},
+					["healingspells"] = {
+						["Swift Hand of Justice"] = {
+							["shielding"] = 0,
+							["id"] = 59913,
+							["healing"] = 9,
+							["min"] = 9,
+							["name"] = "Swift Hand of Justice",
+							["max"] = 9,
+							["critical"] = 0,
+							["absorbed"] = 0,
+							["overhealing"] = 0,
+							["hits"] = 1,
+						},
+					},
+					["damagetaken"] = 20,
+					["shielding"] = 0,
+					["id"] = "Player-76-09B7E798",
+					["first"] = 1523235717,
+					["healing"] = 9,
+					["damagetakenspells"] = {
+						["Attack"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["min"] = 6,
+							["school"] = 1,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["absorbed"] = 0,
+							["name"] = "Attack",
+							["blocked"] = 0,
+							["totalhits"] = 3,
+							["resisted"] = 0,
+							["max"] = 7,
+							["damage"] = 20,
+						},
+					},
+					["healed"] = {
+						["Player-76-09B7E798"] = {
+							["role"] = "NONE",
+							["name"] = "Fiberboi",
+							["amount"] = 9,
+							["class"] = "DRUID",
+							["shielding"] = 0,
+						},
+					},
+					["ffdamagedonetargets"] = {
+					},
+					["name"] = "Fiberboi",
+					["ffdamagedonespells"] = {
+					},
+					["ffdamagedone"] = 0,
+					["maxhp"] = 432,
+					["dispells"] = 0,
+					["ccbreaks"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Gnarlpine Warrior"] = {
+					["players"] = {
+						["Fiberboi"] = {
+							["taken"] = 258,
+							["done"] = 20,
+							["role"] = "NONE",
+							["class"] = "DRUID",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 258,
+					["done"] = 20,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 258,
+			["power"] = {
+			},
+			["healing"] = 9,
+			["overhealing"] = 0,
+			["shielding"] = 0,
+			["ffdamagedone"] = 0,
+			["starttime"] = 1523235717,
+			["name"] = "Gnarlpine Warrior (2)",
+			["mobname"] = "Gnarlpine Warrior",
+			["auras"] = {
+			},
+			["mobhdone"] = 0,
+			["last_action"] = 1523235717,
+			["mobdone"] = 20,
+		}, -- [2]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["time"] = 7,
+			["interrupts"] = 0,
+			["endtime"] = 1523235692,
+			["damagetaken"] = 0,
+			["damage"] = 245,
+			["players"] = {
+				{
+					["last"] = 1523235690,
+					["healingabsorbed"] = 0,
+					["class"] = "DRUID",
+					["damaged"] = {
+						["Gnarlpine Warrior"] = 245,
+					},
+					["auras"] = {
+					},
+					["role"] = "NONE",
+					["time"] = 3,
+					["interrupts"] = 0,
+					["power"] = {
+					},
+					["overhealing"] = 9,
+					["damage"] = 245,
+					["damagespells"] = {
+						["Moonfire"] = {
+							["hitmin"] = 21,
+							["criticalamount"] = 82,
+							["id"] = 164812,
+							["criticalmin"] = 82,
+							["hitamount"] = 83,
+							["critical"] = 1,
+							["min"] = 21,
+							["criticalmax"] = 82,
+							["hitmax"] = 41,
+							["hit"] = 3,
+							["school"] = 64,
+							["max"] = 82,
+							["totalhits"] = 4,
+							["damage"] = 165,
+						},
+						["Solar Wrath"] = {
+							["hitmin"] = 80,
+							["id"] = 190984,
+							["min"] = 80,
+							["hitamount"] = 80,
+							["hitmax"] = 80,
+							["hit"] = 1,
+							["school"] = 8,
+							["max"] = 80,
+							["totalhits"] = 1,
+							["damage"] = 80,
+						},
+					},
+					["healingspells"] = {
+						["Swift Hand of Justice"] = {
+							["shielding"] = 0,
+							["id"] = 59913,
+							["healing"] = 0,
+							["min"] = 0,
+							["name"] = "Swift Hand of Justice",
+							["max"] = 0,
+							["critical"] = 0,
+							["absorbed"] = 0,
+							["overhealing"] = 9,
+							["hits"] = 1,
+						},
+					},
+					["damagetaken"] = 0,
+					["shielding"] = 0,
+					["id"] = "Player-76-09B7E798",
+					["first"] = 1523235687,
+					["healing"] = 0,
+					["damagetakenspells"] = {
+					},
+					["healed"] = {
+						["Player-76-09B7E798"] = {
+							["role"] = "NONE",
+							["name"] = "Fiberboi",
+							["amount"] = 0,
+							["class"] = "DRUID",
+							["shielding"] = 0,
+						},
+					},
+					["ffdamagedonetargets"] = {
+					},
+					["name"] = "Fiberboi",
+					["ffdamagedonespells"] = {
+					},
+					["ffdamagedone"] = 0,
+					["maxhp"] = 432,
+					["dispells"] = 0,
+					["ccbreaks"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Gnarlpine Warrior"] = {
+					["players"] = {
+						["Fiberboi"] = {
+							["taken"] = 245,
+							["done"] = 0,
+							["role"] = "NONE",
+							["class"] = "DRUID",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 245,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 245,
+			["power"] = {
+			},
+			["healing"] = 0,
+			["overhealing"] = 9,
+			["shielding"] = 0,
+			["ffdamagedone"] = 0,
+			["starttime"] = 1523235685,
+			["name"] = "Gnarlpine Warrior",
+			["mobname"] = "Gnarlpine Warrior",
+			["auras"] = {
+			},
+			["mobhdone"] = 0,
+			["last_action"] = 1523235685,
+			["mobdone"] = 0,
+		}, -- [3]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["time"] = 6,
+			["interrupts"] = 0,
+			["endtime"] = 1523235643,
+			["damagetaken"] = 0,
+			["damage"] = 223,
+			["players"] = {
+				{
+					["last"] = 1523235641,
+					["healingabsorbed"] = 0,
+					["class"] = "DRUID",
+					["damaged"] = {
+						["Gnarlpine Gardener"] = 223,
+					},
+					["auras"] = {
+						["Moonfire"] = {
+							["school"] = 64,
+							["name"] = "Moonfire",
+							["active"] = 0,
+							["id"] = 164812,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 4,
+						},
+					},
+					["role"] = "NONE",
+					["time"] = 4,
+					["interrupts"] = 0,
+					["power"] = {
+					},
+					["overhealing"] = 8,
+					["damage"] = 223,
+					["damagespells"] = {
+						["Moonfire"] = {
+							["hitmin"] = 21,
+							["id"] = 164812,
+							["min"] = 21,
+							["hitamount"] = 63,
+							["hitmax"] = 42,
+							["hit"] = 2,
+							["school"] = 64,
+							["max"] = 42,
+							["totalhits"] = 2,
+							["damage"] = 63,
+						},
+						["Solar Wrath"] = {
+							["hitmin"] = 80,
+							["id"] = 190984,
+							["min"] = 80,
+							["hitamount"] = 160,
+							["hitmax"] = 80,
+							["hit"] = 2,
+							["school"] = 8,
+							["max"] = 80,
+							["totalhits"] = 2,
+							["damage"] = 160,
+						},
+					},
+					["healingspells"] = {
+						["Swift Hand of Justice"] = {
+							["shielding"] = 0,
+							["id"] = 59913,
+							["healing"] = 0,
+							["min"] = 0,
+							["name"] = "Swift Hand of Justice",
+							["max"] = 0,
+							["critical"] = 0,
+							["absorbed"] = 0,
+							["overhealing"] = 8,
+							["hits"] = 1,
+						},
+					},
+					["damagetaken"] = 0,
+					["shielding"] = 0,
+					["id"] = "Player-76-09B7E798",
+					["first"] = 1523235637,
+					["healing"] = 0,
+					["damagetakenspells"] = {
+					},
+					["healed"] = {
+						["Player-76-09B7E798"] = {
+							["role"] = "NONE",
+							["name"] = "Fiberboi",
+							["amount"] = 0,
+							["class"] = "DRUID",
+							["shielding"] = 0,
+						},
+					},
+					["ffdamagedonetargets"] = {
+					},
+					["name"] = "Fiberboi",
+					["ffdamagedonespells"] = {
+					},
+					["ffdamagedone"] = 0,
+					["maxhp"] = 432,
+					["dispells"] = 0,
+					["ccbreaks"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Gnarlpine Gardener"] = {
+					["players"] = {
+						["Fiberboi"] = {
+							["taken"] = 223,
+							["done"] = 0,
+							["role"] = "NONE",
+							["class"] = "DRUID",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 223,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 223,
+			["power"] = {
+			},
+			["healing"] = 0,
+			["overhealing"] = 8,
+			["shielding"] = 0,
+			["ffdamagedone"] = 0,
+			["starttime"] = 1523235637,
+			["name"] = "Gnarlpine Gardener",
+			["mobname"] = "Gnarlpine Gardener",
+			["auras"] = {
+			},
+			["mobhdone"] = 0,
+			["last_action"] = 1523235637,
+			["mobdone"] = 0,
+		}, -- [4]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["time"] = 6,
+			["interrupts"] = 0,
+			["endtime"] = 1523235313,
+			["damagetaken"] = 11,
+			["damage"] = 199,
+			["players"] = {
+				{
+					["last"] = 1523235312,
+					["healingabsorbed"] = 0,
+					["class"] = "DRUID",
+					["damaged"] = {
+						["Nightsaber"] = 199,
+					},
+					["auras"] = {
+					},
+					["role"] = "NONE",
+					["time"] = 3,
+					["interrupts"] = 0,
+					["power"] = {
+					},
+					["overhealing"] = 0,
+					["damage"] = 199,
+					["damagespells"] = {
+						["Moonfire"] = {
+							["hitmin"] = 20,
+							["id"] = 164812,
+							["min"] = 20,
+							["hitamount"] = 120,
+							["hitmax"] = 40,
+							["hit"] = 4,
+							["school"] = 64,
+							["max"] = 40,
+							["totalhits"] = 4,
+							["damage"] = 120,
+						},
+						["Solar Wrath"] = {
+							["hitmin"] = 79,
+							["id"] = 190984,
+							["min"] = 79,
+							["hitamount"] = 79,
+							["hitmax"] = 79,
+							["hit"] = 1,
+							["school"] = 8,
+							["max"] = 79,
+							["totalhits"] = 1,
+							["damage"] = 79,
+						},
+					},
+					["healingspells"] = {
+						["Swift Hand of Justice"] = {
+							["shielding"] = 0,
+							["id"] = 59913,
+							["healing"] = 8,
+							["min"] = 8,
+							["name"] = "Swift Hand of Justice",
+							["max"] = 8,
+							["critical"] = 0,
+							["absorbed"] = 0,
+							["overhealing"] = 0,
+							["hits"] = 1,
+						},
+					},
+					["damagetaken"] = 11,
+					["shielding"] = 0,
+					["id"] = "Player-76-09B7E798",
+					["first"] = 1523235309,
+					["healing"] = 8,
+					["damagetakenspells"] = {
+						["Attack"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["min"] = 5,
+							["school"] = 1,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["absorbed"] = 0,
+							["name"] = "Attack",
+							["blocked"] = 0,
+							["totalhits"] = 2,
+							["resisted"] = 0,
+							["max"] = 6,
+							["damage"] = 11,
+						},
+					},
+					["healed"] = {
+						["Player-76-09B7E798"] = {
+							["role"] = "NONE",
+							["name"] = "Fiberboi",
+							["amount"] = 8,
+							["class"] = "DRUID",
+							["shielding"] = 0,
+						},
+					},
+					["ffdamagedonetargets"] = {
+					},
+					["name"] = "Fiberboi",
+					["ffdamagedonespells"] = {
+					},
+					["ffdamagedone"] = 0,
+					["maxhp"] = 432,
+					["dispells"] = 0,
+					["ccbreaks"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Nightsaber"] = {
+					["players"] = {
+						["Fiberboi"] = {
+							["taken"] = 199,
+							["done"] = 11,
+							["role"] = "NONE",
+							["class"] = "DRUID",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 199,
+					["done"] = 11,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 199,
+			["power"] = {
+			},
+			["healing"] = 8,
+			["overhealing"] = 0,
+			["shielding"] = 0,
+			["ffdamagedone"] = 0,
+			["starttime"] = 1523235307,
+			["name"] = "Nightsaber",
+			["mobname"] = "Nightsaber",
+			["auras"] = {
+			},
+			["mobhdone"] = 0,
+			["last_action"] = 1523235307,
+			["mobdone"] = 11,
+		}, -- [5]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["time"] = 16,
+			["interrupts"] = 0,
+			["endtime"] = 1523235264,
+			["damagetaken"] = 56,
+			["damage"] = 239,
+			["players"] = {
+				{
+					["last"] = 1523235263,
+					["healingabsorbed"] = 0,
+					["class"] = "DRUID",
+					["damaged"] = {
+						["Webwood Lurker"] = 239,
+					},
+					["auras"] = {
+					},
+					["role"] = "NONE",
+					["time"] = 12,
+					["interrupts"] = 0,
+					["power"] = {
+					},
+					["overhealing"] = 0,
+					["damage"] = 239,
+					["damagespells"] = {
+						["Solar Wrath"] = {
+							["hitmin"] = 80,
+							["criticalamount"] = 159,
+							["id"] = 190984,
+							["criticalmin"] = 159,
+							["hitamount"] = 80,
+							["critical"] = 1,
+							["min"] = 80,
+							["criticalmax"] = 159,
+							["hitmax"] = 80,
+							["hit"] = 1,
+							["school"] = 8,
+							["max"] = 159,
+							["totalhits"] = 2,
+							["damage"] = 239,
+						},
+					},
+					["healingspells"] = {
+						["Swift Hand of Justice"] = {
+							["shielding"] = 0,
+							["id"] = 59913,
+							["healing"] = 9,
+							["min"] = 9,
+							["name"] = "Swift Hand of Justice",
+							["max"] = 9,
+							["critical"] = 0,
+							["absorbed"] = 0,
+							["overhealing"] = 0,
+							["hits"] = 1,
+						},
+					},
+					["damagetaken"] = 56,
+					["shielding"] = 0,
+					["id"] = "Player-76-09B7E798",
+					["first"] = 1523235251,
+					["healing"] = 9,
+					["damagetakenspells"] = {
+						["Poison"] = {
+							["crushing"] = 0,
+							["id"] = 11918,
+							["min"] = 1,
+							["school"] = 8,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["absorbed"] = 0,
+							["name"] = "Poison",
+							["blocked"] = 0,
+							["totalhits"] = 4,
+							["resisted"] = 0,
+							["max"] = 1,
+							["damage"] = 4,
+						},
+						["Attack"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["min"] = 8,
+							["school"] = 1,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["absorbed"] = 0,
+							["name"] = "Attack",
+							["blocked"] = 0,
+							["totalhits"] = 6,
+							["resisted"] = 0,
+							["max"] = 9,
+							["damage"] = 52,
+						},
+					},
+					["healed"] = {
+						["Player-76-09B7E798"] = {
+							["role"] = "NONE",
+							["name"] = "Fiberboi",
+							["amount"] = 9,
+							["class"] = "DRUID",
+							["shielding"] = 0,
+						},
+					},
+					["ffdamagedonetargets"] = {
+					},
+					["name"] = "Fiberboi",
+					["ffdamagedonespells"] = {
+					},
+					["ffdamagedone"] = 0,
+					["maxhp"] = 432,
+					["dispells"] = 0,
+					["ccbreaks"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Webwood Lurker"] = {
+					["players"] = {
+						["Fiberboi"] = {
+							["taken"] = 239,
+							["done"] = 56,
+							["role"] = "NONE",
+							["class"] = "DRUID",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 239,
+					["done"] = 56,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 239,
+			["power"] = {
+			},
+			["healing"] = 9,
+			["overhealing"] = 0,
+			["shielding"] = 0,
+			["ffdamagedone"] = 0,
+			["starttime"] = 1523235248,
+			["name"] = "Webwood Lurker (4)",
+			["mobname"] = "Webwood Lurker",
+			["auras"] = {
+			},
+			["mobhdone"] = 0,
+			["last_action"] = 1523235248,
+			["mobdone"] = 56,
+		}, -- [6]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["time"] = 6,
+			["interrupts"] = 0,
+			["endtime"] = 1523235195,
+			["damagetaken"] = 0,
+			["damage"] = 247,
+			["players"] = {
+				{
+					["last"] = 1523235193,
+					["healingabsorbed"] = 0,
+					["class"] = "DRUID",
+					["damaged"] = {
+						["Webwood Lurker"] = 247,
+					},
+					["auras"] = {
+						["Moonfire"] = {
+							["school"] = 64,
+							["name"] = "Moonfire",
+							["active"] = 0,
+							["id"] = 164812,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 4,
+						},
+					},
+					["role"] = "NONE",
+					["time"] = 4,
+					["interrupts"] = 0,
+					["power"] = {
+					},
+					["overhealing"] = 9,
+					["damage"] = 247,
+					["damagespells"] = {
+						["Moonfire"] = {
+							["hitmin"] = 21,
+							["criticalamount"] = 82,
+							["id"] = 164812,
+							["hitmax"] = 41,
+							["hitamount"] = 165,
+							["criticalmin"] = 82,
+							["min"] = 21,
+							["criticalmax"] = 82,
+							["critical"] = 1,
+							["hit"] = 5,
+							["school"] = 64,
+							["max"] = 82,
+							["totalhits"] = 6,
+							["damage"] = 247,
+						},
+					},
+					["healingspells"] = {
+						["Swift Hand of Justice"] = {
+							["shielding"] = 0,
+							["id"] = 59913,
+							["healing"] = 0,
+							["min"] = 0,
+							["name"] = "Swift Hand of Justice",
+							["max"] = 0,
+							["critical"] = 0,
+							["absorbed"] = 0,
+							["overhealing"] = 9,
+							["hits"] = 1,
+						},
+					},
+					["damagetaken"] = 0,
+					["shielding"] = 0,
+					["id"] = "Player-76-09B7E798",
+					["first"] = 1523235189,
+					["healing"] = 0,
+					["damagetakenspells"] = {
+					},
+					["healed"] = {
+						["Player-76-09B7E798"] = {
+							["role"] = "NONE",
+							["name"] = "Fiberboi",
+							["amount"] = 0,
+							["class"] = "DRUID",
+							["shielding"] = 0,
+						},
+					},
+					["ffdamagedonetargets"] = {
+					},
+					["name"] = "Fiberboi",
+					["ffdamagedonespells"] = {
+					},
+					["ffdamagedone"] = 0,
+					["maxhp"] = 432,
+					["dispells"] = 0,
+					["ccbreaks"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Webwood Lurker"] = {
+					["players"] = {
+						["Fiberboi"] = {
+							["taken"] = 247,
+							["done"] = 0,
+							["role"] = "NONE",
+							["class"] = "DRUID",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 247,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 247,
+			["power"] = {
+			},
+			["healing"] = 0,
+			["overhealing"] = 9,
+			["shielding"] = 0,
+			["ffdamagedone"] = 0,
+			["starttime"] = 1523235189,
+			["name"] = "Webwood Lurker (3)",
+			["mobname"] = "Webwood Lurker",
+			["auras"] = {
+			},
+			["mobhdone"] = 0,
+			["last_action"] = 1523235189,
+			["mobdone"] = 0,
+		}, -- [7]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["time"] = 7,
+			["interrupts"] = 0,
+			["endtime"] = 1523235176,
+			["damagetaken"] = 0,
+			["damage"] = 199,
+			["players"] = {
+				{
+					["last"] = 1523235175,
+					["healingabsorbed"] = 0,
+					["class"] = "DRUID",
+					["damaged"] = {
+						["Webwood Lurker"] = 199,
+					},
+					["auras"] = {
+					},
+					["role"] = "NONE",
+					["time"] = 4,
+					["interrupts"] = 0,
+					["power"] = {
+					},
+					["overhealing"] = 7,
+					["damage"] = 199,
+					["damagespells"] = {
+						["Moonfire"] = {
+							["hitmin"] = 18,
+							["id"] = 164812,
+							["min"] = 18,
+							["hitamount"] = 199,
+							["hitmax"] = 36,
+							["hit"] = 7,
+							["school"] = 64,
+							["max"] = 36,
+							["totalhits"] = 7,
+							["damage"] = 199,
+						},
+					},
+					["healingspells"] = {
+						["Swift Hand of Justice"] = {
+							["shielding"] = 0,
+							["id"] = 59913,
+							["healing"] = 0,
+							["min"] = 0,
+							["name"] = "Swift Hand of Justice",
+							["max"] = 0,
+							["critical"] = 0,
+							["absorbed"] = 0,
+							["overhealing"] = 7,
+							["hits"] = 1,
+						},
+					},
+					["damagetaken"] = 0,
+					["shielding"] = 0,
+					["id"] = "Player-76-09B7E798",
+					["first"] = 1523235171,
+					["healing"] = 0,
+					["damagetakenspells"] = {
+					},
+					["healed"] = {
+						["Player-76-09B7E798"] = {
+							["role"] = "NONE",
+							["name"] = "Fiberboi",
+							["amount"] = 0,
+							["class"] = "DRUID",
+							["shielding"] = 0,
+						},
+					},
+					["ffdamagedonetargets"] = {
+					},
+					["name"] = "Fiberboi",
+					["ffdamagedonespells"] = {
+					},
+					["ffdamagedone"] = 0,
+					["maxhp"] = 323,
+					["dispells"] = 0,
+					["ccbreaks"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Webwood Lurker"] = {
+					["players"] = {
+						["Fiberboi"] = {
+							["taken"] = 199,
+							["done"] = 0,
+							["role"] = "NONE",
+							["class"] = "DRUID",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 199,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 199,
+			["power"] = {
+			},
+			["healing"] = 0,
+			["overhealing"] = 7,
+			["shielding"] = 0,
+			["ffdamagedone"] = 0,
+			["starttime"] = 1523235169,
+			["name"] = "Webwood Lurker (2)",
+			["mobname"] = "Webwood Lurker",
+			["auras"] = {
+			},
+			["mobhdone"] = 0,
+			["last_action"] = 1523235169,
+			["mobdone"] = 0,
+		}, -- [8]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["time"] = 10,
+			["interrupts"] = 0,
+			["endtime"] = 1523235159,
+			["damagetaken"] = 6,
+			["damage"] = 204,
+			["players"] = {
+				{
+					["last"] = 1523235158,
+					["healingabsorbed"] = 0,
+					["class"] = "DRUID",
+					["damaged"] = {
+						["Webwood Lurker"] = 204,
+					},
+					["auras"] = {
+						["Moonfire"] = {
+							["school"] = 64,
+							["name"] = "Moonfire",
+							["active"] = 0,
+							["id"] = 164812,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 5,
+						},
+					},
+					["role"] = "NONE",
+					["time"] = 7,
+					["interrupts"] = 0,
+					["power"] = {
+					},
+					["overhealing"] = 0,
+					["damage"] = 204,
+					["damagespells"] = {
+						["Moonfire"] = {
+							["hitmin"] = 19,
+							["criticalamount"] = 38,
+							["id"] = 164812,
+							["criticalmin"] = 38,
+							["hitamount"] = 166,
+							["critical"] = 1,
+							["min"] = 19,
+							["criticalmax"] = 38,
+							["hitmax"] = 37,
+							["hit"] = 5,
+							["school"] = 64,
+							["max"] = 38,
+							["totalhits"] = 6,
+							["damage"] = 204,
+						},
+					},
+					["healingspells"] = {
+						["Swift Hand of Justice"] = {
+							["shielding"] = 0,
+							["id"] = 59913,
+							["healing"] = 6,
+							["min"] = 6,
+							["name"] = "Swift Hand of Justice",
+							["max"] = 6,
+							["critical"] = 0,
+							["absorbed"] = 0,
+							["overhealing"] = 0,
+							["hits"] = 1,
+						},
+					},
+					["damagetaken"] = 6,
+					["shielding"] = 0,
+					["id"] = "Player-76-09B7E798",
+					["first"] = 1523235151,
+					["healing"] = 6,
+					["damagetakenspells"] = {
+						["Attack"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["min"] = 6,
+							["school"] = 1,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["absorbed"] = 0,
+							["name"] = "Attack",
+							["blocked"] = 0,
+							["totalhits"] = 1,
+							["resisted"] = 0,
+							["max"] = 6,
+							["damage"] = 6,
+						},
+					},
+					["healed"] = {
+						["Player-76-09B7E798"] = {
+							["role"] = "NONE",
+							["name"] = "Fiberboi",
+							["amount"] = 6,
+							["class"] = "DRUID",
+							["shielding"] = 0,
+						},
+					},
+					["ffdamagedonetargets"] = {
+					},
+					["name"] = "Fiberboi",
+					["ffdamagedonespells"] = {
+					},
+					["ffdamagedone"] = 0,
+					["maxhp"] = 323,
+					["dispells"] = 0,
+					["ccbreaks"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Webwood Lurker"] = {
+					["players"] = {
+						["Fiberboi"] = {
+							["taken"] = 204,
+							["done"] = 6,
+							["role"] = "NONE",
+							["class"] = "DRUID",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 204,
+					["done"] = 6,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 204,
+			["power"] = {
+			},
+			["healing"] = 6,
+			["overhealing"] = 0,
+			["shielding"] = 0,
+			["ffdamagedone"] = 0,
+			["starttime"] = 1523235149,
+			["name"] = "Webwood Lurker",
+			["mobname"] = "Webwood Lurker",
+			["auras"] = {
+			},
+			["mobhdone"] = 0,
+			["last_action"] = 1523235149,
+			["mobdone"] = 6,
+		}, -- [9]
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 1,
+			["ccbreaks"] = 0,
+			["time"] = 14,
+			["interrupts"] = 0,
+			["endtime"] = 1523234860,
+			["damagetaken"] = 51,
+			["damage"] = 655,
+			["players"] = {
+				{
+					["last"] = 1523234859,
+					["healingabsorbed"] = 0,
+					["class"] = "DRUID",
+					["damaged"] = {
+						["Webwood Spider"] = 537,
+					},
+					["auras"] = {
+						["Moonfire"] = {
+							["school"] = 64,
+							["name"] = "Moonfire",
+							["active"] = 0,
+							["id"] = 164812,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 12,
+						},
+					},
+					["role"] = "NONE",
+					["time"] = 12,
+					["interrupts"] = 0,
+					["power"] = {
+					},
+					["overhealing"] = 0,
+					["damage"] = 537,
+					["damagespells"] = {
+						["Tarindrella: Entangling Roots"] = {
+							["hitmin"] = 1,
+							["id"] = 33844,
+							["min"] = 1,
+							["hitamount"] = 1,
+							["hitmax"] = 1,
+							["hit"] = 1,
+							["school"] = 8,
+							["max"] = 1,
+							["totalhits"] = 1,
+							["damage"] = 1,
+						},
+						["Solar Wrath"] = {
+							["hitmin"] = 67,
+							["id"] = 190984,
+							["min"] = 67,
+							["hitamount"] = 134,
+							["hitmax"] = 67,
+							["hit"] = 2,
+							["school"] = 8,
+							["max"] = 67,
+							["totalhits"] = 2,
+							["damage"] = 134,
+						},
+						["Moonfire"] = {
+							["hitmin"] = 17,
+							["id"] = 164812,
+							["min"] = 17,
+							["hitamount"] = 402,
+							["hitmax"] = 35,
+							["hit"] = 18,
+							["school"] = 64,
+							["max"] = 35,
+							["totalhits"] = 18,
+							["damage"] = 402,
+						},
+					},
+					["healingspells"] = {
+						["Swift Hand of Justice"] = {
+							["shielding"] = 0,
+							["id"] = 59913,
+							["healing"] = 12,
+							["min"] = 6,
+							["name"] = "Swift Hand of Justice",
+							["max"] = 6,
+							["critical"] = 0,
+							["absorbed"] = 0,
+							["overhealing"] = 0,
+							["hits"] = 2,
+						},
+					},
+					["damagetaken"] = 51,
+					["shielding"] = 0,
+					["id"] = "Player-76-09B7E798",
+					["first"] = 1523234847,
+					["healing"] = 12,
+					["damagetakenspells"] = {
+						["Attack"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["min"] = 5,
+							["school"] = 1,
+							["critical"] = 0,
+							["glancing"] = 0,
+							["absorbed"] = 0,
+							["name"] = "Attack",
+							["blocked"] = 0,
+							["totalhits"] = 8,
+							["resisted"] = 0,
+							["max"] = 8,
+							["damage"] = 51,
+						},
+					},
+					["healed"] = {
+						["Player-76-09B7E798"] = {
+							["role"] = "NONE",
+							["name"] = "Fiberboi",
+							["amount"] = 12,
+							["class"] = "DRUID",
+							["shielding"] = 0,
+						},
+					},
+					["ffdamagedonetargets"] = {
+					},
+					["name"] = "Fiberboi",
+					["ffdamagedonespells"] = {
+					},
+					["ffdamagedone"] = 0,
+					["maxhp"] = 304,
+					["dispells"] = 0,
+					["ccbreaks"] = 0,
+				}, -- [1]
+				{
+					["last"] = 1523234858,
+					["healingabsorbed"] = 0,
+					["ffdamagedonespells"] = {
+					},
+					["damaged"] = {
+						["Webwood Spider"] = 118,
+					},
+					["dispells"] = 1,
+					["role"] = "NONE",
+					["time"] = 9,
+					["interrupts"] = 0,
+					["power"] = {
+					},
+					["damage"] = 118,
+					["damagespells"] = {
+						["Nature's Bite: Attack"] = {
+							["hitmin"] = 4,
+							["criticalamount"] = 30,
+							["id"] = 6603,
+							["criticalmin"] = 10,
+							["hitamount"] = 88,
+							["critical"] = 3,
+							["min"] = 4,
+							["criticalmax"] = 10,
+							["hitmax"] = 6,
+							["hit"] = 18,
+							["school"] = 1,
+							["max"] = 10,
+							["totalhits"] = 21,
+							["damage"] = 118,
+						},
+					},
+					["overhealing"] = 0,
+					["damagetaken"] = 0,
+					["shielding"] = 0,
+					["id"] = "Creature-0-3779-1-21414-49480-00004AB6F9",
+					["maxhp"] = 0,
+					["healingspells"] = {
+					},
+					["damagetakenspells"] = {
+					},
+					["healing"] = 0,
+					["healed"] = {
+					},
+					["name"] = "Tarindrella",
+					["ffdamagedonetargets"] = {
+					},
+					["ffdamagedone"] = 0,
+					["auras"] = {
+						["Entangling Roots"] = {
+							["school"] = 8,
+							["name"] = "Entangling Roots",
+							["active"] = 0,
+							["id"] = 33844,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 4,
+						},
+					},
+					["first"] = 1523234849,
+					["ccbreaks"] = 0,
+				}, -- [2]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Webwood Spider"] = {
+					["players"] = {
+						["Tarindrella"] = {
+							["taken"] = 119,
+							["done"] = 0,
+							["role"] = "NONE",
+						},
+						["Fiberboi"] = {
+							["taken"] = 536,
+							["done"] = 51,
+							["role"] = "NONE",
+							["class"] = "DRUID",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 655,
+					["done"] = 51,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 655,
+			["power"] = {
+			},
+			["healing"] = 12,
+			["overhealing"] = 0,
+			["shielding"] = 0,
+			["ffdamagedone"] = 0,
+			["starttime"] = 1523234846,
+			["name"] = "Webwood Spider (3)",
+			["mobname"] = "Webwood Spider",
+			["auras"] = {
+			},
+			["mobhdone"] = 0,
+			["last_action"] = 1523234846,
+			["mobdone"] = 51,
+		}, -- [10]
+	},
+}

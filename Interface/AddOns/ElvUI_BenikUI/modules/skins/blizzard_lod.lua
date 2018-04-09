@@ -17,6 +17,17 @@ local function style_AchievementUI()
 end
 S:AddCallbackForAddon("Blizzard_AchievementUI", "BenikUI_AchievementUI", style_AchievementUI)
 
+-- AlliedRacesUI
+local function style_AlliedRacesUI()
+	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.AlliedRaces ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
+
+	local frame = _G["AlliedRacesFrame"]
+	if frame.backdrop then
+		frame.backdrop:Style('Outside')
+	end
+end
+S:AddCallbackForAddon("Blizzard_AlliedRacesUI", "BenikUI_AlliedRaces", style_AlliedRacesUI)
+
 -- ArchaeologyUI
 local function style_ArchaeologyUI()
 	if E.private.skins.blizzard.archaeology ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
@@ -96,7 +107,7 @@ local function style_Calendar()
 	_G["CalendarContextMenu"]:Style('Outside')
 	_G["CalendarViewRaidFrame"]:Style('Outside')
 
-	if not IsAddOnLoaded('AddOnSkins') then return end
+	if not BUI.AS then return end
 	for i = 1, 42 do
 		_G['CalendarDayButton'..i]:SetTemplate('Transparent')
 	end

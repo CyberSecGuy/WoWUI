@@ -8,8 +8,8 @@ if E.db.dashboards == nil then E.db.dashboards = {} end
 if E.db.dashboards.tokens == nil then E.db.dashboards.tokens = {} end
 
 local getn = getn
-local pairs, ipairs = pairs, ipairs
-local tinsert, twipe = table.insert, table.wipe
+local pairs = pairs
+local tinsert, twipe, tsort = table.insert, table.wipe, table.sort
 
 local CreateFrame = CreateFrame
 local GameTooltip = _G["GameTooltip"]
@@ -112,6 +112,7 @@ local function Icon_OnEnter(self)
 		GameTooltip:AddLine(L['Shift+RightClick to remove'], 0.7, 0.7, 1)
 		GameTooltip:Show()
 	end
+
 	if E.db.dashboards.tokens.mouseover then
 		E:UIFrameFadeIn(tokenHolder, 0.2, tokenHolder:GetAlpha(), 1)
 	end
@@ -180,6 +181,10 @@ local function Icon_OnMouseUp(self, btn)
 	end
 end
 
+local function sortFunction(a, b)
+	return a.name < b.name
+end
+
 function BUIT:UpdateTokens()
 	local db = E.db.dashboards.tokens
 
@@ -205,7 +210,7 @@ function BUIT:UpdateTokens()
 		end
 	end)
 
-	for i, id in ipairs(BUIcurrency) do
+	for _, id in pairs(BUIcurrency) do
 		local name, amount, icon, _, weeklyMax, totalMax, isDiscovered = GetCurrencyInfo(id)
 		
 		if name then
@@ -226,7 +231,6 @@ function BUIT:UpdateTokens()
 					token:Width(DASH_WIDTH)
 					token:Point('TOPLEFT', tokenHolder, 'TOPLEFT', SPACING, -SPACING)
 					token:EnableMouse(true)
-					token.id = id
 
 					token.dummy = CreateFrame('Frame', nil, token)
 					token.dummy:Point('BOTTOMLEFT', token, 'BOTTOMLEFT', 2, (E.PixelMode and 2 or 0))
@@ -305,11 +309,6 @@ function BUIT:UpdateTokens()
 						end
 					end)
 
-					-- Flash
-					if db.flash then
-						E:Flash(token, 0.2)
-					end
-
 					token:SetScript('OnLeave', function(self)
 						if totalMax == 0 then
 							token.Text:SetFormattedText('%s', amount)
@@ -326,13 +325,18 @@ function BUIT:UpdateTokens()
 						end
 					end)
 
+					token.id = id
+					token.name = name
+
 					tinsert(tokenFrames, token)
 				end
 			end
 		end
 	end
 
-	for key, frame in ipairs(tokenFrames) do
+	tsort(tokenFrames, sortFunction)
+
+	for key, frame in pairs(tokenFrames) do
 		frame:ClearAllPoints()
 		if(key == 1) then
 			frame:Point('TOPLEFT', tokenHolder, 'TOPLEFT', 0, -SPACING -(E.PixelMode and 0 or 4))

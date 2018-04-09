@@ -1,101 +1,152 @@
 local E, L, V, P, G = unpack(ElvUI);
 local BUI = E:GetModule('BenikUI');
 local LSM = LibStub('LibSharedMedia-3.0')
+local mod = E:NewModule('BUIiLevel', 'AceEvent-3.0');
 -- Based on iLevel addon by ahak. http://www.curse.com/addons/wow/ilevel
 
 local _G = _G
+local match, gsub = string.match, gsub
 
 local CreateFrame = CreateFrame
+local SetInventoryItem = SetInventoryItem
 local GetInventoryItemLink = GetInventoryItemLink
 local GetItemInfo = GetItemInfo
 local GetItemQualityColor = GetItemQualityColor
-local GetDetailedItemLevelInfo = GetDetailedItemLevelInfo
 
 -- GLOBALS: CharacterHeadSlot, CharacterNeckSlot, CharacterShoulderSlot, CharacterBackSlot, CharacterChestSlot, CharacterWristSlot
 -- GLOBALS: CharacterHandsSlot, CharacterWaistSlot, CharacterLegsSlot, CharacterFeetSlot, CharacterFinger0Slot, CharacterFinger1Slot
 -- GLOBALS: CharacterTrinket0Slot, CharacterTrinket1Slot, CharacterMainHandSlot, CharacterSecondaryHandSlot, PaperDollFrame
 
-local xo, yo = 0, 1
+local equipped = {}
 
-local f = CreateFrame("Frame", nil, PaperDollFrame)
-f:RegisterEvent("PLAYER_ENTERING_WORLD")
+local slotIDs = {
+	[1] = "HeadSlot",
+	[2] = "NeckSlot",
+	[3] = "ShoulderSlot",
+	[5] = "ChestSlot",
+	[6] = "WaistSlot",
+	[7] = "LegsSlot",
+	[8] = "FeetSlot",
+	[9] = "WristSlot",
+	[10] = "HandsSlot",
+	[11] = "Finger0Slot",
+	[12] = "Finger1Slot",
+	[13] = "Trinket0Slot",
+	[14] = "Trinket1Slot",
+	[15] = "BackSlot",
+	[16] = "MainHandSlot",
+	[17] = "SecondaryHandSlot"
+}
 
-function BUI:update_iLevelItems()
+-- Tooltip and scanning by Phanx @ http://www.wowinterface.com/forums/showthread.php?p=271406
+local S_ITEM_LEVEL = "^" .. gsub(ITEM_LEVEL, "%%d", "(%%d+)")
+local scantip = CreateFrame("GameTooltip", "BenikUIiLvlScanningTooltip", nil, "GameTooltipTemplate")
+scantip:SetOwner(UIParent, "ANCHOR_NONE")
+
+local function getItemLevel(slotId)
+	local hasItem = scantip:SetInventoryItem("player", slotId)
+	local realItemLevel
+	if not hasItem then return nil end
+
+	for i = 2, scantip:NumLines() do
+		local text = _G["BenikUIiLvlScanningTooltipTextLeft"..i]:GetText()
+		if text and text ~= "" then
+			realItemLevel = realItemLevel or match(text, S_ITEM_LEVEL)
+			if realItemLevel then
+				break
+			end
+		end
+	end
+
+	return realItemLevel
+end
+
+function mod:UpdateItemLevel()
 	local db = E.db.benikui.misc.ilevel
-	for i = 1, 17 do
-		if i ~= 4 then
-			local itemLink = GetInventoryItemLink("player", i)	
+
+	for id, _ in pairs(slotIDs) do
+		local itemLink = GetInventoryItemLink("player", id)
+		local iLvl = getItemLevel(id)
+		if (equipped[id] ~= itemLink or mod.f[id]:GetText() ~= nil) then
+			equipped[id] = itemLink
 			if (itemLink ~= nil) then
-				local iLvl = GetDetailedItemLevelInfo(itemLink)
-				f[i]:SetText(iLvl)
+				mod.f[id]:SetText(iLvl)
 				local _, _, ItemRarity = GetItemInfo(itemLink)
 				if ItemRarity and db.colorStyle == 'RARITY' then
 					local r, g, b = GetItemQualityColor(ItemRarity)
-					f[i]:SetTextColor(r, g, b)
+					mod.f[id]:SetTextColor(r, g, b)
 				else
-					f[i]:SetTextColor(BUI:unpackColor(db.color))
+					mod.f[id]:SetTextColor(BUI:unpackColor(db.color))
 				end
 			else
-				f[i]:SetText('')
+				mod.f[id]:SetText("")
 			end
-			f[i]:FontTemplate(LSM:Fetch('font', db.font), db.fontsize, db.fontflags)
+			mod.f[id]:FontTemplate(LSM:Fetch('font', db.font), db.fontsize, db.fontflags)
 		end
 	end
 end
 
-local function createString(parent, myPoint, parentPoint, x, y)
-	local s = f:CreateFontString(nil, "OVERLAY")
-	s:FontTemplate()
-	s:SetPoint(myPoint, parent, parentPoint, x or 0, y or 0)
-	return s
-end
-
-local function applyStrings()
-	f:SetFrameLevel(CharacterHeadSlot:GetFrameLevel())
-
-	f[1] = createString(CharacterHeadSlot, "BOTTOMLEFT", "BOTTOMLEFT", xo, yo)
-	f[2] = createString(CharacterNeckSlot, "BOTTOMLEFT", "BOTTOMLEFT", xo, yo)
-	f[3] = createString(CharacterShoulderSlot, "BOTTOMLEFT", "BOTTOMLEFT", xo, yo)
-	f[15] = createString(CharacterBackSlot, "BOTTOMLEFT", "BOTTOMLEFT", xo, yo)
-	f[5] = createString(CharacterChestSlot, "BOTTOMLEFT", "BOTTOMLEFT", xo, yo)
-	f[9] = createString(CharacterWristSlot, "BOTTOMLEFT", "BOTTOMLEFT", xo, yo)
-
-	f[10] = createString(CharacterHandsSlot, "BOTTOMRIGHT", "BOTTOMRIGHT", 3, yo)
-	f[6] = createString(CharacterWaistSlot, "BOTTOMRIGHT", "BOTTOMRIGHT", 3, yo)
-	f[7] = createString(CharacterLegsSlot, "BOTTOMRIGHT", "BOTTOMRIGHT", 3, yo)
-	f[8] = createString(CharacterFeetSlot, "BOTTOMRIGHT", "BOTTOMRIGHT", 3, yo)
-	f[11] = createString(CharacterFinger0Slot, "BOTTOMRIGHT", "BOTTOMRIGHT", 3, yo)
-	f[12] = createString(CharacterFinger1Slot, "BOTTOMRIGHT", "BOTTOMRIGHT", 3, yo)
-	f[13] = createString(CharacterTrinket0Slot, "BOTTOMRIGHT", "BOTTOMRIGHT", 3, yo)
-	f[14] = createString(CharacterTrinket1Slot, "BOTTOMRIGHT", "BOTTOMRIGHT", 3, yo)
-
-	f[16] = createString(CharacterMainHandSlot, "BOTTOMLEFT", "BOTTOMLEFT", 0, yo)
-	f[17] = createString(CharacterSecondaryHandSlot, "BOTTOMRIGHT", "BOTTOMRIGHT", 3, yo)
-
-	f:Hide()
-end
-
-local function OnEvent(self, event)
-	if E.db.benikui.misc.ilevel.enable == false then return end
-	if event == "PLAYER_ENTERING_WORLD" then
-		self:UnregisterEvent(event)
-
-		applyStrings()
-
-		PaperDollFrame:HookScript("OnShow", function(self)
-			f:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
-			f:RegisterEvent("ITEM_UPGRADE_MASTER_UPDATE")
-			BUI:update_iLevelItems()
-			f:Show()
-		end)
-
-		PaperDollFrame:HookScript("OnHide", function(self)
-			f:UnregisterEvent("PLAYER_EQUIPMENT_CHANGED")
-			f:UnregisterEvent("ITEM_UPGRADE_MASTER_UPDATE")
-			f:Hide()
-		end)
-	elseif event == "PLAYER_EQUIPMENT_CHANGED" or event == "ITEM_UPGRADE_MASTER_UPDATE" then
-		BUI:update_iLevelItems()
+local function returnPoints(id)
+	if E.db.benikui.misc.ilevel.position == 'INSIDE' then
+		if id <= 5 or id == 15 or id == 9 then 			-- Left side
+			return "BOTTOMLEFT", "BOTTOMLEFT", 0, 1
+		elseif id <= 14 then 							-- Right side
+			return "BOTTOMRIGHT", "BOTTOMRIGHT", 2, 1
+		else 											-- Weapon slots
+			return "BOTTOM", "BOTTOM", 2, 1
+		end
+	else
+		if id <= 5 or id == 15 or id == 9 then 			-- Left side
+			return "LEFT", "RIGHT", 0, 1
+		elseif id <= 14 then 							-- Right side
+			return "RIGHT", "LEFT", 2, 1
+		else 											-- Weapon slots
+			return "BOTTOM", "BOTTOM", 2, 1
+		end
 	end
 end
-f:SetScript("OnEvent", OnEvent)
+
+function mod:UpdateItemLevelPosition()
+	for id, _ in pairs(slotIDs) do
+		local parent = _G["Character"..slotIDs[id]]
+		local myPoint, parentPoint, x, y = returnPoints(id)
+		mod.f[id]:ClearAllPoints()
+		mod.f[id]:Point(myPoint, parent, parentPoint, x or 0, y or 0)
+	end
+end
+
+function mod:CreateString()
+	for id, _ in pairs(slotIDs) do
+		mod.f[id] = mod.f:CreateFontString(nil, "OVERLAY")
+		mod.f[id]:FontTemplate()
+	end
+
+	mod:UpdateItemLevelPosition()
+	mod.f:SetFrameLevel(CharacterHeadSlot:GetFrameLevel())
+	mod.f:Hide()
+end
+
+function mod:Initialize()
+	if E.db.benikui.misc.ilevel.enable == false or (BUI.SLE and E.db.sle.Armory.Character.Enable ~= false) then return end
+
+	mod.f = CreateFrame("Frame", nil, PaperDollFrame)
+	mod:CreateString()
+	mod:UpdateItemLevel()
+
+	PaperDollFrame:HookScript("OnShow", function(self)
+		mod.f:Show()
+	end)
+
+	PaperDollFrame:HookScript("OnHide", function(self)
+		mod.f:Hide()
+	end)
+
+	mod:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", mod.UpdateItemLevel)
+	mod:RegisterEvent("ITEM_UPGRADE_MASTER_UPDATE", mod.UpdateItemLevel)
+end
+
+local function InitializeCallback()
+	mod:Initialize()
+end
+
+E:RegisterModule(mod:GetName(), InitializeCallback)

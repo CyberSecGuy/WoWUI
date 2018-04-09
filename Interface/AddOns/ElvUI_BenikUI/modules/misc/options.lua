@@ -19,33 +19,31 @@ local function miscTable()
 			},
 			flightMode = {
 				order = 2,
-				type = 'group',
-				guiInline = true,
+				type = 'toggle',
 				name = L['Flight Mode'],
-				get = function(info) return E.db.benikui.misc.flightMode[ info[#info] ] end,
-				set = function(info, value) E.db.benikui.misc.flightMode[ info[#info] ] = value; E:GetModule('BUIFlightMode'):Toggle() end,
-				args = {
-					enable = {
-						order = 1,
-						type = 'toggle',
-						name = L['Enable'],
-						desc = L['Display the Flight Mode screen when taking flight paths'],
-					},
-					cameraRotation = {
-						order = 2,
-						type = 'toggle',
-						name = L['Camera rotation'],
-						disabled = function() return not E.db.benikui.misc.flightMode.enable end,
-					},
-				},
+				desc = L['Display the Flight Mode screen when taking flight paths'],
+				get = function(info) return E.db.benikui.misc[ info[#info] ] end,
+				set = function(info, value) E.db.benikui.misc[ info[#info] ] = value; E:GetModule('BUIFlightMode'):Toggle() end,
+			},
+			afkMode = {
+				order = 3,
+				type = 'toggle',
+				name = L['AFK Mode'],
+				get = function(info) return E.db.benikui.misc[ info[#info] ] end,
+				set = function(info, value) E.db.benikui.misc[ info[#info] ] = value; E:StaticPopup_Show('PRIVATE_RL') end,
+			},
+			spacer = {
+				order = 4,
+				type = 'description',
+				name = '',
 			},
 			ilevel = {
-				order = 3,
+				order = 5,
 				type = 'group',
 				guiInline = true,
 				name = L['iLevel'],
 				get = function(info) return E.db.benikui.misc.ilevel[ info[#info] ] end,
-				set = function(info, value) E.db.benikui.misc.ilevel[ info[#info] ] = value; BUI:update_iLevelItems() end,
+				set = function(info, value) E.db.benikui.misc.ilevel[ info[#info] ] = value; E:GetModule('BUIiLevel'):UpdateItemLevel() end,
 				args = {
 					enable = {
 						order = 1,
@@ -108,10 +106,22 @@ local function miscTable()
 							t.r, t.g, t.b, t.a = r, g, b, a
 						end,
 					},
+					position = {
+						order = 7,
+						type = "select",
+						name = L["Text Position"]..BUI.NewSign,
+						values = {
+							['INSIDE'] = L['Inside the item slot'],
+							['OUTSIDE'] = L['Outside the item slot'],
+						},
+						disabled = function() return not E.db.benikui.misc.ilevel.enable end,
+						get = function(info) return E.db.benikui.misc.ilevel[ info[#info] ] end,
+						set = function(info, value) E.db.benikui.misc.ilevel[ info[#info] ] = value; E:GetModule('BUIiLevel'):UpdateItemLevelPosition() end,
+					},
 				},
 			},
 			panels = {
-				order = 4,
+				order = 6,
 				type = 'group',
 				guiInline = true,
 				name = L['Panels'],

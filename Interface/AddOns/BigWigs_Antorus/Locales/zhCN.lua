@@ -21,7 +21,7 @@ if L then
 
 	L.gifts = "恩赐：%s（天空），%s（海洋）"
 	L.burst = "|T1778229:15:15:0:0:64:64:4:60:4:60|t爆发：%s" -- short for Soulburst
-	L.bomb = "|T1778228:15:15:0:0:64:64:4:60:4:60|t|T137002:0|t炸弹（%d）：%s -" -- short for Soulbomb
+	L.bomb = "|T1778228:15:15:0:0:64:64:4:60:4:60|t炸弹（%d）：|T137002:0|t%s -" -- short for Soulbomb
 
 	L.sky_say = "{rt5} 爆击/精通" -- short for Critical Strike/Mastery (stats)
 	L.sea_say = "{rt6} 急速/全能" -- short for Haste/Versatility (stats)
@@ -76,6 +76,7 @@ if L then
 	L.worldExplosion_desc = "显示崩塌的世界爆炸计时条。"
 	L.platform_active = "%s激活！" -- Platform: Xoroth Active!
 	L.add_killed = "%s已击杀！"
+	L.achiev = "“致命传送”成就减益" -- Achievement 11928
 end
 
 L = BigWigs:NewBossLocale("Kin'garoth", "zhCN")

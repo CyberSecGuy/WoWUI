@@ -3,12 +3,14 @@
 -- Module Declaration
 --
 
-local mod, CL = BigWigs:NewBoss("Antorus Trash", nil, nil, 1712)
+local mod, CL = BigWigs:NewBoss("Antorus Trash", 1712)
 if not mod then return end
 mod.displayName = CL.trash
 mod:RegisterEnableMob(
 	-- [[ Before Garothi Worldbreaker ]] --
 	123478, -- Antoran Felguard
+	123398, -- Garothi Annihilator
+	123402, -- Garothi Decimator
 
 	-- [[ After Garothi Worldbreaker ]] --
 	127233, -- Flameweaver
@@ -23,6 +25,8 @@ mod:RegisterEnableMob(
 
 	-- [[ Imonar to Kin'garoth ]] --
 	127235, -- Garothi Demolisher
+	127231, -- Garothi Decimator
+	127230, -- Garothi Annihilator
 
 	-- [[ Before Varimathras / Coven of Shivarra ]] --
 	123533, -- Tarneth
@@ -89,6 +93,8 @@ function mod:GetOptions()
 
 		-- [[ Imonar to Kin'garoth ]] --
 		{252760, "SAY"}, -- Demolish
+		252743, -- Annihilation
+		{252797, "SAY"}, -- Decimation
 
 		-- [[ Before Varimathras / Coven of Shivarra ]] --
 		{249297, "SAY"}, -- Flames of Reorigination
@@ -105,6 +111,8 @@ function mod:GetOptions()
 		[253600] = L.clobex,
 		[249212] = L.stalker,
 		[252760] = -16145, -- Garothi Demolisher
+		[252743] = -16143, -- Garothi Annihilator
+		[252797] = -16144, -- Garothi Decimator
 		[249297] = L.tarneth,
 		[254122] = L.priestess,
 		[246209] = L.aedis,
@@ -119,15 +127,18 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED", "GroundEffectDamage", 245861, 246199)
 	self:Log("SPELL_PERIODIC_DAMAGE", "GroundEffectDamage", 245861, 246199)
 	self:Log("SPELL_PERIODIC_MISSED", "GroundEffectDamage", 245861, 246199)
-	-- Bladestorm (Felsworn Ravager, Imperator Deconix)
-	self:Log("SPELL_DAMAGE", "GroundEffectDamage", 251612, 254512)
-	self:Log("SPELL_MISSED", "GroundEffectDamage", 251612, 254512)
+
+	-- [[ Before Garothi Worldbreaker ]] --
+	self:Log("SPELL_CAST_START", "Annihilation", 245807)
 
 	-- [[ After Garothi Worldbreaker ]] --
 	self:Log("SPELL_AURA_APPLIED", "BoundByFel", 252621)
 	self:Death("FlameweaverDeath", 127233)
 
 	-- [[ Before Antoran High Command ]] --
+	self:Log("SPELL_DAMAGE", "Whirlwind", 251612, 254512) -- Felsworn Ravager, Imperator Deconix
+	self:Log("SPELL_MISSED", "Whirlwind", 251612, 254512)
+
 	self:Log("SPELL_CAST_START", "FearsomeLeap", 254500)
 	self:Death("DeconixDeath", 127723)
 	self:Log("SPELL_CAST_SUCCESS", "SoulburnCastSuccess", 253599)
@@ -141,6 +152,8 @@ function mod:OnBossEnable()
 	-- [[ Imonar to Kin'garoth ]] --
 	self:Log("SPELL_AURA_APPLIED", "Demolish", 252760)
 	self:Log("SPELL_AURA_REMOVED", "DemolishRemoved", 252760)
+	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+	self:RegisterEvent("UNIT_AURA")
 
 	-- [[ Before Varimathras / Coven of Shivarra ]] --
 	self:Log("SPELL_AURA_APPLIED", "FlamesOfReorigination", 249297)
@@ -166,42 +179,44 @@ do
 			local t = GetTime()
 			if t-prev > 1.5 then
 				prev = t
-				self:Message(args.spellId, "Personal", "Alert", CL.underyou:format(args.spellName))
+				self:Message(args.spellId, "blue", "Alert", CL.underyou:format(args.spellName))
 			end
 		end
 	end
+end
+
+-- [[ Before Garothi Worldbreaker ]] --
+function mod:Annihilation()
+	self:Message(252743, "Important", "Long")
 end
 
 -- [[ After Garothi Worldbreaker ]] --
 do
 	local targets = {}
 
-	local function printTargets(self, spellId, sourceGUID)
-		local tbl = targets[sourceGUID]
-		if self:Me(tbl[1].guid) then
-			self:Message(spellId, "Personal", "Alarm", CL.link:format(self:ColorName(tbl[2].name)))
-		elseif self:Me(tbl[2].guid) then
-			self:Message(spellId, "Personal", "Alarm", CL.link:format(self:ColorName(tbl[1].name)))
-		elseif not self:CheckOption(spellId, "ME_ONLY") then
-			self:Message(spellId, "Attention", nil, CL.link_both:format(self:ColorName(tbl[1].name), self:ColorName(tbl[2].name)))
-		end
-		wipe(targets[sourceGUID])
-	end
-
 	function mod:BoundByFel(args)
 		if not targets[args.sourceGUID] then
 			targets[args.sourceGUID] = {}
 		end
-		targets[args.sourceGUID][#targets[args.sourceGUID] + 1] = { guid = args.destGUID, name = args.destName }
-		if #targets[args.sourceGUID] == 2 then
-			printTargets(self, args.spellId, args.sourceGUID)
+		local tbl = targets[args.sourceGUID]
+		tbl[#tbl + 1] = { guid = args.destGUID, name = args.destName }
+		if #tbl == 2 then
+			if self:Me(tbl[1].guid) then
+				self:Message(args.spellId, "blue", "Alarm", CL.link:format(self:ColorName(tbl[2].name)))
+			elseif self:Me(tbl[2].guid) then
+				self:Message(args.spellId, "blue", "Alarm", CL.link:format(self:ColorName(tbl[1].name)))
+			elseif not self:CheckOption(args.spellId, "ME_ONLY") then
+				self:Message(args.spellId, "yellow", nil, CL.link_both:format(self:ColorName(tbl[1].name), self:ColorName(tbl[2].name)))
+			end
+			wipe(tbl)
 		else
 			-- XXX I have no logs where this happens so the possibility of this situation is an assumption:
 			-- clean up if, for some reason, the 2nd target had an immunity on.
-			self:ScheduleTimer(function()
-				if targets[args.sourceGUID] and #targets[args.sourceGUID] == 1 then
-					wipe(targets[args.sourceGUID])
-				end end, 1)
+			self:SimpleTimer(function()
+				if tbl and #tbl == 1 then
+					wipe(tbl)
+				end
+			end, 1)
 		end
 	end
 
@@ -211,8 +226,21 @@ do
 end
 
 -- [[ Before Antoran High Command ]] --
+do
+	local prev = 0
+	function mod:Whirlwind(args)
+		if self:Me(args.destGUID) then
+			local t = GetTime()
+			if (not self:Melee() and t-prev > 1.5) or t-prev > 6 then
+				prev = t
+				self:Message(args.spellId, "blue", "Alert", CL.underyou:format(args.spellName))
+			end
+		end
+	end
+end
+
 function mod:FearsomeLeap(args)
-	self:Message(args.spellId, "Important", self:Melee() and "Warning" or "Long", CL.casting:format(args.spellName))
+	self:Message(args.spellId, "red", self:Melee() and "Warning" or "Long", CL.casting:format(args.spellName))
 	self:CastBar(args.spellId, 3)
 end
 
@@ -233,14 +261,18 @@ do
 			self:Say(args.spellId)
 			self:SayCountdown(args.spellId, 6)
 			if not appliedByTheBoss then
-				self:Message(args.spellId, "Personal", "Alarm", CL.you:format(args.destName)) -- personal warning regardless of the source
+				self:PlaySound(args.spellId, "Alarm")
+				self:TargetMessage2(args.spellId, "blue", args.destName) -- personal warning regardless of the source
+			elseif not self:Dispeller("magic") then
+				self:PlaySound(args.spellId, "Alarm")
 			end
 		end
 		if appliedByTheBoss then -- don't announce those that were spread by players
 			list[#list+1] = args.destName
-			if #list == 1 then
-				self:ScheduleTimer("TargetMessage", 0.3, args.spellId, list, "Urgent", "Alarm", nil, nil, self:Dispeller("magic"))
+			if self:Dispeller("magic") then
+				self:PlaySound(args.spellId, "Alarm", nil, list)
 			end
+			self:TargetsMessage(args.spellId, "orange", list, 2)
 		end
 	end
 
@@ -252,7 +284,7 @@ do
 
 	function mod:SoulburnDispelled(args)
 		if args.extraSpellId == 253600 and self:Me(args.destGUID) then
-			self:Message(args.extraSpellId, "Positive", "Info", CL.removed_by:format(args.extraSpellName, self:ColorName(args.sourceName)))
+			self:Message(253600, "green", "Info", CL.removed_by:format(args.extraSpellName, self:ColorName(args.sourceName)))
 		end
 	end
 end
@@ -263,7 +295,7 @@ do
 		local t = GetTime()
 		if t-prev > 1 then
 			prev = t
-			self:Message(args.spellId, "Important", "Warning", CL.casting:format(args.spellName))
+			self:Message(args.spellId, "red", "Warning", CL.casting:format(args.spellName))
 		end
 	end
 end
@@ -273,16 +305,52 @@ function mod:Demolish(args)
 	if self:Me(args.destGUID) then
 		self:Say(args.spellId)
 		self:SayCountdown(args.spellId, 6)
+		self:PlaySound(args.spellId, "Warning")
 	end
 	list[#list+1] = args.destName
-	if #list == 1 then
-		self:ScheduleTimer("TargetMessage", 0.3, args.spellId, list, "Urgent", "Warning")
-	end
+	self:TargetsMessage(args.spellId, "orange", list, self:LFR() and 1 or 2)
 end
 
 function mod:DemolishRemoved(args)
 	if self:Me(args.destGUID) then
 		self:CancelSayCountdown(args.spellId)
+	end
+end
+
+do
+	local prev = nil
+	function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, _, _, spellGUID, spellId)
+		if spellId == 252740 and spellGUID ~= prev then -- Annihilation
+			prev = spellGUID
+			self:Message(252743, "Important", "Long")
+		end
+	end
+end
+
+do
+	local players, spellName = {}, mod:SpellName(252797) -- Decimation
+	local UnitDebuff, UnitGUID = UnitDebuff, UnitGUID
+	function mod:UNIT_AURA(_, unit)
+		local _, _, _, _, _, _, _, _, _, _, spellId = UnitDebuff(unit, spellName)
+		if spellId == 252797 or spellId == 245770 then
+			local guid = UnitGUID(unit)
+			if not players[guid] then
+				players[guid] = true
+				if unit == "player" then
+					self:PlaySound(252797, "Warning")
+					self:Say(252797)
+					if spellId == 245770 then -- Pre Garothi Worldbreaker
+						self:SayCountdown(252797, 3, nil, 2)
+					else -- Pre Kin'garoth
+						self:SayCountdown(252797, 5)
+					end
+				end
+				list[#list+1] = self:UnitName(unit)
+				self:TargetsMessage(252797, "orange", list, 2)
+			end
+		elseif players[UnitGUID(unit)] then
+			players[UnitGUID(unit)] = nil
+		end
 	end
 end
 
@@ -295,11 +363,12 @@ do
 			if t-prev > 6 then -- reapplications *sometimes* fire _APPLIED instead of _REFRESH for some reason
 				prev = t
 				self:Say(args.spellId)
-				self:Message(args.spellId, "Personal", "Warning", CL.you:format(args.spellName))
+				self:PlaySound(args.spellId, "Warning")
+				self:TargetMessage2(args.spellId, "blue", args.destName)
 			end
 			self:TargetBar(args.spellId, 6, args.destName)
 		elseif self:MobId(args.sourceGUID) == 123533 then -- don't announce those that were spread by players
-			self:TargetMessage(args.spellId, args.destName, "Important", nil)
+			self:TargetMessage2(args.spellId, "red", args.destName)
 		end
 	end
 end
@@ -320,9 +389,10 @@ function mod:CloudOfConfusion(args)
 	if self:Me(args.destGUID) then
 		self:Say(args.spellId)
 		self:SayCountdown(args.spellId, 10)
+		self:PlaySound(args.spellId, "Alarm")
 	end
 	self:TargetBar(args.spellId, 10, args.destName)
-	self:TargetMessage(args.spellId, args.destName, "Urgent", "Alarm")
+	self:TargetMessage2(args.spellId, "orange", args.destName)
 end
 
 function mod:CloudOfConfusionRemoved(args)
@@ -334,7 +404,7 @@ end
 
 -- [[ Before Aggramar ]] --
 function mod:PunishingFlames(args)
-	self:Message(args.spellId, "Attention", "Long", CL.casting:format(args.spellName))
+	self:Message(args.spellId, "yellow", "Long", CL.casting:format(args.spellName))
 	self:CastBar(args.spellId, 5)
 end
 

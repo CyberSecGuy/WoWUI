@@ -515,6 +515,28 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
           hidden = hidden,
           order = order
         };
+      elseif (arg.type == "description") then
+        options["description_space_"..name] = {
+          type = "description",
+          name = "",
+          order = order,
+          hidden = hidden,
+        }
+        options["description_title_"..name] = {
+          type = "description",
+          name = arg.display,
+          order = order,
+          hidden = hidden,
+          fontSize = "large",
+        }
+        order = order + 1;
+        options["description_"..name] = {
+          type = "description",
+          name = arg.text,
+          order = order,
+          hidden = hidden,
+        }
+        order = order + 1;
       else
         options["use_"..name] = {
           type = "toggle",
@@ -551,49 +573,51 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
       end
       order = order + 1;
       if(arg.type == "number") then
-        options[name.."_operator"] = {
-          type = "select",
-          name = L["Operator"],
-          width = "half",
-          order = order,
-          hidden = hidden,
-          values = arg.operator_types_without_equal and operator_types_without_equal or operator_types,
-          disabled = function() return not trigger["use_"..realname]; end,
-          get = function() return trigger["use_"..realname] and trigger[realname.."_operator"] or nil; end,
-          set = function(info, v)
-            trigger[realname.."_operator"] = v;
-            WeakAuras.Add(data);
-            if (reloadOptions) then
-              WeakAuras.ScheduleReloadOptions(data);
+        if (not arg.noOperator) then
+          options[name.."_operator"] = {
+            type = "select",
+            name = L["Operator"],
+            width = "half",
+            order = order,
+            hidden = hidden,
+            values = arg.operator_types_without_equal and operator_types_without_equal or operator_types,
+            disabled = function() return not trigger["use_"..realname]; end,
+            get = function() return trigger["use_"..realname] and trigger[realname.."_operator"] or nil; end,
+            set = function(info, v)
+              trigger[realname.."_operator"] = v;
+              WeakAuras.Add(data);
+              if (reloadOptions) then
+                WeakAuras.ScheduleReloadOptions(data);
+              end
+              WeakAuras.ScanForLoads();
+              WeakAuras.SetThumbnail(data);
+              WeakAuras.SetIconNames(data);
+              WeakAuras.UpdateDisplayButton(data);
+              WeakAuras.SortDisplayButtons();
             end
-            WeakAuras.ScanForLoads();
-            WeakAuras.SetThumbnail(data);
-            WeakAuras.SetIconNames(data);
-            WeakAuras.UpdateDisplayButton(data);
-            WeakAuras.SortDisplayButtons();
-          end
-        };
-        if(arg.required and not triggertype) then
-          options[name.."_operator"].set = function(info, v)
-            trigger[realname.."_operator"] = v;
-            untrigger[realname.."_operator"] = v;
-            WeakAuras.Add(data);
-            if (reloadOptions) then
-              WeakAuras.ScheduleReloadOptions(data);
+          };
+          if(arg.required and not triggertype) then
+            options[name.."_operator"].set = function(info, v)
+              trigger[realname.."_operator"] = v;
+              untrigger[realname.."_operator"] = v;
+              WeakAuras.Add(data);
+              if (reloadOptions) then
+                WeakAuras.ScheduleReloadOptions(data);
+              end
+              WeakAuras.ScanForLoads();
+              WeakAuras.SortDisplayButtons();
             end
-            WeakAuras.ScanForLoads();
-            WeakAuras.SortDisplayButtons();
+          elseif(arg.required and triggertype == "untrigger") then
+            options[name.."_operator"] = nil;
+            order = order - 1;
           end
-        elseif(arg.required and triggertype == "untrigger") then
-          options[name.."_operator"] = nil;
-          order = order - 1;
+          order = order + 1;
         end
-        order = order + 1;
         options[name] = {
           type = "input",
           validate = ValidateNumeric,
           name = arg.display,
-          width = "half",
+          width = arg.noOperator and "normal" or "half",
           order = order,
           hidden = hidden,
           disabled = function() return not trigger["use_"..realname]; end,
@@ -867,7 +891,17 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
             if(arg.type == "unit" and trigger["use_specific_"..realname]) then
               return "member";
             end
-            return trigger["use_"..realname] and trigger[realname] or nil;
+
+            if (not trigger["use_"..realname]) then
+              return nil;
+            end
+
+            if (arg.default and (not trigger[realname] or not values[trigger[realname]])) then
+              trigger[realname] = arg.default;
+              return arg.default;
+            end
+
+            return trigger[realname] or nil;
           end,
           set = function(info, v)
             trigger[realname] = v;
@@ -2510,6 +2544,69 @@ function WeakAuras.ReloadTriggerOptions(data)
     WeakAuras.ReloadTriggerOptions(data);
   end
 
+  local function moveTriggerDownImpl(data, i)
+    if (i < 0 or i + 1 >= data.numTriggers) then
+      return false;
+    end
+
+    if (i == 0) then
+      local tmp = data.additional_triggers[1];
+      tremove(data.additional_triggers, 1);
+      tinsert(data.additional_triggers, 1, {
+        trigger = data.trigger,
+        untrigger = data.untrigger
+      });
+      data.trigger = tmp.trigger;
+      data.untrigger = tmp.untrigger;
+    else
+      local tmp = data.additional_triggers[i +1];
+      tremove(data.additional_triggers, i + 1);
+      tinsert(data.additional_triggers, i, tmp);
+    end
+
+    return true;
+  end
+
+  local function moveTriggerDown(data, i)
+    if (moveTriggerDownImpl(data, i)) then
+      optionTriggerChoices[data.id] = optionTriggerChoices[data.id] + 1;
+      WeakAuras.Add(data);
+      WeakAuras.ReloadTriggerOptions(data);
+    end
+  end
+
+  local function moveTriggerUp(data, i)
+    if (moveTriggerDownImpl(data, i - 1)) then
+      optionTriggerChoices[data.id] = optionTriggerChoices[data.id] - 1;
+      WeakAuras.Add(data);
+      WeakAuras.ReloadTriggerOptions(data);
+    end
+  end
+
+
+  local chooseTriggerWidth = 1.2;
+  if (data.controlledChildren) then
+    local hasMultipleTriggers = false;
+    for index, id in pairs(data.controlledChildren) do
+      local childData = WeakAuras.GetData(id);
+      if (childData.numTriggers ~=1) then
+        hasMultipleTriggers = true;
+        break;
+      end
+    end
+    if (not hasMultipleTriggers) then
+      chooseTriggerWidth = chooseTriggerWidth + 0.45;
+    end
+  else
+    if (data.numTriggers == 1) then
+      chooseTriggerWidth = chooseTriggerWidth + 0.45;
+    end
+  end
+
+  if (GetAddOnEnableState(UnitName("player"), "WeakAurasTemplates") == 0) then
+    chooseTriggerWidth = chooseTriggerWidth + 0.15;
+  end
+
   local trigger_options = {
     disjunctive = {
       type = "select",
@@ -2522,7 +2619,13 @@ function WeakAuras.ReloadTriggerOptions(data)
         end
         return  WeakAuras.trigger_require_types_one;
       end,
-      get = function() return data.disjunctive or "all" end,
+      get = function()
+        if (data.additional_triggers and #data.additional_triggers > 0) then
+          return data.disjunctive or "all";
+        else
+          return (data.disjunctive and data.disjunctive ~= "all") and data.disjunctive or "any";
+        end
+      end,
       set = function(info, v)
         data.disjunctive = v;
         WeakAuras.Add(data);
@@ -2594,14 +2697,21 @@ function WeakAuras.ReloadTriggerOptions(data)
       set = function(info, v)
         if(v == 0 or (data.additional_triggers and data.additional_triggers[v])) then
           optionTriggerChoices[id] = v;
-
           WeakAuras.ReloadTriggerOptions(data);
         end
-      end
+      end,
+      width = chooseTriggerWidth
+    },
+    chooseTriggerSpace = {
+      type = "description",
+      name = "",
+      order = 0.75,
+      width = 0.04
     },
     addTrigger = {
       type = "execute",
-      name = L["Add Trigger"],
+      name = "",
+      desc = L["Add Trigger"],
       order = 1,
       func = function()
         if(data.controlledChildren) then
@@ -2622,7 +2732,129 @@ function WeakAuras.ReloadTriggerOptions(data)
           optionTriggerChoices[id] = #data.additional_triggers;
         end
         WeakAuras.ReloadTriggerOptions(data);
-      end
+      end,
+      width = 0.15,
+      image = "Interface\\AddOns\\WeakAuras\\Media\\Textures\\add",
+      imageWidth = 24,
+      imageHeight = 24
+    },
+    deleteTrigger = {
+      type = "execute",
+      name = "",
+      desc = L["Delete Trigger"],
+      order = 1.1,
+      func = deleteTrigger,
+      hidden = function()
+        return data.numTriggers == 1
+      end,
+      width = 0.15,
+      image = "Interface\\AddOns\\WeakAuras\\Media\\Textures\\delete",
+      imageWidth = 24,
+      imageHeight = 24
+    },
+    triggerUp = {
+      type = "execute",
+      name = "",
+      desc = L["Up"],
+      order = 1.2,
+      func = function()
+        if(data.controlledChildren) then
+          for index, childId in pairs(data.controlledChildren) do
+            local childData = WeakAuras.GetData(childId);
+            moveTriggerUp(childData, optionTriggerChoices[childId])
+          end
+          WeakAuras.Add(data);
+          WeakAuras.ReloadTriggerOptions(data);
+        else
+          moveTriggerUp(data, optionTriggerChoices[id])
+        end
+      end,
+      disabled = function()
+        if(data.controlledChildren) then
+          for index, childId in pairs(data.controlledChildren) do
+            local childData = WeakAuras.GetData(childId);
+            if(childData) then
+              if (optionTriggerChoices[childId] ~= 0) then
+                return false;
+              end
+            end
+          end
+          return true;
+        else
+          if (optionTriggerChoices[id] == 0) then
+            return true;
+          else
+            return false;
+          end
+        end
+      end,
+      hidden = function()
+        return data.numTriggers == 1
+      end,
+      width = 0.15,
+      image = "Interface\\AddOns\\WeakAuras\\Media\\Textures\\moveup",
+      imageWidth = 24,
+      imageHeight = 24
+    },
+    triggerDown = {
+      type = "execute",
+      name = "",
+      desc = L["Down"],
+      order = 1.3,
+      func = function()
+        if(data.controlledChildren) then
+          for index, childId in pairs(data.controlledChildren) do
+            local childData = WeakAuras.GetData(childId);
+            moveTriggerDown(childData, optionTriggerChoices[childId]);
+          end
+          WeakAuras.Add(data);
+          WeakAuras.ReloadTriggerOptions(data);
+        else
+          moveTriggerDown(data, optionTriggerChoices[id]);
+        end
+      end,
+      disabled = function()
+        if(data.controlledChildren) then
+          for index, childId in pairs(data.controlledChildren) do
+            local childData = WeakAuras.GetData(childId);
+            if(childData) then
+              if (optionTriggerChoices[childId] ~= childData.numTriggers -1) then
+                return false;
+              end
+            end
+          end
+          return true;
+        else
+          if (optionTriggerChoices[id] == data.numTriggers - 1) then
+            return true;
+          else
+            return false;
+          end
+        end
+      end,
+      hidden = function()
+        return data.numTriggers == 1
+      end,
+      width = 0.15,
+      image = "Interface\\AddOns\\WeakAuras\\Media\\Textures\\movedown",
+      imageWidth = 24,
+      imageHeight = 24
+    },
+    applyTemplate = {
+      type = "execute",
+      name = "",
+      desc = L["Apply Template"],
+      order = 1.4,
+      func = function()
+        WeakAuras.OpenTriggerTemplate(data);
+      end,
+      hidden = function()
+        return GetAddOnEnableState(UnitName("player"), "WeakAurasTemplates") == 0
+      end,
+      width = 0.15,
+      image = "Interface\\AddOns\\WeakAuras\\Media\\Textures\\template",
+      imageWidth = 24,
+      imageHeight = 24
     },
     triggerHeader = {
       type = "header",
@@ -2638,43 +2870,6 @@ function WeakAuras.ReloadTriggerOptions(data)
         end
       end,
       order = 2
-    },
-    applyTemplate = {
-      type = "execute",
-      name = L["Apply Template"],
-      order = 2.5,
-      func = function()
-        WeakAuras.OpenTriggerTemplate(data);
-      end,
-      hidden = function()
-        return GetAddOnEnableState(UnitName("player"), "WeakAurasTemplates") == 0
-      end
-    },
-    deleteTriggerHalf = {
-      type = "execute",
-      name = L["Delete Trigger"],
-      order = 3,
-      func = deleteTrigger,
-      hidden = function()
-        return data.numTriggers == 1 or GetAddOnEnableState(UnitName("player"), "WeakAurasTemplates") == 0
-      end
-    },
-    deleteTriggerSpace = {
-      type = "execute",
-      name = "",
-      order = 3.1,
-      image = function() return "", 0, 0 end,
-      hidden = function()
-        return data.numTriggers ~= 1 or GetAddOnEnableState(UnitName("player"), "WeakAurasTemplates") == 0
-      end,
-    },
-    deleteTriggerFull = {
-      type = "execute",
-      name = L["Delete Trigger"],
-      order = 3,
-      width = "double",
-      func = deleteTrigger,
-      hidden = function() return data.numTriggers == 1 or GetAddOnEnableState(UnitName("player"), "WeakAurasTemplates") ~= 0 end
     },
     typedesc = {
       type = "toggle",
@@ -2938,6 +3133,13 @@ function WeakAuras.ReloadTriggerOptions(data)
   end
 
   displayOptions[id].args.conditions.args = {};
+  -- We never want the condition options to use the hiddenAll, disabledAll functions
+  displayOptions[id].args.conditions.hidden = function()
+    return false;
+  end
+  displayOptions[id].args.conditions.disabled = function()
+    return false;
+  end
   WeakAuras.GetConditionOptions(data, displayOptions[id].args.conditions.args, "conditions", 0, nil);
 
   if(type(id) ~= "string") then
@@ -2979,17 +3181,6 @@ function WeakAuras.ReloadGroupRegionOptions(data)
     end
   end
   if(regionOption) then
-    if(data.regionType == "dynamicgroup") then
-      regionOption.selfPoint = nil;
-      regionOption.anchorPoint = nil;
-      regionOption.anchorPointGroup = nil;
-      regionOption.xOffset1 = nil;
-      regionOption.xOffset2 = nil;
-      regionOption.xOffset3 = nil;
-      regionOption.yOffset1 = nil;
-      regionOption.yOffset2 = nil;
-      regionOption.yOffset3 = nil;
-    end
     replaceNameDescFuncs(regionOption, data);
     replaceImageFuncs(regionOption, data);
     replaceValuesFuncs(regionOption, data);
@@ -3134,10 +3325,10 @@ function WeakAuras.AddPositionOptions(input, id, data)
       order = 79,
       image = function() return "", 0, 0 end,
       hidden = function()
-        return not (data.anchorFrameType ~= "SCREEN");
+        return not (data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup());
       end
     },
-    -- IsParentDynamicGroup => none
+    -- IsParentDynamicGroup => xOffset4 / yOffset4
     -- InGroup/Attached to mouse/PRD/SELECTFRAME => -screen -- +screen
     -- Attached to Screen => depends on anchorPoint
     --   LEFT/BOTTOM => 0 -- +screen
@@ -3151,10 +3342,7 @@ function WeakAuras.AddPositionOptions(input, id, data)
       softMax = screenWidth,
       bigStep = 10,
       hidden = function()
-        if (IsParentDynamicGroup()) then
-          return true;
-        end
-        if (data.parent or data.anchorFrameType ~= "SCREEN") then
+        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
           return true;
         end
         return not data.anchorPoint:find("LEFT")
@@ -3182,10 +3370,7 @@ function WeakAuras.AddPositionOptions(input, id, data)
       softMax = ((1/2) * screenWidth),
       bigStep = 10,
       hidden = function()
-        if (IsParentDynamicGroup()) then
-          return true;
-        end
-        if (data.parent or data.anchorFrameType ~= "SCREEN") then
+        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
           return true;
         end
         return (data.anchorPoint:find("LEFT") or data.anchorPoint:find("RIGHT"));
@@ -3213,10 +3398,7 @@ function WeakAuras.AddPositionOptions(input, id, data)
       softMax = 0,
       bigStep = 10,
       hidden = function()
-        if (IsParentDynamicGroup()) then
-          return true;
-        end
-        if (data.parent or data.anchorFrameType ~= "SCREEN") then
+        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
           return true;
         end
         return not data.anchorPoint:find("RIGHT");
@@ -3244,10 +3426,7 @@ function WeakAuras.AddPositionOptions(input, id, data)
       softMax = screenWidth,
       bigStep = 10,
       hidden = function()
-        if (IsParentDynamicGroup()) then
-          return true;
-        end
-        if (data.parent or data.anchorFrameType ~= "SCREEN") then
+        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
           return false;
         end
         return true;
@@ -3275,10 +3454,7 @@ function WeakAuras.AddPositionOptions(input, id, data)
       softMax = screenHeight,
       bigStep = 10,
       hidden = function()
-        if (IsParentDynamicGroup()) then
-          return true;
-        end
-        if (data.parent or data.anchorFrameType ~= "SCREEN") then
+        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
           return true;
         end
         return not data.anchorPoint:find("BOTTOM");
@@ -3306,10 +3482,7 @@ function WeakAuras.AddPositionOptions(input, id, data)
       softMax = ((1/2) * screenHeight),
       bigStep = 10,
       hidden = function()
-        if (IsParentDynamicGroup()) then
-          return true;
-        end
-        if (data.parent or data.anchorFrameType ~= "SCREEN") then
+        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
           return true;
         end
         return data.anchorPoint:find("BOTTOM") or data.anchorPoint:find("TOP");
@@ -3337,10 +3510,7 @@ function WeakAuras.AddPositionOptions(input, id, data)
       softMax = 0,
       bigStep = 10,
       hidden = function()
-        if (IsParentDynamicGroup()) then
-          return true;
-        end
-        if (data.parent or data.anchorFrameType ~= "SCREEN") then
+        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
           return true;
         end
         return not data.anchorPoint:find("TOP");
@@ -3368,10 +3538,7 @@ function WeakAuras.AddPositionOptions(input, id, data)
       softMax = screenHeight,
       bigStep = 10,
       hidden = function()
-        if (IsParentDynamicGroup()) then
-          return true;
-        end
-        if (data.parent or data.anchorFrameType ~= "SCREEN") then
+        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
           return false;
         end
         return true;
@@ -3771,12 +3938,6 @@ function WeakAuras.EnsureDisplayButton(data)
     else
       print("|cFF8800FFWeakAuras|r: Error creating button for", id);
     end
-  end
-end
-
-function WeakAuras.SetCopying(data)
-  for id, button in pairs(displayButtons) do
-    button:SetCopying(data);
   end
 end
 

@@ -61,11 +61,10 @@ P['benikui'] = {
 			['fontflags'] = 'OUTLINE',
 			['colorStyle'] = 'RARITY',
 			['color'] = {r = 1, g = 1, b = 0},
+			['position'] = 'INSIDE',
 		},
-		['flightMode'] = {
-			['enable'] = true,
-			['cameraRotation'] = false,
-		},
+		['flightMode'] = true,
+		['afkMode'] = true,
 		['panels'] = {
 			['top'] = {
 				['style'] = false,
@@ -245,7 +244,6 @@ P['benikuiSkins'] = {
 		['tinydps'] = true,
 		['atlasloot'] = true,
 		['altoholic'] = true,
-		['zg'] = true,
 		['clique'] = true,
 		['ora'] = true,
 		['pawn'] = true,
@@ -357,7 +355,6 @@ P['dashboards'] = {
 		['backdrop'] = true,
 		['zeroamount'] = false,
 		['weekly'] = true,
-		['flash'] = false,
 	},
 	
 	['professions'] = {
