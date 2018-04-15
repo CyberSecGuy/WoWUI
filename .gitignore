@@ -4,11 +4,11 @@ Data/
 Logs/
 Screenshots/
 Utils/
-Cache./
-Data./
-Logs./
-Screenshots./
-Utils./
+Cache.old/
+Data.old/
+Logs.old/
+Screenshots.old/
+Utils.old/
 
 # Junk WoW Files
 .build.info

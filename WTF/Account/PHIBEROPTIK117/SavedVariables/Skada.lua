@@ -5,26 +5,29 @@ SkadaDB = {
 		},
 	},
 	["profileKeys"] = {
-		["Fiberboi - Sargeras"] = "BenikUI",
+		["Fiber - Stormrage"] = "BenikUI",
 		["Phiber - Stormrage"] = "BenikUI",
+		["Fiberoptic - Aggramar"] = "BenikUI",
+		["Voidbro - Stormrage"] = "BenikUI",
+		["Fiberboi - Sargeras"] = "BenikUI",
 	},
 	["profiles"] = {
 		["Default"] = {
 			["windows"] = {
 				{
-					["y"] = 0.0001678466796875,
-					["point"] = "CENTER",
+					["y"] = 0.00018310546875,
 					["x"] = 0,
+					["point"] = "CENTER",
 				}, -- [1]
 			},
 			["versions"] = {
-				["1.6.7"] = true,
-				["1.6.4"] = true,
 				["1.6.3"] = true,
+				["1.6.4"] = true,
+				["1.6.7"] = true,
 			},
 			["ffoptions"] = {
-				["ignoreability"] = false,
 				["ignoredefensive"] = true,
+				["ignoreability"] = false,
 			},
 		},
 		["BenikUI"] = {
@@ -33,16 +36,15 @@ SkadaDB = {
 					["barheight"] = 14,
 					["classicons"] = false,
 					["barslocked"] = true,
-					["y"] = 0,
+					["y"] = 4.5,
 					["barfont"] = "Expressway",
 					["title"] = {
 						["font"] = "Expressway",
 						["fontsize"] = 11,
 						["height"] = 18,
 					},
-					["x"] = -6.1035156250e-005,
+					["x"] = 1719.83367919922,
 					["classcolortext"] = true,
-					["point"] = "CENTER",
 					["barcolor"] = {
 						["b"] = 0,
 						["g"] = 0.5,
@@ -54,8 +56,11 @@ SkadaDB = {
 					["bartexture"] = "BuiOnePixel",
 					["barwidth"] = 196.000061035156,
 					["classcolorbars"] = false,
+					["point"] = "TOPRIGHT",
 					["background"] = {
+						["strata"] = "LOW",
 						["height"] = 122,
+						["bordertexture"] = "None",
 					},
 				}, -- [1]
 				{
@@ -67,11 +72,12 @@ SkadaDB = {
 					["wipemode"] = "",
 					["set"] = "current",
 					["hidden"] = false,
-					["y"] = 0,
+					["y"] = 4.5,
 					["barfont"] = "Expressway",
 					["name"] = "Skada 2",
 					["display"] = "bar",
 					["barfontflags"] = "",
+					["strata"] = "LOW",
 					["classcolortext"] = true,
 					["scale"] = 1,
 					["reversegrowth"] = false,
@@ -79,12 +85,12 @@ SkadaDB = {
 					["roleicons"] = false,
 					["barorientation"] = 1,
 					["snapto"] = true,
-					["x"] = -6.1035156250e-005,
+					["x"] = 1920.83360290527,
 					["mode"] = "Healing",
-					["point"] = "CENTER",
+					["point"] = "TOPRIGHT",
 					["spark"] = false,
 					["bartexture"] = "BuiOnePixel",
-					["barwidth"] = 201.000091552734,
+					["barwidth"] = 201.999893188477,
 					["barspacing"] = 0,
 					["buttons"] = {
 						["segment"] = true,
@@ -122,6 +128,7 @@ SkadaDB = {
 						["r"] = 1,
 					},
 					["background"] = {
+						["strata"] = "LOW",
 						["borderthickness"] = 0,
 						["color"] = {
 							["a"] = 0.2,
@@ -140,6 +147,15 @@ SkadaDB = {
 					["modeincombat"] = "",
 					["version"] = 1,
 				}, -- [2]
+			},
+			["versions"] = {
+				["1.6.7"] = true,
+				["1.6.4"] = true,
+				["1.6.3"] = true,
+			},
+			["ffoptions"] = {
+				["ignoreability"] = false,
+				["ignoredefensive"] = true,
 			},
 		},
 	},

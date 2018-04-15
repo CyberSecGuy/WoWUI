@@ -7,4 +7,5 @@ WeakAurasSaved = {
 	["registered"] = {
 	},
 	["login_squelch_time"] = 10,
+	["editor_theme"] = "Monokai",
 }

@@ -2,11 +2,52 @@
 CliqueDB = nil
 CliqueDB3 = {
 	["profileKeys"] = {
-		["Fiberboi - Sargeras"] = "Fiberboi - Sargeras",
+		["Fiber - Stormrage"] = "Fiber - Stormrage",
 		["Phiber - Stormrage"] = "Phiber - Stormrage",
+		["Fiberoptic - Aggramar"] = "Fiberoptic - Aggramar",
+		["Voidbro - Stormrage"] = "Voidbro - Stormrage",
+		["Fiberboi - Sargeras"] = "Fiberboi - Sargeras",
 	},
 	["profiles"] = {
-		["Fiberboi - Sargeras"] = {
+		["Fiber - Stormrage"] = {
+			["bindings"] = {
+				{
+					["sets"] = {
+						["default"] = true,
+					},
+					["type"] = "target",
+					["key"] = "BUTTON1",
+					["unit"] = "mouseover",
+				}, -- [1]
+				{
+					["type"] = "menu",
+					["key"] = "BUTTON2",
+					["sets"] = {
+						["default"] = true,
+					},
+				}, -- [2]
+			},
+		},
+		["Phiber - Stormrage"] = {
+			["bindings"] = {
+				{
+					["sets"] = {
+						["default"] = true,
+					},
+					["type"] = "target",
+					["key"] = "BUTTON1",
+					["unit"] = "mouseover",
+				}, -- [1]
+				{
+					["type"] = "menu",
+					["key"] = "BUTTON2",
+					["sets"] = {
+						["default"] = true,
+					},
+				}, -- [2]
+			},
+		},
+		["Fiberoptic - Aggramar"] = {
 			["bindings"] = {
 				{
 					["type"] = "target",
@@ -25,13 +66,32 @@ CliqueDB3 = {
 				}, -- [2]
 			},
 		},
-		["Phiber - Stormrage"] = {
+		["Voidbro - Stormrage"] = {
 			["bindings"] = {
 				{
-					["type"] = "target",
 					["sets"] = {
 						["default"] = true,
 					},
+					["type"] = "target",
+					["key"] = "BUTTON1",
+					["unit"] = "mouseover",
+				}, -- [1]
+				{
+					["type"] = "menu",
+					["key"] = "BUTTON2",
+					["sets"] = {
+						["default"] = true,
+					},
+				}, -- [2]
+			},
+		},
+		["Fiberboi - Sargeras"] = {
+			["bindings"] = {
+				{
+					["sets"] = {
+						["default"] = true,
+					},
+					["type"] = "target",
 					["key"] = "BUTTON1",
 					["unit"] = "mouseover",
 				}, -- [1]
