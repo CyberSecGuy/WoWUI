@@ -8,13 +8,14 @@
 
 local _, TSM = ...
 local Destroying = TSM.MainUI.Settings.Tooltip:NewPackage("Destroying")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { sources = {}, sourceKeys = {} }
 local INVALID_PRICE_SOURCES = {
 	Crafting = true,
 	VendorBuy = true,
 	VendorSell = true,
 	Destroy = true,
+	ItemQuality = true,
 	ItemLevel = true,
 	RequiredLevel = true,
 	NumExpires = true,
@@ -43,7 +44,7 @@ end
 function private.GetTooltipSettingsFrame()
 	wipe(private.sources)
 	wipe(private.sourceKeys)
-	for key, moduleName, label in TSMAPI_FOUR.CustomPrice.Iterator() do
+	for key, _, label in TSMAPI_FOUR.CustomPrice.Iterator() do
 		if not INVALID_PRICE_SOURCES[key] then
 			tinsert(private.sources, label)
 			tinsert(private.sourceKeys, strlower(key))

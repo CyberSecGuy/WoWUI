@@ -13,7 +13,6 @@
 local _, TSM = ...
 local SearchInput = TSMAPI_FOUR.Class.DefineClass("SearchInput", TSM.UI.Input)
 TSM.UI.SearchInput = SearchInput
-local private = {}
 local SEARCH_ICON_SIZE = 14
 local SEARCH_ICON_PADDING = 1
 local TEXT_PADDING = 5
@@ -30,29 +29,21 @@ function SearchInput.__init(self)
 	local frame = self:_GetBaseFrame()
 
 	frame.searchIcon = frame:CreateTexture(nil, "ARTWORK")
-
-	self._clearBtn = nil
 end
 
 function SearchInput.Acquire(self)
-	self._clearBtn = TSMAPI_FOUR.UI.NewElement("Button", self._id.."_ClearBtn")
-	self._clearBtn:_SetParentElement(self)
-	self._clearBtn:_GetBaseFrame():SetParent(self:_GetBaseFrame())
-	self._clearBtn:_GetBaseFrame():SetPoint("RIGHT", -TEXT_PADDING, 0)
-	self._clearBtn:SetScript("OnClick", private.ClearBtnOnClick)
 	self.__super:Acquire()
+	self:SetStyle("clearButton", true)
+	self:SetStyle("backgroundTexturePacks", "uiFrames.Search")
 	self._hintText:SetStyle("anchors", { { "CENTER", (SEARCH_ICON_SIZE + SEARCH_ICON_PADDING) / 2, 0 } })
 end
 
 function SearchInput.Release(self)
 	self:_GetBaseFrame():ClearFocus()
-	self._clearBtn:Release()
-	self._clearBtn = nil
 	self.__super:Release()
 end
 
 function SearchInput.Draw(self)
-	self:SetStyle("backgroundTexturePacks", "uiFrames.Search")
 	self.__super:Draw()
 	local frame = self:_GetBaseFrame()
 	frame:SetTextInsets(TEXT_PADDING, TEXT_PADDING_RIGHT, TEXT_PADDING, TEXT_PADDING)
@@ -80,21 +71,5 @@ function SearchInput.Draw(self)
 		self._clearBtn:SetStyle("backgroundVertexColor", self:_GetStyle("textColor"))
 		self._clearBtn:Show()
 		self._clearBtn:Draw()
-	end
-end
-
-
-
--- ============================================================================
--- Local Script Handlers
--- ============================================================================
-
-function private.ClearBtnOnClick(button)
-	local self = button:GetParentElement()
-	self:SetFocused(false)
-	self:SetText("")
-	self:Draw()
-	if self._userScriptHandlers.OnEnterPressed then
-		self._userScriptHandlers.OnEnterPressed(self)
 	end
 end

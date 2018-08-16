@@ -10,7 +10,14 @@
 -- @module Util
 
 TSMAPI_FOUR.Util = {}
-local private = { freeTempTables = {}, tempTableState = {}, filterTemp = {} }
+local private = {
+	freeTempTables = {},
+	tempTableState = {},
+	filterTemp = {},
+	sortComparator = nil,
+	sortContext = nil,
+	sortValueLookup = nil,
+}
 private.iterContext = { arg = {}, index = {}, helperFunc = {}, cleanupFunc = {} }
 setmetatable(private.iterContext.arg, { __mode = "k" })
 setmetatable(private.iterContext.index, { __mode = "k" })
@@ -28,10 +35,11 @@ local RELEASED_TEMP_TABLE_MT = {
 		return rawget(self, key)
 	end,
 }
+local SLOT_ID_MULTIPLIER = 1000
 
 -- setup the temporary tables
 do
-	for i = 1, NUM_TEMP_TABLES do
+	for _ = 1, NUM_TEMP_TABLES do
 		local tempTbl = setmetatable({}, RELEASED_TEMP_TABLE_MT)
 		tinsert(private.freeTempTables, tempTbl)
 	end
@@ -47,7 +55,7 @@ end
 -- The lua strsplit function causes a stack overflow if passed large inputs. This API fixes that issue and also supports
 -- separators which are more than one character in length.
 -- @tparam string str The string to be split
--- @tparam string sep The seperator to use to split the string
+-- @tparam string sep The separator to use to split the string
 -- @treturn table The result as a list of substrings
 -- @within String
 function TSMAPI_FOUR.Util.SafeStrSplit(str, sep)
@@ -82,6 +90,31 @@ function TSMAPI_FOUR.Util.StrEscape(str)
 	end
 	str = gsub(str, "\001", "%%%%")
 	return str
+end
+
+--- Check if a string which contains multiple values separated by a specific string contains the value.
+-- @tparam string str The string to be searched
+-- @tparam string sep The separating string
+-- @tparam string value The value to search for
+-- @treturn boolean Whether or not the value was found
+-- @within String
+function TSMAPI_FOUR.Util.SeparatedStrContains(str, sep, value)
+	return str == value or strmatch(str, "^"..value..sep) or strmatch(str, sep..value..sep) or strmatch(str, sep..value.."$")
+end
+
+--- Iterates over the parts of a string which are separated by a character.
+-- @tparam string str The string to be split
+-- @tparam string sep The separator to use to split the string
+-- @return An iterator with fields: `part`
+-- @within String
+function TSMAPI_FOUR.Util.StrSplitIterator(str, sep)
+	assert(#sep == 1)
+	for _, char in ipairs(MAGIC_CHARACTERS) do
+		if char == sep then
+			sep = "%"..char
+		end
+	end
+	return gmatch(str, "([^"..sep.."]+)")
 end
 
 
@@ -165,6 +198,8 @@ function TSMAPI_FOUR.Util.CalculateHash(data, hash)
 			hash = TSMAPI_FOUR.Util.CalculateHash(key, hash)
 			hash = TSMAPI_FOUR.Util.CalculateHash(data[key], hash)
 		end
+	elseif type(data) == "boolean" then
+		hash = (hash * 33 + (data and 1 or 0)) % maxValue
 	else
 		error("Invalid data")
 	end
@@ -285,7 +320,6 @@ end
 -- @within Table
 function TSMAPI_FOUR.Util.Count(tbl)
 	local count = 0
-
 	for _ in pairs(tbl) do
 		count = count + 1
 	end
@@ -310,43 +344,47 @@ function TSMAPI_FOUR.Util.GetDistinctTableKey(tbl, value)
 	return key
 end
 
---- Gets the first table index by value in the table.
--- This function assumes the table is a list of tables which is sorted by `tbl[key]` in ascending order. It uses a
--- binary search to efficiently find the first index where `tbl[key] == value`.
--- @tparam table tbl The table to look through
--- @param value The value to search for
--- @param key The key within each entry to compare with value
--- @return The first index which matches or `nil` if not found
+--- Checks if two tables have the same entries (non-recursively).
+-- @tparam table tbl1 The first table to check
+-- @tparam table tbl2 The second table to check
+-- @treturn boolean Whether or not the tables are equal
 -- @within Table
-function TSMAPI_FOUR.Util.BinarySearchGetFirstIndex(tbl, value, key)
-	local found, index = private.BinarySearchHelper(tbl, value, key, "FIRST")
-	return found and index or nil
+function TSMAPI_FOUR.Util.TablesEqual(tbl1, tbl2)
+	if TSMAPI_FOUR.Util.Count(tbl1) ~= TSMAPI_FOUR.Util.Count(tbl2) then
+		return false
+	end
+	for k, v in pairs(tbl1) do
+		if tbl2[k] ~= v then
+			return false
+		end
+	end
+	return true
 end
 
---- Gets the last table index by value in the table.
--- This function assumes the table is a list of tables which is sorted by `tbl[key]` in ascending order. It uses a
--- binary search to efficiently find the last index where `tbl[key] == value`.
--- @tparam table tbl The table to look through
--- @param value The value to search for
--- @param key The key within each entry to compare with value
--- @return The last index which matches or `nil` if not found
+--- Does a table sort with extra arguments getting passed through to the comparator
+-- @tparam table tbl The table to sort
+-- @?tparam function comparator The comparasion function
+-- @param ... Other arguments to pass through to the comparator
 -- @within Table
-function TSMAPI_FOUR.Util.BinarySearchGetLastIndex(tbl, value, key)
-	local found, index = private.BinarySearchHelper(tbl, value, key, "LAST")
-	return found and index or nil
+function TSMAPI_FOUR.Util.TableSortWithContext(tbl, comparator, ...)
+	assert(not private.sortComparator and not private.sortContext and comparator)
+	private.sortComparator = comparator
+	private.sortContext = TSMAPI_FOUR.Util.AcquireTempTable(...)
+	sort(tbl, private.TableSortWithContextHelper)
+	TSMAPI_FOUR.Util.ReleaseTempTable(private.sortContext)
+	private.sortComparator = nil
+	private.sortContext = nil
 end
 
---- Gets an index at which to insert a value into the table.
--- This function assumes the table is a list of tables which is sorted by `tbl[key]` in ascending order. It uses a
--- binary search to efficiently find where the value should be inserted into the table.
--- @tparam table tbl The table to look through
--- @param value The value to be inserted
--- @param key The key within each entry to compare with value
--- @return The index to insert at
+--- Does a table sort with an extra value lookup step
+-- @tparam table tbl The table to sort
+-- @tparam table valueLookup The sort value lookup table
 -- @within Table
-function TSMAPI_FOUR.Util.BinarySearchGetInsertIndex(tbl, value, key)
-	local _, index = private.BinarySearchHelper(tbl, value, key, "ANY")
-	return index
+function TSMAPI_FOUR.Util.TableSortWithValueLookup(tbl, valueLookup)
+	assert(not private.sortValueLookup and valueLookup)
+	private.sortValueLookup = valueLookup
+	sort(tbl, private.TableSortWithValueLookupHelper)
+	private.sortValueLookup = nil
 end
 
 
@@ -365,7 +403,7 @@ function TSMAPI_FOUR.Util.AcquireTempTable(...)
 	local tbl = tremove(private.freeTempTables, 1)
 	assert(tbl, "Could not acquire temp table")
 	setmetatable(tbl, nil)
-	private.tempTableState[tbl] = TSMAPI_FOUR.Util.GetDebugStackInfo(2).." -> "..(TSMAPI_FOUR.Util.GetDebugStackInfo(3) or "?")
+	private.tempTableState[tbl] = (TSMAPI_FOUR.Util.GetDebugStackInfo(2) or "?").." -> "..(TSMAPI_FOUR.Util.GetDebugStackInfo(3) or "?")
 	TSMAPI_FOUR.Util.VarargIntoTable(tbl, ...)
 	return tbl
 end
@@ -406,7 +444,7 @@ function TSMAPI_FOUR.Util.GetTempTableDebugInfo()
 	end
 	local debugInfo = {}
 	for info, count in pairs(counts) do
-		tinsert(debugInfo, format("%d acquired by %s", count, info))
+		tinsert(debugInfo, format("[%d] %s", count, info))
 	end
 	if #debugInfo == 0 then
 		tinsert(debugInfo, "<none>")
@@ -442,7 +480,7 @@ function TSMAPI_FOUR.Util.SafeTooltipLink(link)
 		link = TSMAPI_FOUR.Item.GetLink(link)
 	end
 	if strmatch(link, "battlepet") then
-		local _, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID = strsplit(":", link)
+		local _, speciesID, level, breedQuality, maxHealth, power, speed = strsplit(":", link)
 		BattlePetToolTip_Show(tonumber(speciesID), tonumber(level) or 0, tonumber(breedQuality) or 0, tonumber(maxHealth) or 0, tonumber(power) or 0, tonumber(speed) or 0, gsub(gsub(link, "^(.*)%[", ""), "%](.*)$", ""))
 	elseif strmatch(link, "currency") then
 		local currencyID = strmatch(link, "currency:(%d+)")
@@ -463,6 +501,15 @@ function TSMAPI_FOUR.Util.SafeItemRef(link)
 	if blizzItemString then
 		SetItemRef(blizzItemString, link)
 	end
+end
+
+--- Checks if the version of an addon is a dev version.
+-- @tparam string name The name of the addon
+-- @treturn boolean Whether or not the addon is a dev version
+-- @within WoW Util
+function TSMAPI_FOUR.Util.IsDevVersion(addonName)
+	-- use strmatch does this string doesn't itself get replaced when we deploy
+	return strmatch(GetAddOnMetadata(addonName, "version"), "^@tsm%-project%-version@$") and true or false
 end
 
 --- Checks if an addon is installed.
@@ -522,7 +569,7 @@ function TSMAPI_FOUR.Util.GetDebugStackInfo(targetLevel, thread)
 		end
 		stackLine = strmatch(stackLine, "^%.*([^:]+:%d+):")
 		-- ignore the class code's wrapper function
-		if stackLine and not strmatch(stackLine, "Class%.lua:192") then
+		if stackLine and not strmatch(stackLine, "Class%.lua:190") then
 			targetLevel = targetLevel - 1
 			if targetLevel == 0 then
 				stackLine = gsub(stackLine, "/", "\\")
@@ -531,6 +578,26 @@ function TSMAPI_FOUR.Util.GetDebugStackInfo(targetLevel, thread)
 			end
 		end
 	end
+end
+
+--- Combines a container and slot into a slotId.
+-- @tparam number container The container
+-- @tparam number slot The slot
+-- @treturn number The slotId
+-- @within Misc
+function TSMAPI_FOUR.Util.JoinSlotId(container, slot)
+	return container * SLOT_ID_MULTIPLIER + slot
+end
+
+--- Splits a slotId into a container and slot
+-- @tparam number The slotId
+-- @treturn number container The container
+-- @treturn number slot The slot
+-- @within Misc
+function TSMAPI_FOUR.Util.SplitSlotId(slotId)
+	local container = floor(slotId / SLOT_ID_MULTIPLIER)
+	local slot = slotId % SLOT_ID_MULTIPLIER
+	return container, slot
 end
 
 
@@ -576,42 +643,10 @@ function private.TempTableReleaseHelper(tbl, ...)
 	return ...
 end
 
-function private.BinarySearchHelper(tbl, value, key, searchType)
-	-- binary search for index
-	local low, mid, high = 1, 0, #tbl
-	while low <= high do
-		mid = floor((low + high) / 2)
-		local rowValue = key and tbl[mid][key] or tbl[mid]
-		if rowValue == value then
-			if searchType == "FIRST" then
-				if mid == 1 or (key and tbl[mid-1][key] or tbl[mid]) ~= value then
-					-- we've found the row we want
-					return true, mid
-				else
-					-- we're too high
-					high = mid - 1
-				end
-			elseif searchType == "LAST" then
-				if mid == high or (key and tbl[mid+1][key] or tbl[mid]) ~= value then
-					-- we've found the row we want
-					return true, mid
-				else
-					-- we're too low
-					low = mid + 1
-				end
-			elseif searchType == "ANY" then
-				return true, mid
-			else
-				error("Invalid searchType: "..tostring(searchType))
-			end
-		elseif rowValue < value then
-			-- we're too low
-			low = mid + 1
-		else
-			-- we're too high
-			high = mid - 1
-		end
-	end
-	-- didn't find it but return where it should be inserted
-	return false, low
+function private.TableSortWithContextHelper(a, b)
+	return private.sortComparator(a, b, unpack(private.sortContext))
+end
+
+function private.TableSortWithValueLookupHelper(a, b)
+	return private.sortValueLookup[a] < private.sortValueLookup[b]
 end

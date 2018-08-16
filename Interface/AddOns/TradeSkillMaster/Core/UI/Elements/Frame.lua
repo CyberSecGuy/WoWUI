@@ -155,7 +155,7 @@ function Frame.Draw(self)
 		local xOffset = self:_GetPadding("LEFT")
 		-- calculate the Y offset to properly position stuff with the padding of this frame taken into account
 		local yOffset = -self:_GetPadding("TOP")
-		for i, child in self:LayoutChildrenIterator() do
+		for _, child in self:LayoutChildrenIterator() do
 			local childFrame = child:_GetBaseFrame()
 			local childWidth = childFrame:GetWidth() + child:_GetMargin("LEFT") + child:_GetMargin("RIGHT")
 			if xOffset + childWidth + self:_GetPadding("RIGHT") > width then
@@ -213,7 +213,7 @@ function Frame.Draw(self)
 			local xOffset = self:_GetPadding("LEFT")
 			-- calculate the Y offset to properly position stuff with the padding of this frame taken into account
 			local yOffset = (self:_GetPadding("BOTTOM") - self:_GetPadding("TOP")) / 2
-			for i, child in self:LayoutChildrenIterator() do
+			for _, child in self:LayoutChildrenIterator() do
 				local childFrame = child:_GetBaseFrame()
 				xOffset = xOffset + child:_GetMargin("LEFT")
 				local childYOffset = (child:_GetMargin("BOTTOM") - child:_GetMargin("TOP")) / 2
@@ -224,7 +224,7 @@ function Frame.Draw(self)
 			local yOffset = -self:_GetPadding("TOP")
 			-- calculate the X offset to properly position stuff with the padding of this frame taken into account
 			local xOffset = (self:_GetPadding("LEFT") - self:_GetPadding("RIGHT")) / 2
-			for i, child in self:LayoutChildrenIterator() do
+			for _, child in self:LayoutChildrenIterator() do
 				local childFrame = child:_GetBaseFrame()
 				yOffset = yOffset - child:_GetMargin("TOP")
 				local childXOffset = (child:_GetMargin("LEFT") - child:_GetMargin("RIGHT")) / 2
@@ -268,9 +268,8 @@ function Frame._GetMinimumDimension(self, dimension)
 	elseif layout == "FLOW" then
 		-- calculate our minimum width which is the largest of the widths of the children
 		local minWidth = 0
-		local canExpand = false
 		for _, child in self:LayoutChildrenIterator() do
-			local childMin, childCanExpand = child:_GetMinimumDimension("WIDTH")
+			local childMin = child:_GetMinimumDimension("WIDTH")
 			childMin = childMin + child:_GetMargin("LEFT") + child:_GetMargin("RIGHT")
 			minWidth = max(minWidth, childMin)
 		end

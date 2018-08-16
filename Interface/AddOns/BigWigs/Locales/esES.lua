@@ -38,8 +38,6 @@ L.offline  = "Desconectado"
 L.missingAddOn  = "Tenga en cuenta que esta zona requiere el plugin |cFF436EEE%s|r para que los contadores sean mostrados."
 L.disabledAddOn  = "Tienes el addon |cFF436EEE%s|r deshabilitado, los contadores no se mostraran."
 
-L.coreAddonDisabled  = "BigWigs no puede funcionar correctamente ya que el addon %s está desactivado. Puedes activarlo desde el addon Control Panel o en la pantalla de selección de personaje."
-
 L.removeAddon  = "Por favor elimina '|cFF436EEE%s|r' ya que está siendo reemplazado por '|cFF436EEE%s|r'."
 
 -- Options.lua
@@ -115,6 +113,12 @@ L.COUNTDOWN  = "Cuenta atrás"
 L.COUNTDOWN_desc  = "Si está activo, una cuenta atrás vocal y visual será agregada para los últimos 5 segundos. Imagina a alguien contando hacia atrás \"5... 4... 3... 2... 1...\" con un número grande en el medio de la pantalla."
 L.INFOBOX  = L.infobox
 L.INFOBOX_desc  = L.infobox_desc
+--L.SOUND = "Sound"
+--L.SOUND_desc = "Boss abilities usually play sounds to help you notice them. If you disable this option, none of the sounds attached to it will play."
+--L.CASTBAR = "Cast Bars"
+--L.CASTBAR_desc = "Cast bars are sometimes shown on certain bosses, usually to bring attention to a critical ability incoming. If this ability is accompanied by a cast bar that you want to hide, disable this option."
+--L.SAY_COUNTDOWN = "Say Countdown"
+--L.SAY_COUNTDOWN_desc = "Chat bubbles are easy to spot. BigWigs will use multiple say messages counting down to alert people nearby that an ability on you is about to expire."
 
 L.advanced  = "Opciones avanzadas"
 L.back  = "<< Volver"

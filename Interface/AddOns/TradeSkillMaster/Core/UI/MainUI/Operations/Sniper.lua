@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Sniper = TSM.MainUI.Operations:NewPackage("Sniper")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { currentOperationName = nil }
 
 
@@ -29,7 +29,7 @@ end
 
 function private.GetSniperOperationSettings(operationName)
 	private.currentOperationName = operationName
-	local operation = TSM.operations.Sniper[private.currentOperationName]
+	local operation = TSM.Operations.GetSettings("Sniper", private.currentOperationName)
 	return TSMAPI_FOUR.UI.NewElement("Frame", "content")
 		:SetLayout("VERTICAL")
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")

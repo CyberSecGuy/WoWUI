@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Warehousing = TSM.MainUI.Operations:NewPackage("Warehousing")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { currentOperationName = nil }
 
 
@@ -29,7 +29,7 @@ end
 
 function private.GetWarehousingOperationSettings(operationName)
 	private.currentOperationName = operationName
-	local operation = TSM.operations.Warehousing[private.currentOperationName]
+	local operation = TSM.Operations.GetSettings("Warehousing", private.currentOperationName)
 	return TSMAPI_FOUR.UI.NewElement("Frame", "content")
 		:SetLayout("VERTICAL")
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")

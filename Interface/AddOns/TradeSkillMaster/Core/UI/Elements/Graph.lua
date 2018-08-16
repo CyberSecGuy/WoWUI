@@ -47,7 +47,6 @@ function Graph.__init(self)
 	frame.plot:EnableMouse(true)
 	frame.plot:SetScript("OnEnter", private.PlotFrameOnEnter)
 	frame.plot:SetScript("OnLeave", private.PlotFrameOnLeave)
-	frame.plot:SetScript("OnUpdate", private.PlotFrameOnUpdate)
 	private.plotFrameGraphLookup[frame.plot] = self
 
 	frame.plot.dot = frame.plot:CreateTexture(nil, "ARTWORK", nil, 3)
@@ -74,7 +73,6 @@ function Graph.__init(self)
 end
 
 function Graph.Release(self)
-	self:_GetBaseFrame().plot.mouseOver = false
 	self:_ReleaseAllTextures()
 	self:_ReleaseAllFontStrings()
 	self._dataIterFunc = nil
@@ -139,8 +137,6 @@ function Graph.Draw(self)
 	self:_ApplyFrameStyle(frame)
 	local plot = frame.plot
 
-	local totalHeight = self:_GetDimension("HEIGHT")
-	local totalWidth = self:_GetDimension("WIDTH")
 	local plotWidth = plot:GetWidth()
 	local plotHeight = plot:GetHeight()
 
@@ -400,53 +396,52 @@ function private.GetAxisStep(diff, stepSize, totalSize, minSpacing)
 end
 
 function private.PlotFrameOnEnter(plotFrame)
-	plotFrame.mouseOver = true
+	plotFrame:SetScript("OnUpdate", private.PlotFrameOnUpdate)
 end
 
 function private.PlotFrameOnLeave(plotFrame)
-	plotFrame.mouseOver = false
+	plotFrame:SetScript("OnUpdate", nil)
+
+	plotFrame.dot:Hide()
+	plotFrame.highlight:Hide()
+	TSM.UI.HideTooltip()
 end
 
 function private.PlotFrameOnUpdate(plotFrame)
 	local self = private.plotFrameGraphLookup[plotFrame]
-	if plotFrame.mouseOver then
-		local xPos = GetCursorPosition() / plotFrame:GetEffectiveScale()
-		local fromMin = plotFrame:GetLeft()
-		local fromMax = plotFrame:GetRight()
-		if xPos < fromMin then
-			xPos = fromMin
-		end
-		if xPos > fromMax then
-			xPos = fromMax
-		end
-		local x = TSMAPI_FOUR.Util.Scale(xPos, fromMin, fromMax, self._xMin, self._xMax)
-		x = TSMAPI_FOUR.Util.Round(x - self._xMin, self._xDataStep) + self._xMin
-		local y = nil
-		for _, xVal, yVal in self:_dataIterFunc() do
-			if xVal == x then
-				assert(not y)
-				y = yVal
-			end
-		end
-		assert(y)
-		plotFrame.dot:Show()
-		plotFrame.dot:ClearAllPoints()
-		local xCoord = TSMAPI_FOUR.Util.Scale(x, self._xMin, self._xMax, 0, plotFrame:GetWidth())
-		local yCoord = TSMAPI_FOUR.Util.Scale(y, self._yMin, self._yMax, 0, plotFrame:GetHeight())
-		plotFrame.dot:SetPoint("CENTER", plotFrame, "BOTTOMLEFT", xCoord, yCoord)
 
-		plotFrame.highlight:Show()
-		plotFrame.highlight:ClearAllPoints()
-		plotFrame.highlight:SetWidth(plotFrame:GetWidth() / ((self._xMax - self._xMin) / self._xDataStep))
-		plotFrame.highlight:SetHeight(plotFrame:GetHeight())
-		plotFrame.highlight:SetPoint("BOTTOM", plotFrame, "BOTTOMLEFT", xCoord, 0)
-
-		TSM.UI.ShowTooltip(plotFrame.dot, self._tooltipFunc(x, y))
-	else
-		plotFrame.dot:Hide()
-		plotFrame.highlight:Hide()
-		TSM.UI.HideTooltip()
+	local xPos = GetCursorPosition() / plotFrame:GetEffectiveScale()
+	local fromMin = plotFrame:GetLeft()
+	local fromMax = plotFrame:GetRight()
+	if xPos < fromMin then
+		xPos = fromMin
 	end
+	if xPos > fromMax then
+		xPos = fromMax
+	end
+	local x = TSMAPI_FOUR.Util.Scale(xPos, fromMin, fromMax, self._xMin, self._xMax)
+	x = TSMAPI_FOUR.Util.Round(x - self._xMin, self._xDataStep) + self._xMin
+	local y = nil
+	for _, xVal, yVal in self:_dataIterFunc() do
+		if xVal == x then
+			assert(not y)
+			y = yVal
+		end
+	end
+	assert(y)
+	plotFrame.dot:Show()
+	plotFrame.dot:ClearAllPoints()
+	local xCoord = TSMAPI_FOUR.Util.Scale(x, self._xMin, self._xMax, 0, plotFrame:GetWidth())
+	local yCoord = TSMAPI_FOUR.Util.Scale(y, self._yMin, self._yMax, 0, plotFrame:GetHeight())
+	plotFrame.dot:SetPoint("CENTER", plotFrame, "BOTTOMLEFT", xCoord, yCoord)
+
+	plotFrame.highlight:Show()
+	plotFrame.highlight:ClearAllPoints()
+	plotFrame.highlight:SetWidth(plotFrame:GetWidth() / ((self._xMax - self._xMin) / self._xDataStep))
+	plotFrame.highlight:SetHeight(plotFrame:GetHeight())
+	plotFrame.highlight:SetPoint("BOTTOM", plotFrame, "BOTTOMLEFT", xCoord, 0)
+
+	TSM.UI.ShowTooltip(plotFrame.dot, self._tooltipFunc(x, y))
 end
 
 

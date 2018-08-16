@@ -8,14 +8,9 @@
 
 local _, TSM = ...
 local ImportConfirmationList = TSMAPI_FOUR.Class.DefineClass("ImportConfirmationList", TSM.UI.ScrollList)
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 TSM.UI.ImportConfirmationList = ImportConfirmationList
 local private = {}
-local EXPANDER_PADDING_LEFT = 7
-local CHECK_PADDING_LEFT = 8
-local TEXT_PADDING_RIGHT = 8
-local CHILD_TEXT_PADDING = 29
-local HEADER_TEXT_PADDING = 29
 
 local stylesheet = {
 	LINE_COLOR = "#e2e2e2",
@@ -61,10 +56,10 @@ function ImportConfirmationList.SetImporter(self, importer, redraw)
 
 	private._AddSectionLabel(self, "GROUPS_HEADER", L["Imported Items"])
 	local groups = importer.groups
-	for i, groupPath in pairs(groups) do
+	for _, groupPath in pairs(groups) do
 		private._AddGroupLabel(self, groupPath)
 		local items = importer:ItemsForGroup(groupPath)
-		for i, itemString in pairs(items) do
+		for _, itemString in pairs(items) do
 			private._AddItem(self, itemString, groupPath)
 		end
 	end
@@ -165,8 +160,7 @@ function ImportConfirmationList._IsDataHidden(self, data)
 		if self._hidden[group] then
 			return true
 		end
-		local section = self._sections[group]
-		if self._hidden[section] then
+		if self._hidden[self._sections[group]] then
 			return true
 		end
 		return self.__super:_IsDataHidden(data)
@@ -180,11 +174,8 @@ function ImportConfirmationList._IsDataHidden(self, data)
 		return self.__super:_IsDataHidden(data)
 	end
 
-	local section = self._sections[data]
-	if section then
-		if self._hidden[section] then
-			return true
-		end
+	if section and self._hidden[section] then
+		return true
 	end
 
 	return self.__super:_IsDataHidden(data)
@@ -215,8 +206,7 @@ function ImportConfirmationList._CreateRow(self)
 		:AddChild(TSMAPI_FOUR.UI.NewElement("ActionButton", "cancelButton")
 			:SetStyle("width", 68)
 			:SetStyle("height", 26)
-
-			:SetText(L["Cancel"])
+			:SetText(CANCEL)
 			:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
 			:SetStyle("fontHeight", 14)
 			:SetStyle("height", 15)
@@ -239,7 +229,6 @@ function ImportConfirmationList._DrawRow(self, row, dataIndex)
 	local text = row:GetElement("text")
 	text:SetStyle("height", self:_GetStyle("rowHeight"))
 	local subText = row:GetElement("subText")
-	cancelButton:SetPressed(false)
 
 	if isCollapsable then
 		text:SetStyle("font", TSM.UI.Fonts.MontserratBold)
@@ -264,7 +253,7 @@ function ImportConfirmationList._DrawRow(self, row, dataIndex)
 		end
 
 		local texturePack = self:_GetStyle(isCollapsed and "expanderCollapsedBackgroundTexturePack" or "expanderExpandedBackgroundTexturePack")
-		local expander = row:GetElement("expander")
+		row:GetElement("expander")
 			:SetStyle("width", TSM.UI.TexturePacks.GetWidth(texturePack))
 			:SetStyle("height", TSM.UI.TexturePacks.GetHeight(texturePack))
 			:SetStyle("backgroundTexturePack", texturePack)
@@ -281,7 +270,7 @@ function ImportConfirmationList._DrawRow(self, row, dataIndex)
 		row:GetElement("expander"):Hide()
 		text:SetStyle("textColor", stylesheet.TEXTCOLOR)
 		local texturePack = self:_GetStyle("expanderCollapsedBackgroundTexturePack")
-		local expander = row:GetElement("expander")
+		row:GetElement("expander")
 			:SetStyle("width", TSM.UI.TexturePacks.GetWidth(texturePack))
 			:SetStyle("backgroundTexturePack", nil)
 			:Show()
@@ -291,12 +280,12 @@ function ImportConfirmationList._DrawRow(self, row, dataIndex)
 		text:SetStyle("font", TSM.UI.Fonts.MontserratBold)
 			:SetText(TSMAPI_FOUR.Item.GetLink(item))
 			:SetStyle("fontHeight", 16)
-		local subText = row:GetElement("subText")
-		subText:Hide()
+		row:GetElement("subText")
+			:Hide()
 
 		text:SetText(TSM.UI.GetColoredItemName(item))
 		local texturePack = self:_GetStyle("expanderCollapsedBackgroundTexturePack")
-		local expander = row:GetElement("expander")
+		row:GetElement("expander")
 			:SetStyle("width", TSM.UI.TexturePacks.GetWidth(texturePack))
 			:SetStyle("backgroundTexturePack", nil)
 		cancelButton:Hide()

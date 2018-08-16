@@ -21,8 +21,8 @@ local ICON_PADDING = 2
 -- Public Class Methods
 -- ============================================================================
 
-function Button.__init(self, name)
-	local frame = CreateFrame("Button", name, nil, nil)
+function Button.__init(self)
+	local frame = CreateFrame("Button")
 
 	self.__super:__init(frame)
 

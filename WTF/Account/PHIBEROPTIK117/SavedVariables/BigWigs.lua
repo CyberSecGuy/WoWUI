@@ -3,11 +3,23 @@ BigWigs3DB = {
 	["namespaces"] = {
 		["BigWigs_Plugins_Victory"] = {
 		},
-		["BigWigs_Plugins_Raid Icons"] = {
+		["BigWigs_Plugins_Alt Power"] = {
+			["profiles"] = {
+				["BenikUI"] = {
+					["font"] = "Expressway",
+					["fontsize"] = 11,
+					["fontOutline"] = "",
+				},
+				["Default"] = {
+					["font"] = "Friz Quadrata TT",
+					["fontSize"] = 11.0000009536743,
+					["fontOutline"] = "",
+				},
+			},
 		},
 		["BigWigs_Plugins_Colors"] = {
 		},
-		["BigWigs_Plugins_Wipe"] = {
+		["BigWigs_Plugins_Raid Icons"] = {
 		},
 		["BigWigs_Plugins_BossBlock"] = {
 		},
@@ -20,13 +32,13 @@ BigWigs3DB = {
 					["texture"] = "BuiFlat",
 				},
 				["Default"] = {
-					["BigWigsAnchor_width"] = 220.000015258789,
-					["tempMonoUIReset"] = true,
 					["tempSpacingReset"] = true,
 					["BigWigsEmphasizeAnchor_height"] = 21.9999752044678,
+					["tempMonoUIReset"] = true,
+					["BigWigsAnchor_width"] = 220.000015258789,
 					["BigWigsEmphasizeAnchor_width"] = 320.000061035156,
-					["BigWigsAnchor_height"] = 15.9999876022339,
 					["font"] = "Friz Quadrata TT",
+					["BigWigsAnchor_height"] = 15.9999876022339,
 				},
 			},
 		},
@@ -44,6 +56,20 @@ BigWigs3DB = {
 		},
 		["BigWigs_Plugins_Sounds"] = {
 		},
+		["LibDualSpec-1.0"] = {
+		},
+		["BigWigs_Plugins_Messages"] = {
+			["profiles"] = {
+				["BenikUI"] = {
+					["fontSize"] = 20,
+					["font"] = "Expressway",
+				},
+				["Default"] = {
+					["font"] = "Friz Quadrata TT",
+					["fontSize"] = 20,
+				},
+			},
+		},
 		["BigWigs_Plugins_AutoReply"] = {
 		},
 		["BigWigs_Plugins_Proximity"] = {
@@ -57,49 +83,23 @@ BigWigs3DB = {
 					["width"] = 139.999984741211,
 				},
 				["Default"] = {
-					["fontSize"] = 20,
 					["font"] = "Friz Quadrata TT",
+					["fontSize"] = 20,
 				},
 			},
 		},
 		["BigWigs_Plugins_Statistics"] = {
 		},
-		["BigWigs_Plugins_Messages"] = {
-			["profiles"] = {
-				["BenikUI"] = {
-					["font"] = "Expressway",
-					["fontSize"] = 20,
-				},
-				["Default"] = {
-					["fontSize"] = 20,
-					["font"] = "Friz Quadrata TT",
-				},
-			},
-		},
-		["LibDualSpec-1.0"] = {
-		},
 		["BigWigs_Plugins_Pull"] = {
 		},
-		["BigWigs_Plugins_Alt Power"] = {
-			["profiles"] = {
-				["BenikUI"] = {
-					["font"] = "Expressway",
-					["fontsize"] = 11,
-					["fontOutline"] = "",
-				},
-				["Default"] = {
-					["font"] = "Friz Quadrata TT",
-					["fontOutline"] = "",
-					["fontSize"] = 11.0000009536743,
-				},
-			},
+		["BigWigs_Plugins_Wipe"] = {
 		},
 	},
-	["profileKeys"] = {
-		["Phiber - Stormrage"] = "Default",
-		["Fiberoptic - Aggramar"] = "BenikUI",
-	},
 	["discord"] = 6,
+	["profileKeys"] = {
+		["Fiberoptic - Aggramar"] = "BenikUI",
+		["Phiber - Stormrage"] = "Default",
+	},
 	["profiles"] = {
 		["BenikUI"] = {
 		},

@@ -3,6 +3,12 @@ local L = WeakAuras.L;
 
 WeakAuras.regionPrototype = {};
 
+-- Alpha
+
+function WeakAuras.regionPrototype.AddAlphaToDefault(default)
+  default.alpha = 1.0;
+end
+
 -- Adjusted Duration
 
 function WeakAuras.regionPrototype.AddAdjustedDurationToDefault(default)
@@ -67,7 +73,7 @@ end
 -- Sound / Chat Message / Custom Code
 local screenWidth, screenHeight = math.ceil(GetScreenWidth() / 20) * 20, math.ceil(GetScreenHeight() / 20) * 20;
 
-function WeakAuras.regionPrototype.AddProperties(properties)
+function WeakAuras.regionPrototype.AddProperties(properties, defaultsForRegion)
   properties["sound"] = {
     display = L["Sound"],
     action = "SoundPlay",
@@ -99,29 +105,48 @@ function WeakAuras.regionPrototype.AddProperties(properties)
     softMax = screenHeight,
     bigStep = 1
   }
+
+  if (defaultsForRegion and defaultsForRegion.alpha) then
+    properties["alpha"] = {
+      display = L["Alpha"],
+      setter = "SetRegionAlpha",
+      type = "number",
+      min = 0,
+      max = 1,
+      bigStep = 0.01,
+      isPercent = true
+    }
+  end
 end
 
 local function SoundRepeatStop(self)
+  WeakAuras.StartProfileSystem("sound");
   if (self.soundRepeatTimer) then
     WeakAuras.timer:CancelTimer(self.soundRepeatTimer);
     self.soundRepeatTimer = nil;
   end
+  WeakAuras.StopProfileSystem("sound");
 end
 
 local function SoundStop(self)
+  WeakAuras.StartProfileSystem("sound");
   if (self.soundHandle) then
     StopSound(self.soundHandle);
   end
+  WeakAuras.StopProfileSystem("sound");
 end
 
 local function SoundPlayHelper(self)
+  WeakAuras.StartProfileSystem("sound");
   local options = self.soundOptions;
   self.soundHandle = nil;
   if (options.sound_type == "Stop") then
+    WeakAuras.StopProfileSystem("sound");
     return;
   end
 
   if (WeakAuras.IsOptionsOpen() or WeakAuras.SquelchingActions() or WeakAuras.InLoadingScreen()) then
+    WeakAuras.StopProfileSystem("sound");
     return;
   end
 
@@ -139,9 +164,11 @@ local function SoundPlayHelper(self)
     local _, handle = PlaySoundFile(options.sound, options.sound_channel or "Master");
     self.soundHandle = handle;
   end
+  WeakAuras.StopProfileSystem("sound");
 end
 
 local function SoundPlay(self, options)
+  WeakAuras.StartProfileSystem("sound");
   self:SoundStop();
   self:SoundRepeatStop();
 
@@ -152,6 +179,7 @@ local function SoundPlay(self, options)
   if (loop and options.sound_repeat and options.sound_repeat < WeakAuras.maxTimerDuration) then
     self.soundRepeatTimer = WeakAuras.timer:ScheduleRepeatingTimer(SoundPlayHelper, options.sound_repeat, self);
   end
+  WeakAuras.StopProfileSystem("sound");
 end
 
 local function SendChat(self, options)
@@ -161,7 +189,7 @@ end
 local function RunCode(self, func)
   if func then
     WeakAuras.ActivateAuraEnvironment(self.id, self.cloneId, self.state);
-    func();
+    xpcall(func, geterrorhandler());
     WeakAuras.ActivateAuraEnvironment(nil);
   end
 end
@@ -229,6 +257,23 @@ local function SetOffsetAnim(self, xOffset, yOffset)
   UpdatePosition(self);
 end
 
+local function SetRegionAlpha(self, alpha)
+  if (self.alpha == alpha) then
+    return;
+  end
+
+  self.alpha = alpha;
+  self:SetAlpha(self.animAlpha or self.alpha or 1);
+end
+
+local function SetAnimAlpha(self, alpha)
+  if (self.animAlpha == alpha) then
+    return;
+  end
+  self.animAlpha = alpha;
+  self:SetAlpha(self.animAlpha or self.alpha or 1);
+end
+
 function WeakAuras.regionPrototype.create(region)
   region.SoundPlay = SoundPlay;
   region.SoundStop = SoundStop;
@@ -244,12 +289,18 @@ function WeakAuras.regionPrototype.create(region)
   region.GetXOffset = GetXOffset;
   region.GetYOffset = GetYOffset;
   region.ResetPosition = ResetPosition;
+  region.SetRegionAlpha = SetRegionAlpha;
+  region.SetAnimAlpha = SetAnimAlpha;
 end
 
 -- SetDurationInfo
 
 function WeakAuras.regionPrototype.modify(parent, region, data)
+
   local defaultsForRegion = WeakAuras.regionTypes[data.regionType] and WeakAuras.regionTypes[data.regionType].default;
+  if (defaultsForRegion and defaultsForRegion.alpha) then
+    region:SetRegionAlpha(data.alpha);
+  end
   local hasAdjustedMin = defaultsForRegion and defaultsForRegion.useAdjustededMin ~= nil and data.useAdjustededMin;
   local hasAdjustedMax = defaultsForRegion and defaultsForRegion.useAdjustededMax ~= nil and data.useAdjustededMax;
 
@@ -259,7 +310,9 @@ function WeakAuras.regionPrototype.modify(parent, region, data)
 
   region:SetOffset(data.xOffset or 0, data.yOffset or 0);
   region:SetOffsetAnim(0, 0);
-  WeakAuras.AnchorFrame(data, region, parent);
+  if not parent or parent.regionType ~= "dynamicgroup" then
+    WeakAuras.AnchorFrame(data, region, parent);
+  end
 end
 
 local function SetProgressValue(region, value, total)
@@ -323,8 +376,12 @@ local function UpateRegionValues(region)
 end
 
 function WeakAuras.TimerTick(region)
+  WeakAuras.StartProfileSystem("text")
+  WeakAuras.StartProfileAura(region.id);
   UpateRegionValues(region);
   region:TimerTick();
+  WeakAuras.StopProfileAura(region.id);
+  WeakAuras.StopProfileSystem("text")
 end
 
 function WeakAuras.regionPrototype.AddSetDurationInfo(region)
@@ -332,10 +389,14 @@ function WeakAuras.regionPrototype.AddSetDurationInfo(region)
     region.generatedSetDurationInfo = true;
 
     region.SetValueFromCustomValueFunc = function()
+      WeakAuras.StartProfileSystem("text")
+      WeakAuras.StartProfileAura(region.id);
       local value, total, _ = region.customValueFunc(region.state.trigger);
       value = type(value) == "number" and value or 0
       total = type(total) == "number" and total or 0
       SetProgressValue(region, value, total);
+      WeakAuras.StopProfileAura(region.id);
+      WeakAuras.StopProfileSystem("text")
     end
 
     region.SetDurationInfo = function(self, duration, expirationTime, customValue, inverse)
@@ -439,6 +500,7 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, id, cloneId, 
 
       parent:EnsureTrays();
       region.justCreated = nil;
+      region:SetFrameLevel(WeakAuras.GetFrameLevelFor(id));
       WeakAuras.PerformActions(data, "start", region);
       if not(WeakAuras.Animate("display", data, "start", data.animation.start, region, true, startMainAnimation, nil, cloneId)) then
         startMainAnimation();
@@ -479,6 +541,7 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, id, cloneId, 
       if(region.PreShow) then
         region:PreShow();
       end
+      region:SetFrameLevel(WeakAuras.GetFrameLevelFor(id));
       region:Show();
       WeakAuras.PerformActions(data, "start", region);
       if not(WeakAuras.Animate("display", data, "start", data.animation.start, region, true, startMainAnimation, nil, cloneId)) then
@@ -504,6 +567,14 @@ function WeakAuras.regionPrototype.SetTextOnText(text, str)
   text:SetWidth(0); -- This makes the text use its internal text size calculation
   text:SetText(str);
   local w = text:GetWidth();
-  w = w + max(4, w / 40);
+  w = w + max(15, w / 20);
   text:SetWidth(w); -- But that internal text size calculation is wrong, see ticket 1014
+end
+
+function WeakAuras.SetTextureOrAtlas(texture, path, wrapModeH, wrapModeV)
+  if type(path) == "string" and GetAtlasInfo(path) then
+    texture:SetAtlas(path);
+  else
+    texture:SetTexture(path, wrapModeH, wrapModeV);
+  end
 end

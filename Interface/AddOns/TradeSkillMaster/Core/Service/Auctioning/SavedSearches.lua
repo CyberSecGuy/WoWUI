@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local SavedSearches = TSM.Auctioning:NewPackage("SavedSearches")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { db = nil }
 local FILTER_SEP = "\001"
 local SAVED_SEARCHES_SCHEMA = {
@@ -17,9 +17,20 @@ local SAVED_SEARCHES_SCHEMA = {
 		lastSearch = "number",
 		isFavorite = "boolean",
 		searchType = "string",
-		name = "string",
 		filter = "string",
-	}
+		name = "string",
+	},
+	fieldAttributes = {
+		index = { "unique", "index" },
+	},
+	fieldOrder = {
+		"index",
+		"lastSearch",
+		"isFavorite",
+		"searchType",
+		"filter",
+		"name",
+	},
 }
 
 
@@ -31,7 +42,7 @@ local SAVED_SEARCHES_SCHEMA = {
 function SavedSearches.OnInitialize()
 	-- remove duplicates
 	local keepSearch = TSMAPI_FOUR.Util.AcquireTempTable()
-	for i, data in ipairs(TSM.db.global.userData.savedAuctioningSearches) do
+	for _, data in ipairs(TSM.db.global.userData.savedAuctioningSearches) do
 		local filter = data.filter
 		if not keepSearch[filter] then
 			keepSearch[filter] = data
@@ -52,18 +63,13 @@ function SavedSearches.OnInitialize()
 	end
 	TSMAPI_FOUR.Util.ReleaseTempTable(keepSearch)
 
-	private.db = TSMAPI_FOUR.Database.New(SAVED_SEARCHES_SCHEMA)
-	for i, data in ipairs(TSM.db.global.userData.savedAuctioningSearches) do
+	private.db = TSMAPI_FOUR.Database.New(SAVED_SEARCHES_SCHEMA, "AUCTIONING_SAVED_SEARCHES")
+	private.db:BulkInsertStart()
+	for index, data in pairs(TSM.db.global.userData.savedAuctioningSearches) do
 		assert(data.searchType == "postItems" or data.searchType == "postGroups" or data.searchType == "cancelGroups")
-		private.db:NewRow()
-			:SetField("index", i)
-			:SetField("lastSearch", data.lastSearch)
-			:SetField("isFavorite", data.isFavorite and true or false)
-			:SetField("searchType", data.searchType)
-			:SetField("filter", data.filter)
-			:SetField("name", private.GetSearchName(data.filter, data.searchType))
-			:Save()
+		private.db:BulkInsertNewRow(index, data.lastSearch, data.isFavorite and true or false, data.searchType, data.filter, private.GetSearchName(data.filter, data.searchType))
 	end
+	private.db:BulkInsertEnd()
 end
 
 function SavedSearches.CreateRecentSearchesQuery()
@@ -81,20 +87,21 @@ function SavedSearches.SetSearchIsFavorite(dbRow, isFavorite)
 	local data = TSM.db.global.userData.savedAuctioningSearches[dbRow:GetField("index")]
 	data.isFavorite = isFavorite or nil
 	dbRow:SetField("isFavorite",  isFavorite)
-		:Save()
+		:Update()
 end
 
 function SavedSearches.DeleteSearch(dbRow)
 	local index = dbRow:GetField("index")
 	tremove(TSM.db.global.userData.savedAuctioningSearches, index)
-	private.db:SetQueryUpdatesPaused(true)
 	private.db:DeleteRow(dbRow)
 	-- need to decrement the index fields of all the rows which got shifted up
+	private.db:SetQueryUpdatesPaused(true)
 	local query = private.db:NewQuery()
 		:GreaterThanOrEqual("index", index)
+		:OrderBy("index", true)
 	for _, row in query:Iterator() do
-		row:DecrementField("index")
-			:Save()
+		row:SetField("index", row:GetField("index") - 1)
+			:Update()
 	end
 	query:Release()
 	private.db:SetQueryUpdatesPaused(false)
@@ -107,12 +114,10 @@ function SavedSearches.RecordSearch(searchList, searchType)
 	for i, data in ipairs(TSM.db.global.userData.savedAuctioningSearches) do
 		if data.filter == filter then
 			data.lastSearch = time()
-			local query = private.db:NewQuery()
-				:Equal("index", i)
-			local dbRow = query:GetSingleResult()
-			query:Release()
-			dbRow:SetField("lastSearch", data.lastSearch)
-			dbRow:Save()
+			local row = private.db:GetUniqueRow("index", i)
+			row:SetField("lastSearch", data.lastSearch)
+				:Update()
+			row:Release()
 			found = true
 			break
 		end
@@ -132,12 +137,14 @@ function SavedSearches.RecordSearch(searchList, searchType)
 			:SetField("searchType", data.searchType)
 			:SetField("filter", data.filter)
 			:SetField("name", private.GetSearchName(data.filter, data.searchType))
-			:Save()
+			:Create()
 	end
 end
 
-function SavedSearches.FilterIterator(dbRow)
-	return TSMAPI_FOUR.Util.VarargIterator(strsplit(FILTER_SEP, dbRow:GetField("filter")))
+function SavedSearches.FiltersToTable(dbRow, tbl)
+	for filter in gmatch(dbRow:GetField("filter"), "[^"..FILTER_SEP.."]+") do
+		tinsert(tbl, filter)
+	end
 end
 
 
@@ -150,21 +157,27 @@ function private.GetSearchName(filter, searchType)
 	local filters = TSMAPI_FOUR.Util.AcquireTempTable()
 	local searchTypeStr, numFiltersStr = nil, nil
 	if searchType == "postGroups" or searchType == "cancelGroups" then
-		for _, groupPath in TSMAPI_FOUR.Util.VarargIterator(strsplit(FILTER_SEP, filter)) do
-			local _, groupName = TSMAPI_FOUR.Groups.SplitPath(groupPath)
+		for groupPath in gmatch(filter, "[^"..FILTER_SEP.."]+") do
+			local groupName = TSM.Groups.Path.GetName(groupPath)
 			local level = select('#', strsplit(TSM.CONST.GROUP_SEP, groupPath))
 			local color = gsub(TSM.UI.GetGroupLevelColor(level), "#", "|cff")
 			tinsert(filters, color..groupName.."|r")
+			if #filters == 11 then
+				break
+			end
 		end
 		searchTypeStr = searchType == "postGroups" and L["Post Scan"] or L["Cancel Scan"]
 		numFiltersStr = #filters == 1 and L["1 Group"] or format(L["%d Groups"], #filters)
 	elseif searchType == "postItems" then
 		local numItems = 0
-		for _, itemString in TSMAPI_FOUR.Util.VarargIterator(strsplit(FILTER_SEP, filter)) do
+		for itemString in gmatch(filter, "[^"..FILTER_SEP.."]+") do
 			numItems = numItems + 1
 			local coloredName = TSM.UI.GetColoredItemName(itemString)
 			if coloredName then
 				tinsert(filters, coloredName)
+				if #filters == 11 then
+					break
+				end
 			end
 		end
 		searchTypeStr = L["Post Scan"]

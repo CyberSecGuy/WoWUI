@@ -33,3 +33,7 @@ VER 3 0000000000000013 "Time Lost" "INV_MISC_QUESTIONMARK"
 /run RaidNotice_AddMessage(RaidBossEmoteFrame,"THERE IT IS! KILL IT!", ChatTypeInfo["RAID_WARNING"])
 /script PlaySoundFile("Sound\\interface\\RaidWarning.wav")
 END
+VER 3 000000000000001E "TomTom" "INV_MISC_QUESTIONMARK"
+/way Highmountain:Broken Isles 35.6 63.6 Sylvan Falls
+/way Highmountain:Broken Isles 35.2 45.7 Trueshot Lodge
+END

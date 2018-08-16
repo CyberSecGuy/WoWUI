@@ -722,8 +722,10 @@ function DeathNote:Show()
 									-- value.text, value.font, value.icon, value.func, value.onEnter, value.onLeave
 									local t = { };
 									for spellID, spellInfo in pairs(DeathNote.SurvivalIDs) do
+										local spellName = GetSpellInfo(spellID);
+										if (not spellName) then error("Unknown survival spellID: "..spellID) end
 										tinsert(t, {
-											text = string_format("[%s] %s", LocalizedClassList[spellInfo.class], GetSpellInfo(spellID)),
+											text = string_format("[%s] %s", LocalizedClassList[spellInfo.class], spellName),
 											font = nil,
 											icon = GetSpellTexture(spellID),
 											dontCloseOnClick = true,
@@ -1257,7 +1259,7 @@ function DeathNote:AddToUnitPopup()
 	UnitPopupButtons["SHOW_DEATH_NOTE"] = {
 		text = L["Show Death Note"],
 		icon = [[Interface\AddOns\DeathNote\Textures\icon.tga]],
-		dist = 0,
+		--dist = 0,
 	}
 
 	local types = { "PET", "RAID_PLAYER", "PARTY", "SELF", "TARGET", "PLAYER" }

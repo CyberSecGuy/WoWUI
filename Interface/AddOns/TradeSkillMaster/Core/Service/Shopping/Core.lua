@@ -7,4 +7,4 @@
 -- ------------------------------------------------------------------------------ --
 
 local _, TSM = ...
-local Shopping = TSM:NewPackage("Shopping")
+TSM:NewPackage("Shopping")

@@ -8,12 +8,13 @@
 
 --- SelectionScrollingTable UI Element Class.
 -- A selection scrolling table is a scrolling table which allows for selecting and deselecting individual rows. It is a
--- subclass of the @{FastScrollingTable} class.
+-- subclass of the @{QueryScrollingTable} class.
 -- @classmod SelectionScrollingTable
 
 local _, TSM = ...
-local SelectionScrollingTable = TSMAPI_FOUR.Class.DefineClass("SelectionScrollingTable", TSM.UI.FastScrollingTable)
+local SelectionScrollingTable = TSMAPI_FOUR.Class.DefineClass("SelectionScrollingTable", TSM.UI.QueryScrollingTable)
 TSM.UI.SelectionScrollingTable = SelectionScrollingTable
+local private = {}
 local CHECK_LEFT_SPACING = 4
 local CHECK_RIGHT_SPACING = 6
 local ICON_SPACING = 4
@@ -60,7 +61,7 @@ end
 -- @tparam ?table data The record to toggle the selection of
 -- @treturn SelectionScrollingTable The selection scrolling table object
 function SelectionScrollingTable.SetSelection(self, data)
-	if self._selectionEnabledFunc and not self:_selectionEnabledFunc(data) then
+	if data and self._selectionValidator and not self:_selectionValidator(self._query:GetResultRowByUUID(data)) then
 		assert(not self._selectedData[data])
 		return self
 	end
@@ -81,12 +82,19 @@ function SelectionScrollingTable.SetSelection(self, data)
 	return self
 end
 
+--- Gets whether or not the selection is currently cleared.
+-- @tparam SelectionScrollingTable self The selection scrolling table object
+-- @treturn boolean Whether or not the selection is cleared
+function SelectionScrollingTable.IsSelectionCleared(self)
+	return not next(self._selectedData)
+end
+
 --- Gets the current selection table.
 -- @tparam SelectionScrollingTable self The selection scrolling table object
 -- @treturn table A table where the key is the data and the value is whether or not it's selected (only selected entries
 -- are in the table)
-function SelectionScrollingTable.GetSelection(self)
-	return self._selectedData
+function SelectionScrollingTable.SelectionIterator(self)
+	return private.SelectionIteratorHelper, self
 end
 
 
@@ -123,4 +131,18 @@ function SelectionScrollingTable._SetRowData(self, row, data)
 		row._icons.check:Hide()
 	end
 	self.__super:_SetRowData(row, data)
+end
+
+
+
+-- ============================================================================
+-- Private Helper Functions
+-- ============================================================================
+
+function private.SelectionIteratorHelper(self, uuid)
+	uuid = next(self._selectedData, uuid)
+	if not uuid then
+		return
+	end
+	return uuid, self._query:GetResultRowByUUID(uuid)
 end

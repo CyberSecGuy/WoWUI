@@ -6,6 +6,8 @@
 --    All Rights Reserved* - Detailed license information included with addon.    --
 -- ------------------------------------------------------------------------------ --
 
+local _, TSM = ...
+local L = TSM.L
 TSMAPI_FOUR.ItemFilter = {}
 local ItemFilter = TSMAPI_FOUR.Class.DefineClass("ItemFilter")
 
@@ -31,6 +33,8 @@ function ItemFilter.__init(self)
 	self._maxPrice = nil
 	self._maxQuantity = nil
 	self._usableOnly = nil
+	self._unlearned = nil
+	self._canlearn = nil
 	self._exactOnly = nil
 	self._evenOnly = nil
 	self._item = nil
@@ -54,6 +58,8 @@ function ItemFilter._Reset(self)
 	self._maxPrice = math.huge
 	self._maxQuantity = math.huge
 	self._usableOnly = false
+	self._unlearned = nil
+	self._canlearn = nil
 	self._exactOnly = false
 	self._evenOnly = false
 	self._item = nil
@@ -71,29 +77,34 @@ end
 function ItemFilter.ParseStr(self, str)
 	self:_Reset()
 	local numLevelParts, numItemLevelParts, numPriceParts = 0, 0, 0
+	self._isValid = nil
 	for i, part in TSMAPI_FOUR.Util.VarargIterator(strsplit("/", strtrim(str))) do
 		part = strtrim(part)
-		if i == 1 then
+		if self._isValid ~= nil then
+			-- already done iterating, but can't break / return out of a VarargIterator
+		elseif i == 1 then
 			-- first part must be a filter string or an item
 			if strmatch(part, "^[ip]:[0-9]+") then
 				local name = TSMAPI_FOUR.Item.GetName(part)
 				local level = TSMAPI_FOUR.Item.GetMinLevel(part)
 				local quality = TSMAPI_FOUR.Item.GetQuality(part)
 				if not name or not level or not quality then
-					return false
+					self._isValid = false
+				else
+					self._exactOnly = true
+					self._item = part
+					self._str = strlower(name)
+					self._escapedStr = TSMAPI_FOUR.Util.StrEscape(self._str)
+					self._quality = quality
+					self._minLevel = level
+					self._maxLevel = level
+					self._class = TSMAPI_FOUR.Item.GetClassId(self._item) or 0
+					self._subClass = TSMAPI_FOUR.Item.GetSubClassId(self._item) or 0
 				end
-				self._exactOnly = true
-				self._item = part
-				self._str = strlower(name)
-				self._quality = quality
-				self._minLevel = level
-				self._maxLevel = level
-				self._class = TSMAPI_FOUR.Item.GetClassId(self._item) or 0
-				self._subClass = TSMAPI_FOUR.Item.GetSubClassId(self._item) or 0
 			else
 				self._str = strlower(part)
+				self._escapedStr = TSMAPI_FOUR.Util.StrEscape(self._str)
 			end
-			self._escapedStr = TSMAPI_FOUR.Util.StrEscape(self._str)
 		elseif part == "" then
 			-- ignore an empty part
 		elseif tonumber(part) then
@@ -104,7 +115,6 @@ function ItemFilter.ParseStr(self, str)
 			else
 				-- already have min / max level
 				self._isValid = false
-				return false
 			end
 			numLevelParts = numLevelParts + 1
 		elseif tonumber(strmatch(part, "^i(%d+)$")) then
@@ -115,7 +125,6 @@ function ItemFilter.ParseStr(self, str)
 			else
 				-- already have min / max item level
 				self._isValid = false
-				return false
 			end
 			numItemLevelParts = numItemLevelParts + 1
 		elseif TSMAPI_FOUR.Item.GetClassIdFromClassString(part) then
@@ -135,25 +144,39 @@ function ItemFilter.ParseStr(self, str)
 			else
 				-- already have min / max price
 				self._isValid = false
-				return false
 			end
 			numPriceParts = numPriceParts + 1
 		elseif strlower(part) == "usable" then
 			if self._usableOnly then
 				self._isValid = false
-				return false
 			end
 			self._usableOnly = true
+		elseif strlower(part) == "unlearned" then
+			if self._unlearned then
+				self._isValid = false
+			end
+			if CanIMogIt and CanIMogIt.PlayerKnowsTransmog then
+				self._unlearned = true
+			else
+				TSM:Print(L["The unlearned filter was ignored because the CanIMogIt addon was not found."])
+			end
+		elseif strlower(part) == "canlearn" then
+			if self._canlearn then
+				self._isValid = false
+			end
+			if CanIMogIt and CanIMogIt.CharacterCanLearnTransmog then
+				self._canlearn = true
+			else
+				TSM:Print(L["The canlearn filter was ignored because the CanIMogIt addon was not found."])
+			end
 		elseif strlower(part) == "exact" then
 			if self._exactOnly then
 				self._isValid = false
-				return false
 			end
 			self._exactOnly = true
 		elseif strlower(part) == "even" then
 			if self._evenOnly then
 				self._isValid = false
-				return false
 			end
 			self._evenOnly = true
 		elseif tonumber(strmatch(part, "^x(%d+)$")) then
@@ -161,12 +184,13 @@ function ItemFilter.ParseStr(self, str)
 		else
 			-- invalid part
 			self._isValid = false
-			return false
 		end
 	end
 
-	self._isValid = true
-	return true
+	if self._isValid == nil then
+		self._isValid = true
+	end
+	return self._isValid
 end
 
 function ItemFilter.GetStr(self)
@@ -211,6 +235,14 @@ end
 
 function ItemFilter.GetUsableOnly(self)
 	return self._usableOnly
+end
+
+function ItemFilter.GetUnlearned(self)
+	return self._unlearned
+end
+
+function ItemFilter.GetCanLearn(self)
+	return self._canlearn
 end
 
 function ItemFilter.GetExactOnly(self)
@@ -258,7 +290,7 @@ function ItemFilter.Matches(self, item, price)
 
 	-- check the required level
 	local level = TSMAPI_FOUR.Item.GetMinLevel(item)
-	if level < self._minLevel or level > self._maxLevel then
+	if not level or level < self._minLevel or level > self._maxLevel then
 		return
 	end
 
@@ -274,6 +306,16 @@ function ItemFilter.Matches(self, item, price)
 
 	-- check the inventory slot
 	if self._invSlotId and TSMAPI_FOUR.Item.GetInvSlotId(item) ~= self._invSlotId then
+		return
+	end
+
+	-- check unlearned
+	if self._unlearned and CanIMogIt:PlayerKnowsTransmog(TSMAPI_FOUR.Item.GetLink(item)) then
+		return
+	end
+
+	-- check canlearn
+	if self._canlearn and CanIMogIt:CharacterCanLearnTransmog(TSMAPI_FOUR.Item.GetLink(item)) then
 		return
 	end
 

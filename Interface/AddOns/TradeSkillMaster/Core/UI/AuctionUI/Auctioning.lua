@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Auctioning = TSM.UI.AuctionUI:NewPackage("Auctioning")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = {
 	contentPath = "selection",
 	hasLastScan = false,
@@ -17,9 +17,13 @@ local private = {
 	scanQuery = nil,
 	groupSearch = "",
 	selectionFrame = nil,
+	logQuery = nil,
 }
 local DEFAULT_DIVIDED_CONTAINER_CONTEXT = {
 	leftWidth = 272,
+}
+local DEFAULT_TAB_GROUP_CONTEXT = {
+	pathIndex = 1
 }
 -- TODO: these should eventually go in the saved variables
 private.dividedContainerContext = {}
@@ -36,37 +40,8 @@ local AUCTION_DURATIONS = {
 -- ============================================================================
 
 function Auctioning.OnInitialize()
-	TSM.UI.AuctionUI.RegisterTopLevelPage("Auctioning", "iconPack.24x24/Posting", private.GetAuctioningFrame)
+	TSM.UI.AuctionUI.RegisterTopLevelPage(L["Auctioning"], "iconPack.24x24/Posting", private.GetAuctioningFrame, private.OnItemLinked)
 	private.FSMCreate()
-
-	-- setup hooks to shift-click on items to quickly post them
-	local function HandleShiftClickItem(origFunc, link)
-		local putIntoChat = origFunc(link)
-		if putIntoChat or not private.selectionFrame then
-			return putIntoChat
-		end
-		local name = TSMAPI_FOUR.Item.GetName(link)
-		if name then
-			if not TSM.UI.AuctionUI.StartingScan("Auctioning") then
-				return
-			end
-			wipe(private.scanContext)
-			private.scanContext.isItems = true
-			tinsert(private.scanContext, TSMAPI_FOUR.Item.ToItemString(link))
-			private.selectionFrame:GetParentElement():SetPath("scan", true)
-			private.fsm:ProcessEvent("EV_START_SCAN", "POST", private.scanContext)
-			return true
-		end
-		return putIntoChat
-	end
-	local origHandleModifiedItemClick = HandleModifiedItemClick
-	HandleModifiedItemClick = function(link)
-		return HandleShiftClickItem(origHandleModifiedItemClick, link)
-	end
-	local origChatEdit_InsertLink = ChatEdit_InsertLink
-	ChatEdit_InsertLink = function(link)
-		return HandleShiftClickItem(origChatEdit_InsertLink, link)
-	end
 end
 
 
@@ -151,10 +126,11 @@ function private.GetAuctioningSelectionFrame()
 		)
 		:SetRightChild(TSMAPI_FOUR.UI.NewElement("Frame", "content")
 			:SetLayout("VERTICAL")
-			:SetStyle("margin", { top = 38 })
+			:SetStyle("margin", { top = 43 })
 			:AddChild(TSMAPI_FOUR.UI.NewElement("TabGroup", "buttons")
 				:SetNavCallback(private.GetScansElement)
-				:AddPath(L["Recent Scans"], true)
+				:SetContextTable(TSM.db.profile.internalData.auctioningTabGroupContext, DEFAULT_TAB_GROUP_CONTEXT)
+				:AddPath(L["Recent Scans"])
 				:AddPath(L["Favorite Scans"])
 			)
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")
@@ -179,10 +155,10 @@ function private.GetAuctioningSelectionFrame()
 						:SetFontHeight(12)
 						:SetJustifyH("LEFT")
 						:SetIconSize(12)
-						:SetTextFunction(private.BagGetItemText)
-						:SetIconFunction(private.BagGetItemIcon)
-						:SetSortValueFunction(private.BagGetItemSortValue)
-						:SetTooltipFunction(private.BagGetItemTooltip)
+						:SetTextInfo("autoBaseItemString", TSM.UI.GetColoredItemName)
+						:SetIconInfo("itemTexture")
+						:SetTooltipInfo("autoBaseItemString")
+						:SetSortInfo("name")
 						:Commit()
 					:NewColumn("operation")
 						:SetTitles(L["Auctioning Operation"])
@@ -190,13 +166,13 @@ function private.GetAuctioningSelectionFrame()
 						:SetFont(TSM.UI.Fonts.MontserratMedium)
 						:SetFontHeight(12)
 						:SetJustifyH("LEFT")
-						:SetTextFunction(private.BagGetOperationText)
-						:SetSortValueFunction(private.BagGetOperationSortValue)
+						:SetTextInfo("firstOperation", private.BagGetOperationText)
+						:SetSortInfo("firstOperation")
 						:Commit()
-					:SetDefaultSort("item", true)
 					:Commit()
-				:SetQuery(TSM.Auctioning.PostScan.GetBagsQuery())
-				:SetIsSelectionEnabledFunc(private.BagScrollingTableIsSelectionEnabled)
+				:SetQuery(TSM.Auctioning.PostScan.CreateBagsQuery())
+				:SetAutoReleaseQuery(true)
+				:SetSelectionValidator(private.BagScrollingTableIsSelectionEnabled)
 				:SetScript("OnSelectionChanged", private.BagScrollingTableOnSelectionChanged)
 			)
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")
@@ -387,18 +363,11 @@ function private.GetAuctioningScanFrame()
 						:SetStyle("autoWidth", true)
 						:SetText(L["Stack / Quantity"] .. ":")
 					)
-					:AddChild(TSMAPI_FOUR.UI.NewElement("EditableText", "text")
+					:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "text")
+						:SetStyle("margin.left", 4)
 						:SetStyle("font", TSM.UI.Fonts.RobotoMedium)
 						:SetStyle("fontHeight", 12)
 						:SetStyle("justifyH", "RIGHT")
-						:SetScript("OnValueChanged", private.StackQuantityTextOnValueChanged)
-					)
-					:AddChild(TSMAPI_FOUR.UI.NewElement("Button", "editBtn")
-						:SetStyle("width", 12)
-						:SetStyle("height", 12)
-						:SetStyle("margin", { left = 4 })
-						:SetStyle("backgroundTexturePack", "iconPack.12x12/Edit")
-						:SetScript("OnClick", private.EditBtnOnClick)
 					)
 				)
 				:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "duration")
@@ -445,13 +414,14 @@ function private.GetAuctioningScanFrame()
 				:SetProgressIconHidden(false)
 				:SetText(L["Starting Scan..."])
 			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("ActionButton", "processBtn", "TSMAuctioningBtn")
+			:AddChild(TSMAPI_FOUR.UI.NewNamedElement("ActionButton", "processBtn", "TSMAuctioningBtn")
 				:SetStyle("width", 107)
 				:SetStyle("height", 26)
 				:SetStyle("margin.right", 8)
 				:SetStyle("iconTexturePack", "iconPack.14x14/Post")
 				:SetText(L["POST"])
 				:SetDisabled(true)
+				:DisableClickCooldown(true)
 				:SetScript("OnClick", private.ProcessButtonOnClick)
 			)
 			:AddChild(TSMAPI_FOUR.UI.NewElement("ActionButton", "skipBtn")
@@ -461,6 +431,7 @@ function private.GetAuctioningScanFrame()
 				:SetStyle("iconTexturePack", "iconPack.14x14/Skip")
 				:SetText(L["SKIP"])
 				:SetDisabled(true)
+				:DisableClickCooldown(true)
 				:SetScript("OnClick", private.SkipButtonOnClick)
 			)
 			:AddChild(TSMAPI_FOUR.UI.NewElement("ActionButton", "stopBtn")
@@ -478,26 +449,35 @@ end
 
 function private.ScanNavCallback(_, path)
 	if path == L["Auctioning Log"] then
+		private.logQuery = private.logQuery or TSM.Auctioning.Log.CreateQuery()
 		return TSMAPI_FOUR.UI.NewElement("Frame", "logFrame")
 			:SetLayout("VERTICAL")
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")
 				:SetStyle("color", "#9d9d9d")
 				:SetStyle("height", 1)
 			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("FastScrollingTable", "log")
+			:AddChild(TSMAPI_FOUR.UI.NewElement("QueryScrollingTable", "log")
 				:SetStyle("headerBackground", "#404040")
 				:SetStyle("headerFontHeight", 12)
 				:GetScrollingTableInfo()
+					:NewColumn("index")
+						:SetFont(TSM.UI.Fonts.FRIZQT)
+						:SetFontHeight(12)
+						:SetJustifyH("CENTER")
+						:SetTextInfo("index", private.LogGetIndexText)
+						:SetSortInfo("index")
+						:SetWidth(20)
+						:Commit()
 					:NewColumn("item")
 						:SetTitles(L["Item"])
 						:SetFont(TSM.UI.Fonts.FRIZQT)
 						:SetFontHeight(12)
 						:SetJustifyH("LEFT")
 						:SetIconSize(12)
-						:SetTextFunction(private.LogGetItemText)
-						:SetIconFunction(private.LogGetItemIcon)
-						:SetSortValueFunction(private.LogGetItemSortValue)
-						:SetTooltipFunction(private.LogGetItemTooltip)
+						:SetTextInfo("itemString", TSM.UI.GetColoredItemName)
+						:SetIconInfo("itemString", TSMAPI_FOUR.Item.GetTexture)
+						:SetTooltipInfo("itemString")
+						:SetSortInfo("name")
 						:Commit()
 					:NewColumn("buyout")
 						:SetTitles(L["Your Buyout"])
@@ -505,39 +485,39 @@ function private.ScanNavCallback(_, path)
 						:SetFont(TSM.UI.Fonts.RobotoMedium)
 						:SetFontHeight(12)
 						:SetJustifyH("RIGHT")
-						:SetTextFunction(private.LogGetBuyoutText)
-						:SetSortValueFunction(private.LogGetBuyoutSortValue)
+						:SetTextInfo("buyout", private.LogGetBuyoutText)
+						:SetSortInfo("buyout")
 						:Commit()
 					:NewColumn("operation")
 						:SetTitles(L["Operation"])
-						:SetWidth(110)
+						:SetWidth(100)
 						:SetFont(TSM.UI.Fonts.FRIZQT)
 						:SetFontHeight(12)
 						:SetJustifyH("LEFT")
-						:SetTextFunction(private.LogGetOperationText)
-						:SetSortValueFunction(private.LogGetOperationSortValue)
+						:SetTextInfo("operation")
+						:SetSortInfo("operation")
 						:Commit()
 					:NewColumn("seller")
 						:SetTitles(L["Seller"])
-						:SetWidth(110)
+						:SetWidth(90)
 						:SetFont(TSM.UI.Fonts.FRIZQT)
 						:SetFontHeight(12)
 						:SetJustifyH("LEFT")
-						:SetTextFunction(private.LogGetSellerText)
-						:SetSortValueFunction(private.LogGetSellerSortValue)
+						:SetTextInfo("seller")
+						:SetSortInfo("seller")
 						:Commit()
 					:NewColumn("info")
-						:SetTitles(L["Info"])
+						:SetTitles(INFO)
 						:SetWidth(222)
 						:SetFont(TSM.UI.Fonts.FRIZQT)
 						:SetFontHeight(12)
 						:SetJustifyH("LEFT")
-						:SetTextFunction(private.LogGetInfoText)
-						:SetSortValueFunction(private.LogGetInfoSortValue)
+						:SetTextInfo("info")
+						:SetSortInfo("info")
 						:Commit()
-					:SetDefaultSort("item", true)
 					:Commit()
-				:SetQuery(TSM.Auctioning.Log.GetQuery())
+				:SetQuery(private.logQuery)
+				:SetSelectionDisabled(true)
 			)
 	elseif path == L["All Auctions"] then
 		return TSMAPI_FOUR.UI.NewElement("Frame", "auctionsFrame")
@@ -546,7 +526,7 @@ function private.ScanNavCallback(_, path)
 				:SetStyle("color", "#9d9d9d")
 				:SetStyle("height", 1)
 			)
-		 	:AddChild(TSMAPI_FOUR.UI.NewElement("AuctionScrollingTable", "auctions")
+			:AddChild(TSMAPI_FOUR.UI.NewElement("AuctionScrollingTable", "auctions")
 				:SetQuery(private.scanQuery)
 				:SetMarketValueFunction(private.MarketValueFunction)
 			)
@@ -560,6 +540,18 @@ end
 -- ============================================================================
 -- Local Script Handlers
 -- ============================================================================
+
+function private.OnItemLinked(_, itemLink)
+	if not private.selectionFrame or not TSM.UI.AuctionUI.StartingScan(L["Auctioning"]) then
+		return false
+	end
+	wipe(private.scanContext)
+	private.scanContext.isItems = true
+	tinsert(private.scanContext, TSMAPI_FOUR.Item.ToBaseItemString(itemLink, true))
+	private.selectionFrame:GetParentElement():SetPath("scan", true)
+	private.fsm:ProcessEvent("EV_START_SCAN", "POST", private.scanContext)
+	return true
+end
 
 function private.SelectionOnHide(frame)
 	assert(frame == private.selectionFrame)
@@ -610,9 +602,7 @@ function private.GroupTreeOnGroupSelectionChanged(groupTree)
 end
 
 function private.RunPostButtonOnclick(button)
-	button:SetPressed(false)
-	button:Draw()
-	if not TSM.UI.AuctionUI.StartingScan("Auctioning") then
+	if not TSM.UI.AuctionUI.StartingScan(L["Auctioning"]) then
 		return
 	end
 	wipe(private.scanContext)
@@ -624,9 +614,7 @@ function private.RunPostButtonOnclick(button)
 end
 
 function private.RunCancelButtonOnclick(button)
-	button:SetPressed(false)
-	button:Draw()
-	if not TSM.UI.AuctionUI.StartingScan("Auctioning") then
+	if not TSM.UI.AuctionUI.StartingScan(L["Auctioning"]) then
 		return
 	end
 	wipe(private.scanContext)
@@ -646,43 +634,34 @@ function private.SearchListOnDelete(_, dbRow)
 end
 
 function private.SearchListOnRowClick(searchList, dbRow)
-	if not TSM.UI.AuctionUI.StartingScan("Auctioning") then
+	if not TSM.UI.AuctionUI.StartingScan(L["Auctioning"]) then
 		return
 	end
 	local scanType = dbRow:GetField("searchType")
 	wipe(private.scanContext)
 	private.scanContext.isItems = scanType == "postItems" or nil
-	-- iterate through all the "filters" (either items or groups)
-	for _, filter in TSM.Auctioning.SavedSearches.FilterIterator(dbRow) do
-		tinsert(private.scanContext, filter)
-	end
+	TSM.Auctioning.SavedSearches.FiltersToTable(dbRow, private.scanContext)
 	searchList:GetParentElement():GetParentElement():GetParentElement():GetParentElement():SetPath("scan", true)
 	private.fsm:ProcessEvent("EV_START_SCAN", scanType == "cancelGroups" and "CANCEL" or "POST", private.scanContext)
 end
 
 function private.ProcessButtonOnClick(button)
-	button:SetPressed(false)
-	button:Draw()
 	private.fsm:ProcessEvent("EV_PROCESS_CLICKED")
 end
 
 function private.SkipButtonOnClick(button)
-	button:SetPressed(false)
-	button:Draw()
 	private.fsm:ProcessEvent("EV_SKIP_CLICKED")
 end
 
 function private.StopButtonOnClick(button)
-	button:SetPressed(false)
-	button:Draw()
 	private.fsm:ProcessEvent("EV_STOP_BUTTON_CLICKED")
 end
 
 function private.ScanFrameOnUpdate(frame)
+	frame:SetScript("OnUpdate", nil)
 	local baseFrame = frame:GetBaseElement()
 	baseFrame:SetStyle("bottomPadding", 38)
 	baseFrame:Draw()
-	frame:SetScript("OnUpdate", nil)
 	private.fsm:ProcessEvent("EV_SCAN_FRAME_SHOWN", frame)
 end
 
@@ -695,10 +674,10 @@ end
 
 function private.BagScrollingTableOnSelectionChanged(table)
 	local postBagsBtn = table:GetElement("__parent.buttonFrame.postBagsBtn")
-	postBagsBtn:SetDisabled(not next(table:GetSelection()))
+	postBagsBtn:SetDisabled(table:IsSelectionCleared())
 	postBagsBtn:Draw()
 	local clearBtn = table:GetElement("__parent.buttonFrame.clearSelectionBtn")
-	clearBtn:SetDisabled(not next(table:GetSelection()))
+	clearBtn:SetDisabled(table:IsSelectionCleared())
 	clearBtn:Draw()
 end
 
@@ -709,16 +688,14 @@ function private.RunClearSelectionButtonOnclick(button)
 end
 
 function private.RunPostBagsButtonOnclick(button)
-	button:SetPressed(false)
-	button:Draw()
-	if not TSM.UI.AuctionUI.StartingScan("Auctioning") then
+	if not TSM.UI.AuctionUI.StartingScan(L["Auctioning"]) then
 		return
 	end
 	wipe(private.scanContext)
 	private.scanContext.isItems = true
-	for record, selected in pairs(button:GetElement("__parent.__parent.bagScrollingTable"):GetSelection()) do
-		local itemString, operation = record:GetFields("itemString", "operation")
-		if selected and operation ~= "" then
+	for _, row in button:GetElement("__parent.__parent.bagScrollingTable"):SelectionIterator() do
+		local itemString, operation = row:GetFields("itemString", "firstOperation")
+		if operation then
 			tinsert(private.scanContext, itemString)
 		end
 	end
@@ -743,19 +720,6 @@ function private.BidBuyoutTextOnValueChanged(text, value)
 	end
 end
 
-function private.StackQuantityTextOnValueChanged(text, value)
-	local matchStr = gsub(L["%d of %d"], "%%d", "(%%d+)")
-	local num, stackSize = strmatch(value, matchStr)
-	num = tonumber(num)
-	stackSize = tonumber(stackSize)
-	if num and stackSize then
-		private.fsm:ProcessEvent("EV_POST_DETAIL_CHANGED", "numStacks", num)
-		private.fsm:ProcessEvent("EV_POST_DETAIL_CHANGED", "stackSize", stackSize)
-	else
-		text:Draw()
-	end
-end
-
 function private.DurationOnSelectionChanged(dropdown, value)
 	local postTime = TSMAPI_FOUR.Util.GetDistinctTableKey(AUCTION_DURATIONS, value)
 	private.fsm:ProcessEvent("EV_POST_DETAIL_CHANGED", "postTime", postTime)
@@ -769,7 +733,7 @@ end
 
 function private.FSMCreate()
 	local fsmContext = {
-		db = TSMAPI_FOUR.Auction.NewDatabase(),
+		db = TSMAPI_FOUR.Auction.NewDatabase("AUCTIONING_AUCTIONS"),
 		scanFrame = nil,
 		scanThreadId = nil,
 		scanType = nil,
@@ -814,9 +778,11 @@ function private.FSMCreate()
 
 		local currentRow, numProcessed, numConfirmed, _, totalNum = nil, nil, nil, nil, nil
 		if context.scanType == "POST" then
-			currentRow, numProcessed, numConfirmed, _, totalNum = TSM.Auctioning.PostScan.GetStatus()
+			currentRow = TSM.Auctioning.PostScan.GetCurrentRow()
+			numProcessed, numConfirmed, _, totalNum = TSM.Auctioning.PostScan.GetStatus()
 		elseif context.scanType == "CANCEL" then
-			currentRow, numProcessed, numConfirmed, _, totalNum = TSM.Auctioning.CancelScan.GetStatus()
+			currentRow = TSM.Auctioning.CancelScan.GetCurrentRow()
+			numProcessed, numConfirmed, _, totalNum = TSM.Auctioning.CancelScan.GetStatus()
 		else
 			error("Invalid scan type: "..tostring(context.scanType))
 		end
@@ -826,7 +792,18 @@ function private.FSMCreate()
 		local detailsHeader1 = header:GetElement("details1")
 		local detailsHeader2 = header:GetElement("details2")
 		if currentRow then
+			local selectedRow = nil
+			for _, row in private.logQuery:Iterator() do
+				if currentRow:GetField("index") == row:GetField("index") then
+					selectedRow = row
+				end
+			end
+			if selectedRow and context.scanFrame:GetElement("tabs"):GetPath() == L["Auctioning Log"] then
+				context.scanFrame:GetElement("tabs.logFrame.log"):SetSelection(selectedRow:GetUUID())
+			end
+
 			local itemString = currentRow:GetField("itemString")
+			local rowStacksRemaining = currentRow:GetField("numStacks") - currentRow:GetField("numProcessed")
 			itemContent:GetElement("icon")
 				:SetStyle("backgroundTexture", TSMAPI_FOUR.Item.GetTexture(itemString))
 				:SetTooltip(itemString)
@@ -835,19 +812,18 @@ function private.FSMCreate()
 				:SetTooltip(itemString)
 			detailsHeader1:GetElement("bid.text"):SetText(TSMAPI_FOUR.Money.ToString(currentRow:GetField("bid")))
 			detailsHeader1:GetElement("buyout.text"):SetText(TSMAPI_FOUR.Money.ToString(currentRow:GetField("buyout")))
-			detailsHeader2:GetElement("quantity.text"):SetText(format(L["%d of %d"], currentRow:GetField("numStacks"), currentRow:GetField("stackSize")))
+			detailsHeader2:GetElement("quantity.text"):SetText(format(L["%d of %d"], rowStacksRemaining, currentRow:GetField("stackSize")))
 			if context.scanType == "POST" then
 				detailsHeader1:GetElement("bid.editBtn"):Show()
 				detailsHeader1:GetElement("buyout.editBtn"):Show()
-				detailsHeader2:GetElement("quantity.editBtn"):Show()
 				detailsHeader2:GetElement("duration.dropdown"):SetDisabled(false)
 				detailsHeader2:GetElement("duration.dropdown"):SetSelection(AUCTION_DURATIONS[currentRow:GetField("postTime")])
 			else
 				detailsHeader1:GetElement("bid.editBtn"):Hide()
 				detailsHeader1:GetElement("buyout.editBtn"):Hide()
-				detailsHeader2:GetElement("quantity.editBtn"):Hide()
 				detailsHeader2:GetElement("duration.dropdown"):SetDisabled(true)
 			end
+			currentRow:Release()
 		else
 			itemContent:GetElement("icon")
 				:SetStyle("backgroundTexture", nil)
@@ -860,9 +836,11 @@ function private.FSMCreate()
 			detailsHeader1:GetElement("buyout.text"):SetText("-")
 			detailsHeader1:GetElement("buyout.editBtn"):Hide()
 			detailsHeader2:GetElement("quantity.text"):SetText("-")
-			detailsHeader2:GetElement("quantity.editBtn"):Hide()
 			detailsHeader2:GetElement("duration.dropdown"):SetSelection("")
 			detailsHeader2:GetElement("duration.dropdown"):SetDisabled(true)
+			if context.scanFrame:GetElement("tabs"):GetPath() == L["Auctioning Log"] then
+				context.scanFrame:GetElement("tabs.logFrame.log"):SetSelection(nil)
+			end
 		end
 
 		local processText, processIcon = nil, nil
@@ -870,7 +848,7 @@ function private.FSMCreate()
 			processText = L["POST"]
 			processIcon = "iconPack.18x18/Post"
 		elseif context.scanType == "CANCEL" then
-			processText = L["CANCEL"]
+			processText = strupper(CANCEL)
 			processIcon = "iconPack.18x18/Post" -- FIXME
 		else
 			error("Invalid scan type: "..tostring(context.scanType))
@@ -950,7 +928,7 @@ function private.FSMCreate()
 					context.scanFrame:GetParentElement():SetPath("selection", true)
 					context.scanFrame = nil
 				end
-				TSM.UI.AuctionUI.EndedScan("Auctioning")
+				TSM.UI.AuctionUI.EndedScan(L["Auctioning"])
 			end)
 			:AddTransition("ST_INIT")
 			:AddTransition("ST_STARTING_SCAN")
@@ -961,8 +939,12 @@ function private.FSMCreate()
 				context.scanType = scanType
 				if context.scanType == "POST" then
 					context.scanThreadId = TSM.Auctioning.PostScan.Prepare()
+					private.logQuery:ResetOrderBy()
+					private.logQuery:OrderBy("index", true)
 				elseif context.scanType == "CANCEL" then
 					context.scanThreadId = TSM.Auctioning.CancelScan.Prepare()
+					private.logQuery:ResetOrderBy()
+					private.logQuery:OrderBy("index", false)
 				else
 					error("Invalid scan type: "..tostring(context.scanType))
 				end
@@ -1017,7 +999,7 @@ function private.FSMCreate()
 			:SetOnEnter(function(context, success, canRetry)
 				if context.scanType == "POST" then
 					TSM.Auctioning.PostScan.HandleConfirm(success, canRetry)
-					local _, _, numConfirmed, numFailed, totalNum = TSM.Auctioning.PostScan.GetStatus()
+					local _, numConfirmed, numFailed, totalNum = TSM.Auctioning.PostScan.GetStatus()
 					if numConfirmed == totalNum then
 						if numFailed > 0 then
 							-- TODO: need to wait for the player's bags to settle
@@ -1050,7 +1032,7 @@ function private.FSMCreate()
 		)
 		:AddState(TSMAPI_FOUR.FSM.NewState("ST_RESULTS")
 			:SetOnEnter(function(context)
-				TSM.UI.AuctionUI.EndedScan("Auctioning")
+				TSM.UI.AuctionUI.EndedScan(L["Auctioning"])
 				TSMAPI_FOUR.Thread.Kill(context.scanThreadId)
 				context.scanProgress = 1
 				context.scanProgressText = L["Done Scanning"]
@@ -1138,81 +1120,19 @@ end
 -- ============================================================================
 
 function private.BagScrollingTableIsSelectionEnabled(_, record)
-	return record:GetField("operation") ~= ""
+	return record:GetField("firstOperation") and true or false
 end
 
-function private.BagGetItemIcon(_, record)
-	return record:GetField("itemTexture")
+function private.BagGetOperationText(firstOperation)
+	return firstOperation or ("|cfff72d20"..L["Skipped: No assigned operation"].."|r")
 end
 
-function private.BagGetItemText(_, record)
-	return TSM.UI.GetColoredItemName(record:GetField("autoBaseItemString"))
-end
-
-function private.BagGetOperationText(_, record)
-	local operation = record:GetField("operation")
-	return operation ~= "" and operation or "|cfff72d20"..L["Skipped: No assigned operation"].."|r"
-end
-
-function private.BagGetItemSortValue(_, record)
-	return TSMAPI_FOUR.Item.GetName(record:GetField("itemLink"))
-end
-
-function private.BagGetItemTooltip(_, record)
-	return record:GetField("autoBaseItemString")
-end
-
-function private.BagGetOperationSortValue(_, record)
-	return record:GetField("operation")
-end
-
-function private.LogGetItemText(_, record)
-	return TSM.UI.GetColoredItemName(record:GetField("itemLink"))
-end
-
-function private.LogGetBuyoutText(_, record)
-	local buyout = record:GetField("buyout")
+function private.LogGetBuyoutText(buyout)
 	return buyout == 0 and "-" or TSMAPI_FOUR.Money.ToString(buyout, "OPT_PAD", "OPT_SEP")
 end
 
-function private.LogGetOperationText(_, record)
-	return record:GetField("operation")
-end
-
-function private.LogGetSellerText(_, record)
-	return record:GetField("seller")
-end
-
-function private.LogGetInfoText(_, record)
-	return record:GetField("info")
-end
-
-function private.LogGetItemIcon(_, record)
-	return record:GetField("itemTexture")
-end
-
-function private.LogGetItemSortValue(_, record)
-	return TSMAPI_FOUR.Item.GetName(record:GetField("itemLink"))
-end
-
-function private.LogGetItemTooltip(_, record)
-	return record:GetField("itemString")
-end
-
-function private.LogGetBuyoutSortValue(_, record)
-	return record:GetField("buyout")
-end
-
-function private.LogGetOperationSortValue(_, record)
-	return record:GetField("operation")
-end
-
-function private.LogGetSellerSortValue(_, record)
-	return record:GetField("seller")
-end
-
-function private.LogGetInfoSortValue(_, record)
-	return record:GetField("info")
+function private.LogGetIndexText(index)
+	return ""
 end
 
 function private.MarketValueFunction(row)

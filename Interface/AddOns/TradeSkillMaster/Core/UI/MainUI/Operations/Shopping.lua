@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Shopping = TSM.MainUI.Operations:NewPackage("Shopping")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { currentOperationName = nil }
 local RESTOCK_SOURCES = { bank = BANK, guild = GUILD, alts = L["Alts"], auctions = L["Auctions"] }
 local RESTOCK_SOURCES_ORDER = { "alts", "auctions", "bank", "guild" }
@@ -31,7 +31,7 @@ end
 
 function private.GetShoppingOperationSettings(operationName)
 	private.currentOperationName = operationName
-	local operation = TSM.operations.Shopping[private.currentOperationName]
+	local operation = TSM.Operations.GetSettings("Shopping", private.currentOperationName)
 	return TSMAPI_FOUR.UI.NewElement("Frame", "content")
 		:SetLayout("VERTICAL")
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")

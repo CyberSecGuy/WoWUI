@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local ValueSources = TSM.MainUI.Settings.Tooltip:NewPackage("ValueSources")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = {}
 
 
@@ -68,6 +68,8 @@ function private.GetTooltipSettingsFrame()
 				:AddChild(TSM.MainUI.Settings.Tooltip.CreateCheckbox(L["Display region market value avg"], TSM.db.global.tooltipOptions.moduleTooltips.AuctionDB, "regionMarketValue"))
 				:AddChild(TSM.MainUI.Settings.Tooltip.CreateCheckbox(L["Display region historical price"], TSM.db.global.tooltipOptions.moduleTooltips.AuctionDB, "regionHistorical"))
 				:AddChild(TSM.MainUI.Settings.Tooltip.CreateCheckbox(L["Display region sale avg"], TSM.db.global.tooltipOptions.moduleTooltips.AuctionDB, "regionSale"))
+				:AddChild(TSM.MainUI.Settings.Tooltip.CreateCheckbox(L["Display region sale rate"], TSM.db.global.tooltipOptions.moduleTooltips.AuctionDB, "regionSalePercent"))
+				:AddChild(TSM.MainUI.Settings.Tooltip.CreateCheckbox(L["Display region sold per day"], TSM.db.global.tooltipOptions.moduleTooltips.AuctionDB, "regionSoldPerDay"))
 			)
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "left")
 				:SetLayout("VERTICAL")

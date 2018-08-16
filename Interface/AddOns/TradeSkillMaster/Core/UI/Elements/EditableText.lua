@@ -14,7 +14,6 @@ local _, TSM = ...
 local private = { frameEditableTextLookup = {} }
 local EditableText = TSMAPI_FOUR.Class.DefineClass("EditableText", TSM.UI.Element)
 TSM.UI.EditableText = EditableText
-local IS_SCRIPT_HOOKED = { OnEscapePressed = true, OnEnterPressed = true }
 local STRING_RIGHT_PADDING = 16
 
 
@@ -104,7 +103,6 @@ function EditableText.SetEditing(self, editing)
 	if self._onEditingChangedHandler then
 		self:_onEditingChangedHandler(editing)
 	end
-	local frame = self:_GetBaseFrame()
 	if self:_GetStyle("autoWidth") then
 		self:GetParentElement():Draw()
 	else

@@ -13,10 +13,7 @@
 	<Script file="Arcanometer.lua"/>
 	<Script file="Archy.lua"/>
 	<Script file="ArgusEliteTracker.lua"/>
-	<Script file="Arh.lua"/>
 	<Script file="ArkInventory.lua"/>
-	<Script file="ArtifactPowerUser.lua"/>
-	<Script file="ArtifactTab.lua"/>
 	<Script file="Atlas.lua"/>
 	<Script file="AtlasLoot.lua"/>
 	<Script file="ATSW.lua"/>
@@ -25,6 +22,7 @@
 	<Script file="AuctionLite.lua"/>
 	<Script file="AutoBar.lua"/>
 	<Script file="AutoEquipQuestItem.lua"/>
+	<!--Script file="AzerothAutoPilot.lua"/-->
 	<Script file="Baggins.lua"/>
 	<Script file="Bagnon.lua"/>
 	<Script file="BagSync.lua"/>
@@ -53,7 +51,6 @@
 	<Script file="Cork.lua"/>
 	<Script file="Creator.lua"/>
 	<Script file="Critline.lua"/>
-	<Script file="DailyTamerCheck.lua"/>
 	<Script file="DBM.lua"/>
 	<Script file="DejaCharacterStats.lua"/>
 	<Script file="Details.lua"/>
@@ -87,6 +84,7 @@
 	<Script file="Healium.lua"/>
 	<Script file="Hekili.lua"/>
 	<Script file="Ignition.lua"/>
+	<!--Script file="Immersion.lua"/-->
 	<Script file="InboxMailBag.lua"/>
 	<Script file="Incoming.lua"/>
 	<Script file="InspectEquip.lua"/>
@@ -105,7 +103,6 @@
 	<Script file="Ludwig.lua"/>
 	<Script file="MageNuggets.lua"/>
 	<Script file="MailCommander.lua"/>
-	<Script file="MasterLootManagerRemix.lua"/>
 	<Script file="MasterPlan.lua"/>
 	<Script file="MinimalArchaeology.lua"/>
 	<Script file="MiscFixes.lua"/>
@@ -116,9 +113,8 @@
 	<Script file="MrTrader.lua"/>
 	<Script file="MyRolePlay.lua"/>
 	<Script file="MythicKeystoneStatus.lua"/>
-	<Script file="NirritisNotes.lua"/>
+	<Script file="Notes.lua"/>
 	<Script file="NoNoGoGo.lua"/>
-	<Script file="NPCScan.lua"/>
 	<Script file="NugRunning.lua"/>
 	<Script file="Numeration.lua"/>
 	<Script file="Odyssey.lua"/>
@@ -128,7 +124,7 @@
 	<Script file="oRA3.lua"/>
 	<Script file="OrderHallCommander.lua"/>
 	<Script file="Outfitter.lua"/>
-	<!--Script file="Ovale.lua"/-->
+	<Script file="Ovale.lua"/>
 	<Script file="Overachiever.lua"/>
 	<Script file="Pawn.lua"/>
 	<Script file="PetBattleTeams.lua"/>
@@ -152,8 +148,6 @@
 	<Script file="RCLootCouncil.lua"/>
 	<Script file="ReagentMaker.lua"/>
 	<Script file="Recount.lua"/>
-	<Script file="REFlex.lua"/>
-	<Script file="REPorter.lua"/>
 	<Script file="Scrap.lua"/>
 	<Script file="SearingPlasmaTracker.lua"/>
 	<Script file="ServerHop.lua"/>
@@ -170,6 +164,7 @@
 	<Script file="StormEarthAndFire.lua"/>
 	<Script file="Storyline.lua"/>
 	<Script file="Swatter.lua"/>
+	<Script file="Talented.lua"/>
 	<Script file="Talentless.lua"/>
 	<Script file="TalentSetManager.lua"/>
 	<Script file="tdBattlePetScript.lua"/>
@@ -187,12 +182,10 @@
 	<Script file="WeakAuras.lua"/>
 	<Script file="Wholly.lua"/>
 	<Script file="WorldBossStatus.lua"/>
-	<Script file="WorldQuestGroupFinder.lua"/>
 	<Script file="WorldQuestTab.lua"/>
 	<Script file="WowLua.lua"/>
 	<Script file="WoWPro.lua"/>
 	<Script file="wTetriNET.lua"/>
 	<Script file="xMerchant.lua"/>
 	<Script file="XPBarNone.lua"/>
-	<Script file="Zygor.lua"/>
 </Ui>

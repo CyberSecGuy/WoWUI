@@ -47,7 +47,7 @@ function OverlayApplicationFrame.Acquire(self)
 		:SetStyle("anchors", { { "TOPRIGHT", -26, -11 } })
 		:SetStyle("width", 18)
 		:SetStyle("height", 18)
-		:SetStyle("backgroundTexturePack", "iconPack.18x18/Subtract")
+		:SetStyle("backgroundTexturePack", "iconPack.18x18/Subtract/Circle")
 		:SetScript("OnClick", private.MinimizeBtnOnClick)
 	)
 	self:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Text", "title")
@@ -100,10 +100,13 @@ end
 -- within the settings DB.
 -- @tparam OverlayApplicationFrame self The overlay application frame object
 -- @tparam table tbl The context table
--- @tparam table defaultTbl The default values (required fields: `topRightX`, `topRightY`)
+-- @tparam table defaultTbl The default values (required fields: `minimized`, `topRightX`, `topRightY`)
 -- @treturn OverlayApplicationFrame The overlay application frame object
 function OverlayApplicationFrame.SetContextTable(self, tbl, defaultTbl)
-	assert(defaultTbl.topRightX and defaultTbl.topRightY)
+	assert(defaultTbl.minimized ~= nil and defaultTbl.topRightX and defaultTbl.topRightY)
+	if tbl.minimized == nil then
+		tbl.minimized = defaultTbl.minimized
+	end
 	tbl.topRightX = tbl.topRightX or defaultTbl.topRightX
 	tbl.topRightY = tbl.topRightY or defaultTbl.topRightY
 	self._contextTable = tbl
@@ -117,7 +120,7 @@ function OverlayApplicationFrame.Draw(self)
 		self:GetElement("content"):Hide()
 		self:SetStyle("height", TITLE_HEIGHT)
 	else
-		self:GetElement("minimizeBtn"):SetStyle("backgroundTexturePack", "iconPack.18x18/Subtract")
+		self:GetElement("minimizeBtn"):SetStyle("backgroundTexturePack", "iconPack.18x18/Subtract/Circle")
 		self:GetElement("content"):Show()
 		-- set the height of the frame based on the height of the children
 		local contentHeight, contentHeightExpandable = self:GetElement("content"):_GetMinimumDimension("HEIGHT")

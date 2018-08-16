@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Accounting = TSM.MainUI.Settings.Tooltip:NewPackage("Accounting")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = {}
 
 
@@ -41,7 +41,7 @@ function private.GetTooltipSettingsFrame()
 			:SetText(L["Select which accounting information to display in item tooltips."])
 		)
 		:AddChild(TSM.MainUI.Settings.Tooltip.CreateCheckbox(L["Display sale info"], TSM.db.global.tooltipOptions.moduleTooltips.Accounting, "sale"))
-		:AddChild(TSM.MainUI.Settings.Tooltip.CreateCheckbox(L["Display market value"], TSM.db.global.tooltipOptions.moduleTooltips.Accounting, "expiredAuctions"))
+		:AddChild(TSM.MainUI.Settings.Tooltip.CreateCheckbox(L["Display expired auctions"], TSM.db.global.tooltipOptions.moduleTooltips.Accounting, "expiredAuctions"))
 		:AddChild(TSM.MainUI.Settings.Tooltip.CreateCheckbox(L["Display cancelled since last sale"], TSM.db.global.tooltipOptions.moduleTooltips.Accounting, "cancelledAuctions"))
 		:AddChild(TSM.MainUI.Settings.Tooltip.CreateCheckbox(L["Display sale rate"], TSM.db.global.tooltipOptions.moduleTooltips.Accounting, "saleRate"))
 		:AddChild(TSM.MainUI.Settings.Tooltip.CreateCheckbox(L["Display purchase info"], TSM.db.global.tooltipOptions.moduleTooltips.Accounting, "purchase"))

@@ -4,14 +4,12 @@ local S = E:GetModule('Skins')
 --Cache global variables
 --Lua functions
 local _G = _G
+local pairs = pairs
+local select = select
 local unpack = unpack
 --WoW API / Variables
 local CreateFrame = CreateFrame
 local hooksecurefunc = hooksecurefunc
-local IsQuestComplete = IsQuestComplete
-local GetQuestLogTitle = GetQuestLogTitle
-local GetNumQuestLogEntries = GetNumQuestLogEntries
-local QuestLogQuests_GetHeaderButton = QuestLogQuests_GetHeaderButton
 --Global variables that we don't cache, list them here for mikk's FindGlobals script
 -- GLOBALS:
 
@@ -237,10 +235,10 @@ local function LoadSkin()
 	--QuestLogDetailScrollFrame:StripTextures()
 	--S:HandleCloseButton(QuestLogDetailFrameCloseButton)
 
-	hooksecurefunc("QuestFrame_ShowQuestPortrait", function(parentFrame, _, _, _, x, y)
-		QuestNPCModel:ClearAllPoints();
-		QuestNPCModel:Point("TOPLEFT", parentFrame, "TOPRIGHT", x + 18, y);
-	end)
+	--hooksecurefunc("QuestFrame_ShowQuestPortrait", function(parentFrame, _, _, _, x, y)
+		--QuestNPCModel:ClearAllPoints();
+		--QuestNPCModel:Point("TOPLEFT", parentFrame, "TOPRIGHT", x + 18, y);
+	--end)
 
 	QuestLogPopupDetailFrame:StripTextures()
 	QuestLogPopupDetailFrameInset:StripTextures()
@@ -261,6 +259,7 @@ local function LoadSkin()
 	end)
 
 	S:HandleCloseButton(QuestLogPopupDetailFrameCloseButton)
+	S:HandleScrollBar(QuestMapDetailsScrollFrameScrollBar)
 
 	QuestLogPopupDetailFrame.ShowMapButton:StripTextures()
 	S:HandleButton(QuestLogPopupDetailFrame.ShowMapButton)
@@ -270,25 +269,24 @@ local function LoadSkin()
 
 	-- Skin the +/- buttons in the QuestLog
 	hooksecurefunc("QuestLogQuests_Update", function()
-		local _, isHeader, isCollapsed, questID, isTask, isBounty, isHidden, numEntries, headerIndex, headerCollapsed, headerShown, headerButton;
+		local tex, texture
+		for i = 6, QuestMapFrame.QuestsFrame.Contents:GetNumChildren() do
+			local child = select(i, QuestMapFrame.QuestsFrame.Contents:GetChildren())
+			if child and child.ButtonText and not child.Text then
+				if not child.buttonSized then
+					child:Size(16, 16)
+					child.buttonSized = true
+				end
 
-		numEntries = GetNumQuestLogEntries();
-		headerIndex, headerCollapsed = 0, false;
-
-		for questLogIndex = 1, numEntries do
-			_, _, _, isHeader, isCollapsed, _, _, questID, _, _, _, _, isTask, isBounty, _, isHidden, _ = GetQuestLogTitle(questLogIndex);
-
-			if isHeader then
-				headerShown, headerCollapsed = false, isCollapsed;
-			elseif not isTask and not isHidden and not headerShown and (not isBounty or IsQuestComplete(questID)) then
-				headerShown, headerIndex = true, headerIndex+1;
-				headerButton = QuestLogQuests_GetHeaderButton(headerIndex);
-
-				if headerButton then
-					if headerCollapsed then
-						headerButton:SetNormalTexture("Interface\\AddOns\\ElvUI\\media\\textures\\PlusButton")
-					else
-						headerButton:SetNormalTexture("Interface\\AddOns\\ElvUI\\media\\textures\\MinusButton")
+				tex = select(2, child:GetRegions())
+				if tex and tex.GetTexture then
+					texture = tex:GetTexture()
+					if texture then
+						if texture:find("PlusButton") then
+							tex:SetTexture("Interface\\AddOns\\ElvUI\\media\\textures\\PlusButton")
+						else
+							tex:SetTexture("Interface\\AddOns\\ElvUI\\media\\textures\\MinusButton")
+						end
 					end
 				end
 			end

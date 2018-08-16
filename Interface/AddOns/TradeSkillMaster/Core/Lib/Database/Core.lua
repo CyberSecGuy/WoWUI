@@ -13,7 +13,36 @@ TSMAPI_FOUR.Database = {}
 local _, TSM = ...
 local Database = TSM:NewPackage("Database")
 Database.classes = {}
-local private = { recycledRows = {}, recycledQueries = {}, recycledQueryClauses = {} }
+local private = {
+	-- make the initial UUID a very big negative number so it doesn't conflict with other numbers
+	lastUUID = -1000000,
+	databaseQueries = nil,
+	databaseQueryClauses = nil,
+	databaseQueryResultRows = nil,
+	dbByNameLookup = {},
+	infoNameDB = nil,
+	infoFieldDB = nil,
+}
+local INFO_NAME_DB_SCHEMA = {
+	fields = {
+		name = "string",
+	},
+	fieldAttributes = {
+		name = { "unique", "index" },
+	},
+}
+local INFO_FIELD_DB_SCHEMA = {
+	fields = {
+		dbName = "string",
+		field = "string",
+		type = "string",
+		attributes = "string",
+		order = "number",
+	},
+	fieldAttributes = {
+		dbName = { "index" },
+	},
+}
 
 
 
@@ -23,9 +52,41 @@ local private = { recycledRows = {}, recycledQueries = {}, recycledQueryClauses 
 
 --- Create a new database.
 -- @tparam table schema The database schema
+-- @tparam string name The name of the database for debug use
 -- @treturn Database The database object
-function TSMAPI_FOUR.Database.New(schema)
-	return Database.classes.Database(schema)
+function TSMAPI_FOUR.Database.New(schema, name)
+	name = name or tostring(schema)
+	private.infoNameDB:NewRow()
+		:SetField("name", name)
+		:Create()
+	local nextOrder = 1
+	for field, type in pairs(schema.fields) do
+		private.infoFieldDB:NewRow()
+			:SetField("dbName", name)
+			:SetField("field", field)
+			:SetField("type", type)
+			:SetField("attributes", schema.fieldAttributes and schema.fieldAttributes[field] and table.concat(schema.fieldAttributes[field], ",") or "")
+			:SetField("order", schema.fieldOrder and TSMAPI_FOUR.Util.TableKeyByValue(schema.fieldOrder, field) or nextOrder)
+			:Create()
+		nextOrder = nextOrder + 1
+	end
+	if schema.fieldAttributes then
+		for field in pairs(schema.fieldAttributes) do
+			if not schema.fields[field] then
+				-- multi-field index
+				private.infoFieldDB:NewRow()
+					:SetField("dbName", name)
+					:SetField("field", field)
+					:SetField("type", "-")
+					:SetField("attributes", "multi-field index")
+					:SetField("order", -1)
+					:Create()
+			end
+		end
+	end
+	local db = Database.classes.Database(schema)
+	private.dbByNameLookup[name] = db
+	return db
 end
 
 
@@ -34,38 +95,71 @@ end
 -- Module Functions (Internal)
 -- ============================================================================
 
-function Database.GetDatabaseRow()
-	if #private.recycledRows > 0 then
-		return tremove(private.recycledRows)
-	else
-		return Database.classes.DatabaseRow()
-	end
+function Database.OnInitialize()
+	private.databaseQueries = TSMAPI_FOUR.ObjectPool.New("DATABASE_QUERIES", Database.classes.DatabaseQuery, 1)
+	private.databaseQueryClauses = TSMAPI_FOUR.ObjectPool.New("DATABASE_QUERY_CLAUSES", Database.classes.DatabaseQueryClause, 3)
+	private.databaseQueryResultRows = TSMAPI_FOUR.ObjectPool.New("DATABASE_QUERY_RESULT_ROWS", Database.DatabaseQueryResultRow.New)
+
+	-- Create the information databases
+	private.infoNameDB = Database.classes.Database(INFO_NAME_DB_SCHEMA)
+	private.infoFieldDB = Database.classes.Database(INFO_FIELD_DB_SCHEMA)
 end
 
-function Database.RecycleDatabaseRow(row)
-	tinsert(private.recycledRows, row)
+function Database.GetNextUUID()
+	private.lastUUID = private.lastUUID - 1
+	return private.lastUUID
 end
 
 function Database.GetDatabaseQuery()
-	if #private.recycledQueries > 0 then
-		return tremove(private.recycledQueries)
-	else
-		return Database.classes.DatabaseQuery()
-	end
+	return private.databaseQueries:Get()
 end
 
 function Database.RecycleDatabaseQuery(query)
-	tinsert(private.recycledQueries, query)
+	private.databaseQueries:Recycle(query)
 end
 
 function Database.GetDatabaseQueryClause()
-	if #private.recycledQueryClauses > 0 then
-		return tremove(private.recycledQueryClauses)
-	else
-		return Database.classes.DatabaseQueryClause()
-	end
+	return private.databaseQueryClauses:Get()
 end
 
 function Database.RecycleDatabaseQueryClause(queryClause)
-	tinsert(private.recycledQueryClauses, queryClause)
+	private.databaseQueryClauses:Recycle(queryClause)
+end
+
+function Database.GetDatabaseQueryResultRow()
+	return private.databaseQueryResultRows:Get()
+end
+
+function Database.RecycleDatabaseQueryResultRow(row)
+	private.databaseQueryResultRows:Recycle(row)
+end
+
+
+
+-- ============================================================================
+-- Debug Functions
+-- ============================================================================
+
+function Database.InfoNameIterator()
+	return private.infoNameDB:NewQuery()
+		:Select("name")
+		:OrderBy("name", true)
+		:IteratorAndRelease()
+end
+
+function Database.CreateInfoFieldQuery(dbName)
+	return private.infoFieldDB:NewQuery()
+		:Equal("dbName", dbName)
+end
+
+function Database.GetNumRows(dbName)
+	return private.dbByNameLookup[dbName]:GetNumRows()
+end
+
+function Database.GetNumActiveQueries(dbName)
+	return #private.dbByNameLookup[dbName]._queries
+end
+
+function Database.CreateDBQuery(dbName)
+	return private.dbByNameLookup[dbName]:NewQuery()
 end

@@ -8,7 +8,7 @@
 
 TSMAPI_FOUR.Auction = {}
 local _, TSM = ...
-local Auction = TSM:NewPackage("Auction")
+TSM:NewPackage("Auction")
 
 
 

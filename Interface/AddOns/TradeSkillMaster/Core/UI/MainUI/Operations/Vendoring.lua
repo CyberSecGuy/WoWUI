@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Vendoring = TSM.MainUI.Operations:NewPackage("Vendoring")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { currentOperationName = nil }
 
 local RESTOCK_SOURCES = { bank = BANK, guild = GUILD, alts = L["Alts"], alts_ah = L["Alts AH"], ah = L["AH"], mail = L["Mail"] }
@@ -31,25 +31,7 @@ end
 function private.GetVendoringOperationSettings(operationName)
 	private.currentOperationName = operationName
 
-	local factionrealmList = {}
-	local factionrealmListOrder = {}
-	for _, factionrealm in ipairs(TSM.db:GetScopeKeys("factionrealm")) do
-		factionrealmList[factionrealm] = factionrealm
-		tinsert(factionrealmListOrder, factionrealm)
-	end
-
-	-- TODO clean up tables
-	local playerList = {}
-	local playerListOrder = {}
-	for factionrealm in TSM.db:GetConnectedRealmIterator("factionrealm") do
-		for _, character in TSM.db:FactionrealmCharacterIterator(factionrealm) do
-			local playerFullName = character.." - "..factionrealm
-			playerList[playerFullName] = character
-			tinsert(playerListOrder, playerFullName)
-		end
-	end
-
-	local operation = TSM.operations.Vendoring[private.currentOperationName]
+	local operation = TSM.Operations.GetSettings("Vendoring", private.currentOperationName)
 	return TSMAPI_FOUR.UI.NewElement("Frame", "content")
 		:SetLayout("VERTICAL")
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")
@@ -167,7 +149,7 @@ function private.GetVendoringOperationSettings(operationName)
 					:SetDisabled(not operation.enableSell)
 				)
 			)
-			:AddChild(TSM.MainUI.Operations.CreateLinkedSettingLine("vsMaxMarketValueSettingLine", L["Maximum Market Value (Enter ‘0c’ to disable)"], not operation.enableSell))
+			:AddChild(TSM.MainUI.Operations.CreateLinkedSettingLine("vsMaxMarketValueSettingLine", L["Maximum Market Value (Enter '0c' to disable)"], not operation.enableSell))
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "vsMaxMarketValueFrame")
 				:SetLayout("HORIZONTAL")
 				:SetStyle("height", 32)
@@ -193,7 +175,7 @@ function private.GetVendoringOperationSettings(operationName)
 					:SetDisabled(not operation.enableSell)
 				)
 			)
-			:AddChild(TSM.MainUI.Operations.CreateLinkedSettingLine("vsMaxDestroyValueSettingLine", L["Maximum Destroy Value (Enter ‘0c’ to disable)"], not operation.enableSell))
+			:AddChild(TSM.MainUI.Operations.CreateLinkedSettingLine("vsMaxDestroyValueSettingLine", L["Maximum Destroy Value (Enter '0c' to disable)"], not operation.enableSell))
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "vsMaxDestroyValueFrame")
 				:SetLayout("HORIZONTAL")
 				:SetStyle("height", 32)
@@ -230,7 +212,7 @@ end
 -- ============================================================================
 
 function private.EnableBuyingToggleOnValueChanged(toggle, value)
-	local operation = TSM.operations.Vendoring[private.currentOperationName]
+	local operation = TSM.Operations.GetSettings("Vendoring", private.currentOperationName)
 	local settingsFrame = toggle:GetParentElement():GetParentElement():GetParentElement()
 	settingsFrame:GetElement("restockQtyFrame.left.linkBtn")
 		:SetStyle("backgroundVertexColor", value and "#ffffff" or "#424242")
@@ -251,7 +233,7 @@ function private.EnableBuyingToggleOnValueChanged(toggle, value)
 end
 
 function private.EnableSellingToggleOnValueChanged(toggle, value)
-	local operation = TSM.operations.Vendoring[private.currentOperationName]
+	local operation = TSM.Operations.GetSettings("Vendoring", private.currentOperationName)
 	local settingsFrame = toggle:GetParentElement():GetParentElement():GetParentElement()
 	settingsFrame:GetElement("keepQtyFrame.left.linkBtn")
 		:SetStyle("backgroundVertexColor", value and "#ffffff" or "#424242")

@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Auctioning = TSM.MainUI.Settings.Tooltip:NewPackage("Auctioning")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = {}
 
 
@@ -29,23 +29,16 @@ end
 
 function private.GetTooltipSettingsFrame()
 	return TSMAPI_FOUR.UI.NewElement("ScrollFrame", "tooltipSettings")
-		:SetStyle("padding", 10)
-		:AddChild(TSM.MainUI.Settings.CreateHeadingLine("auctioningTooptipSettingsTitle", L["Auctioning Tooltips"]))
-		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "auctioningTooptipSettingsDesc")
-			:SetStyle("height", 35)
-			:SetStyle("fontHeight", 16)
-			:SetStyle("justifyV", "CENTER")
-			:SetText(L["Show auction operation values in item tooltips."])
+		:SetStyle("padding.left", 12)
+		:SetStyle("padding.right", 12)
+		:AddChild(TSM.MainUI.Settings.Tooltip.CreateHeading("header", L["Accounting Tooltips"]))
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "dbHeadingDesc")
+			:SetStyle("height", 18)
+			:SetStyle("margin.bottom", 24)
+			:SetStyle("font", TSM.UI.Fonts.MontserratRegular)
+			:SetStyle("fontHeight", 14)
+			:SetStyle("textColor", "#ffffff")
+			:SetText(L["Select which auctioning information to display in item tooltips."])
 		)
-		:AddChild(TSMAPI_FOUR.UI.NewElement("Checkbox", "auctioningValuesCheckbox")
-			:SetStyle("height", 35)
-			:SetContext("operationPrices")
-			:SetText(L["Display auctioning values"])
-			:SetChecked(TSM.db.global.tooltipOptions.moduleTooltips.Auctioning.operationPrices)
-			:SetScript("OnValueChanged", private.SetAuctioningTooltipOption)
-		)
-end
-
-function private.SetAuctioningTooltipOption(self, value)
-	 TSM.db.global.tooltipOptions.moduleTooltips.Auctioning[self:GetContext()] = value
+		:AddChild(TSM.MainUI.Settings.Tooltip.CreateCheckbox(L["Display auctioning values"], TSM.db.global.tooltipOptions.moduleTooltips.Auctioning, "operationPrices"))
 end

@@ -4,7 +4,8 @@ local T = LibStub('LibTourist-3.0');
 
 local format, tonumber, pairs = string.format, tonumber, pairs
 
-local GetBindLocation, GetCurrentMapAreaID = GetBindLocation, GetCurrentMapAreaID
+local GetBindLocation = GetBindLocation
+local C_Map_GetBestMapForUnit = C_Map.GetBestMapForUnit
 local GetCurrencyInfo, GetCurrencyListSize = GetCurrencyInfo, GetCurrencyListSize
 local GetProfessionInfo, GetProfessions = GetProfessionInfo, GetProfessions
 local UnitLevel = UnitLevel
@@ -36,8 +37,8 @@ local currency = {
 	--777,	-- Timeless Coins
 	--697,	-- Elder Charm of Good Fortune
 	--738,	-- Lesser Charm of Good Fortune
-	390,	-- Conquest Points
-	392,	-- Honor Points
+	--390,	-- Conquest Points
+	--392,	-- Honor Points
 	--515,	-- Darkmoon Prize Ticket
 	--402,	-- Ironpaw Token
 	--776,	-- Warforged Seal
@@ -53,31 +54,38 @@ local currency = {
 	--821,	-- Draenor Clans Archaeology Fragment
 	--828,	-- Ogre Archaeology Fragment
 	--829,	-- Arakkoa Archaeology Fragment
-	1166, 	-- Timewarped Badge (6.22)
+	--1166, -- Timewarped Badge (6.22)
 	--1191,	-- Valor Points (6.23)
 	
 	-- Legion
 	--1226,	-- Nethershard (Invasion scenarios)
-	1172,	-- Highborne Archaeology Fragment
-	1173,	-- Highmountain Tauren Archaeology Fragment
+	--1172,	-- Highborne Archaeology Fragment
+	--1173,	-- Highmountain Tauren Archaeology Fragment
 	--1155,	-- Ancient Mana
-	1220,	-- Order Resources
-	1275,	-- Curious Coin (Buy stuff :P)
+	--1220,	-- Order Resources
+	--1275,	-- Curious Coin (Buy stuff :P)
 	--1226,	-- Nethershard (Invasion scenarios)
-	1273,	-- Seal of Broken Fate (Raid)
+	--1273,	-- Seal of Broken Fate (Raid)
 	--1154,	-- Shadowy Coins
 	--1149,	-- Sightless Eye (PvP)
 	--1268,	-- Timeworn Artifact (Honor Points?)
 	--1299,	-- Brawler's Gold
 	--1314,	-- Lingering Soul Fragment (Good luck with this one :D)
-	1342,	-- Legionfall War Supplies (Construction at the Broken Shore)
-	1355,	-- Felessence (Craft Legentary items)
+	--1342,	-- Legionfall War Supplies (Construction at the Broken Shore)
+	--1355,	-- Felessence (Craft Legentary items)
 	--1356,	-- Echoes of Battle (PvP Gear)
 	--1357,	-- Echoes of Domination (Elite PvP Gear)
-	1416,	-- Coins of Air
-	1506,	-- Argus Waystone
-	1508,	-- Veiled Argunite
-	1533,	-- Wakening Essence
+	--1416,	-- Coins of Air
+	--1506,	-- Argus Waystone
+	--1508,	-- Veiled Argunite
+	--1533,	-- Wakening Essence
+
+	-- BfA
+	1560, 	-- War Resources
+	1565,	-- Rich Azerite Fragment
+	1580,	-- Seal of Wartorn Fate
+	1587,	-- War Supplies
+	1710,	-- Seafarer's Dubloon
 }
 
 -----------------------
@@ -233,7 +241,7 @@ end
 
 -- Get Fishing Level
 function LP:GetFishingLvl(minFish, ontt)
-	local mapID = GetCurrentMapAreaID()
+	local mapID = C_Map_GetBestMapForUnit("player")
 	local zoneText = T:GetMapNameByIDAlt(mapID) or UNKNOWN;
 	local uniqueZone = T:GetUniqueZoneNameForLookup(zoneText, continentID)
 	local minFish = T:GetFishingLevel(uniqueZone)
@@ -271,7 +279,7 @@ end
 
 -- Zone level range
 function LP:GetLevelRange(zoneText, ontt)
-	local mapID = GetCurrentMapAreaID()
+	local mapID = C_Map_GetBestMapForUnit("player")
 	local zoneText = T:GetMapNameByIDAlt(mapID) or UNKNOWN;	
 	local low, high = T:GetLevel(zoneText)
 	local dlevel
@@ -299,7 +307,7 @@ end
 
 -- PetBattle Range
 function LP:GetBattlePetLvl(zoneText, ontt)
-	local mapID = GetCurrentMapAreaID()
+	local mapID = C_Map_GetBestMapForUnit("player")
 	local zoneText = T:GetMapNameByIDAlt(mapID) or UNKNOWN;
 	local uniqueZone = T:GetUniqueZoneNameForLookup(zoneText, continentID)
 	local low,high = T:GetBattlePetLevel(uniqueZone)
@@ -325,10 +333,8 @@ function LP:GetBattlePetLvl(zoneText, ontt)
 	return plevel or ""
 end
 
-local capRank = 800
-
 function LP:UpdateTooltip()
-	local mapID = GetCurrentMapAreaID()
+	local mapID = C_Map_GetBestMapForUnit("player")
 	local zoneText = T:GetMapNameByIDAlt(mapID) or UNKNOWN;
 	local curPos = (zoneText.." ") or "";
 
@@ -433,7 +439,7 @@ function LP:UpdateTooltip()
 		for _, id in pairs(proftable) do
 			local name, icon, rank, maxRank, _, _, _, rankModifier = GetProfessionInfo(id)
 
-			if rank < capRank or (not E.db.locplus.profcap) then
+			if rank < maxRank or (not E.db.locplus.profcap) then
 				icon = ("|T%s:12:12:1:0|t"):format(icon)
 				if (rankModifier and rankModifier > 0) then
 					GameTooltip:AddDoubleLine(format("%s %s :", icon, name), (format("%s |cFF6b8df4+ %s|r / %s", rank, rankModifier, maxRank)), 1, 1, 1, selectioncolor)				

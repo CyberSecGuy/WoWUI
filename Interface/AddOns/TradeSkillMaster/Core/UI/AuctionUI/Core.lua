@@ -8,12 +8,14 @@
 
 local _, TSM = ...
 local AuctionUI = TSM.UI:NewPackage("AuctionUI")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = {
 	topLevelPages = {},
 	frame = nil,
+	hasShown = false,
 	isSwitching = false,
 	scanningPage = nil,
+	updateCallbacks = {},
 }
 local HEADER_LINE_TEXT_MARGIN = { right = 8 }
 local HEADER_LINE_MARGIN = { top = 16, bottom = 16 }
@@ -27,13 +29,44 @@ local MIN_FRAME_SIZE = { width = 830, height = 587 }
 
 function AuctionUI.OnInitialize()
 	UIParent:UnregisterEvent("AUCTION_HOUSE_SHOW")
-	TSMAPI_FOUR.Event.Register("AUCTION_HOUSE_SHOW", private.ShowAuctionFrame)
+	TSMAPI_FOUR.Event.Register("AUCTION_HOUSE_SHOW", private.AuctionFrameInit)
 	TSMAPI_FOUR.Event.Register("AUCTION_HOUSE_CLOSED", private.HideAuctionFrame)
 	TSMAPI_FOUR.Delay.AfterTime(1, function() LoadAddOn("Blizzard_AuctionUI") end)
+
+	-- setup hooks to handle shift-clicking on items while the AH is open
+	local function HandleShiftClickItem(origFunc, itemLink)
+		local putIntoChat = origFunc(itemLink)
+		if putIntoChat or not private.frame then
+			return putIntoChat
+		end
+		local name = TSMAPI_FOUR.Item.GetName(itemLink)
+		if not name then
+			return putIntoChat
+		end
+		local path = private.frame:GetSelectedNavButton()
+		for _, info in ipairs(private.topLevelPages) do
+			if info.name == path then
+				if info.itemLinkedHandler(name, itemLink) then
+					return true
+				else
+					return putIntoChat
+				end
+			end
+		end
+		error("Invalid frame path")
+	end
+	local origHandleModifiedItemClick = HandleModifiedItemClick
+	HandleModifiedItemClick = function(link)
+		return HandleShiftClickItem(origHandleModifiedItemClick, link)
+	end
+	local origChatEdit_InsertLink = ChatEdit_InsertLink
+	ChatEdit_InsertLink = function(link)
+		return HandleShiftClickItem(origChatEdit_InsertLink, link)
+	end
 end
 
-function AuctionUI.RegisterTopLevelPage(name, texturePack, callback)
-	tinsert(private.topLevelPages, { name = name, texturePack = texturePack, callback = callback })
+function AuctionUI.RegisterTopLevelPage(name, texturePack, callback, itemLinkedHandler)
+	tinsert(private.topLevelPages, { name = name, texturePack = texturePack, callback = callback, itemLinkedHandler = itemLinkedHandler })
 end
 
 function AuctionUI.CreateHeadingLine(id, text)
@@ -56,13 +89,16 @@ end
 
 function AuctionUI.StartingScan(pageName)
 	if private.scanningPage and private.scanningPage ~= pageName then
-		TSM:Printf(L["A scan is already in progress in another page (%s). Please stop that scan before starting another one."], private.scanningPage)
+		TSM:Printf(L["A scan is already in progress. Please stop that scan before starting another one."])
 		return false
 	end
 	private.scanningPage = pageName
 	TSM:LOG_INFO("Starting scan %s", pageName)
 	if private.frame then
 		private.frame:SetPulsingNavButton(private.scanningPage)
+	end
+	for _, callback in ipairs(private.updateCallbacks) do
+		callback()
 	end
 	return true
 end
@@ -74,7 +110,33 @@ function AuctionUI.EndedScan(pageName)
 		if private.frame then
 			private.frame:SetPulsingNavButton()
 		end
+		for _, callback in ipairs(private.updateCallbacks) do
+			callback()
+		end
 	end
+end
+
+function AuctionUI.SetOpenPage(name)
+	private.frame:SetSelectedNavButton(name, true)
+end
+
+function AuctionUI.IsPageOpen(name)
+	if not private.frame then
+		return false
+	end
+	return private.frame:GetSelectedNavButton() == name
+end
+
+function AuctionUI.IsScanning()
+	return private.scanningPage and true or false
+end
+
+function AuctionUI.RegisterUpdateCallback(callback)
+	tinsert(private.updateCallbacks, callback)
+end
+
+function AuctionUI.IsVisible()
+	return private.frame and true or false
 end
 
 
@@ -83,10 +145,7 @@ end
 -- Main Frame
 -- ============================================================================
 
-function private.ShowAuctionFrame()
-	if private.frame then
-		return
-	end
+function private.AuctionFrameInit()
 	if not private.hasShown then
 		private.hasShown = true
 		local tabId = AuctionFrame.numTabs + 1
@@ -101,9 +160,23 @@ function private.ShowAuctionFrame()
 		PanelTemplates_EnableTab(AuctionFrame, tabId)
 		tab:SetScript("OnClick", private.TSMTabOnClick)
 	end
+	if TSM.db.global.internalData.auctionUIFrameContext.showDefault then
+		UIParent_OnEvent(UIParent, "AUCTION_HOUSE_SHOW")
+	else
+		private.ShowAuctionFrame()
+	end
+end
+
+function private.ShowAuctionFrame()
+	if private.frame then
+		return
+	end
 	private.frame = private.CreateMainFrame()
 	private.frame:Show()
 	private.frame:Draw()
+	for _, callback in ipairs(private.updateCallbacks) do
+		callback()
+	end
 end
 
 function private.HideAuctionFrame()
@@ -112,6 +185,9 @@ function private.HideAuctionFrame()
 	end
 	private.frame:Hide()
 	assert(not private.frame)
+	for _, callback in ipairs(private.updateCallbacks) do
+		callback()
+	end
 end
 
 function private.CreateMainFrame()
@@ -155,12 +231,9 @@ function private.BaseFrameOnHide(frame)
 	end
 end
 
-function private.GetNavFrame(_, path)
-	return private.topLevelPages.callback[path]()
-end
-
 function private.SwitchBtnOnClick(button)
 	private.isSwitching = true
+	TSM.db.global.internalData.auctionUIFrameContext.showDefault = button ~= private.defaultUISwitchBtn
 	private.HideAuctionFrame()
 	UIParent_OnEvent(UIParent, "AUCTION_HOUSE_SHOW")
 	private.isSwitching = false
@@ -172,6 +245,7 @@ end
 function private.TSMTabOnClick()
 	-- Replace CloseAuctionHouse() with a no-op while hiding the AH frame so we don't stop interacting with the AH NPC
 	local origCloseAuctionHouse = CloseAuctionHouse
+	TSM.db.global.internalData.auctionUIFrameContext.showDefault = false
 	CloseAuctionHouse = NoOp
 	AuctionFrame_Hide()
 	CloseAuctionHouse = origCloseAuctionHouse

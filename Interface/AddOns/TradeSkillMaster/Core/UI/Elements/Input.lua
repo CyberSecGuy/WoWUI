@@ -31,14 +31,20 @@ function Input.__init(self)
 	self._settingTable = nil
 	self._settingKey = nil
 	self._validation = nil
+	self._clearBtn = nil
+	self._multiLine = nil
+	self._compStart = nil
 	self._userScriptHandlers = {}
 
 	frame:SetShadowColor(0, 0, 0, 0)
 	frame:SetAutoFocus(false)
+	frame:SetScript("OnSizeChanged", private.OnSizeChanged)
 	frame:SetScript("OnEscapePressed", private.OnEscapePressed)
 	frame:SetScript("OnEnterPressed", private.OnEnterPressed)
 	frame:SetScript("OnEditFocusGained", private.OnEditFocusGained)
 	frame:SetScript("OnEditFocusLost", private.OnEditFocusLost)
+	frame:SetScript("OnChar", private.OnChar)
+	frame:SetScript("OnTabPressed", private.OnTabPressed)
 
 	frame.bgLeft = frame:CreateTexture(nil, "BACKGROUND")
 	frame.bgLeft:SetPoint("TOPLEFT")
@@ -60,21 +66,66 @@ function Input.Acquire(self)
 	self._hintText:_GetBaseFrame():SetParent(self:_GetBaseFrame())
 	self._hintText:_GetBaseFrame():SetPoint("TOPLEFT", 8, 0)
 	self._hintText:_GetBaseFrame():SetPoint("BOTTOMRIGHT", -8, 0)
+	self._clearBtn = TSMAPI_FOUR.UI.NewElement("Button", self._id.."_ClearBtn")
+	self._clearBtn:_SetParentElement(self)
+	self._clearBtn:_GetBaseFrame():SetParent(self:_GetBaseFrame())
+	self._clearBtn:_GetBaseFrame():SetPoint("RIGHT", -5, 0)
+	self._clearBtn:SetScript("OnClick", private.ClearBtnOnClick)
 	self._textStr = ""
+	self:_GetBaseFrame():SetScript("OnEnterPressed", private.OnEnterPressed)
 	self.__super:Acquire()
 end
 
 function Input.Release(self)
 	wipe(self._userScriptHandlers)
 	self:_GetBaseFrame():ClearFocus()
+	self:_GetBaseFrame():EnableMouse(true)
+	self:_GetBaseFrame():EnableKeyboard(true)
 	self:_GetBaseFrame():SetMultiLine(false)
 	self:_GetBaseFrame():SetHitRectInsets(0, 0, 0, 0)
+	self:_GetBaseFrame():SetMaxLetters(2147483647)
 	self._hintText:Release()
 	self._hintText = nil
+	self._clearBtn:Release()
+	self._clearBtn = nil
+	self._multiLine = nil
+	self._compStart = nil
 	self._settingTable = nil
 	self._settingKey = nil
 	self._validation = nil
 	self.__super:Release()
+end
+
+--- Enables mouse interactivity for the input.
+-- @tparam Input self The input object
+-- @tparam boolean enable Enable or disable the mouse
+-- @treturn Input The input object
+function Input.EnableMouse(self, enable)
+	self:_GetBaseFrame():EnableMouse(enable)
+	return self
+end
+
+--- Enables keyboard interactivity for the input.
+-- @tparam Input self The input object
+-- @tparam boolean enable Enable or disable the keyboard
+-- @treturn Input The input object
+function Input.EnableKeyboard(self, enable)
+	self:_GetBaseFrame():EnableKeyboard(enable)
+	return self
+end
+
+--- Set the highlight to all or some of the input's text.
+-- @tparam Input self The input object
+-- @tparam number the position at which to start the highlight
+-- @tparam number the position at which to stop the highlight
+-- @treturn Input The input object
+function Input.HighlightText(self, starting, ending)
+	if starting and ending then
+		self:_GetBaseFrame():HighlightText(starting, ending)
+	else
+		self:_GetBaseFrame():HighlightText()
+	end
+	return self
 end
 
 --- Sets the current text.
@@ -96,6 +147,13 @@ function Input.SetHintText(self, text)
 	return self
 end
 
+
+--- Returns the input's focus state.
+-- @tparam Input self The input object
+function Input.HasFocus(self)
+	return self:_GetBaseFrame():HasFocus()
+end
+
 --- Sets whether or not this input is focused.
 -- @tparam Input self The input object
 -- @tparam boolean focused Whether or not this input is focused
@@ -109,14 +167,27 @@ function Input.SetFocused(self, focused)
 	return self
 end
 
+--- Set the maximum number of letters for the input's entered text.
+-- @tparam Input self The input object
+-- @tparam number the number of letters for entered text
+-- @treturn Input The input object
+function Input.SetMaxLetters(self, number)
+	self:_GetBaseFrame():SetMaxLetters(number)
+	return self
+end
+
 --- Sets whether or not this input is multiline
 -- @tparam Input self The input object
 -- @tparam boolean multiLine Whether or not this input is multiline
 -- @treturn Input The input object
 function Input.SetMultiLine(self, multiLine)
 	local frame = self:_GetBaseFrame()
+	self._multiLine = multiLine
 	frame:SetText("")
 	frame:SetMultiLine(multiLine)
+	if self._multiLine then
+		frame:SetScript("OnEnterPressed", nil)
+	end
 	frame:SetText(self._textStr)
 	return self
 end
@@ -186,7 +257,7 @@ function Input.Draw(self)
 	frame:SetTextInsets(inset, inset, inset, inset)
 
 	local texturePacks = self:_GetStyle("backgroundTexturePacks")
-	if texturePacks then
+	if texturePacks and not self._multiLine then
 		TSM.UI.TexturePacks.SetTextureAndWidth(frame.bgLeft, texturePacks.."Left")
 		TSM.UI.TexturePacks.SetTexture(frame.bgMiddle, texturePacks.."Middle")
 		TSM.UI.TexturePacks.SetTextureAndWidth(frame.bgRight, texturePacks.."Right")
@@ -199,6 +270,10 @@ function Input.Draw(self)
 		frame.bgLeft:Hide()
 		frame.bgMiddle:Hide()
 		frame.bgRight:Hide()
+		if self._multiLine then
+			self:SetStyle("background", "#00000000")
+			self:SetStyle("border", "#00000000")
+		end
 	end
 	self:_ApplyFrameStyle(frame)
 	self:_ApplyTextStyle(frame)
@@ -209,18 +284,32 @@ function Input.Draw(self)
 	-- set the text
 	frame:SetText(self._textStr)
 
-	if self._textStr == "" and not frame:HasFocus() then
+	if self._textStr == "" and not frame:HasFocus() and self._hintText:GetText() ~= "" then
+		self._hintText:SetStyle("font", self:_GetStyle("font"))
+		self._hintText:SetStyle("fontHeight", self:_GetStyle("fontHeight"))
+		self._hintText:SetStyle("justifyH", self:_GetStyle("hintJustifyH"))
+		self._hintText:SetStyle("justifyV", self:_GetStyle("hintJustifyV"))
+		self._hintText:SetStyle("textColor", self:_GetStyle("hintTextColor"))
 		self._hintText:Show()
+		self._hintText:Draw()
 	else
 		self._hintText:Hide()
 	end
 
-	self._hintText:SetStyle("font", self:_GetStyle("font"))
-	self._hintText:SetStyle("fontHeight", self:_GetStyle("fontHeight"))
-	self._hintText:SetStyle("justifyH", self:_GetStyle("hintJustifyH"))
-	self._hintText:SetStyle("justifyV", self:_GetStyle("hintJustifyV"))
-	self._hintText:SetStyle("textColor", self:_GetStyle("hintTextColor"))
-	self._hintText:Draw()
+	if self._textStr == "" then
+		self._clearBtn:Hide()
+	else
+		if self:_GetStyle("clearButton") then
+			self._clearBtn:SetStyle("width", TSM.UI.TexturePacks.GetWidth("iconPack.14x14/Close/Circle"))
+			self._clearBtn:SetStyle("height", TSM.UI.TexturePacks.GetHeight("iconPack.14x14/Close/Circle"))
+			self._clearBtn:SetStyle("backgroundTexturePack", "iconPack.14x14/Close/Circle")
+			self._clearBtn:SetStyle("backgroundVertexColor", self:_GetStyle("textColor"))
+			self._clearBtn:Show()
+			self._clearBtn:Draw()
+		else
+			self._clearBtn:Hide()
+		end
+	end
 end
 
 --- Sets whether or not the input is disabled.
@@ -241,6 +330,14 @@ end
 -- ============================================================================
 -- Local Script Handlers
 -- ============================================================================
+
+function private.OnSizeChanged(frame)
+	local self = private.frameInputLookup[frame]
+
+	if self._userScriptHandlers.OnSizeChanged then
+		self._userScriptHandlers.OnSizeChanged(self)
+	end
+end
 
 function private.OnEscapePressed(frame)
 	frame:ClearFocus()
@@ -292,5 +389,50 @@ function private.OnEditFocusLost(frame)
 	self:Draw()
 	if self._userScriptHandlers.OnEditFocusLost then
 		self._userScriptHandlers.OnEditFocusLost(self)
+	end
+end
+
+function private.OnChar(frame)
+	local self = private.frameInputLookup[frame]
+	if not self:_GetStyle("autoComplete") then
+		return
+	end
+	local text = self:GetText()
+	local match = nil
+	for k in pairs(self:_GetStyle("autoComplete")) do
+		local start, ending = strfind(strlower(k), "^"..TSMAPI_FOUR.Util.StrEscape(strlower(text)))
+		if start and ending and ending == #text then
+			match = k
+			break
+		end
+	end
+	if match and not IsControlKeyDown() then
+		self._compStart = #text
+		self:SetText(match)
+	else
+		self._compStart = nil
+		self:SetText(text)
+	end
+	self:Draw()
+	if self._userScriptHandlers.OnChar then
+		self._userScriptHandlers.OnChar(self)
+	end
+end
+
+function private.OnTabPressed(frame)
+	local self = private.frameInputLookup[frame]
+	self:Draw()
+	if self._userScriptHandlers.OnTabPressed then
+		self._userScriptHandlers.OnTabPressed(self)
+	end
+end
+
+function private.ClearBtnOnClick(button)
+	local self = button:GetParentElement()
+	self:SetFocused(false)
+	self:SetText("")
+	self:Draw()
+	if self._userScriptHandlers.OnEnterPressed then
+		self._userScriptHandlers.OnEnterPressed(self)
 	end
 end

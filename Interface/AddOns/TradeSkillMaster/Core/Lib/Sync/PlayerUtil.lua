@@ -12,7 +12,6 @@ local private = {
 	addedFriends = {},
 	invalidPlayers = {},
 }
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 
 
 
@@ -25,7 +24,6 @@ function PlayerUtil.OnInitialize()
 end
 
 function PlayerUtil.GetTargetPlayer(account)
-	local targetPlayer = nil
 	local tempTbl = TSMAPI_FOUR.Util.AcquireTempTable()
 	for _, player in TSM.db:FactionrealmCharacterByAccountIterator(account) do
 		tinsert(tempTbl, player)
@@ -49,6 +47,7 @@ function PlayerUtil.GetTargetPlayer(account)
 end
 
 function PlayerUtil.IsOnline(target, noAdd)
+	ShowFriends()
 	for i = 1, GetNumFriends() do
 		local name, _, _, _, connected = GetFriendInfo(i)
 		if name and strlower(name) == strlower(target) then

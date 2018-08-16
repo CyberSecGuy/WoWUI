@@ -21,7 +21,7 @@ P['bags']['countPosition'] = 'BOTTOMRIGHT'
 
 -- Databars text yOffset
 P['databars']['experience']['textYoffset'] = 0
-P['databars']['artifact']['textYoffset'] = 0
+P['databars']['azerite']['textYoffset'] = 0
 P['databars']['reputation']['textYoffset'] = 0
 P['databars']['honor']['textYoffset'] = 0
 
@@ -35,7 +35,7 @@ P['benikui'] = {
 	['general'] = {
 		['benikuiStyle'] = true,
 		['hideStyle'] = false,
-		['shadows'] = false,
+		['shadows'] = true,
 		['auras'] = true,
 		['loginMessage'] = true,
 		['splashScreen'] = true,
@@ -247,6 +247,8 @@ P['benikuiSkins'] = {
 		['clique'] = true,
 		['ora'] = true,
 		['pawn'] = true,
+		['dbm'] = true,
+		['bigwigs'] = true,
 	},
 	
 	['variousSkins'] = {
@@ -293,7 +295,7 @@ P['benikuiDatabars'] = {
 		},
 	},
 	
-	['artifact'] = {
+	['azerite'] = {
 		['enable'] = true,
 		['buiStyle'] = true,
 		['buttonStyle'] = "TRANSPARENT",
@@ -305,7 +307,6 @@ P['benikuiDatabars'] = {
 			['enable'] = true,
 			['combat'] = false,
 			['position'] = 'LEFT',
-			['movetobagbar'] = true,
 		},
 	},
 	
@@ -337,7 +338,7 @@ P['dashboards'] = {
 		['chooseSystem'] = {
 			['FPS'] = true,
 			['MS'] = true,
-			['Memory'] = true,
+			['Bags'] = true,
 			['Durability'] = true,
 			['Volume'] = true,
 		},
@@ -375,7 +376,8 @@ P['dashboards'] = {
 		['dbfontflags'] = E.db.datatexts.fontOutline,
 	},
 	
-	['barColor'] = {r = 255/255,g = 128/255,b = 0/255},
+	['barColor'] = 1,
+	['customBarColor'] = {r = 255/255,g = 128/255,b = 0/255},
 	['textColor'] = 2,
 	['customTextColor'] = {r = 255/255,g = 255/255,b = 255/255},
 }

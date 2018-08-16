@@ -15,6 +15,8 @@ local private = {
 	eventCallbacks = {},
 	eventFrame = nil,
 	temp = {},
+	eventQueue = {},
+	processingEvent = false,
 }
 local CALLBACK_TIME_WARNING_THRESHOLD_MS = 20
 
@@ -24,8 +26,7 @@ local CALLBACK_TIME_WARNING_THRESHOLD_MS = 20
 -- Event Frame
 -- ============================================================================
 
-private.eventFrame = CreateFrame("Frame")
-private.eventFrame:SetScript("OnEvent", function(_, event, ...)
+function private.ProcessEvent(event, ...)
 	-- NOTE: the registered events may change within the callback, so copy them to a temp table
 	wipe(private.temp)
 	for i, callback in ipairs(private.eventCallbacks[event]) do
@@ -39,7 +40,27 @@ private.eventFrame:SetScript("OnEvent", function(_, event, ...)
 			TSM:LOG_WARN("Event (%s) callback took %.2fms", event, timeTaken)
 		end
 	end
-end)
+end
+
+function private.EventHandler(_, event, ...)
+	if private.processingEvent then
+		-- we are already in the middle of processing another event, so queue this one up
+		tinsert(private.eventQueue, TSMAPI_FOUR.Util.AcquireTempTable(event, ...))
+		assert(#private.eventQueue < 50)
+		return
+	end
+	private.processingEvent = true
+	private.ProcessEvent(event, ...)
+	-- process queued events
+	while #private.eventQueue > 0 do
+		local tbl = tremove(private.eventQueue, 1)
+		private.ProcessEvent(TSMAPI_FOUR.Util.UnpackAndReleaseTempTable(tbl))
+	end
+	private.processingEvent = false
+end
+
+private.eventFrame = CreateFrame("Frame")
+private.eventFrame:SetScript("OnEvent", private.EventHandler)
 private.eventFrame:Show()
 
 

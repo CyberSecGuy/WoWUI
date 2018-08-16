@@ -158,6 +158,20 @@ function Util.GetNextLowestItemBuyout(query, itemString, lowestItemBuyout, opera
 	return nextLowestItemBuyout
 end
 
+function Util.GetQueueStatus(query)
+	local numProcessed, numConfirmed, numFailed, totalNum = 0, 0, 0, 0
+	query:OrderBy("index", true)
+	for _, row in query:Iterator() do
+		local rowNumStacks, rowNumProcessed, rowNumConfirmed, rowNumFailed = row:GetFields("numStacks", "numProcessed", "numConfirmed", "numFailed")
+		totalNum = totalNum + rowNumStacks
+		numProcessed = numProcessed + rowNumProcessed
+		numConfirmed = numConfirmed + rowNumConfirmed
+		numFailed = numFailed + rowNumFailed
+	end
+	query:Release()
+	return numProcessed, numConfirmed, numFailed, totalNum
+end
+
 
 
 -- ============================================================================

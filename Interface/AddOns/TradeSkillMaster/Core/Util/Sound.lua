@@ -11,7 +11,7 @@
 
 TSMAPI_FOUR.Sound = {}
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local SOUNDS = {
 	[TSM.CONST.NO_SOUND_KEY] = "|cff99ffff"..L["No Sound"].."|r",
 	["AuctionWindowOpen"] = L["Auction Window Open"],

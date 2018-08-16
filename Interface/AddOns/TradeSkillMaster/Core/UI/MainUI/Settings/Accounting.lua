@@ -8,11 +8,23 @@
 
 local _, TSM = ...
 local Accounting = TSM.MainUI.Settings:NewPackage("Accounting")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
-local private = { marketValues = {} }
+local L = TSM.L
+local private = { marketValueItems = {}, marketValueKeys = {} }
 local DAYS_OLD_OPTIONS = { 30, 45, 60, 75, 90 }
-local TIME_FORMAT_VALUES = { L["_ Hr _ Min ago"], L["MM/DD/YY HH:MM"], L["YY/MM/DD HH:MM"], L["DD/MM/YY HH:MM"] }
-local TIME_FORMAT_KEYS = { "ago", "usdate", "aidate", "eudate" }
+local INVALID_PRICE_SOURCES = {
+	Crafting = true,
+	VendorBuy = true,
+	VendorSell = true,
+	Destroy = true,
+	ItemQuality = true,
+	ItemLevel = true,
+	RequiredLevel = true,
+	NumExpires = true,
+	DBRegionSaleRate = true,
+	DBRegionSoldPerDay = true,
+	DBGlobalSaleRate = true,
+	DBGlobalSoldPerDay = true,
+}
 
 
 
@@ -21,7 +33,6 @@ local TIME_FORMAT_KEYS = { "ago", "usdate", "aidate", "eudate" }
 -- ============================================================================
 
 function Accounting.OnInitialize()
-	assert(#TIME_FORMAT_VALUES == #TIME_FORMAT_KEYS)
 	TSM.MainUI.Settings.RegisterSettingPage("Accounting", "middle", private.GetAccountingSettingsFrame)
 end
 
@@ -32,116 +43,90 @@ end
 -- ============================================================================
 
 function private.GetAccountingSettingsFrame()
-	wipe(private.marketValues)
-	for source in TSMAPI_FOUR.CustomPrice.Iterator() do
-		tinsert(private.marketValues, source)
+	wipe(private.marketValueItems)
+	wipe(private.marketValueKeys)
+	for key, _, label in TSMAPI_FOUR.CustomPrice.Iterator() do
+		if not INVALID_PRICE_SOURCES[key] then
+			tinsert(private.marketValueItems, label)
+			tinsert(private.marketValueKeys, strlower(key))
+		end
 	end
 
 	return TSMAPI_FOUR.UI.NewElement("ScrollFrame", "accountingSettings")
-		:SetStyle("padding", 10)
-		:AddChild(TSM.MainUI.Settings.CreateHeadingLine("generalOptionsTitle", L["General Options"]))
-		:AddChild(TSM.MainUI.Settings.CreateSettingLine("timeFormatFrame", L["Set Time Format:"])
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Dropdown", "timeFormatDropdown")
-				:SetItems(TIME_FORMAT_VALUES, private.TimeFormatKeyToValue(TSM.db.global.accountingOptions.timeFormat))
-				:SetScript("OnSelectionChanged", private.SetTimeFormat)
-			)
+		:SetStyle("padding.left", 12)
+		:SetStyle("padding.right", 12)
+		:AddChild(TSM.MainUI.Settings.CreateHeading("generalOptionsTitle", L["General Options"])
+			:SetStyle("margin.bottom", 16)
 		)
-		:AddChild(TSM.MainUI.Settings.CreateSettingLine("mvSourceFrame", L["Set Market Value Source:"])
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Dropdown", "mvSourceDropdown")
-				:SetItems(private.marketValues, TSM.db.global.accountingOptions.mvSource)
-				:SetScript("OnSelectionChanged", private.SetMarketValueSource)
-			)
-		)
-		:AddChild(TSM.MainUI.Settings.CreateSettingLine("itemResaleFrame", L["Item / Resale price format:"])
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Toggle", "itemResaleToggle")
-				:SetStyle("border", "#e2e2e2")
-				:SetStyle("textColor", "#e2e2e2")
-				:SetStyle("selectedBackground", "#e2e2e2")
-				:SetStyle("height", 20)
-				:AddOption(L["Per Item"], TSM.db.global.accountingOptions.priceFormat == "avg")
-				:AddOption(L["Total Value"], TSM.db.global.accountingOptions.priceFormat == "total")
-				:SetScript("OnValueChanged", private.SetPriceFormat)
-			)
-		)
-		:AddChild(TSM.MainUI.Settings.CreateSettingLine("trackSalesFrame", L["Track Sales / Purchases via trade?"])
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Toggle", "trackSalesToggle")
-				:SetStyle("width", 80)
-				:SetStyle("height", 20)
-				:SetBooleanToggle(TSM.db.global.accountingOptions, "trackTrades")
-			)
-		)
-		:AddChild(TSM.MainUI.Settings.CreateSettingLine("promptTradesFrame", L["Prompt to record trades?"])
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Toggle", "promptTradesToggle")
-				:SetStyle("width", 80)
-				:SetStyle("height", 20)
-				:SetBooleanToggle(TSM.db.global.accountingOptions, "autoTrackTrades")
-			)
-		)
-		:AddChild(TSM.MainUI.Settings.CreateSettingLine("smartAvgFrame", L["Use smart average for purchase price?"])
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Toggle", "smartAvgToggle")
-				:SetStyle("width", 80)
-				:SetStyle("height", 20)
-				:SetBooleanToggle(TSM.db.global.accountingOptions, "smartBuyPrice")
-			)
-		)
-		:AddChild(TSM.MainUI.Settings.CreateHeadingLine("clearOldDataTitle", L["Clear Old Data"]))
-		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "clearDataDesc")
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "row1Labels")
 			:SetLayout("HORIZONTAL")
-			:SetStyle("height", 70)
-			:SetStyle("margin", { bottom = 16 })
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "label")
-				:SetStyle("textColor", "#e2e2e2")
-				:SetStyle("fontHeight", 16)
-				:SetStyle("justifyV", "CENTER")
-				:SetText(L["You can use the options below to clear old data. It is recommended to occasionally clear your old data to keep the accounting module running smoothly. Select the minimum number of days old to be removed, then click ‘confirm’"])
+			:SetStyle("height", 18)
+			:SetStyle("margin.bottom", 4)
+			:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "timeFormat")
+				:SetStyle("margin.right", 16)
+				:SetStyle("font", TSM.UI.Fonts.MontserratRegular)
+				:SetStyle("fontHeight", 14)
+				:SetStyle("textColor", "#ffffff")
+				:SetText(L["Time Format"])
+			)
+			:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "marketValue")
+				:SetStyle("font", TSM.UI.Fonts.MontserratRegular)
+				:SetStyle("fontHeight", 14)
+				:SetStyle("textColor", "#ffffff")
+				:SetText(L["Market Value Source"])
 			)
 		)
-		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "minDaysOldFrame")
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Checkbox", "tradeCheckbox")
+			:SetStyle("height", 28)
+			:SetStyle("fontHeight", 12)
+			:SetText(L["Track Sales / Purchases via trade"])
+			:SetSettingInfo(TSM.db.global.accountingOptions, "trackTrades")
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Checkbox", "tradePromptCheckbox")
+			:SetStyle("height", 28)
+			:SetStyle("fontHeight", 12)
+			:SetText(L["Don't prompt to record trades"])
+			:SetSettingInfo(TSM.db.global.accountingOptions, "autoTrackTrades")
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Checkbox", "smartAvgCheckbox")
+			:SetStyle("height", 28)
+			:SetStyle("margin.bottom", 32)
+			:SetStyle("fontHeight", 12)
+			:SetText(L["Use smart average for purchase price"])
+			:SetSettingInfo(TSM.db.global.accountingOptions, "smartBuyPrice")
+		)
+		:AddChild(TSM.MainUI.Settings.CreateHeading("clearOldData", L["Clear Old Data"]))
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "clearDataDesc")
+			:SetStyle("height", 54)
+			:SetStyle("margin.bottom", 16)
+			:SetStyle("font", TSM.UI.Fonts.MontserratRegular)
+			:SetStyle("fontHeight", 14)
+			:SetStyle("textColor", "#ffffff")
+			:SetFormattedText(L["You can use the options below to clear old data. It is recommended to occasionally clear your old data to keep the accounting module running smoothly. Select the minimum number of days old to be removed, then click '%s'."], L["CLEAR DATA"])
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "daysOldLabel")
+			:SetStyle("height", 18)
+			:SetStyle("margin.bottom", 4)
+			:SetStyle("font", TSM.UI.Fonts.MontserratRegular)
+			:SetStyle("fontHeight", 14)
+			:SetStyle("textColor", "#ffffff")
+			:SetText(L["Minimum Days Old"])
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "daysOld")
 			:SetLayout("HORIZONTAL")
 			:SetStyle("height", 26)
-			:SetStyle("margin", { bottom = 16 })
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "label")
-				:SetStyle("textColor", "#e2e2e2")
-				:SetStyle("fontHeight", 18)
-				:SetStyle("justifyV", "CENTER")
-				:SetStyle("width", 250)
-				:SetText(L["Minimum Days Old:"])
-			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Dropdown", "minDaysOldDropdown")
+			:AddChild(TSMAPI_FOUR.UI.NewElement("SelectionDropdown", "dropdown")
+				:SetStyle("margin.right", 16)
+				:SetHintText(L["None Selected"])
 				:SetItems(DAYS_OLD_OPTIONS)
+				:SetScript("OnSelectionChanged", private.DaysOldDropdownOnSelectionChanged)
 			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Button", "confirmMinDaysOld")
-				:SetStyle("width", 100)
-				:SetStyle("height", 20)
-				:SetStyle("fontHeight", 16)
-				:SetStyle("borderTexture", "Interface\\Addons\\TradeSkillMaster\\Media\\ButtonEdgeFrame.blp")
-				:SetStyle("borderSize", 3)
-				:SetText("CONFIRM")
-				:SetScript("OnClick", private.ConfirmRemoveOldOnclick)
+			:AddChild(TSMAPI_FOUR.UI.NewElement("ActionButton", "clearBtn")
+				:SetDisabled(true)
+				:SetText(L["CLEAR DATA"])
+				:SetScript("OnClick", private.ClearBtnOnClick)
 			)
 		)
-end
-
-
-
--- ============================================================================
--- Private Helper Functions
--- ============================================================================
-
-function private.TimeFormatKeyToValue(key)
-	for i, v in ipairs(TIME_FORMAT_KEYS) do
-		if v == key then
-			return TIME_FORMAT_VALUES[i]
-		end
-	end
-end
-
-function private.TimeFormatValueToKey(value)
-	for i, v in ipairs(TIME_FORMAT_VALUES) do
-		if v == value then
-			return TIME_FORMAT_KEYS[i]
-		end
-	end
 end
 
 
@@ -150,30 +135,17 @@ end
 -- Local Script Handlers
 -- ============================================================================
 
-function private.SetTimeFormat(self, value)
-	TSM.db.global.accountingOptions.timeFormat = private.TimeFormatValueToKey(value)
+function private.DaysOldDropdownOnSelectionChanged(dropdown)
+	dropdown:GetElement("__parent.clearBtn")
+		:SetDisabled(false)
+		:Draw()
 end
 
-function private.SetMarketValueSource(self, value)
-	TSM.db.global.accountingOptions.mvSource = value
+function private.ClearBtnOnClick(button)
+	local days = button:GetElement("__parent.dropdown"):GetSelectedItem()
+	button:GetBaseElement():ShowConfirmationDialog(L["Clear Old Data Confirmation"], L["Are you sure you want to clear old accounting data?"], strupper(YES), private.ClearDataConfirmed, days)
 end
 
-function private.SetPriceFormat(self, value)
-	if value == L["Per Item"] then
-		TSM.db.global.accountingOptions.priceFormat = "avg"
-	elseif value == L["Total Value"] then
-		TSM.db.global.accountingOptions.priceFormat = "total"
-	else
-		error("Unknown value: "..tostring(value))
-	end
-end
-
-function private.ConfirmRemoveOldOnclick(self)
-	local dropdown = self:GetElement("__parent.minDaysOldDropdown")
-	local daysOld = dropdown:GetSelection()
-	if not daysOld then
-		return
-	end
-	TSM.old.Accounting.ViewerUtil:RemoveOldData(daysOld)
-	dropdown:SetSelection(nil)
+function private.ClearDataConfirmed(days)
+	TSM:Printf(L["Removed a total of %s old records."], TSM.Accounting.Transactions.RemoveOldData(days))
 end

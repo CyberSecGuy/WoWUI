@@ -5,111 +5,16 @@ local BUI = E:GetModule('BenikUI');
 local pairs = pairs
 
 local _G = _G
-local strfind = strfind
 local CreateFrame = CreateFrame
-local GetAddOnMetadata = GetAddOnMetadata
 local IsAddOnLoaded = IsAddOnLoaded
 
 -- GLOBALS: hooksecurefunc, Skada, Recount, oRA3, RC, RCnotify, RCminimized
-
-local SPACING = (E.PixelMode and 1 or 3)
-
-local function skinDecursive()
-	if not IsAddOnLoaded('Decursive') or not E.db.benikuiSkins.variousSkins.decursive then return end
-
-	-- Main Buttons
-	_G["DecursiveMainBar"]:StripTextures()
-	_G["DecursiveMainBar"]:SetTemplate('Default', true)
-	_G["DecursiveMainBar"]:Height(20)
-
-	local mainButtons = {_G["DecursiveMainBarPriority"], _G["DecursiveMainBarSkip"], _G["DecursiveMainBarHide"]}
-	for i, button in pairs(mainButtons) do
-		S:HandleButton(button)
-		button:SetTemplate('Default', true)
-		button:ClearAllPoints()
-		if(i == 1) then
-			button:Point('LEFT', _G["DecursiveMainBar"], 'RIGHT', SPACING, 0)
-		else
-			button:Point('LEFT', mainButtons[i - 1], 'RIGHT', SPACING, 0)
-		end
-	end
-
-	-- Priority List Frame
-	_G["DecursivePriorityListFrame"]:StripTextures()
-	_G["DecursivePriorityListFrame"]:CreateBackdrop('Transparent')
-	_G["DecursivePriorityListFrame"].backdrop:Style('Outside')
-
-	local priorityButton = {_G["DecursivePriorityListFrameAdd"], _G["DecursivePriorityListFramePopulate"], _G["DecursivePriorityListFrameClear"], _G["DecursivePriorityListFrameClose"]}
-	for i, button in pairs(priorityButton) do
-		S:HandleButton(button)
-		button:ClearAllPoints()
-		if(i == 1) then
-			button:Point('TOP', _G["DecursivePriorityListFrame"], 'TOPLEFT', 54, -20)
-		else
-			button:Point('LEFT', priorityButton[i - 1], 'RIGHT', SPACING, 0)
-		end
-	end
-
-	_G["DecursivePopulateListFrame"]:StripTextures()
-	_G["DecursivePopulateListFrame"]:CreateBackdrop('Transparent')
-	_G["DecursivePopulateListFrame"].backdrop:Style('Outside')
-
-	for i = 1, 8 do
-		local groupButton = _G["DecursivePopulateListFrameGroup"..i]
-		S:HandleButton(groupButton)
-	end
-
-	local classPop = {'Warrior', 'Priest', 'Mage', 'Warlock', 'Hunter', 'Rogue', 'Druid', 'Shaman', 'Monk', 'Paladin', 'Deathknight', 'Close'}
-	for _, classBtn in pairs(classPop) do
-		local btnName = _G["DecursivePopulateListFrame"..classBtn]
-		S:HandleButton(btnName)
-	end
-
-	-- Skip List Frame
-	_G["DecursiveSkipListFrame"]:StripTextures()
-	_G["DecursiveSkipListFrame"]:CreateBackdrop('Transparent')
-	_G["DecursiveSkipListFrame"].backdrop:Style('Outside')
-
-	local skipButton = {_G["DecursiveSkipListFrameAdd"], _G["DecursiveSkipListFramePopulate"], _G["DecursiveSkipListFrameClear"], _G["DecursiveSkipListFrameClose"]}
-	for i, button in pairs(skipButton) do
-		S:HandleButton(button)
-		button:ClearAllPoints()
-		if(i == 1) then
-			button:Point('TOP', _G["DecursiveSkipListFrame"], 'TOPLEFT', 54, -20)
-		else
-			button:Point('LEFT', skipButton[i - 1], 'RIGHT', SPACING, 0)
-		end
-	end
-
-	-- Tooltip
-	_G["DcrDisplay_Tooltip"]:StripTextures()
-	_G["DcrDisplay_Tooltip"]:CreateBackdrop('Transparent')
-	_G["DcrDisplay_Tooltip"].backdrop:Style('Outside')
-end
-
-local function skinStoryline()
-	if not IsAddOnLoaded('Storyline') or not E.db.benikuiSkins.variousSkins.storyline then return end
-	_G["Storyline_NPCFrame"]:StripTextures()
-	_G["Storyline_NPCFrame"]:CreateBackdrop('Transparent')
-	_G["Storyline_NPCFrame"].backdrop:Style('Outside')
-	S:HandleCloseButton(_G["Storyline_NPCFrameClose"])
-	_G["Storyline_NPCFrameChat"]:StripTextures()
-	_G["Storyline_NPCFrameChat"]:CreateBackdrop('Transparent')
-end
-
-local f = CreateFrame("Frame")
-f:RegisterEvent("PLAYER_ENTERING_WORLD")
-f:SetScript("OnEvent", function(self)
-	skinDecursive()
-	skinStoryline()
-	f:UnregisterEvent("PLAYER_ENTERING_WORLD")
-end)
 
 if not BUI.AS then return end
 local AS = unpack(AddOnSkins)
 
 local function SkadaDecor()
-	if not E.db.benikuiSkins.addonSkins.skada then return end
+	if not E.db.benikui.general.benikuiStyle or not E.db.benikuiSkins.addonSkins.skada then return end
 	hooksecurefunc(Skada.displays['bar'], 'ApplySettings', function(self, win)
 		local skada = win.bargroup
 		skada.Backdrop:Style('Outside')
@@ -170,7 +75,7 @@ local function RecountDecor()
 end
 
 local function TinyDPSDecor()
-	if not E.db.benikuiSkins.addonSkins.tinydps then return end
+	if not E.db.benikui.general.benikuiStyle or not E.db.benikuiSkins.addonSkins.tinydps then return end
 	if _G["tdpsFrame"] then
 		if not _G["tdpsFrame"].style then
 			_G["tdpsFrame"]:Style('Outside')
@@ -179,8 +84,7 @@ local function TinyDPSDecor()
 end
 
 local function AtlasLootDecor()
-	if not strfind(GetAddOnMetadata('AtlasLoot', 'Version'), 'v8') then return end -- As Azilroka did ;)
-	if not E.db.benikuiSkins.addonSkins.atlasloot then return end
+	if not E.db.benikui.general.benikuiStyle or not E.db.benikuiSkins.addonSkins.atlasloot then return end
 	local AtlasLootFrame = _G["AtlasLoot_GUI-Frame"]
 	if AtlasLootFrame then
 		if not AtlasLootFrame.style then
@@ -190,7 +94,7 @@ local function AtlasLootDecor()
 end
 
 local function AltoholicDecor()
-	if not E.db.benikuiSkins.addonSkins.altoholic then return end
+	if not E.db.benikui.general.benikuiStyle or not E.db.benikuiSkins.addonSkins.altoholic then return end
 	if _G["AltoholicFrame"] then
 		if not _G["AltoholicFrame"].style then
 			_G["AltoholicFrame"]:Style('Outside')
@@ -199,7 +103,7 @@ local function AltoholicDecor()
 end
 
 local function RareCoordDecor()
-	if not E.db.benikuiSkins.addonSkins.rc then return end
+	if not E.db.benikui.general.benikuiStyle or not E.db.benikuiSkins.addonSkins.rc then return end
 	local rcFrames = {RC, RC.opt, RCnotify, RCminimized}
 	for _, frame in pairs(rcFrames) do
 		if not frame.style then
@@ -209,7 +113,7 @@ local function RareCoordDecor()
 end
 
 local function CliqueDecor()
-	if not E.db.benikuiSkins.addonSkins.clique then return end
+	if not E.db.benikui.general.benikuiStyle or not E.db.benikuiSkins.addonSkins.clique then return end
 	_G["CliqueConfig"]:Style('Small')
 	_G["CliqueDialog"]:Style('Small')
 	local tab = _G["CliqueSpellTab"]
@@ -221,7 +125,7 @@ local function CliqueDecor()
 end
 
 local function oRA3Decor()
-	if not E.db.benikuiSkins.addonSkins.ora then return end
+	if not E.db.benikui.general.benikuiStyle or not E.db.benikuiSkins.addonSkins.ora then return end
 	hooksecurefunc(oRA3, "ToggleFrame", function() _G["oRA3Frame"]:Style('Small'); end)
 
 	local ReadyCheckModule = oRA3:GetModule("ReadyCheck")
@@ -231,12 +135,62 @@ local function oRA3Decor()
 end
 
 local function PawnDecor()
-	if not E.db.benikuiSkins.addonSkins.pawn then return end
+	if not E.db.benikui.general.benikuiStyle or not E.db.benikuiSkins.addonSkins.pawn then return end
 	local frame = PawnUIFrame
 
 	if not frame.style then
 		frame:Style('Outside')
 	end
+end
+
+local function DbmDecor(event)
+	if not E.db.benikui.general.benikuiStyle or not E.db.benikuiSkins.addonSkins.dbm then return end
+
+	local function StyleRangeFrame(self, range, filter, forceshow, redCircleNumPlayers)
+		if DBM.Options.DontShowRangeFrame and not forceshow then return end
+
+		if DBMRangeCheckRadar then
+			if not DBMRangeCheckRadar.style then
+				DBMRangeCheckRadar:Style('Inside')
+			end
+
+			if AS:CheckOption('DBMRadarTrans') then
+				if DBMRangeCheckRadar.style and E.db.benikui.general.benikuiStyle then
+					DBMRangeCheckRadar.style:Hide()
+				end
+
+				if DBMRangeCheckRadar.shadow then
+					DBMRangeCheckRadar.shadow:Hide()
+				end
+			else
+				if DBMRangeCheckRadar.style and E.db.benikui.general.benikuiStyle then
+					DBMRangeCheckRadar.style:Show()
+				end
+
+				if DBMRangeCheckRadar.shadow then
+					DBMRangeCheckRadar.shadow:Show()
+				end
+			end
+		end
+		
+		if DBMRangeCheck then
+			DBMRangeCheck:SetTemplate('Transparent')
+			if not DBMRangeCheck.style then
+				DBMRangeCheck:Style('Outside')
+			end
+		end
+	end
+
+	local function StyleInfoFrame(self, maxLines, event, ...)
+		if DBM.Options.DontShowInfoFrame and (event or 0) ~= "test" then return end
+
+		if DBMInfoFrame and not DBMInfoFrame.style then
+			DBMInfoFrame:Style('Inside')
+		end
+	end
+
+	hooksecurefunc(DBM.RangeCheck, 'Show', StyleRangeFrame)
+	hooksecurefunc(DBM.InfoFrame, 'Show', StyleInfoFrame)
 end
 
 if AS:CheckAddOn('Skada') then AS:RegisterSkin('Skada', SkadaDecor, 2) end
@@ -248,6 +202,7 @@ if AS:CheckAddOn('RareCoordinator') then AS:RegisterSkin('RareCoordinator', Rare
 if AS:CheckAddOn('Clique') then AS:RegisterSkin('Clique', CliqueDecor, 2) end
 if AS:CheckAddOn('oRA3') then AS:RegisterSkin('oRA3', oRA3Decor, 2) end
 if AS:CheckAddOn('Pawn') then AS:RegisterSkin('Pawn', PawnDecor, 2) end
+if AS:CheckAddOn('DBM-Core') then AS:RegisterSkin('DBM', DbmDecor, 2) end
 
 hooksecurefunc(AS, 'AcceptFrame', function(self)
 	if not _G["AcceptFrame"].style then

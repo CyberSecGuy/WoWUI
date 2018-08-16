@@ -38,8 +38,6 @@ L.offline = "접속 종료"
 L.missingAddOn = "이 지역에서 타이머를 표시하려면 |cFF436EEE%s|r 플러그인이 필요합니다."
 L.disabledAddOn = "|cFF436EEE%s|r 애드온이 비활성화 중이므로 타이머를 표시할 수 없습니다."
 
-L.coreAddonDisabled = "%s 애드온이 비활성화되어 있어서 BigWigs가 제대로 작동하지 않습니다. 캐릭터 선택 화면의 애드온 설정 창을 통해 활성화할 수 있습니다."
-
 L.removeAddon = "'|cFF436EEE%s|r'|1이;가; '|cFF436EEE%s|r'|1으로;로; 대체되었으므로 제거해주세요."
 
 -- Options.lua
@@ -115,6 +113,12 @@ L.COUNTDOWN = "초읽기"
 L.COUNTDOWN_desc = "활성화하면, 마지막 5초에 음성과 시각적 초읽기가 추가됩니다. 화면 가운데에 \"5... 4... 3... 2... 1...\"의 큰 숫자와 함께 초읽기를 해줍니다."
 L.INFOBOX = L.infobox
 L.INFOBOX_desc = L.infobox_desc
+--L.SOUND = "Sound"
+--L.SOUND_desc = "Boss abilities usually play sounds to help you notice them. If you disable this option, none of the sounds attached to it will play."
+--L.CASTBAR = "Cast Bars"
+--L.CASTBAR_desc = "Cast bars are sometimes shown on certain bosses, usually to bring attention to a critical ability incoming. If this ability is accompanied by a cast bar that you want to hide, disable this option."
+--L.SAY_COUNTDOWN = "Say Countdown"
+--L.SAY_COUNTDOWN_desc = "Chat bubbles are easy to spot. BigWigs will use multiple say messages counting down to alert people nearby that an ability on you is about to expire."
 
 L.advanced = "고급 옵션"
 L.back = "<< 뒤로"

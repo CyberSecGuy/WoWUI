@@ -12,7 +12,6 @@
 -- @classmod BaseDropdown
 
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 local BaseDropdown = TSMAPI_FOUR.Class.DefineClass("BaseDropdown", TSM.UI.Element, "ABSTRACT")
 TSM.UI.BaseDropdown = BaseDropdown
 local private = { dropdownLookup = {}, dialogDropdownLookup = {} }

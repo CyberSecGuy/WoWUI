@@ -8,7 +8,8 @@
 
 local _, TSM = ...
 TSMAPI_FOUR.Addon = {}
-local private = { Addon = nil, addonLookup = {}, initializeQueue = {}, enableQueue = {}, disableQueue = {} }
+local private = { addonLookup = {}, initializeQueue = {}, enableQueue = {}, disableQueue = {} }
+local TIME_WARNING_THRESHOLD_MS = 20
 
 
 
@@ -31,7 +32,12 @@ function private.EventHandler(event, arg1)
 		end
 		for _, addon in ipairs(private.initializeQueue) do
 			if addon.OnInitialize then
+				local startTime = debugprofilestop()
 				addon.OnInitialize()
+				local timeTaken = debugprofilestop() - startTime
+				if timeTaken > TIME_WARNING_THRESHOLD_MS then
+					TSM:LOG_WARN("OnInitialize (%s) took %0.2fms", addon, timeTaken)
+				end
 			end
 			tinsert(private.enableQueue, addon)
 		end
@@ -40,7 +46,12 @@ function private.EventHandler(event, arg1)
 		if IsLoggedIn() then
 			for _, addon in ipairs(private.enableQueue) do
 				if addon.OnEnable then
+					local startTime = debugprofilestop()
 					addon.OnEnable()
+					local timeTaken = debugprofilestop() - startTime
+					if timeTaken > TIME_WARNING_THRESHOLD_MS then
+						TSM:LOG_WARN("OnEnable (%s) took %0.2fms", addon, timeTaken)
+					end
 				end
 				tinsert(private.disableQueue, addon)
 			end
@@ -99,26 +110,6 @@ function Addon.__init(self, name, ...)
 	self._logger = TSMAPI_FOUR.Logger.New(self:GetShortName())
 end
 
--- FIXME: remove this
-function Addon.NewModule(self, ...)
-	return self:NewPackage(...)
-end
-function Addon.GetModule(self, name)
-	return self[name]
-end
-
-function Addon.GetVersion(self)
-	local version = GetAddOnMetadata("TradeSkillMaster", "X-Curse-Packaged-Version") or GetAddOnMetadata("TradeSkillMaster", "Version")
-	if version == "@project-version@" then
-		version = "Dev"
-	end
-	return version
-end
-
-function Addon.GetFullName(self)
-	return self._name
-end
-
 function Addon.GetShortName(self)
 	return self._shortName
 end
@@ -163,53 +154,6 @@ function Addon.LOG_STACK_TRACE(self)
 	end
 end
 
-function Addon.AnalyticsEvent(self, moduleEvent, ...)
-	TSMAPI_FOUR.Analytics.LogEvent(moduleEvent, self:GetShortName(), self:GetVersion(), ...)
-end
-
-function Addon.LoadSettings(self, name, defaults)
-	local db, upgradeObj = TSMAPI_FOUR.Settings.New(name, defaults)
-	self.db = db
-	return upgradeObj
-end
-
-function Addon.LoadOperations(self, defaults, maxOperations, callbackInfo, callbackOptions)
-	for key, value in pairs(TSM.CONST.OPERATION_DEFAULT_FIELDS) do
-		assert(not defaults[key], "Invalid use of reserved operation field: "..key)
-		defaults[key] = value
-	end
-	local moduleName = self:GetShortName()
-
-	-- register operation info
-	TSM.Operations.Register(moduleName, defaults, maxOperations, callbackInfo, callbackOptions)
-	TSM.operations[moduleName] = TSM.operations[moduleName] or {}
-	self.operations = TSM.operations[moduleName]
-	for _, operation in pairs(self.operations) do
-		operation.ignorePlayer = operation.ignorePlayer or {}
-		operation.ignoreFactionrealm = operation.ignoreFactionrealm or {}
-		operation.relationships = operation.relationships or {}
-	end
-	TSM.Modules:CheckOperationRelationships(moduleName)
-end
-
-function Addon.RegisterPriceSource(self, key, label, callback, fullLink, arg)
-	TSM.CustomPrice.RegisterSource(self:GetShortName(), key, label, callback, fullLink, arg)
-end
-
-function Addon.RegisterSlashCommand(self, key, callback, label)
-	TSM.SlashCommands.Register(self:GetShortName(), key, callback, label)
-end
-
-function Addon.RegisterTooltipInfo(self, defaults, callbackLoad, callbackOptions)
-	TSM.Tooltips.Register(self:GetShortName(), defaults, callbackLoad, callbackOptions)
-end
-
-function Addon.RegisterModuleAPI(self, key, callback)
-	-- FIXME: register these in a better way
-	self.moduleAPIs = self.moduleAPIs or {}
-	tinsert(self.moduleAPIs, { key = key, callback = callback })
-end
-
 
 
 -- ============================================================================
@@ -223,4 +167,23 @@ function TSMAPI_FOUR.Addon.New(name, tbl)
 	local addon = TSMAPI_FOUR.Class.ConstructWithTable(tbl, Addon, name)
 	private.addonLookup[tbl] = addon
 	return addon
+end
+
+
+
+-- ============================================================================
+-- Module Functions (Debug Only)
+-- ============================================================================
+
+function TSM.AddonTestLogout()
+	for _, addon in ipairs(private.disableQueue) do
+		if addon.OnDisable then
+			local startTime = debugprofilestop()
+			addon.OnDisable()
+			local timeTaken = debugprofilestop() - startTime
+			if timeTaken > TIME_WARNING_THRESHOLD_MS then
+				TSM:LOG_WARN("OnDisable (%s) took %0.2fms", addon, timeTaken)
+			end
+		end
+	end
 end

@@ -1,94 +1,28 @@
 
 ElvCharacterDB = {
 	["ChatEditHistory"] = {
-		"/i you died, get fucked", -- [1]
-		"/i lol jk", -- [2]
-		"/cw Ghalema-Stormrage 6pm pst, that's 9pm est", -- [3]
-		"/cw Ghalema-Stormrage right?", -- [4]
-		"/cw Ghalema-Stormrage any need for an ele sham?", -- [5]
-		"/1 reported for racism", -- [6]
-		"/who Baluarte", -- [7]
-		"/1 Iceebetch you have lupis, i'm a doctor.", -- [8]
-		" what have you been up too", -- [9]
-		" still playing WoW or na", -- [10]
-		" word", -- [11]
-		" just resubbed", -- [12]
-		" gonna play for a bit", -- [13]
-		" you in a guild on Stormrage?", -- [14]
-		" lul", -- [15]
-		" that's nuts", -- [16]
-		" that sounds about right", -- [17]
-		"/quit", -- [18]
-		"/logout", -- [19]
-		"/raidinfo", -- [20]
+		"/1 Iceebetch you have lupis, i'm a doctor.", -- [1]
+		" what have you been up too", -- [2]
+		" still playing WoW or na", -- [3]
+		" word", -- [4]
+		" just resubbed", -- [5]
+		" gonna play for a bit", -- [6]
+		" you in a guild on Stormrage?", -- [7]
+		" lul", -- [8]
+		" that's nuts", -- [9]
+		" that sounds about right", -- [10]
+		"/quit", -- [11]
+		"/logout", -- [12]
+		"/raidinfo", -- [13]
+		"/s we did it", -- [14]
+		"/wave", -- [15]
+		"/cw Zombiewhipp-Sargeras are we doing the GTA thing tonight", -- [16]
+		"/cw Zombiewhipp-Sargeras or na", -- [17]
+		"/s NO ONE", -- [18]
+		"/s CAN'T JOIN YOU", -- [19]
+		"/skada reset", -- [20]
 	},
 	["ChatHistoryLog"] = {
-		{
-			"putting feast down before boss", -- [1]
-			"Antihero-Greymane", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Antihero-Greymane", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			375, -- [11]
-			"Player-158-001E614A", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffff7c0aAntihero-Greymane|r",
-			[51] = 1523238423,
-			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [1]
-		{
-			"Thanks!", -- [1]
-			"Misshealy-DarkIron", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Misshealy-DarkIron", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			378, -- [11]
-			"Player-157-058FF343", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffff7c0aMisshealy-DarkIron|r",
-			[51] = 1523238433,
-			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [2]
-		{
-			"feast down", -- [1]
-			"Antihero-Greymane", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Antihero-Greymane", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			392, -- [11]
-			"Player-158-001E614A", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffff7c0aAntihero-Greymane|r",
-			[51] = 1523238449,
-			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [3]
 		{
 			"Ty!", -- [1]
 			"Triblit-SilverHand", -- [2]
@@ -110,7 +44,7 @@ ElvCharacterDB = {
 			[52] = "|cffffffffTriblit-SilverHand|r",
 			[51] = 1523238453,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [4]
+		}, -- [1]
 		{
 			"thx <3", -- [1]
 			"Misshealy-DarkIron", -- [2]
@@ -132,7 +66,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aMisshealy-DarkIron|r",
 			[51] = 1523238462,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [5]
+		}, -- [2]
 		{
 			"and ty for the candy locky person <3", -- [1]
 			"Misshealy-DarkIron", -- [2]
@@ -154,7 +88,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aMisshealy-DarkIron|r",
 			[51] = 1523238497,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [6]
+		}, -- [3]
 		{
 			"helpful for us healers =)", -- [1]
 			"Misshealy-DarkIron", -- [2]
@@ -176,7 +110,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aMisshealy-DarkIron|r",
 			[51] = 1523238507,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [7]
+		}, -- [4]
 		{
 			"Decimation on Phiber", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -198,7 +132,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238622,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [8]
+		}, -- [5]
 		{
 			"3", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -220,7 +154,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238624,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [9]
+		}, -- [6]
 		{
 			"2", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -242,7 +176,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238625,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [10]
+		}, -- [7]
 		{
 			"1", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -264,7 +198,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238626,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [11]
+		}, -- [8]
 		{
 			"Decimation", -- [1]
 			"Antihero-Greymane", -- [2]
@@ -286,7 +220,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aAntihero-Greymane|r",
 			[51] = 1523238637,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [12]
+		}, -- [9]
 		{
 			"3", -- [1]
 			"Antihero-Greymane", -- [2]
@@ -308,7 +242,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aAntihero-Greymane|r",
 			[51] = 1523238639,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [13]
+		}, -- [10]
 		{
 			"2", -- [1]
 			"Antihero-Greymane", -- [2]
@@ -330,7 +264,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aAntihero-Greymane|r",
 			[51] = 1523238641,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [14]
+		}, -- [11]
 		{
 			"Decimation on Xoti", -- [1]
 			"Xoti-Stormrage", -- [2]
@@ -352,7 +286,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edXoti|r",
 			[51] = 1523238653,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [15]
+		}, -- [12]
 		{
 			"Decimation on Phiber", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -374,7 +308,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238653,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [16]
+		}, -- [13]
 		{
 			"3", -- [1]
 			"Xoti-Stormrage", -- [2]
@@ -396,7 +330,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edXoti|r",
 			[51] = 1523238655,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [17]
+		}, -- [14]
 		{
 			"3", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -418,7 +352,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238655,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [18]
+		}, -- [15]
 		{
 			"2", -- [1]
 			"Xoti-Stormrage", -- [2]
@@ -440,7 +374,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edXoti|r",
 			[51] = 1523238656,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [19]
+		}, -- [16]
 		{
 			"2", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -462,7 +396,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238656,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [20]
+		}, -- [17]
 		{
 			"1", -- [1]
 			"Xoti-Stormrage", -- [2]
@@ -484,7 +418,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edXoti|r",
 			[51] = 1523238657,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [21]
+		}, -- [18]
 		{
 			"1", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -506,7 +440,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238657,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [22]
+		}, -- [19]
 		{
 			"Decimation", -- [1]
 			"Antihero-Greymane", -- [2]
@@ -528,7 +462,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aAntihero-Greymane|r",
 			[51] = 1523238669,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [23]
+		}, -- [20]
 		{
 			"3", -- [1]
 			"Antihero-Greymane", -- [2]
@@ -550,7 +484,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aAntihero-Greymane|r",
 			[51] = 1523238671,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [24]
+		}, -- [21]
 		{
 			"2", -- [1]
 			"Antihero-Greymane", -- [2]
@@ -572,7 +506,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aAntihero-Greymane|r",
 			[51] = 1523238672,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [25]
+		}, -- [22]
 		{
 			"Decimation on Phiber", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -594,7 +528,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238685,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [26]
+		}, -- [23]
 		{
 			"Decimation on Xoti", -- [1]
 			"Xoti-Stormrage", -- [2]
@@ -616,7 +550,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edXoti|r",
 			[51] = 1523238685,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [27]
+		}, -- [24]
 		{
 			"3", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -638,7 +572,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238687,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [28]
+		}, -- [25]
 		{
 			"3", -- [1]
 			"Xoti-Stormrage", -- [2]
@@ -660,7 +594,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edXoti|r",
 			[51] = 1523238687,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [29]
+		}, -- [26]
 		{
 			"3", -- [1]
 			"Oldfool-Sargeras", -- [2]
@@ -682,7 +616,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaOldfool-Sargeras|r",
 			[51] = 1523238687,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [30]
+		}, -- [27]
 		{
 			"2", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -704,7 +638,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238688,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [31]
+		}, -- [28]
 		{
 			"2", -- [1]
 			"Xoti-Stormrage", -- [2]
@@ -726,7 +660,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edXoti|r",
 			[51] = 1523238688,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [32]
+		}, -- [29]
 		{
 			"2", -- [1]
 			"Oldfool-Sargeras", -- [2]
@@ -748,7 +682,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaOldfool-Sargeras|r",
 			[51] = 1523238688,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [33]
+		}, -- [30]
 		{
 			"1", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -770,7 +704,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238689,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [34]
+		}, -- [31]
 		{
 			"1", -- [1]
 			"Xoti-Stormrage", -- [2]
@@ -792,7 +726,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edXoti|r",
 			[51] = 1523238689,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [35]
+		}, -- [32]
 		{
 			"1", -- [1]
 			"Oldfool-Sargeras", -- [2]
@@ -814,7 +748,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaOldfool-Sargeras|r",
 			[51] = 1523238689,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [36]
+		}, -- [33]
 		{
 			"Decimation", -- [1]
 			"Whindie-Feathermoon", -- [2]
@@ -836,7 +770,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaWhindie-Feathermoon|r",
 			[51] = 1523238700,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [37]
+		}, -- [34]
 		{
 			"Decimation", -- [1]
 			"Ghalema-Stormrage", -- [2]
@@ -858,7 +792,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaGhalema|r",
 			[51] = 1523238700,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [38]
+		}, -- [35]
 		{
 			"3", -- [1]
 			"Whindie-Feathermoon", -- [2]
@@ -880,7 +814,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaWhindie-Feathermoon|r",
 			[51] = 1523238702,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [39]
+		}, -- [36]
 		{
 			"3", -- [1]
 			"Ghalema-Stormrage", -- [2]
@@ -902,7 +836,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaGhalema|r",
 			[51] = 1523238702,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [40]
+		}, -- [37]
 		{
 			"2", -- [1]
 			"Whindie-Feathermoon", -- [2]
@@ -924,7 +858,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaWhindie-Feathermoon|r",
 			[51] = 1523238703,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [41]
+		}, -- [38]
 		{
 			"2", -- [1]
 			"Ghalema-Stormrage", -- [2]
@@ -946,7 +880,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaGhalema|r",
 			[51] = 1523238703,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [42]
+		}, -- [39]
 		{
 			"1", -- [1]
 			"Whindie-Feathermoon", -- [2]
@@ -968,7 +902,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaWhindie-Feathermoon|r",
 			[51] = 1523238704,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [43]
+		}, -- [40]
 		{
 			"REEEE", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -990,7 +924,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523238762,
 			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
-		}, -- [44]
+		}, -- [41]
 		{
 			"sup", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1012,7 +946,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523238763,
 			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
-		}, -- [45]
+		}, -- [42]
 		{
 			"lol", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1034,7 +968,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523238786,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [46]
+		}, -- [43]
 		{
 			"why the rEEEE?", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1056,7 +990,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523238789,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [47]
+		}, -- [44]
 		{
 			"inc rez", -- [1]
 			"Triblit-SilverHand", -- [2]
@@ -1078,7 +1012,7 @@ ElvCharacterDB = {
 			[52] = "|cffffffffTriblit-SilverHand|r",
 			[51] = 1523238789,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [48]
+		}, -- [45]
 		{
 			"lost all my weakauras", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1100,7 +1034,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523238795,
 			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
-		}, -- [49]
+		}, -- [46]
 		{
 			"anyone not need anything?", -- [1]
 			"Gezuss-DarkIron", -- [2]
@@ -1122,7 +1056,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaGezuss-DarkIron|r",
 			[51] = 1523238800,
 			[50] = "CHAT_MSG_INSTANCE_CHAT_LEADER",
-		}, -- [50]
+		}, -- [47]
 		{
 			"don't need this |cffa335ee|Hitem:151937::::::::110:262::4:3:3613:1457:3528:::|h[Cloak of the Burning Vanguard]|h|r", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -1144,7 +1078,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238808,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [51]
+		}, -- [48]
 		{
 			"anyone want?", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -1166,7 +1100,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238809,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [52]
+		}, -- [49]
 		{
 			"oh", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1188,7 +1122,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523238811,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [53]
+		}, -- [50]
 		{
 			"god", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1210,7 +1144,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523238812,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [54]
+		}, -- [51]
 		{
 			"REEEEEEEEEE", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1232,7 +1166,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523238814,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [55]
+		}, -- [52]
 		{
 			"me", -- [1]
 			"Gezuss-DarkIron", -- [2]
@@ -1254,7 +1188,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaGezuss-DarkIron|r",
 			[51] = 1523238814,
 			[50] = "CHAT_MSG_INSTANCE_CHAT_LEADER",
-		}, -- [56]
+		}, -- [53]
 		{
 			"you died, get fucked", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -1276,7 +1210,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238822,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [57]
+		}, -- [54]
 		{
 			"lol jk", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -1298,7 +1232,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523238826,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [58]
+		}, -- [55]
 		{
 			"if anyone with the |cffa335ee|Hitem:151937::::::::110:64::4:3:3613:1457:3528:::|h[Cloak of the Burning Vanguard]|h|r I'm interested", -- [1]
 			"Whindie-Feathermoon", -- [2]
@@ -1320,7 +1254,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaWhindie-Feathermoon|r",
 			[51] = 1523238833,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [59]
+		}, -- [56]
 		{
 			"me", -- [1]
 			"Gezuss-DarkIron", -- [2]
@@ -1342,7 +1276,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaGezuss-DarkIron|r",
 			[51] = 1523238845,
 			[50] = "CHAT_MSG_INSTANCE_CHAT_LEADER",
-		}, -- [60]
+		}, -- [57]
 		{
 			"i win", -- [1]
 			"Ghalema-Stormrage", -- [2]
@@ -1364,7 +1298,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaGhalema|r",
 			[51] = 1523238854,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [61]
+		}, -- [58]
 		{
 			"tyvm", -- [1]
 			"Ghalema-Stormrage", -- [2]
@@ -1386,7 +1320,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaGhalema|r",
 			[51] = 1523238870,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [62]
+		}, -- [59]
 		{
 			"6pm pst, that's 9pm est", -- [1]
 			"Ghalema-Stormrage", -- [2]
@@ -1408,7 +1342,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaGhalema|r",
 			[51] = 1523238918,
 			[50] = "CHAT_MSG_WHISPER_INFORM",
-		}, -- [63]
+		}, -- [60]
 		{
 			"right?", -- [1]
 			"Ghalema-Stormrage", -- [2]
@@ -1430,7 +1364,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaGhalema|r",
 			[51] = 1523238920,
 			[50] = "CHAT_MSG_WHISPER_INFORM",
-		}, -- [64]
+		}, -- [61]
 		{
 			"yup :)", -- [1]
 			"Ghalema-Stormrage", -- [2]
@@ -1452,7 +1386,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaGhalema|r",
 			[51] = 1523238933,
 			[50] = "CHAT_MSG_WHISPER",
-		}, -- [65]
+		}, -- [62]
 		{
 			"any need for an ele sham?", -- [1]
 			"Ghalema-Stormrage", -- [2]
@@ -1474,7 +1408,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaGhalema|r",
 			[51] = 1523238991,
 			[50] = "CHAT_MSG_WHISPER_INFORM",
-		}, -- [66]
+		}, -- [63]
 		{
 			"reported for racism", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -1496,7 +1430,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523239009,
 			[50] = "CHAT_MSG_CHANNEL",
-		}, -- [67]
+		}, -- [64]
 		{
 			"yeah we need shaman too :)", -- [1]
 			"Ghalema-Stormrage", -- [2]
@@ -1518,7 +1452,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaGhalema|r",
 			[51] = 1523239012,
 			[50] = "CHAT_MSG_WHISPER",
-		}, -- [68]
+		}, -- [65]
 		{
 			"and we need range :)", -- [1]
 			"Ghalema-Stormrage", -- [2]
@@ -1540,7 +1474,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaGhalema|r",
 			[51] = 1523239032,
 			[50] = "CHAT_MSG_WHISPER",
-		}, -- [69]
+		}, -- [66]
 		{
 			"Iceebetch you have lupis, i'm a doctor.", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -1562,7 +1496,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523239321,
 			[50] = "CHAT_MSG_CHANNEL",
-		}, -- [70]
+		}, -- [67]
 		{
 			"what have you been up too", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1584,7 +1518,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239379,
 			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
-		}, -- [71]
+		}, -- [68]
 		{
 			"Desolate Gaze on Triblit", -- [1]
 			"Triblit-SilverHand", -- [2]
@@ -1606,7 +1540,7 @@ ElvCharacterDB = {
 			[52] = "|cffffffffTriblit-SilverHand|r",
 			[51] = 1523239412,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [72]
+		}, -- [69]
 		{
 			"anyone not need anything?", -- [1]
 			"Gezuss-DarkIron", -- [2]
@@ -1628,7 +1562,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaGezuss-DarkIron|r",
 			[51] = 1523239436,
 			[50] = "CHAT_MSG_INSTANCE_CHAT_LEADER",
-		}, -- [73]
+		}, -- [70]
 		{
 			"roll for |cffa335ee|Hitem:151973::::::::110:102::4:3:3613:1457:3528:::|h[Collar of Null-Flame]|h|r", -- [1]
 			"Antihero-Greymane", -- [2]
@@ -1650,7 +1584,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aAntihero-Greymane|r",
 			[51] = 1523239444,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [74]
+		}, -- [71]
 		{
 			"not much many", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1672,7 +1606,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239445,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [75]
+		}, -- [72]
 		{
 			"mostly dicking around", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1694,7 +1628,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239448,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [76]
+		}, -- [73]
 		{
 			"still playing WoW or na", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1716,7 +1650,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239454,
 			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
-		}, -- [77]
+		}, -- [74]
 		{
 			"going once", -- [1]
 			"Antihero-Greymane", -- [2]
@@ -1738,7 +1672,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aAntihero-Greymane|r",
 			[51] = 1523239460,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [78]
+		}, -- [75]
 		{
 			"yea a fuck ton", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1760,7 +1694,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239461,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [79]
+		}, -- [76]
 		{
 			"going twice", -- [1]
 			"Antihero-Greymane", -- [2]
@@ -1782,7 +1716,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aAntihero-Greymane|r",
 			[51] = 1523239466,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [80]
+		}, -- [77]
 		{
 			"been on alpha a lot", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1804,7 +1738,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239472,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [81]
+		}, -- [78]
 		{
 			"trade daft", -- [1]
 			"Antihero-Greymane", -- [2]
@@ -1826,7 +1760,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aAntihero-Greymane|r",
 			[51] = 1523239474,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [82]
+		}, -- [79]
 		{
 			"word", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1848,7 +1782,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239496,
 			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
-		}, -- [83]
+		}, -- [80]
 		{
 			"BitCONNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEECT!", -- [1]
 			"Oldfool-Sargeras", -- [2]
@@ -1870,7 +1804,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaOldfool-Sargeras|r",
 			[51] = 1523239500,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [84]
+		}, -- [81]
 		{
 			"ty", -- [1]
 			"Daftmonk-Dentarg", -- [2]
@@ -1892,7 +1826,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Daftmonk-Dentarg|r",
 			[51] = 1523239508,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [85]
+		}, -- [82]
 		{
 			":)", -- [1]
 			"Antihero-Greymane", -- [2]
@@ -1914,7 +1848,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aAntihero-Greymane|r",
 			[51] = 1523239512,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [86]
+		}, -- [83]
 		{
 			"hbu", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1936,7 +1870,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239549,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [87]
+		}, -- [84]
 		{
 			"just resubbed", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1958,7 +1892,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239569,
 			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
-		}, -- [88]
+		}, -- [85]
 		{
 			"gonna play for a bit", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -1980,7 +1914,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239572,
 			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
-		}, -- [89]
+		}, -- [86]
 		{
 			"[FIS] Interrupted Fanatical Pyromancer's |cff71d5ff|Hspell:246505:0|h[Pyroblast]|h|r", -- [1]
 			"Ghalema-Stormrage", -- [2]
@@ -2002,7 +1936,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaGhalema|r",
 			[51] = 1523239620,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [90]
+		}, -- [87]
 		{
 			"you in a guild on Stormrage?", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -2024,7 +1958,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239655,
 			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
-		}, -- [91]
+		}, -- [88]
 		{
 			"still in that pleb guild lul", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -2046,7 +1980,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239670,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [92]
+		}, -- [89]
 		{
 			"lul", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -2068,7 +2002,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239677,
 			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
-		}, -- [93]
+		}, -- [90]
 		{
 			"lots of guilds on stormrage still haven't cleared mythic", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -2090,7 +2024,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239685,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [94]
+		}, -- [91]
 		{
 			"its fucking crazy", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -2112,7 +2046,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239690,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [95]
+		}, -- [92]
 		{
 			"that's nuts", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -2134,7 +2068,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523239889,
 			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
-		}, -- [96]
+		}, -- [93]
 		{
 			"Demonic Charge on Ghalema", -- [1]
 			"Ghalema-Stormrage", -- [2]
@@ -2156,7 +2090,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaGhalema|r",
 			[51] = 1523239890,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [97]
+		}, -- [94]
 		{
 			"pod guy plz", -- [1]
 			"Xoti-Stormrage", -- [2]
@@ -2178,7 +2112,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edXoti|r",
 			[51] = 1523240042,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [98]
+		}, -- [95]
 		{
 			"yea lots of guilds are still stuck by varimathras", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -2200,7 +2134,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523240044,
 			[50] = "CHAT_MSG_BN_WHISPER",
-		}, -- [99]
+		}, -- [96]
 		{
 			"shield?", -- [1]
 			"Xoti-Stormrage", -- [2]
@@ -2222,7 +2156,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edXoti|r",
 			[51] = 1523240050,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [100]
+		}, -- [97]
 		{
 			"that sounds about right", -- [1]
 			"|Kf9|k00000|k", -- [2]
@@ -2244,7 +2178,7 @@ ElvCharacterDB = {
 			[52] = "Kraez",
 			[51] = 1523240055,
 			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
-		}, -- [101]
+		}, -- [98]
 		{
 			"Demonic Charge on Antihero", -- [1]
 			"Antihero-Greymane", -- [2]
@@ -2266,7 +2200,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aAntihero-Greymane|r",
 			[51] = 1523240176,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [102]
+		}, -- [99]
 		{
 			"Demonic Charge on Kitsumii", -- [1]
 			"Kitsumii-Dath'Remar", -- [2]
@@ -2288,7 +2222,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Kitsumii-Dath'Remar|r",
 			[51] = 1523240227,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [103]
+		}, -- [100]
 		{
 			"Demonic Charge on Antihero", -- [1]
 			"Antihero-Greymane", -- [2]
@@ -2310,7 +2244,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aAntihero-Greymane|r",
 			[51] = 1523240239,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [104]
+		}, -- [101]
 		{
 			"FFS assign 1 person to click them", -- [1]
 			"Whindie-Feathermoon", -- [2]
@@ -2332,7 +2266,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaWhindie-Feathermoon|r",
 			[51] = 1523240247,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [105]
+		}, -- [102]
 		{
 			"no more double bubbles", -- [1]
 			"Whindie-Feathermoon", -- [2]
@@ -2354,7 +2288,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaWhindie-Feathermoon|r",
 			[51] = 1523240253,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [106]
+		}, -- [103]
 		{
 			"Demonic Charge on Kitsumii", -- [1]
 			"Kitsumii-Dath'Remar", -- [2]
@@ -2376,7 +2310,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Kitsumii-Dath'Remar|r",
 			[51] = 1523240259,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [107]
+		}, -- [104]
 		{
 			"Slumbering Gasp on Phiber", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -2398,7 +2332,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523406789,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [108]
+		}, -- [105]
 		{
 			"|cff71d5ff|Hspell:183752:0|h[Consume Magic]|h|r interrupted Matron Folnuna's |cff71d5ff|Hspell:254147:0|h[Fel Blast]|h|r!", -- [1]
 			"Midiaen-WyrmrestAccord", -- [2]
@@ -2420,7 +2354,7 @@ ElvCharacterDB = {
 			[52] = "|cffa330c9Midiaen-WyrmrestAccord|r",
 			[51] = 1523406838,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [109]
+		}, -- [106]
 		{
 			"Slumbering Gasp on Jaecarr", -- [1]
 			"Jaecarr-Proudmoore", -- [2]
@@ -2442,7 +2376,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Jaecarr-Proudmoore|r",
 			[51] = 1523406858,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [110]
+		}, -- [107]
 		{
 			"Slumbering Gasp on Phiber", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -2464,7 +2398,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1523406858,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [111]
+		}, -- [108]
 		{
 			"|cff71d5ff|Hspell:183752:0|h[Consume Magic]|h|r interrupted Matron Folnuna's |cff71d5ff|Hspell:254147:0|h[Fel Blast]|h|r!", -- [1]
 			"Midiaen-WyrmrestAccord", -- [2]
@@ -2486,6 +2420,402 @@ ElvCharacterDB = {
 			[52] = "|cffa330c9Midiaen-WyrmrestAccord|r",
 			[51] = 1523406888,
 			[50] = "CHAT_MSG_RAID",
+		}, -- [109]
+		{
+			"we did it", -- [1]
+			"Phiber-Stormrage", -- [2]
+			"Common", -- [3]
+			"", -- [4]
+			"Phiber", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			44, -- [11]
+			"Player-60-0B4ACBB1", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff0070ddPhiber|r",
+			[51] = 1523666584,
+			[50] = "CHAT_MSG_SAY",
+		}, -- [110]
+		{
+			"|cffffff00Shrine of Seven Stars is under attack!|r", -- [1]
+			"", -- [2]
+			"", -- [3]
+			"3. LocalDefense - Shrine of Seven Stars", -- [4]
+			"", -- [5]
+			"", -- [6]
+			22, -- [7]
+			3, -- [8]
+			"LocalDefense - Shrine of Seven Stars", -- [9]
+			0, -- [10]
+			204, -- [11]
+			false, -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			true, -- [17]
+			[52] = "",
+			[51] = 1523667748,
+			[50] = "CHAT_MSG_CHANNEL",
+		}, -- [111]
+		{
+			"are we doing the GTA thing tonight", -- [1]
+			"Zombiewhipp-Sargeras", -- [2]
+			"Common", -- [3]
+			"", -- [4]
+			"Zombiewhipp-Sargeras", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			213, -- [11]
+			"Player-76-057D2BA0", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc69b6dZombiewhipp-Sargeras|r",
+			[51] = 1523667927,
+			[50] = "CHAT_MSG_WHISPER_INFORM",
 		}, -- [112]
+		{
+			"or na", -- [1]
+			"Zombiewhipp-Sargeras", -- [2]
+			"Common", -- [3]
+			"", -- [4]
+			"Zombiewhipp-Sargeras", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			214, -- [11]
+			"Player-76-057D2BA0", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc69b6dZombiewhipp-Sargeras|r",
+			[51] = 1523667928,
+			[50] = "CHAT_MSG_WHISPER_INFORM",
+		}, -- [113]
+		{
+			"NO ONE", -- [1]
+			"Phiber-Stormrage", -- [2]
+			"Common", -- [3]
+			"", -- [4]
+			"Phiber", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			410, -- [11]
+			"Player-60-0B4ACBB1", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff0070ddPhiber|r",
+			[51] = 1523668706,
+			[50] = "CHAT_MSG_SAY",
+		}, -- [114]
+		{
+			"CAN'T JOIN YOU", -- [1]
+			"Phiber-Stormrage", -- [2]
+			"Common", -- [3]
+			"", -- [4]
+			"Phiber", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			411, -- [11]
+			"Player-60-0B4ACBB1", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff0070ddPhiber|r",
+			[51] = 1523668708,
+			[50] = "CHAT_MSG_SAY",
+		}, -- [115]
+		{
+			"that's some bs", -- [1]
+			"Olog-WyrmrestAccord", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Olog-WyrmrestAccord", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			606, -- [11]
+			"Player-1171-07BD77BF", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc69b6dOlog-WyrmrestAccord|r",
+			[51] = 1523669766,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [116]
+		{
+			"someone take flag from me", -- [1]
+			"Velaurix-Sargeras", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Velaurix-Sargeras", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			641, -- [11]
+			"Player-76-099BBABC", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff8787edVelaurix-Sargeras|r",
+			[51] = 1523669981,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [117]
+		{
+			"plz", -- [1]
+			"Velaurix-Sargeras", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Velaurix-Sargeras", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			643, -- [11]
+			"Player-76-099BBABC", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff8787edVelaurix-Sargeras|r",
+			[51] = 1523669995,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [118]
+		{
+			"fuck", -- [1]
+			"Proetus-Blade'sEdge", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Proetus-Blade'sEdge", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			652, -- [11]
+			"Player-105-0675283A", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfff48cbaProetus-Blade'sEdge|r",
+			[51] = 1523670036,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [119]
+		{
+			"Wasted effort", -- [1]
+			"Trayssa-MoonGuard", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Trayssa-MoonGuard", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			655, -- [11]
+			"Player-3675-06D7B075", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfffff468Trayssa-MoonGuard|r",
+			[51] = 1523670055,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [120]
+		{
+			"There is a mage lookin' at me", -- [1]
+			"Hankerchief-Malfurion", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Hankerchief-Malfurion", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			845, -- [11]
+			"Player-1175-09391946", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff00ff96Hankerchief-Malfurion|r",
+			[51] = 1523670924,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [121]
+		{
+			"clal inc", -- [1]
+			"Ninjhax-Staghelm", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Ninjhax-Staghelm", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			846, -- [11]
+			"Player-160-09B19CFF", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfffff468Ninjhax-Staghelm|r",
+			[51] = 1523670929,
+			[50] = "CHAT_MSG_INSTANCE_CHAT_LEADER",
+		}, -- [122]
+		{
+			"inc LH", -- [1]
+			"Ninjhax-Staghelm", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Ninjhax-Staghelm", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			850, -- [11]
+			"Player-160-09B19CFF", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfffff468Ninjhax-Staghelm|r",
+			[51] = 1523670974,
+			[50] = "CHAT_MSG_INSTANCE_CHAT_LEADER",
+		}, -- [123]
+		{
+			"lh pls", -- [1]
+			"Hankerchief-Malfurion", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Hankerchief-Malfurion", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			859, -- [11]
+			"Player-1175-09391946", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff00ff96Hankerchief-Malfurion|r",
+			[51] = 1523671124,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [124]
+		{
+			"inc LH", -- [1]
+			"Ninjhax-Staghelm", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Ninjhax-Staghelm", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			862, -- [11]
+			"Player-160-09B19CFF", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfffff468Ninjhax-Staghelm|r",
+			[51] = 1523671163,
+			[50] = "CHAT_MSG_INSTANCE_CHAT_LEADER",
+		}, -- [125]
+		{
+			"inc LH", -- [1]
+			"Ninjhax-Staghelm", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Ninjhax-Staghelm", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			878, -- [11]
+			"Player-160-09B19CFF", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfffff468Ninjhax-Staghelm|r",
+			[51] = 1523671310,
+			[50] = "CHAT_MSG_INSTANCE_CHAT_LEADER",
+		}, -- [126]
+		{
+			"lh pls", -- [1]
+			"Hankerchief-Malfurion", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Hankerchief-Malfurion", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			879, -- [11]
+			"Player-1175-09391946", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff00ff96Hankerchief-Malfurion|r",
+			[51] = 1523671310,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [127]
 	},
 }

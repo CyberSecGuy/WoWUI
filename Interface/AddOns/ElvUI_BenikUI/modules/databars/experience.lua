@@ -44,14 +44,12 @@ local function StyleBar()
 	xp.fb = CreateFrame('Button', nil, xp)
 	xp.fb:CreateSoftGlow()
 	xp.fb.sglow:Hide()
-	if E.db.benikui.general.shadows then
-		xp.fb:CreateShadow('Default')
-		xp.fb:Point('TOPLEFT', xp, 'BOTTOMLEFT', 0, (E.PixelMode and -SPACING -2 or -SPACING))
-		xp.fb:Point('BOTTOMRIGHT', xp, 'BOTTOMRIGHT', 0, -22)
-	else
-		xp.fb:Point('TOPLEFT', xp, 'BOTTOMLEFT', 0, -SPACING)
-		xp.fb:Point('BOTTOMRIGHT', xp, 'BOTTOMRIGHT', 0, (E.PixelMode and -20 or -22))
+	if BUI.ShadowMode then
+		xp.fb:CreateSoftShadow()
 	end
+	xp.fb:Point('TOPLEFT', xp, 'BOTTOMLEFT', 0, -SPACING)
+	xp.fb:Point('BOTTOMRIGHT', xp, 'BOTTOMRIGHT', 0, (E.PixelMode and -20 or -22))
+
 	xp.fb:SetScript('OnEnter', onEnter)
 	xp.fb:SetScript('OnLeave', onLeave)
 
@@ -70,7 +68,7 @@ function BDB:ApplyXpStyling()
 	if E.db.databars.experience.enable then
 		if xp.fb then
 			if E.db.databars.experience.orientation == 'VERTICAL' then
-				if E.db.benikui.datatexts.chat.enable then 
+				if E.db.benikui.datatexts.chat.enable then
 					xp.fb:Show()
 				else
 					xp.fb:Hide()
@@ -87,7 +85,7 @@ function BDB:ApplyXpStyling()
 		end
 	else
 		if xp.style then
-			xp.style:Hide()	
+			xp.style:Hide()
 		end
 	end
 end
@@ -114,10 +112,19 @@ function BDB:ToggleXPBackdrop()
 	if bar.fb then
 		if db.buttonStyle == 'DEFAULT' then
 			bar.fb:SetTemplate('Default', true)
+			if bar.fb.shadow then
+				bar.fb.shadow:Show()
+			end
 		elseif db.buttonStyle == 'TRANSPARENT' then
 			bar.fb:SetTemplate('Transparent')
+			if bar.fb.shadow then
+				bar.fb.shadow:Show()
+			end
 		else
 			bar.fb:SetTemplate('NoBackdrop')
+			if bar.fb.shadow then
+				bar.fb.shadow:Hide()
+			end
 		end
 	end
 end
@@ -185,7 +192,7 @@ end
 
 function BDB:XpTextOffset()
 	local text = ElvUI_ExperienceBar.text
-	text:Point('CENTER', 0, E.db.databars.experience.textYoffset)
+	text:Point('CENTER', 0, E.db.databars.experience.textYoffset or 0)
 end
 
 function BDB:LoadXP()
@@ -206,9 +213,9 @@ function BDB:LoadXP()
 		hooksecurefunc(M, 'UpdateExperienceDimensions', BDB.UpdateXpNotifierPositions)
 	end
 
-	if E.db.benikui.general.shadows then
+	if BUI.ShadowMode then
 		if not bar.style then
-			bar:CreateShadow('Default')
+			bar:CreateSoftShadow()
 		end
 	end
 

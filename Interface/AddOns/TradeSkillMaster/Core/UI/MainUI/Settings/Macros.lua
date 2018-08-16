@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Macros = TSM.MainUI.Settings:NewPackage("Macros")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = {}
 local MACRO_NAME = "TSMMacro"
 local MACRO_ICON = "Achievement_Faction_GoldenLotus"
@@ -162,16 +162,16 @@ function private.GetMacrosSettingsFrame()
 			)
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Checkbox", "altCheckbox")
 				:SetStyle("width", 80)
-				:SetText(L["ALT"])
+				:SetText(ALT_KEY)
 				:SetChecked(altEnabled)
 			)
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Checkbox", "ctrlCheckbox")
 				:SetStyle("width", 80)
-				:SetText(L["CTRL"])
+				:SetText(CTRL_KEY)
 				:SetChecked(ctrlEnabled)
 			)
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Checkbox", "shiftCheckbox")
-				:SetText(L["SHIFT"])
+				:SetText(SHIFT_KEY)
 				:SetChecked(shiftEnabled)
 			)
 		)
@@ -195,14 +195,16 @@ end
 -- ============================================================================
 
 function private.CreateButtonOnClick(button)
-	button:SetPressed(false)
-	button:Draw()
-
 	-- remove the old bindings and macros
 	for _, binding in TSMAPI_FOUR.Util.VarargIterator(GetBindingKey(BINDING_NAME)) do
 		SetBinding(binding)
 	end
 	DeleteMacro(MACRO_NAME)
+
+	if GetNumMacros() >= MAX_ACCOUNT_MACROS then
+		TSM:Print(L["Could not create macro as you already have too many. Delete one of your existing macros and try again."])
+		return
+	end
 
 	-- create the new macro
 	local scrollFrame = button:GetParentElement()

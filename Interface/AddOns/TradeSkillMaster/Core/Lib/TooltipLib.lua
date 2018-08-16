@@ -137,12 +137,12 @@ function private.OnTooltipSetItem(tooltip)
 
 	reg.hasItem = true
 	reg.extraTip:Attach(tooltip)
-	local r, g, b = GetItemQualityColor(TSMAPI_FOUR.Item.GetQuality(item) or 0)
-	reg.extraTip:AddLine(TSMAPI_FOUR.Item.GetName(item), r, g, b)
 
 	private.callback(tooltip, item, reg.quantity or 1)
 	tooltip:Show()
 	if reg.extraTipUsed then
+		local r, g, b = GetItemQualityColor(TSMAPI_FOUR.Item.GetQuality(item) or 0)
+		reg.extraTip:AddLine(TSMAPI_FOUR.Item.GetName(item), r, g, b)
 		reg.extraTip:Show()
 	end
 end
@@ -186,7 +186,6 @@ function private.OnTooltipSetBattlePet(tooltip, data)
 		r, g, b = coltable.r, coltable.g, coltable.b
 	end
 
-	local quantity = reg.quantity or 1
 	local link = reg.item
 	if not link then
 		link = format("%s|Hbattlepet:%d:%d:%d:%d:%d:%d:%s|h[%s]|h|r", colcode, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID, customName or name)
@@ -313,9 +312,8 @@ private.extraTipMethods = {
 		for i = changedLines + 1, numLines do
 			local left, right = self.Left[i], self.Right[i]
 			local font = i == 1 and GameFontNormal or GameFontNormalSmall
-			local r, g, b, a = nil, nil, nil, nil
 
-			r, g, b, a = left:GetTextColor()
+			local r, g, b, a = left:GetTextColor()
 			left:SetFontObject(font)
 			left:SetTextColor(r, g, b, a)
 

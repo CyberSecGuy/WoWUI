@@ -7,178 +7,306 @@
 -- ------------------------------------------------------------------------------ --
 
 --- Scrolling Table UI Element Class.
--- NOTE: This class is deprecated and shouldn't be used for new code. @{FastScrollingTable} should be used instead.
+-- A scrolling table contains a scrollable list of rows with a fixed set of columns. It is a subclass of the @{Element}
+-- class.
 -- @classmod ScrollingTable
 
 local _, TSM = ...
-local ScrollingTable = TSMAPI_FOUR.Class.DefineClass("ScrollingTable", TSM.UI.Frame)
+local ScrollingTable = TSMAPI_FOUR.Class.DefineClass("ScrollingTable", TSM.UI.Element, "ABSTRACT")
 TSM.UI.ScrollingTable = ScrollingTable
-local ScrollingTable_ScrollList = TSMAPI_FOUR.Class.DefineClass("ScrollingTable_ScrollList", TSM.UI.ScrollList)
-TSM.UI.ScrollingTable_ScrollList = ScrollingTable_ScrollList
-local private = { sortContext = nil, sortCache = {}, queryScrollListLookup = {} }
-local ROW_PADDING = { left = 8, right = 8 }
-local SORT_ICON_MARGIN = { left = 2 }
+local private = {
+	rowPool = TSMAPI_FOUR.ObjectPool.New("TABLE_ROWS", TSM.UI.Util.TableRow, 1),
+	frameScrollingTableLookup = {},
+}
+local MOUSE_WHEEL_SCROLL_AMOUNT = 60
+local HEADER_HEIGHT = 22
+local HEADER_LINE_HEIGHT = 2
 
 
 
 -- ============================================================================
--- ScrollingTable - Public Class Methods
+-- Meta Class Methods
 -- ============================================================================
 
-function ScrollingTable.__init(self, scrollListClass)
-	scrollListClass = scrollListClass or ScrollingTable_ScrollList
-	assert(scrollListClass and scrollListClass:__isa(ScrollingTable_ScrollList))
-	self.__super:__init()
-	self._scrollListClass = scrollListClass
-	self._showingAltTitles = false
-	self._tableInfo = TSM.UI.Util.ScrollingTableInfo()
+function ScrollingTable.__init(self)
+	local frame = CreateFrame("Frame", nil, nil, nil)
+
+	self.__super:__init(frame)
+
+	frame.backgroundTexture = frame:CreateTexture(nil, "BACKGROUND")
+	frame.backgroundTexture:SetAllPoints()
+
+	self._line = frame:CreateTexture(nil, "ARTWORK")
+	self._line:SetPoint("TOPLEFT", 0, -HEADER_HEIGHT)
+	self._line:SetPoint("TOPRIGHT", 0, -HEADER_HEIGHT)
+	self._line:SetHeight(HEADER_LINE_HEIGHT)
+	self._line:SetColorTexture(TSM.UI.HexToRGBA("#585858"))
+
+	self._scrollFrame = CreateFrame("ScrollFrame", nil, frame, nil)
+	self._scrollFrame:SetPoint("TOPLEFT", 0, -HEADER_HEIGHT - HEADER_LINE_HEIGHT)
+	self._scrollFrame:SetPoint("BOTTOMRIGHT")
+
+	self._scrollFrame:EnableMouseWheel(true)
+	self._scrollFrame:SetScript("OnUpdate", private.FrameOnUpdate)
+	self._scrollFrame:SetScript("OnMouseWheel", private.FrameOnMouseWheel)
+	private.frameScrollingTableLookup[self._scrollFrame] = self
+
+	self._scrollbar = TSM.UI.CreateScrollbar(self._scrollFrame)
+
+	self._content = CreateFrame("Frame", nil, self._scrollFrame)
+	self._content:SetPoint("TOPLEFT")
+	self._content:SetPoint("TOPRIGHT")
+	self._scrollFrame:SetScrollChild(self._content)
+
+	self._rows = {}
+	self._data = {}
+	self._scrollValue = 0
+	self._onSelectionChangedHandler = nil
+	self._onRowClickHandler = nil
+	self._selection = nil
+	self._selectionDisabled = nil
 	self._selectionValidator = nil
-	self._sortDisabled = false
+	self._tableInfo = self:_CreateScrollingTableInfo()
+	self._header = nil
+	self._dataTranslationFunc = nil
 end
 
 function ScrollingTable.Acquire(self)
-	self.__super:Acquire()
-	self:SetLayout("VERTICAL")
-		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "header")
-			:SetLayout("HORIZONTAL")
-			:SetStyle("height", 22)
-			:SetStyle("padding", ROW_PADDING)
-		)
-		:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")
-			:SetStyle("height", 2)
-			:SetStyle("color", "#9d9d9d")
-		)
-		:AddChild(TSMAPI_FOUR.UI.NewElement(self._scrollListClass, "scrollList"))
-	self._scrollList = self:GetElement("scrollList")
-	self._showingAltTitles = false
 	self._tableInfo:_Acquire(self)
+	self._scrollValue = 0
+	self._scrollbar:SetScript("OnValueChanged", private.OnScrollbarValueChangedNoDraw)
+	self._scrollbar:SetMinMaxValues(0, self:_GetMaxScroll())
+	-- don't want to cause this element to be drawn for this initial scrollbar change
+	self._scrollbar:SetValue(0)
+	self._scrollbar:SetScript("OnValueChanged", private.OnScrollbarValueChanged)
+
+	self._scrollbar:ClearAllPoints()
+	self._scrollbar:SetWidth(self:_GetStyle("scrollbarWidth"))
+	self._scrollbar:SetPoint("TOPRIGHT", -self:_GetStyle("scrollbarMargin"), -self:_GetStyle("scrollbarMargin"))
+	self._scrollbar:SetPoint("BOTTOMRIGHT", -self:_GetStyle("scrollbarMargin"), self:_GetStyle("scrollbarMargin"))
+	self._scrollbar.thumb:SetWidth(self:_GetStyle("scrollbarThumbWidth"))
+	self._scrollbar.thumb:SetColorTexture(TSM.UI.HexToRGBA(self:_GetStyle("scrollbarThumbBackground")))
+
+	self.__super:Acquire()
 end
 
 function ScrollingTable.Release(self)
-	self._selectionValidator = nil
-	self._sortDisabled = false
+	if self._header then
+		self._header:Release()
+		private.rowPool:Recycle(self._header)
+		self._header = nil
+	end
+	for _, row in ipairs(self._rows) do
+		row:Release()
+		private.rowPool:Recycle(row)
+	end
+	wipe(self._rows)
 	self._tableInfo:_Release()
+	self._onSelectionChangedHandler = nil
+	self._onRowClickHandler = nil
+	self._selection = nil
+	self._selectionDisabled = nil
+	self._selectionValidator = nil
+	self._dataTranslationFunc = nil
+	wipe(self._data)
 	self.__super:Release()
 end
 
+
+
+-- ============================================================================
+-- Public Class Methods
+-- ============================================================================
+
+--- Forces an update of the data shown within the table.
+-- @tparam ScrollingTable self The scrolling table object
+-- @tparam[opt=false] bool redraw Whether or not to redraw the scrolling table
+function ScrollingTable.UpdateData(self, redraw)
+	self:_UpdateData()
+	if redraw then
+		self:Draw()
+	end
+	return self
+end
+
+--- Gets the @{ScrollingTableInfo} object.
+-- @tparam ScrollingTable self The scrolling table object
+-- @treturn ScrollingTableInfo The scrolling table info object
 function ScrollingTable.GetScrollingTableInfo(self)
 	return self._tableInfo
 end
 
+--- Commits the scrolling table info.
+-- This should be called once the scrolling table info is completely set (retrieved via @{ScrollingTable.GetScrollingTableInfo}).
+-- @tparam ScrollingTable self The scrolling table object
+-- @treturn ScrollingTable The scrolling table object
 function ScrollingTable.CommitTableInfo(self)
-	-- recreate the header
-	local header = self:GetElement("header")
-	header:ReleaseAllChildren()
-	for i, col in ipairs(self._tableInfo:_GetCols()) do
-		local headerIndent = col:_GetHeaderIndent()
-		local headerCol = TSMAPI_FOUR.UI.NewElement("Frame", col:_GetId())
-			:SetLayout("HORIZONTAL")
-			:SetStyle("width", col:_GetWidth())
-			:SetStyle("margin", { left = (i ~= 1 and 16 or 0) + (headerIndent or 0) })
-			:SetContext(col)
-			:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Button", "button")
-				:SetStyle("anchors", { { "TOPLEFT" }, { "BOTTOMRIGHT" } })
-				:EnableRightClick()
-				:SetScript("OnClick", private.HeaderCellOnClick)
-			)
-		local justifyH = col:_GetJustifyH() or "LEFT"
-		if justifyH == "LEFT" then
-			-- no spacer on the left
-		elseif justifyH == "CENTER" then
-			headerCol:AddChild(TSMAPI_FOUR.UI.NewElement("Spacer", "leftSpacer"))
-		elseif justifyH == "RIGHT" then
-			headerCol:AddChild(TSMAPI_FOUR.UI.NewElement("Spacer", "leftSpacer"))
-		else
-			error("Invalid justifyH: "..tostring(justifyH))
-		end
-		if col:_GetTitleIcon() then
-			headerCol:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "iconFrame")
-				:SetStyle("width", 14)
-				:SetStyle("height", 14)
-			)
-		else
-			headerCol:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "text")
-				:SetStyle("autoWidth", true)
-				:SetStyle("font", TSM.UI.Fonts.bold)
-				:SetStyle("justifyH", col:_GetJustifyH())
-				:SetStyle("fontHeight", 14)
-				:SetText(col:_GetTitle())
-			)
-		end
-		headerCol:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "sortIcon")
-			:SetStyle("margin", SORT_ICON_MARGIN)
-			:SetStyle("height", 10)
-			:SetStyle("width", 10)
-		)
-		if justifyH == "LEFT" then
-			headerCol:AddChild(TSMAPI_FOUR.UI.NewElement("Spacer", "rightSpacer"))
-		elseif justifyH == "CENTER" then
-			headerCol:AddChild(TSMAPI_FOUR.UI.NewElement("Spacer", "rightSpacer"))
-		elseif justifyH == "RIGHT" then
-			-- no spacer on the right
-		else
-			error("Invalid justifyH: "..tostring(justifyH))
-		end
-		header:AddChild(headerCol)
+	if self._header then
+		self._header:Release()
 	end
-	self._scrollList:_SetTableInfo(self._tableInfo)
+	self._header = self:_GetTableRow(true)
+	self._header:SetBackgroundColor(self:_GetStyle("headerBackground"))
+	self._header:SetHeight(HEADER_HEIGHT)
 	return self
 end
 
-function ScrollingTable.SetQuery(self, query, redraw)
-	self._scrollList:_SetQuery(query, redraw)
-
-	if redraw then
-		self:Draw()
-	end
-
-	return self
-end
-
+--- Registers a script handler.
+-- @tparam ScrollingTable self The scrolling table object
+-- @tparam string script The script to register for (supported scripts: `OnSelectionChanged`, `OnRowClick`)
+-- @tparam function handler The script handler which will be called with the scrolling table object followed by any
+-- arguments to the script
+-- @treturn ScrollingTable The scrolling table object
 function ScrollingTable.SetScript(self, script, handler)
 	if script == "OnSelectionChanged" then
-		self._scrollList:_SetScript("OnSelectionChanged", handler)
+		self._onSelectionChangedHandler = handler
 	elseif script == "OnRowClick" then
-		self._scrollList:_SetScript("OnRowClick", handler)
+		self._onRowClickHandler = handler
 	else
 		error("Unknown ScrollingTable script: "..tostring(script))
 	end
 	return self
 end
 
-function ScrollingTable.GetSelection(self)
-	return self._scrollList:_GetSelection()
-end
-
-function ScrollingTable.GetSelectionIndex(self)
-	return self._scrollList:_GetSelectionIndex()
-end
-
-function ScrollingTable.SetSelection(self, record)
-	if record and self._selectionValidator and not self:_selectionValidator(record) then
-		record = nil
+--- Sets the selected row.
+-- @tparam ScrollingTable self The scrolling table object
+-- @param selection The selected row or nil to clear the selection
+-- @treturn ScrollingTable The scrolling table object
+function ScrollingTable.SetSelection(self, selection)
+	if selection == self._selection then
+		return self
+	elseif selection and self._selectionValidator and not self:_selectionValidator(selection) then
+		return self
 	end
-	self._scrollList:_SetSelection(record)
+	local index = nil
+	if selection then
+		index = TSMAPI_FOUR.Util.TableKeyByValue(self._data, selection)
+		assert(index)
+	end
+	self._selection = selection
+	if selection then
+		-- set the scroll so that the selection is visible if necessary
+		local rowHeight = self:_GetStyle("rowHeight")
+		local firstVisibleIndex = ceil(self._scrollValue / rowHeight) + 1
+		local lastVisibleIndex = floor((self._scrollValue + self:_GetDimension("HEIGHT")) / rowHeight)
+		if lastVisibleIndex > firstVisibleIndex and (index < firstVisibleIndex or index > lastVisibleIndex) then
+			self:_OnScrollValueChanged(min((index - 1) * rowHeight, self:_GetMaxScroll()))
+		end
+	end
+	for _, row in ipairs(self._rows) do
+		if not row:IsMouseOver() and row:IsVisible() and row:GetData() ~= selection then
+			row:SetHighlightVisible(false)
+		elseif row:IsVisible() and row:GetData() == selection then
+			row:SetHighlightVisible(true)
+		end
+	end
+	if self._onSelectionChangedHandler then
+		self:_onSelectionChangedHandler()
+	end
 	return self
 end
 
-function ScrollingTable.SetSelectionDisabled(self, disabled)
-	self._scrollList:_SetSelectionDisabled(disabled)
-	return self
+--- Gets the currently selected row.
+-- @tparam ScrollingTable self The scrolling table object
+-- @return The selected row or nil if there's nothing selected
+function ScrollingTable.GetSelection(self)
+	return self._selection
 end
 
+--- Sets a selection validator function.
+-- @tparam ScrollingTable self The scrolling table object
+-- @tparam function validator A function which gets called with the scrolling table object and a row to validate
+-- whether or not it's selectable (returns true if it is, false otherwise)
+-- @treturn ScrollingTable The scrolling table object
 function ScrollingTable.SetSelectionValidator(self, validator)
 	self._selectionValidator = validator
 	return self
 end
 
-function ScrollingTable.GetDataByIndex(self, index)
-	return self._scrollList:_GetDataByIndex(index)
+--- Sets whether or not selection is disabled.
+-- @tparam ScrollingTable self The scrolling table object
+-- @tparam boolean disabled Whether or not to disable selection
+-- @treturn ScrollingTable The scrolling table object
+function ScrollingTable.SetSelectionDisabled(self, disabled)
+	self._selectionDisabled = disabled
+	return self
 end
 
-function ScrollingTable.SetSortDisabled(self, disabled)
-	self._sortDisabled = disabled
-	return self
+function ScrollingTable.Draw(self)
+	self.__super:Draw()
+	self:_ApplyFrameBackgroundTexture()
+
+	local rowHeight = self:_GetStyle("rowHeight")
+	local totalHeight = #self._data * rowHeight
+	local visibleHeight = self._scrollFrame:GetHeight()
+	local numVisibleRows = ceil(visibleHeight / rowHeight)
+	local scrollOffset = min(self._scrollValue, self:_GetMaxScroll())
+	local dataOffset = floor(scrollOffset / rowHeight)
+
+	self._scrollbar.thumb:SetHeight(min(visibleHeight / 2, self:_GetStyle("scrollbarThumbHeight")))
+	self._scrollbar:SetMinMaxValues(0, self:_GetMaxScroll())
+	self._scrollbar:SetValue(scrollOffset)
+	self._content:SetWidth(self._scrollFrame:GetWidth())
+	self._content:SetHeight(numVisibleRows * rowHeight)
+
+	self._line:SetColorTexture(TSM.UI.HexToRGBA(self:_GetStyle("lineColor")))
+
+	if self:_GetStyle("hideHeader") then
+		self._line:Hide()
+		self._header:SetHeight(0)
+		self._header:SetBackgroundColor("#00000000")
+		self._scrollFrame:SetPoint("TOPLEFT", 0, 0)
+	else
+		self._line:Show()
+		self._scrollFrame:SetPoint("TOPLEFT", 0, -HEADER_HEIGHT - HEADER_LINE_HEIGHT)
+		self._header:SetBackgroundColor(self:_GetStyle("headerBackground"))
+		self._header:SetHeight(HEADER_HEIGHT)
+	end
+
+	if TSMAPI_FOUR.Util.Round(scrollOffset + visibleHeight) == totalHeight then
+		-- we are at the bottom
+		self._scrollFrame:SetVerticalScroll(numVisibleRows * rowHeight - visibleHeight)
+	else
+		self._scrollFrame:SetVerticalScroll(0)
+	end
+
+	while #self._rows < numVisibleRows do
+		local row = self:_GetTableRow(false)
+		if #self._rows == 0 then
+			row._frame:SetPoint("TOPLEFT", self._content)
+			row._frame:SetPoint("TOPRIGHT", self._content)
+		else
+			row._frame:SetPoint("TOPLEFT", self._rows[#self._rows]._frame, "BOTTOMLEFT")
+			row._frame:SetPoint("TOPRIGHT", self._rows[#self._rows]._frame, "BOTTOMRIGHT")
+		end
+		tinsert(self._rows, row)
+	end
+
+	local altBackground = self:_GetStyle("altBackground")
+	for i, row in ipairs(self._rows) do
+		local dataIndex = i + dataOffset
+		local data = self._data[dataIndex]
+		if i > numVisibleRows or not data then
+			row:SetVisible(false)
+			row:ClearData()
+		else
+			local topInset, bottomInset = 0, 0
+			if i == 1 then
+				-- this is the first visible row so might have an inset at the top
+				topInset = max(scrollOffset % rowHeight, 0)
+			end
+			if i == numVisibleRows then
+				-- this is the last visible row so might have an inset at the bottom
+				bottomInset = max((numVisibleRows + dataOffset) * rowHeight - (scrollOffset + visibleHeight), 0)
+			end
+			row:SetVisible(true)
+			self:_SetRowData(row, data)
+			row:SetBackgroundColor(dataIndex % 2 == 1 and "#00000000" or altBackground)
+			row:SetHeight(rowHeight)
+			row:SetHitRectInsets(0, 0, topInset, bottomInset)
+		end
+	end
+
+	self._header:SetHeaderData()
 end
 
 
@@ -187,297 +315,79 @@ end
 -- ScrollingTable - Private Class Methods
 -- ============================================================================
 
-function ScrollingTable.Draw(self)
-	self._scrollList:SetStyle("rowHeight", self:_GetStyle("rowHeight"))
-	self._scrollList:SetStyle("altBackground", self:_GetStyle("altBackground"))
-	local header = self:GetElement("header")
-	header:SetStyle("background", self:_GetStyle("headerBackground"))
-	for _, col in ipairs(self._tableInfo:_GetCols()) do
-		local colElement = header:GetElement(col:_GetId())
-		if col:_GetTitleIcon() then
-			colElement:GetElement("iconFrame"):SetStyle("texturePack", col:_GetTitleIcon())
-		else
-			colElement:GetElement("text"):SetText(self._scrollList._showingAltTitles and col:_GetTitle(true) or col:_GetTitle())
-		end
-
-		local sortIcon = colElement:GetElement("sortIcon")
-		if col == self._scrollList._sortCol then
-			sortIcon:SetStyle("backgroundTexturePack", self._scrollList._sortAscending and "iconPack.10x10/Arrow/Up" or "iconPack.10x10/Arrow/Down")
-			sortIcon:SetStyle("margin", SORT_ICON_MARGIN)
-			sortIcon:SetStyle("width", 10)
-		else
-			sortIcon:SetStyle("backgroundTexturePack", nil)
-			sortIcon:SetStyle("margin", nil)
-			sortIcon:SetStyle("width", 0)
-		end
-	end
-	self.__super:Draw()
+function ScrollingTable._CreateScrollingTableInfo(self)
+	error("Must be implemented by the child class")
 end
 
-
-
--- ============================================================================
--- ScrollingTable Private Script Handlers
--- ============================================================================
-
-function private.HeaderCellOnClick(button, mouseButton)
-	local colFrame = button:GetParentElement()
-	local self = colFrame:GetParentElement():GetParentElement()
-	local col = colFrame:GetContext()
-	if mouseButton == "LeftButton" then
-		if self._sortDisabled then
-			return
-		end
-		if col ~= self._scrollList._sortCol then
-			self._scrollList._sortCol = col
-			self._scrollList._sortAscending = true
-		else
-			self._scrollList._sortAscending = not self._scrollList._sortAscending
-		end
-	elseif mouseButton == "RightButton" and col:_GetTitle(true) then
-		self._scrollList._showingAltTitles = not self._scrollList._showingAltTitles
-	end
-
-	self:SetSelection(nil)
-	self._scrollList:_UpdateData()
-	self:Draw()
-end
-
-
-
-
--- ============================================================================
--- ScrollingTable_ScrollList - Class Methods
--- ============================================================================
-
-function ScrollingTable_ScrollList.__init(self)
-	self.__super:__init()
-
-	self._query = nil
-	self._tableInfo = nil
-	self._selection = nil
-	self._sortCol = nil
-	self._sortAscending = true
-	self._sortSecondaryComparator = nil
-	self._selectionDisabled = false
-	self._onSelectionChangedHandler = nil
-	self._onClickHandler = nil
-end
-
-function ScrollingTable_ScrollList.Release(self)
-	if self._query then
-		self._query:SetUpdateCallback()
-		private.queryScrollListLookup[self._query] = nil
-		self._query = nil
-	end
-	self._tableInfo = nil
-	self._selection = nil
-	self._sortCol = nil
-	self._sortAscending = true
-	self._sortSecondaryComparator = nil
-	self._selectionDisabled = false
-	self._onSelectionChangedHandler = nil
-	self._onClickHandler = nil
-	self.__super:Release()
-end
-
-function ScrollingTable_ScrollList._SetTableInfo(self, tableInfo)
-	self._tableInfo = tableInfo
-	local defaultSortKey, defaultSortAscending, secondaryComparator = self._tableInfo:_GetSortInfo()
-	self._sortAscending = defaultSortAscending
-	self._sortSecondaryComparator = secondaryComparator
-	for _, col in ipairs(self._tableInfo:_GetCols()) do
-		if defaultSortKey == col:_GetId() then
-			self._sortCol = col
-			break
-		end
-	end
-end
-
-function ScrollingTable_ScrollList._SetQuery(self, query, redraw)
-	if query == self._query and not redraw then
-		return
-	end
-	if self._query then
-		self._query:SetUpdateCallback()
-		private.queryScrollListLookup[self._query] = nil
-	end
-	self._query = query
-	private.queryScrollListLookup[self._query] = self
-	self._query:SetUpdateCallback(private.QueryUpdateCallback)
-	self:_UpdateData(true)
-end
-
-function ScrollingTable_ScrollList._UpdateData(self, queryChanged)
-	wipe(self._data)
-	for _, record in self._query:Iterator(true) do
-		tinsert(self._data, record)
-	end
-	if self._tableInfo:_GetSortInfo() then
-		-- pre-compute the sort value for every record to speed up the sort
-		private.sortContext = self
-		for _, record in ipairs(self._data) do
-			private.sortCache[record] = self._sortCol:_GetSortValue(record)
-		end
-		sort(self._data, private.DataSortComparator)
-		private.sortContext = nil
-		wipe(private.sortCache)
-	end
-end
-
-function ScrollingTable_ScrollList._CreateRow(self)
-	local row = self.__super:_CreateRow()
-		:SetLayout("HORIZONTAL")
-		:SetStyle("padding", ROW_PADDING)
-		:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Frame", "highlight")
-			:SetStyle("anchors", { { "TOPLEFT" }, { "BOTTOMRIGHT" } })
-		)
-		:SetScript("OnUpdate", private.RowOnUpdate)
-	for i, col in ipairs(self._tableInfo:_GetCols()) do
-		local id = col:_GetId()
-		local extraMargin = i ~= 1 and 16 or nil
-		local width = col:_GetWidth()
-		local iconSize = col:_GetIconSize()
-		if iconSize then
-			row:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", id.."_icon")
-				:SetStyle("relativeLevel", 2)
-				:SetStyle("margin", { left = extraMargin, right = col:_HasText() and 4 or nil })
-				:SetStyle("width", iconSize)
-				:SetStyle("height", iconSize)
-			)
-			extraMargin = nil
-			width = width and (width - iconSize) or width
-		end
-		row:AddChild(TSMAPI_FOUR.UI.NewElement("Button", id)
-			:SetStyle("margin", extraMargin and { left = extraMargin } or nil)
-			:SetStyle("width", width)
-			:SetStyle("justifyH", col:_GetJustifyH())
-			:SetStyle("font", col:_GetFont())
-			:SetStyle("fontHeight", col:_GetFontHeight())
-			:EnableRightClick()
-			:SetScript("OnClick", private.RowOnClick)
-		)
-	end
-	row:GetElement("highlight"):Hide()
+function ScrollingTable._GetTableRow(self, isHeader)
+	local row = private.rowPool:Get()
+	row:Acquire(self, isHeader)
 	return row
 end
 
-function ScrollingTable_ScrollList._SetRowHitRectInsets(self, row, top, bottom)
-	for _, col in ipairs(self._tableInfo:_GetCols()) do
-		row:GetElement(col:_GetId()):SetHitRectInsets(0, 0, top, bottom)
+function ScrollingTable._SetRowData(self, row, data)
+	if data == self._selection then
+		row:SetHighlightVisible(true)
+	elseif not row:IsMouseOver() then
+		row:SetHighlightVisible(false)
 	end
-	self.__super:_SetRowHitRectInsets(row, top, bottom)
+	row:SetData(data)
 end
 
-function ScrollingTable_ScrollList._DrawRow(self, row, dataIndex)
-	local context = row:GetContext()
-	-- set the text for each cell
-	for _, col in ipairs(self._tableInfo:_GetCols()) do
-		local id = col:_GetId()
-		local text = row:GetElement(id)
-		text:SetStyle("fontHeight", 12)
-		text:SetText(col:_GetText(context))
-		text:SetTooltip(col:_GetTooltip(context))
-		if col:_GetIconSize() then
-			local texture = col:_GetIcon(context)
-			local isTexturePack = texture and TSM.UI.TexturePacks.IsValid(texture)
-			row:GetElement(id.."_icon")
-				:SetStyle("backgroundTexturePack", isTexturePack and texture or nil)
-				:SetStyle("backgroundTexture", not isTexturePack and texture or nil)
-		end
-	end
-	row:GetElement("highlight"):SetStyle("background", self:_GetStyle("highlight"))
-	self.__super:_DrawRow(row, dataIndex)
-end
-
-function ScrollingTable_ScrollList._SetSelection(self, selection)
-	self._selection = selection
-	if self._onSelectionChangedHandler then
-		self._onSelectionChangedHandler(self:GetParentElement())
-	end
-end
-
-function ScrollingTable_ScrollList._GetSelection(self)
-	return self._selection
-end
-
-function ScrollingTable_ScrollList._SetScript(self, script, handler)
-	if script == "OnSelectionChanged" then
-		self._onSelectionChangedHandler = handler
-	elseif script == "OnRowClick" then
-		self._onClickHandler = handler
-	else
-		error("Unknown ScrollingTable_ScrollList script: "..tostring(script))
-	end
-end
-
-function ScrollingTable_ScrollList._SetSelectionDisabled(self, disabled)
-	self._selectionDisabled = disabled
-end
-
-function ScrollingTable_ScrollList._GetDataByIndex(self, index)
-	return self._data[index]
-end
-
-function ScrollingTable_ScrollList._GetSelectionIndex(self, index)
-	if not self._selection then
-		return
-	end
-	return TSMAPI_FOUR.Util.GetDistinctTableKey(self._data, self._selection)
-end
-
-
-
-
--- ============================================================================
--- ScrollingTable_ScrollList Private Script Handlers
--- ============================================================================
-
-function private.RowOnClick(button, mouseButton)
-	local row = button:GetParentElement()
-	local self = row:GetParentElement()
-	if not self._selectionDisabled and mouseButton == "LeftButton" then
-		self:GetParentElement():SetSelection(row:GetContext())
+function ScrollingTable._OnScrollValueChanged(self, value, noDraw)
+	self._scrollValue = value
+	if not noDraw then
 		self:Draw()
-	elseif self._onClickHandler then
-		self:_onClickHandler(row:GetContext(), mouseButton)
 	end
 end
 
-function private.RowOnUpdate(row)
-	local self = row:GetParentElement()
-	if row:IsMouseOver() or row:GetContext() == self:_GetSelection() then
-		row:GetElement("highlight"):Show()
-	else
-		row:GetElement("highlight"):Hide()
-	end
+function ScrollingTable._GetMaxScroll(self)
+	return max(#self._data * self:_GetStyle("rowHeight") - self._scrollFrame:GetHeight(), 0)
 end
 
-function private.QueryUpdateCallback(query)
-	local self = private.queryScrollListLookup[query]
-	self:_UpdateData()
-	self:Draw()
+function ScrollingTable._UpdateData(self)
+	error("Must be implemented by the child class")
+end
+
+function ScrollingTable._ToggleSort(self, id)
+	error("Must be implemented by the child class")
+end
+
+function ScrollingTable._HandleRowClick(self, data, mouseButton)
+	if self._onRowClickHandler then
+		self:_onRowClickHandler(data, mouseButton)
+	end
 end
 
 
 
 -- ============================================================================
--- Private Helper Functions
+-- ScrollingTable - Local Script Handlers
 -- ============================================================================
 
-function private.DataSortComparator(a, b)
-	local self = private.sortContext
-	local aValue = private.sortCache[a]
-	local bValue = private.sortCache[b]
-	if aValue == bValue then
-		if self._sortSecondaryComparator then
-			return self:_sortSecondaryComparator(a, b)
-		else
-			return tostring(a) < tostring(b)
-		end
-	elseif self._sortAscending then
-		return aValue < bValue
+function private.OnScrollbarValueChanged(scrollbar, value)
+	local self = private.frameScrollingTableLookup[scrollbar:GetParent()]
+	value = max(min(value, self:_GetMaxScroll()), 0)
+	self:_OnScrollValueChanged(value)
+end
+
+function private.OnScrollbarValueChangedNoDraw(scrollbar, value)
+	local self = private.frameScrollingTableLookup[scrollbar:GetParent()]
+	value = max(min(value, self:_GetMaxScroll()), 0)
+	self:_OnScrollValueChanged(value, true)
+end
+
+function private.FrameOnUpdate(frame)
+	local self = private.frameScrollingTableLookup[frame]
+	if (frame:IsMouseOver() and self:_GetMaxScroll() > 0) or self._scrollbar.dragging then
+		self._scrollbar:Show()
 	else
-		return aValue > bValue
+		self._scrollbar:Hide()
 	end
+end
+
+function private.FrameOnMouseWheel(frame, direction)
+	local self = private.frameScrollingTableLookup[frame]
+	local scrollAmount = MOUSE_WHEEL_SCROLL_AMOUNT
+	self._scrollbar:SetValue(self._scrollbar:GetValue() + -1 * direction * scrollAmount)
 end

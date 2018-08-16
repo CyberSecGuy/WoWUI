@@ -9,23 +9,26 @@
 local _, TSM = ...
 local MyAuctions = TSM:NewPackage("MyAuctions")
 local private = {
-	db = nil,
-	query = nil,
-	updateCallback = nil,
+	pendingDB = nil,
 	ahOpen = false,
-	pendingIndexes = {},
 	pendingHashes = {},
 	expectedCounts = {},
 	auctionInfo = { numPosted = 0, numSold = 0, postedGold = 0, soldGold = 0 },
 	dbHashFields = {},
-	ignoreUpdate = nil,
 }
-local PENDING_SEP = ","
-local AUCTION_UPDATE_DELAY = 2
-local EXTENDED_DB_SCHEMA = {
+local PENDING_DB_SCHEMA = {
 	fields = {
+		index = "number",
 		hash = "number",
 		isPending = "boolean",
+	},
+	fieldAttributes = {
+		index = { "unique" },
+	},
+	fieldOrder = {
+		"index",
+		"hash",
+		"isPending",
 	},
 }
 
@@ -36,13 +39,12 @@ local EXTENDED_DB_SCHEMA = {
 -- ============================================================================
 
 function MyAuctions.OnInitialize()
+	private.pendingDB = TSMAPI_FOUR.Database.New(PENDING_DB_SCHEMA, "MY_AUCTIONS_PENDING")
 	for field in TSM.Inventory.AuctionTracking.DatabaseFieldIterator() do
 		if field ~= "index" then
 			tinsert(private.dbHashFields, field)
 		end
 	end
-	TSM.Inventory.AuctionTracking.ExtendDatabaseSchema(EXTENDED_DB_SCHEMA, private.RowSetExtendedFields)
-	private.query = TSM.Inventory.AuctionTracking.CreateQuery()
 
 	TSMAPI_FOUR.Event.Register("AUCTION_HOUSE_SHOW", private.AuctionHouseShowEventHandler)
 	TSMAPI_FOUR.Event.Register("AUCTION_HOUSE_CLOSED", private.AuctionHouseHideEventHandler)
@@ -51,21 +53,18 @@ function MyAuctions.OnInitialize()
 	TSM.Inventory.AuctionTracking.RegisterCallback(private.OnAuctionsUpdated)
 end
 
-function MyAuctions.GetQuery()
-	private.query:Reset()
-	return private.query
+function MyAuctions.CreateQuery()
+	return TSM.Inventory.AuctionTracking.CreateQuery()
+		:LeftJoin(private.pendingDB, "index")
 		:OrderBy("index", false)
 end
 
-function MyAuctions.SetUpdateCallback(callback)
-	private.updateCallback = callback
-end
-
 function MyAuctions.CancelAuction(index)
-	local row = TSM.Inventory.AuctionTracking.CreateQuery()
+	local row = private.pendingDB:NewQuery()
 		:Equal("index", index)
 		:GetFirstResultAndRelease()
 	local hash = row:GetField("hash")
+	assert(hash)
 	if private.expectedCounts[hash] then
 		private.expectedCounts[hash] = private.expectedCounts[hash] - 1
 	else
@@ -75,42 +74,26 @@ function MyAuctions.CancelAuction(index)
 
 	TSM:LOG_INFO("Canceling (index=%d, hash=%d)", index, hash)
 	CancelAuction(index)
-	assert(not private.pendingIndexes[hash..PENDING_SEP..index])
-	private.pendingIndexes[hash..PENDING_SEP..index] = true
-
-	-- calling :Save() will cause the isPending field to be updated
-	-- ignore the auction tracking callback which will be trigged by this
-	private.ignoreUpdate = true
-	row:Save()
-	assert(not private.ignoreUpdate)
+	assert(not row:GetField("isPending"))
+	row:SetField("isPending", true)
+		:Update()
+	row:Release()
 
 	tinsert(private.pendingHashes, hash)
-	TSMAPI_FOUR.Delay.AfterTime("cancelingUpdate", AUCTION_UPDATE_DELAY, private.UpdateOwnerAuctions, AUCTION_UPDATE_DELAY)
 end
 
 function MyAuctions.CanCancel(index)
-	for key in pairs(private.pendingIndexes) do
-		local _, pendingIndex = strsplit(PENDING_SEP, key)
-		pendingIndex = tonumber(pendingIndex)
-		if pendingIndex <= index then
-			return false
-		end
-	end
-	return true
+	local count = private.pendingDB:NewQuery()
+		:Equal("isPending", true)
+		:LessThanOrEqual("index", index)
+		:CountAndRelease()
+	return count == 0
 end
 
 function MyAuctions.GetNumPending()
-	local query = TSM.Inventory.AuctionTracking.CreateQuery()
+	return private.pendingDB:NewQuery()
 		:Equal("isPending", true)
-	local num = query:Count()
-	query:Release()
-	return num
-end
-
-function MyAuctions.GetRecordByIndex(index)
-	return TSM.Inventory.AuctionTracking.CreateQuery()
-		:Equal("index", index)
-		:GetFirstResultAndRelease()
+		:CountAndRelease()
 end
 
 function MyAuctions.GetAuctionInfo()
@@ -125,12 +108,6 @@ end
 -- ============================================================================
 -- Private Helper Functions
 -- ============================================================================
-
-function private.RowSetExtendedFields(row)
-	local hash = row:CalculateHash(private.dbHashFields)
-	row:SetField("hash", hash)
-	row:SetField("isPending", private.pendingIndexes[hash..PENDING_SEP..row:GetField("index")] and true or false)
-end
 
 function private.AuctionHouseShowEventHandler()
 	private.ahOpen = true
@@ -160,47 +137,64 @@ function private.UIErrorMessageEventHandler(_, _, msg)
 end
 
 function private.GetNumRowsByHash(hash)
-	return TSM.Inventory.AuctionTracking.CreateQuery()
+	return private.pendingDB:NewQuery()
 		:Equal("hash", hash)
 		:CountAndRelease()
 end
 
-function private.ProcessCancels()
-	local toRemove = TSMAPI_FOUR.Util.AcquireTempTable()
-	for hash, expectedCount in pairs(private.expectedCounts) do
-		if private.GetNumRowsByHash(hash) == expectedCount then
-			tinsert(toRemove, hash)
-		end
-	end
-	for _, hash in ipairs(toRemove) do
-		local query = TSM.Inventory.AuctionTracking.CreateQuery()
-			:Equal("hash", hash)
-		for _, row in query:Iterator() do
-			private.pendingIndexes[hash..PENDING_SEP..row:GetField("index")] = nil
-			row:Save()
-		end
-		query:Release()
-		private.expectedCounts[hash] = nil
-	end
-	TSMAPI_FOUR.Util.ReleaseTempTable(toRemove)
-end
-
 function private.OnAuctionsUpdated()
-	if private.ignoreUpdate then
-		private.ignoreUpdate = nil
-		return
+	local minPendingIndexByHash = TSMAPI_FOUR.Util.AcquireTempTable()
+	local numByHash = TSMAPI_FOUR.Util.AcquireTempTable()
+	local query = TSM.Inventory.AuctionTracking.CreateQuery()
+		:OrderBy("index", true)
+	for _, row in query:Iterator() do
+		local index = row:GetField("index")
+		local hash = row:CalculateHash(private.dbHashFields)
+		numByHash[hash] = (numByHash[hash] or 0) + 1
+		if not minPendingIndexByHash[hash] and private.pendingDB:GetUniqueRowField("index", index, "isPending") then
+			minPendingIndexByHash[hash] = index
+		end
 	end
-	local hasPending = false
+	local numUsed = TSMAPI_FOUR.Util.AcquireTempTable()
+	private.pendingDB:SetQueryUpdatesPaused(true)
+	private.pendingDB:Truncate()
+	private.pendingDB:BulkInsertStart()
+	for _, row in query:Iterator() do
+		local hash = row:CalculateHash(private.dbHashFields)
+		assert(numByHash[hash] > 0)
+		local expectedCount = private.expectedCounts[hash]
+		local isPending = nil
+		if not expectedCount then
+			-- this was never pending
+			isPending = false
+		elseif numByHash[hash] <= expectedCount then
+			-- this is no longer pending
+			isPending = false
+			private.expectedCounts[hash] = nil
+		elseif row:GetField("index") >= (minPendingIndexByHash[hash] or math.huge) then
+			local numPending = numByHash[hash] - expectedCount
+			assert(numPending > 0)
+			numUsed[hash] = (numUsed[hash] or 0) + 1
+			isPending = numUsed[hash] <= numPending
+		else
+			-- it's a later auction which is pending
+			isPending = false
+		end
+		private.pendingDB:BulkInsertNewRow(row:GetField("index"), hash, isPending)
+	end
+	private.pendingDB:BulkInsertEnd()
+	private.pendingDB:SetQueryUpdatesPaused(false)
+	TSMAPI_FOUR.Util.ReleaseTempTable(numByHash)
+	TSMAPI_FOUR.Util.ReleaseTempTable(numUsed)
+	TSMAPI_FOUR.Util.ReleaseTempTable(minPendingIndexByHash)
+
+	-- update the player's auction status
 	private.auctionInfo.numPosted = 0
 	private.auctionInfo.numSold = 0
 	private.auctionInfo.postedGold = 0
 	private.auctionInfo.soldGold = 0
-	local query = TSM.Inventory.AuctionTracking.CreateQuery()
-		:Select("isPending", "saleStatus", "buyout", "currentBid")
-	for _, isPending, saleStatus, buyout, currentBid in query:Iterator(true) do
-		if isPending then
-			hasPending = true
-		end
+	for _, row in query:Iterator() do
+		local saleStatus, buyout, currentBid = row:GetFields("saleStatus", "buyout", "currentBid")
 		private.auctionInfo.numPosted = private.auctionInfo.numPosted + 1
 		private.auctionInfo.postedGold = private.auctionInfo.postedGold + buyout
 		if saleStatus == 1 then
@@ -210,21 +204,4 @@ function private.OnAuctionsUpdated()
 		end
 	end
 	query:Release()
-	TSM.Inventory.AuctionTracking.DatabaseSetQueryUpdatesPaused(true)
-	private.ProcessCancels()
-	TSM.Inventory.AuctionTracking.DatabaseSetQueryUpdatesPaused(false)
-	if private.updateCallback then
-		private.updateCallback()
-	end
-	if hasPending then
-		TSMAPI_FOUR.Delay.AfterTime("cancelingUpdate", AUCTION_UPDATE_DELAY, private.UpdateOwnerAuctions, AUCTION_UPDATE_DELAY)
-	end
-end
-
-function private.UpdateOwnerAuctions()
-	if MyAuctions.GetNumPending() == 0 then
-		TSMAPI_FOUR.Delay.Cancel("cancelingUpdate")
-		return
-	end
-	GetOwnerAuctionItems()
 end

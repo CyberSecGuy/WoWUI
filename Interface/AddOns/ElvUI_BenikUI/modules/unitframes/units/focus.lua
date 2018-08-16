@@ -11,7 +11,7 @@ function UFB:Construct_FocusFrame()
 	local frame = _G["ElvUF_Focus"]
 
 	if not frame.Portrait.backdrop.shadow then
-		frame.Portrait.backdrop:CreateShadow('Default')
+		frame.Portrait.backdrop:CreateSoftShadow()
 		frame.Portrait.backdrop.shadow:Hide()
 	end
 
@@ -36,6 +36,9 @@ function UFB:ArrangeFocus()
 	
 	-- Portrait
 	UFB:Configure_Portrait(frame)
+	
+	-- AuraBars shadows
+	UFB:Configure_AuraBars(frame)
 	
 	frame:UpdateAllElements("BenikUI_UpdateAllElements")
 end

@@ -85,6 +85,8 @@ end
 
 local playerName = addon:UnitName("player")
 local oraFrame = CreateFrame("Frame", "oRA3Frame", UIParent)
+local SendAddonMessage = C_ChatInfo.SendAddonMessage
+local PlaySound, IsInGroup = PlaySound, IsInGroup
 
 local guildMemberList = {} -- Name:RankIndex
 local guildRanks = {} -- Index:RankName
@@ -266,7 +268,7 @@ function addon:OnInitialize()
 	LibStub("LibDualSpec-1.0"):EnhanceDatabase(self.db, "oRA")
 
 	-- Comm register
-	RegisterAddonMessagePrefix("oRA")
+	C_ChatInfo.RegisterAddonMessagePrefix("oRA")
 
 	-- callbackhandler for comm
 	self.callbacks = CallbackHandler:New(self)

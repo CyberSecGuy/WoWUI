@@ -17,6 +17,8 @@ local private = {
 		list = {},
 		pending = {},
 	},
+	lastScanNum = nil,
+	ignoreUpdateEvent = nil,
 }
 local DB_SCHEMA = {
 	fields = {
@@ -37,6 +39,24 @@ local DB_SCHEMA = {
 	},
 	fieldAttributes = {
 		index = { "unique", "index" },
+		autoBaseItemString = { "index" },
+		saleStatus = { "index" },
+	},
+	fieldOrder = {
+		"index",
+		"itemString",
+		"baseItemString",
+		"autoBaseItemString",
+		"itemLink",
+		"itemTexture",
+		"itemName",
+		"itemQuality",
+		"duration",
+		"highBidder",
+		"currentBid",
+		"buyout",
+		"stackSize",
+		"saleStatus",
 	},
 }
 
@@ -50,7 +70,7 @@ function AuctionTracking.OnInitialize()
 	TSMAPI_FOUR.Event.Register("AUCTION_HOUSE_SHOW", private.AuctionHouseShowHandler)
 	TSMAPI_FOUR.Event.Register("AUCTION_HOUSE_CLOSED", private.AuctionHouseClosedHandler)
 	TSMAPI_FOUR.Event.Register("AUCTION_OWNED_LIST_UPDATE", private.AuctionOwnedListUpdateHandler)
-	private.db = TSMAPI_FOUR.Database.New(DB_SCHEMA)
+	private.db = TSMAPI_FOUR.Database.New(DB_SCHEMA, "AUCTION_TRACKING")
 	private.updateQuery = private.db:NewQuery()
 		:SetUpdateCallback(private.OnCallbackQueryUpdated)
 end
@@ -61,14 +81,6 @@ end
 
 function AuctionTracking.DatabaseFieldIterator()
 	return private.db:FieldIterator()
-end
-
-function AuctionTracking.DatabaseSetQueryUpdatesPaused(paused)
-	private.db:SetQueryUpdatesPaused(paused)
-end
-
-function AuctionTracking.ExtendDatabaseSchema(schema, callback)
-	private.db:ExtendSchema(schema, callback)
 end
 
 function AuctionTracking.CreateQuery()
@@ -84,13 +96,25 @@ end
 function private.AuctionHouseShowHandler()
 	private.isAHOpen = true
 	GetOwnerAuctionItems()
+	-- We don't always get AUCTION_OWNED_LIST_UPDATE events, so do our own scanning if needed
+	TSMAPI_FOUR.Delay.AfterTime("auctionBackgroundScan", 1, private.DoBackgroundScan, 1)
 end
 
 function private.AuctionHouseClosedHandler()
 	private.isAHOpen = false
+	TSMAPI_FOUR.Delay.Cancel("auctionBackgroundScan")
+end
+
+function private.DoBackgroundScan()
+	if GetNumAuctionItems("owner") ~= private.lastScanNum then
+		private.AuctionOwnedListUpdateHandler()
+	end
 end
 
 function private.AuctionOwnedListUpdateHandler()
+	if private.ignoreUpdateEvent then
+		return
+	end
 	wipe(private.indexUpdates.pending)
 	wipe(private.indexUpdates.list)
 	for i = 1, GetNumAuctionItems("owner") do
@@ -99,12 +123,16 @@ function private.AuctionOwnedListUpdateHandler()
 			tinsert(private.indexUpdates.list, i)
 		end
 	end
-	TSMAPI_FOUR.Delay.AfterFrame("auctionOwnedListScan", 2, private.AuctionOwnedListUpdateDelayed)
+	TSMAPI_FOUR.Delay.AfterFrame("AUCTION_OWNED_LIST_SCAN", 2, private.AuctionOwnedListUpdateDelayed)
 end
 
 -- this is not a WoW event, but we fake it based on a delay from private.BankSlotChangedHandler
 function private.AuctionOwnedListUpdateDelayed()
 	if not private.isAHOpen then
+		return
+	elseif AuctionFrame and AuctionFrame:IsVisible() and AuctionFrame.selectedTab == 3 then
+		-- default UI auctions tab is visible, so scan later
+		TSMAPI_FOUR.Delay.AfterFrame("AUCTION_OWNED_LIST_SCAN", 2, private.AuctionOwnedListUpdateDelayed)
 		return
 	end
 	-- check if we need to change the sort
@@ -121,27 +149,50 @@ function private.AuctionOwnedListUpdateDelayed()
 	end
 	if needsSort then
 		TSM:LOG_INFO("Sorting owner auctions")
+		-- ignore events while changing the sort
+		private.ignoreUpdateEvent = true
 		AuctionFrame_SetSort("owner", "duration", true)
 		SortAuctionApplySort("owner")
-		return
+		private.ignoreUpdateEvent = nil
 	end
 
 	-- scan the auctions
+	TSM.Inventory.WipeAuctionQuantity()
+
 	private.db:SetQueryUpdatesPaused(true)
 	private.db:Truncate()
-	wipe(TSM.db.sync.internalData.auctionQuantity)
+	private.db:BulkInsertStart()
 	for i = #private.indexUpdates.list, 1, -1 do
 		local index = private.indexUpdates.list[i]
-		if private.ScanAuction(index) then
+		local name, texture, stackSize, quality, _, _, _, minBid, _, buyout, bid, highBidder, _, _, _, saleStatus = GetAuctionItemInfo("owner", index)
+		local link = name and name ~= "" and GetAuctionItemLink("owner", index)
+		if link then
+			assert(saleStatus == 0 or saleStatus == 1)
+			local duration = GetAuctionItemTimeLeft("owner", index)
+			duration = saleStatus == 0 and duration or (time() + duration)
+			highBidder = highBidder or ""
+			texture = texture or TSMAPI_FOUR.Item.GetTexture(link)
+			local itemString = TSMAPI_FOUR.Item.ToItemString(link)
+			local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
+			local autoBaseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString, true)
+			local currentBid = highBidder ~= "" and bid or minBid
+			if saleStatus == 0 then
+				TSM.Inventory.ChangeAuctionQuantity(baseItemString, stackSize)
+			end
 			private.indexUpdates.pending[index] = nil
 			tremove(private.indexUpdates.list, i)
+			private.db:BulkInsertNewRow(index, itemString, baseItemString, autoBaseItemString, link, texture, name, quality, duration, highBidder, currentBid, buyout, stackSize, saleStatus)
 		end
 	end
-	TSM:LOG_INFO("Scanned auctions (left=%d)", #private.indexUpdates.list)
+	private.db:BulkInsertEnd()
 	private.db:SetQueryUpdatesPaused(false)
+
+	TSM:LOG_INFO("Scanned auctions (left=%d)", #private.indexUpdates.list)
 	if #private.indexUpdates.list > 0 then
 		-- some failed to scan so try again
-		TSMAPI_FOUR.Delay.AfterFrame("auctionOwnedListScan", 2, private.AuctionOwnedListUpdateDelayed)
+		TSMAPI_FOUR.Delay.AfterFrame("AUCTION_OWNED_LIST_SCAN", 2, private.AuctionOwnedListUpdateDelayed)
+	else
+		private.lastScanNum = GetNumAuctionItems("owner")
 	end
 end
 
@@ -150,43 +201,6 @@ end
 -- ============================================================================
 -- Private Helper Functions
 -- ============================================================================
-
-function private.ScanAuction(index)
-	local name, texture, stackSize, quality, _, _, _, minBid, _, buyout, bid, highBidder, _, _, _, saleStatus = GetAuctionItemInfo("owner", index)
-	if not name or name == "" then
-		return false
-	end
-	assert(saleStatus == 0 or saleStatus == 1)
-	local duration = GetAuctionItemTimeLeft("owner", index)
-	local link = GetAuctionItemLink("owner", index)
-	if not link then
-		return false
-	end
-	highBidder = highBidder or ""
-	texture = texture or TSMAPI_FOUR.Item.GetTexture(link)
-	local itemString = TSMAPI_FOUR.Item.ToItemString(link)
-	local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
-	local row = private.db:NewRow()
-		:SetField("index", index)
-		:SetField("itemString", itemString)
-		:SetField("baseItemString", baseItemString)
-		:SetField("autoBaseItemString", TSMAPI_FOUR.Item.ToBaseItemString(itemString, true))
-		:SetField("itemLink", link)
-		:SetField("itemTexture", texture)
-		:SetField("itemName", name)
-		:SetField("itemQuality", quality)
-		:SetField("duration", saleStatus == 0 and duration or (time() + duration))
-		:SetField("highBidder", highBidder)
-		:SetField("currentBid", highBidder ~= "" and bid or minBid)
-		:SetField("buyout", buyout)
-		:SetField("stackSize", stackSize)
-		:SetField("saleStatus", saleStatus)
-		:Save()
-	if saleStatus == 0 then
-		TSM.db.sync.internalData.auctionQuantity[baseItemString] = (TSM.db.sync.internalData.auctionQuantity[baseItemString] or 0) + stackSize
-	end
-	return true
-end
 
 function private.OnCallbackQueryUpdated()
 	for _, callback in ipairs(private.callbacks) do

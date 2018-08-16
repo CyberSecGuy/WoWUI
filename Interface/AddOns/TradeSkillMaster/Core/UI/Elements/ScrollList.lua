@@ -99,27 +99,6 @@ function ScrollList._GetVisibleRowRange(self)
 	return firstVisibleRow, numVisibleRows
 end
 
-function ScrollList._SetDataVisible(self, data)
-	local index, numData = nil, 0
-	for i, rowData in self:_VisibleDataIterator() do
-		numData = numData + 1
-		if rowData == data then
-			assert(not index)
-			index = i
-		end
-	end
-	assert(index)
-	local firstVisibleRow, numVisibleRows = self:_GetVisibleRowRange()
-	if index < firstVisibleRow then
-		-- scroll up to this row
-		self._scrollbar:SetValue(self:_GetStyle("rowHeight") * (index - 1))
-	elseif index >= firstVisibleRow + numVisibleRows then
-		-- scroll down to this row
-		local visibleHeight = self:_GetDimension("HEIGHT")
-		self._scrollbar:SetValue(self:_GetStyle("rowHeight") * index - visibleHeight)
-	end
-end
-
 function ScrollList._DrawRows(self)
 	local rowHeight = self:_GetStyle("rowHeight")
 	local firstVisibleRow, numVisibleRows = self:_GetVisibleRowRange()

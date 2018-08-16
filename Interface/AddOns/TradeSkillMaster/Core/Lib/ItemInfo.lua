@@ -11,40 +11,78 @@
 
 local _, TSM = ...
 local ItemInfo = TSM:NewPackage("ItemInfo")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
-local private = { maxLoadedIndex = nil, itemStringLookup = {}, names = nil, newData = {}, pendingItems = {} }
-local MAX_REQUESTED_ITEM_INFO = 100
-local UNKNOWN_ITEM_NAME = L["Unknown Item"]
-local DB_VERSION = 2
-local RECORD_DATA_LENGTH = 17
-local FIELDS = { "itemLevel", "minLevel", "maxStack", "vendorSell", "bitfield", "invSlotId", "texture", "classId", "subClassId" }
-local FIELD_INFO = {
-	itemLevel = { offset = 0, length = 2 },
-	minLevel = { offset = 2, length = 1 },
-	maxStack = { offset = 3, length = 2 },
-	vendorSell = { offset = 5, length = 4 },
-	bitfield = { offset = 9, length = 1 },
-	invSlotId = { offset = 10, length = 1 },
-	texture = { offset = 11, length = 4 },
-	classId = { offset = 15, length = 1 },
-	subClassId = { offset = 16, length = 1 },
+local L = TSM.L
+local private = {
+	db = nil,
+	pendingItems = {},
+	numRequests = {},
+	availableItems = {},
 }
-local BITFIELD_INFO = {
-	quality = { offset = 0, length = 4 },
-	isBOP = { offset = 4, length = 2 },
-	isCraftingReagent = { offset = 6, length = 2 },
+local SEP_CHAR = "\002"
+local ITEM_INFO_INTERVAL = 0.1
+local MAX_REQUESTED_ITEM_INFO = 100
+local MAX_REQUESTS_PER_ITEM = 50
+local UNKNOWN_ITEM_NAME = L["Unknown Item"]
+local DB_VERSION = 3
+local RECORD_DATA_LENGTH = 17
+local FIELD_LENGTH_BITS = {
+	itemLevel = 16,
+	minLevel = 8,
+	maxStack = 16,
+	vendorSell = 32,
+	invSlotId = 8,
+	texture = 32,
+	classId = 8,
+	subClassId = 8,
+	quality = 4,
+	isBOP = 2,
+	isCraftingReagent = 2,
 }
 do
-	local offset = 0
-	for _, field in ipairs(FIELDS) do
-		local info = FIELD_INFO[field]
-		assert(info and info.offset == offset)
-		offset = offset + info.length
+	local totalLength = 0
+	for _, length in pairs(FIELD_LENGTH_BITS) do
+		totalLength = totalLength + length
 	end
-	assert(offset == RECORD_DATA_LENGTH)
-	for _, info in pairs(BITFIELD_INFO) do
-		info.mask = bit.lshift(2 ^ info.length - 1, info.offset)
-	end
+	assert(totalLength == RECORD_DATA_LENGTH * 8)
+end
+local DB_SCHEMA = {
+	fields = {
+		itemString = "string",
+		name = "string",
+		itemLevel = "number",
+		minLevel = "number",
+		maxStack = "number",
+		vendorSell = "number",
+		invSlotId = "number",
+		texture = "number",
+		classId = "number",
+		subClassId = "number",
+		quality = "number",
+		isBOP = "number",
+		isCraftingReagent = "number",
+	},
+	fieldAttributes = {
+		itemString = { "unique" },
+	},
+	fieldOrder = {
+		"itemString",
+		"name",
+		"itemLevel",
+		"minLevel",
+		"maxStack",
+		"vendorSell",
+		"invSlotId",
+		"texture",
+		"classId",
+		"subClassId",
+		"quality",
+		"isBOP",
+		"isCraftingReagent",
+	},
+}
+local ITEM_QUALITY_BY_HEX_LOOKUP = {}
+for quality, info in pairs(ITEM_QUALITY_COLORS) do
+	ITEM_QUALITY_BY_HEX_LOOKUP[info.hex] = quality
 end
 
 
@@ -60,7 +98,11 @@ function ItemInfo.OnInitialize()
 	end
 
 	TSMAPI_FOUR.Event.Register("GET_ITEM_INFO_RECEIVED", function(_, itemId)
-		private.StoreGetItemInfo("i:"..itemId)
+		if itemId <= 0 or itemId > TSM.CONST.ITEM_MAX_ID or private.numRequests[itemId] == math.huge then
+			return
+		end
+		private.availableItems[itemId] = true
+		TSMAPI_FOUR.Delay.AfterFrame("ITEM_INFO_DELAY", 0, private.ProcessAvailableItems)
 	end)
 
 	-- load the item info database
@@ -71,19 +113,48 @@ function ItemInfo.OnInitialize()
 			data = "",
 		}
 	end
-	private.names = TSMItemInfoDB and TSMItemInfoDB.names and TSMAPI_FOUR.Util.SafeStrSplit(TSMItemInfoDB.names, "\0") or {}
-	private.maxLoadedIndex = #private.names
-	if TSMItemInfoDB.itemStrings then
-		for i, itemString in ipairs(TSMAPI_FOUR.Util.SafeStrSplit(TSMItemInfoDB.itemStrings, "\0")) do
-			private.itemStringLookup[itemString] = i
-		end
+
+	local names = TSMItemInfoDB.names and TSMAPI_FOUR.Util.SafeStrSplit(TSMItemInfoDB.names, SEP_CHAR) or {}
+	local itemStrings = TSMItemInfoDB.itemStrings and TSMAPI_FOUR.Util.SafeStrSplit(TSMItemInfoDB.itemStrings, SEP_CHAR) or {}
+	assert(#itemStrings == #names)
+	local numItemsLoaded = #names
+	TSM:LOG_INFO("Imported %d items worth of data", numItemsLoaded)
+
+	-- The following code for populating our database is highly optimized as we're processing an excessive amount of data here
+	private.db = TSMAPI_FOUR.Database.New(DB_SCHEMA, "ITEM_INFO")
+	private.db:BulkInsertStart()
+	for i = 1, numItemsLoaded do
+		local itemString = itemStrings[i]
+		local name = names[i]
+		-- decode all the fields
+		local dataOffset = (i - 1) * RECORD_DATA_LENGTH + 1
+		local b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16 = strbyte(TSMItemInfoDB.data, dataOffset, dataOffset + RECORD_DATA_LENGTH - 1)
+		local itemLevel = (b0 == 0xff and b1 == 0xff) and -1 or (b0 + b1 * 256)
+		local minLevel = (b2 == 0xff) and -1 or b2
+		local maxStack = (b3 == 0xff and b4 == 0xff) and -1 or (b3 + b4 * 256)
+		local vendorSell = (b5 == 0xff and b6 == 0xff and b7 == 0xff and b8 == 0xff) and -1 or (b5 + b6 * 256 + b7 * 65536 + b8 * 16777216)
+		local invSlotId = (b10 == 0xff) and -1 or b10
+		local texture = (b11 == 0xff and b12 == 0xff and b13 == 0xff and b14 == 0xff) and -1 or (b11 + b12 * 256 + b13 * 65536 + b14 * 16777216)
+		local classId = (b15 == 0xff) and -1 or b15
+		local subClassId = (b16 == 0xff) and -1 or b16
+		local quality = b9 % 0x10
+		b9 = (b9 - quality) / 0x10
+		quality = quality == 0xf and -1 or quality
+		local isBOP = b9 % 0x4
+		b9 = (b9 - isBOP) / 0x4
+		isBOP = isBOP == 0x3 and -1 or isBOP
+		local isCraftingReagent = b9 % 0x4
+		isCraftingReagent = isCraftingReagent == 0x3 and -1 or isCraftingReagent
+		-- store in the DB
+		private.db:BulkInsertNewRow(itemString, name, itemLevel, minLevel, maxStack, vendorSell, invSlotId, texture, classId, subClassId, quality, isBOP, isCraftingReagent)
 	end
-	TSM:LOG_INFO("Imported %d items worth of data", #private.names)
+	private.db:BulkInsertEnd()
 
 	-- process pending item info every 0.1 seconds
-	TSMAPI_FOUR.Delay.AfterTime(0, private.ProcessItemInfo, 0.1)
-	-- scan the merchant every 0.5 seconds (will be a no-op if it's not visible)
-	TSMAPI_FOUR.Delay.AfterTime(0, private.ScanMerchant, 0.5)
+	TSMAPI_FOUR.Delay.AfterTime("processItemInfo", 0, private.ProcessItemInfo, ITEM_INFO_INTERVAL)
+	-- scan the merchant when the goods are shown
+	TSMAPI_FOUR.Event.Register("MERCHANT_SHOW", private.ScanMerchant)
+	TSMAPI_FOUR.Event.Register("MERCHANT_UPDATE", private.UpdateMerchant)
 end
 
 function ItemInfo.OnDisable()
@@ -92,31 +163,38 @@ function ItemInfo.OnDisable()
 		-- bailing if TSMItemInfoDB doesn't exist gives us an easy way to wipe the DB via "/run TSMItemInfoDB = nil"
 		return
 	end
-	local newNames = {}
-	local newItemStrings = {}
-	local newDataParts = {}
-	for itemString, index in pairs(private.itemStringLookup) do
-		tinsert(newNames, private.names[index])
-		tinsert(newItemStrings, itemString)
-		local newDataStr = nil
-		if index > private.maxLoadedIndex then
-			newDataStr = ""
-			for _, field in pairs(FIELDS) do
-				newDataStr = newDataStr..private.EncodeNumber(private.newData[itemString][field], FIELD_INFO[field].length)
-			end
-		else
-			newDataStr = strsub(TSMItemInfoDB.data, RECORD_DATA_LENGTH * (index - 1) + 1, RECORD_DATA_LENGTH * index)
-		end
-		tinsert(newDataParts, newDataStr)
+	local names = {}
+	local itemStrings = {}
+	local dataParts = {}
+	local numFields = #DB_SCHEMA.fieldOrder
+	for i = 1, #private.db._data / numFields do
+		local startOffset = (i - 1) * numFields + 1
+		local itemString, name, itemLevel, minLevel, maxStack, vendorSell, invSlotId, texture, classId, subClassId, quality, isBOP, isCraftingReagent = unpack(private.db._data, startOffset, startOffset + numFields - 1)
+		itemLevel = itemLevel == -1 and 0xffff or itemLevel
+		minLevel = minLevel == -1 and 0xff or minLevel
+		maxStack = maxStack == -1 and 0xffff or maxStack
+		vendorSell = vendorSell == -1 and 0xffffffff or vendorSell
+		invSlotId = invSlotId == -1 and 0xff or invSlotId
+		texture = texture == -1 and 0xffffffff or texture
+		classId = classId == -1 and 0xff or classId
+		subClassId = subClassId == -1 and 0xff or subClassId
+		quality = quality == -1 and 0xf or quality
+		isBOP = isBOP == -1 and 0x3 or isBOP
+		isCraftingReagent = isCraftingReagent == -1 and 0x3 or isCraftingReagent
+		local bitfield = quality + isBOP * 16 + isCraftingReagent * 64
+
+		names[i] = name
+		itemStrings[i] = itemString
+		dataParts[i] = strchar(itemLevel % 256, itemLevel / 256, minLevel, maxStack % 256, maxStack / 256, vendorSell % 256, (vendorSell % 65536) / 256, (vendorSell % 16777216) / 65536, vendorSell / 16777216, bitfield, invSlotId, texture % 256, (texture % 65536) / 256, (texture % 16777216) / 65536, texture / 16777216, classId, subClassId)
 	end
-	TSMItemInfoDB.names = #newNames > 0 and table.concat(newNames, "\0") or nil
-	TSMItemInfoDB.itemStrings = #newItemStrings > 0 and table.concat(newItemStrings, "\0") or nil
-	TSMItemInfoDB.data = table.concat(newDataParts)
+	TSMItemInfoDB.names = #names > 0 and table.concat(names, SEP_CHAR) or nil
+	TSMItemInfoDB.itemStrings = #itemStrings > 0 and table.concat(itemStrings, SEP_CHAR) or nil
+	TSMItemInfoDB.data = table.concat(dataParts)
+	assert(#TSMItemInfoDB.data % RECORD_DATA_LENGTH == 0)
 
 	TSMItemInfoDB.version = DB_VERSION
 	TSMItemInfoDB.locale = GetLocale()
 	TSMItemInfoDB.build = GetBuildInfo()
-	TSMItemInfoDB.saveTime = nil
 end
 
 --- Store the name of an item.
@@ -124,9 +202,28 @@ end
 -- @tparam string itemString The itemString
 -- @tparam string name The item name
 function TSM.ItemInfo.StoreItemName(itemString, name)
-	local index = private.GetItemRecordIndex(itemString)
-	if private.names[index] == "" then
-		private.names[index] = name
+	private.SetSingleField(itemString, "name", name)
+end
+
+--- Store information about an item from its link.
+-- This function is used to opportunistically populate the item cache with item info.
+-- @tparam string itemLink The item link
+function TSM.ItemInfo.StoreItemInfoByLink(itemLink)
+	-- see if we can extract the quality and name from the link
+	local colorHex, name = strmatch(itemLink, "^(\124cff[0-9a-z]+)\124[Hh].+\124h%[(.+)%]\124h\124r$")
+	if name == "" or name == UNKNOWN_ITEM_NAME then
+		name = nil
+	end
+	local quality = ITEM_QUALITY_BY_HEX_LOOKUP[colorHex]
+	local itemString = TSMAPI_FOUR.Item.ToItemString(itemLink)
+	if not itemString then
+		return
+	end
+	if name then
+		private.SetSingleField(itemString, "name", name)
+	end
+	if quality then
+		private.SetSingleField(itemString, "quality", quality)
 	end
 end
 
@@ -137,20 +234,27 @@ end
 -- @treturn ?string The itemString
 function TSM.ItemInfo.ItemNameToItemString(name)
 	local result = nil
-	for itemString, index in pairs(private.itemStringLookup) do
-		if private.names[index] == name then
-			if result then
-				-- multiple matching items
-				if TSMAPI_FOUR.Item.ToBaseItemString(itemString) == TSMAPI_FOUR.Item.ToBaseItemString(result) then
-					result = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
-				else
-					return TSM.CONST.UNKNOWN_ITEM_ITEMSTRING
-				end
-			end
+	local query = private.db:NewQuery()
+		:Select("itemString")
+		:Equal("name", name)
+	for _, itemString in query:Iterator() do
+		if not result then
 			result = itemString
+		elseif result ~= TSM.CONST.UNKNOWN_ITEM_ITEMSTRING then
+			-- multiple matching items
+			if TSMAPI_FOUR.Item.ToBaseItemString(itemString) == TSMAPI_FOUR.Item.ToBaseItemString(result) then
+				result = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
+			else
+				result = TSM.CONST.UNKNOWN_ITEM_ITEMSTRING
+			end
 		end
 	end
+	query:Release()
 	return result
+end
+
+function ItemInfo.GetDBForJoin()
+	return private.db
 end
 
 
@@ -168,25 +272,23 @@ function TSMAPI_FOUR.Item.GetName(item)
 	if itemString == TSM.CONST.UNKNOWN_ITEM_ITEMSTRING then
 		return UNKNOWN_ITEM_NAME
 	end
-	local speciesId = strmatch(itemString, "p:([0-9]+)")
-	if speciesId then
-		local name, texture = C_PetJournal.GetPetInfoBySpeciesID(tonumber(speciesId))
-		-- name is equal to the speciesId if it's invalid, so check the texture instead
-		if not texture then return end
-		return name
-	else
-		local name = private.names[private.GetItemRecordIndex(itemString)]
-		if name == "" then
-			-- if we got passed an item link, we can maybe extract the name from it
-			name = strmatch(item, "^\124cff[0-9a-z]+\124[Hh].+\124h%[(.+)%]\124h\124r$")
-			if name == "" or name == UNKNOWN_ITEM_NAME then
-				name = nil
-			end
-
-			TSMAPI_FOUR.Item.FetchInfo(itemString)
-		end
-		return name
+	local name = private.GetField(itemString, "name")
+	if not name then
+		-- we can fetch info instantly for pets, so try again afterwards
+		TSMAPI_FOUR.Item.FetchInfo(itemString)
+		name = private.GetField(itemString, "name")
 	end
+	if not name then
+		-- if we got passed an item link, we can maybe extract the name from it
+		name = strmatch(item, "^\124cff[0-9a-z]+\124[Hh].+\124h%[(.+)%]\124h\124r$")
+		if name == "" or name == UNKNOWN_ITEM_NAME then
+			name = nil
+		end
+		if name then
+			private.SetSingleField(itemString, "name", name)
+		end
+	end
+	return name
 end
 
 --- Get the link.
@@ -200,12 +302,12 @@ function TSMAPI_FOUR.Item.GetLink(item)
 	if itemStringType == "p" then
 		local name = TSMAPI_FOUR.Item.GetName(item) or UNKNOWN_ITEM_NAME
 		local fullItemString = strjoin(":", speciesId, level or "", quality or "", health or "", power or "", speed or "", petId or "")
-		local quality = tonumber(quality) or 0
+		quality = tonumber(quality) or 0
 		local qualityColor = ITEM_QUALITY_COLORS[quality] and ITEM_QUALITY_COLORS[quality].hex or "|cffff0000"
 		link = qualityColor.."|Hbattlepet:"..fullItemString.."|h["..name.."]|h|r"
 	else
 		local name = TSMAPI_FOUR.Item.GetName(item) or UNKNOWN_ITEM_NAME
-		local quality = TSMAPI_FOUR.Item.GetQuality(item)
+		quality = TSMAPI_FOUR.Item.GetQuality(item)
 		local qualityColor = ITEM_QUALITY_COLORS[quality] and ITEM_QUALITY_COLORS[quality].hex or "|cffff0000"
 		link = qualityColor.."|H"..TSMAPI_FOUR.Item.ToWowItemString(itemString).."|h["..name.."]|h|r"
 	end
@@ -218,31 +320,29 @@ end
 function TSMAPI_FOUR.Item.GetQuality(item)
 	local itemString = TSMAPI_FOUR.Item.ToItemString(item)
 	if not itemString then return end
-	local itemStringType, _, _, quality = strsplit(":", itemString)
-	if itemStringType == "p" then
-		-- we can get the quality directly from the itemString
-		return tonumber(quality) or 0
-	else
-		local quality = private.GetBitfield(itemString, "quality")
-		if not quality then
-			if strmatch(itemString, "^i:[0-9]+:[%-0-9]+$") then
-				-- there is a random enchant, but no bonusIds, so the quality is the same as the base item
-				quality = TSMAPI_FOUR.Item.GetQuality(TSMAPI_FOUR.Item.ToBaseItemString(itemString))
-			elseif strmatch(itemString, "^i:[0-9]+:[0-9]*:[0-9]+") then
-				-- this item has bonusIds
-				local classId = TSMAPI_FOUR.Item.GetClassId(itemString)
-				if classId and classId ~= LE_ITEM_CLASS_WEAPON and classId ~= LE_ITEM_CLASS_ARMOR then
-					-- the bonusId does not affect the quality of this item
-					quality = TSMAPI_FOUR.Item.GetQuality(TSMAPI_FOUR.Item.ToBaseItemString(itemString))
-				end
-			end
-			if quality then
-				private.SetBitfield(itemString, "quality", quality)
-			end
-			TSMAPI_FOUR.Item.FetchInfo(itemString)
-		end
+	local itemType, _, randOrLevel, bonusOrQuality = strsplit(":", itemString)
+	randOrLevel = tonumber(randOrLevel)
+	bonusOrQuality = tonumber(bonusOrQuality)
+	local petDefault = itemType == "p" and (bonusOrQuality or 0) or nil
+	local quality = private.GetFieldValueHelper(itemString, "quality", false, false, petDefault)
+	if quality then
 		return quality
 	end
+	if itemType == "i" and randOrLevel and not bonusOrQuality then
+		-- there is a random enchant, but no bonusIds, so the quality is the same as the base item
+		quality = TSMAPI_FOUR.Item.GetQuality(TSMAPI_FOUR.Item.ToBaseItemString(itemString))
+	elseif itemType == "i" and bonusOrQuality then
+		-- this item has bonusIds
+		local classId = TSMAPI_FOUR.Item.GetClassId(itemString)
+		if classId and classId ~= LE_ITEM_CLASS_WEAPON and classId ~= LE_ITEM_CLASS_ARMOR then
+			-- the bonusId does not affect the quality of this item
+			quality = TSMAPI_FOUR.Item.GetQuality(TSMAPI_FOUR.Item.ToBaseItemString(itemString))
+		end
+	end
+	if quality then
+		private.SetSingleField(itemString, "quality", quality)
+	end
+	return quality
 end
 
 --- Get the quality color.
@@ -260,24 +360,35 @@ end
 function TSMAPI_FOUR.Item.GetItemLevel(item)
 	local itemString = TSMAPI_FOUR.Item.ToItemString(item)
 	if not itemString then return end
-	local itemStringType, _, itemLevel = strsplit(":", itemString)
-	if itemStringType == "p" then
-		-- we can get the level directly from the itemString
-		return tonumber(itemLevel) or 0
-	else
-		local itemLevel = private.GetField(itemString, "itemLevel")
-		if not itemLevel then
-			if strmatch(itemString, "^i:[0-9]+:[%-0-9]+$") then
-				-- there is a random enchant, but no bonusIds, so the itemLevel is the same as the base item
-				itemLevel = TSMAPI_FOUR.Item.GetItemLevel(TSMAPI_FOUR.Item.ToBaseItemString(itemString))
-			end
-			if itemLevel then
-				private.SetField(itemString, "itemLevel", itemLevel)
-			end
-			TSMAPI_FOUR.Item.FetchInfo(itemString)
-		end
+	local itemLevel = private.GetField(itemString, "itemLevel")
+	if itemLevel then
 		return itemLevel
 	end
+	local itemType, _, randOrLevel, bonusOrQuality = strsplit(":", itemString)
+	randOrLevel = tonumber(randOrLevel)
+	bonusOrQuality = tonumber(bonusOrQuality)
+	if itemType == "p" then
+		-- we can fetch info instantly for pets so try again
+		TSMAPI_FOUR.Item.FetchInfo(itemString)
+		itemLevel = private.GetField(itemString, "itemLevel")
+		if not itemLevel then
+			-- just get the level from the item string
+			itemLevel = randOrLevel or 0
+			private.SetSingleField(itemString, "itemLevel", itemLevel)
+		end
+	elseif itemType == "i" then
+		if randOrLevel and not bonusOrQuality then
+			-- there is a random enchant, but no bonusIds, so the itemLevel is the same as the base item
+			itemLevel = TSMAPI_FOUR.Item.GetItemLevel(TSMAPI_FOUR.Item.ToBaseItemString(itemString))
+		end
+		if itemLevel then
+			private.SetSingleField(itemString, "itemLevel", itemLevel)
+		end
+		TSMAPI_FOUR.Item.FetchInfo(itemString)
+	else
+		error("Invalid item: "..tostring(itemString))
+	end
+	return itemLevel
 end
 
 --- Get the min level.
@@ -286,31 +397,22 @@ end
 function TSMAPI_FOUR.Item.GetMinLevel(item)
 	local itemString = TSMAPI_FOUR.Item.ToItemString(item)
 	if not itemString then return end
-	if strmatch(itemString, "^p:") then
-		-- min level is always 0 for battlepets
-		return 0
-	else
-		local minLevel = private.GetField(itemString, "minLevel")
-		if not minLevel then
-			if strmatch(itemString, "^i:[0-9]+:[%-0-9]+$") then
-				-- there is a random enchant, but no bonusIds, so the itemLevel is the same as the base item
-				minLevel = TSMAPI_FOUR.Item.GetMinLevel(TSMAPI_FOUR.Item.ToBaseItemString(itemString))
-			else
-				local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
-				local classId = TSMAPI_FOUR.Item.GetClassId(itemString)
-				local subClassId = TSMAPI_FOUR.Item.GetClassId(itemString)
-				if itemString ~= baseItemString and classId and subClassId and classId ~= LE_ITEM_CLASS_WEAPON and classId ~= LE_ITEM_CLASS_ARMOR and (classId ~= LE_ITEM_CLASS_GEM or subClassId ~= LE_ITEM_GEM_ARTIFACTRELIC) then
-					-- the bonusId does not affect the minLevel of this item
-					minLevel = TSMAPI_FOUR.Item.GetMinLevel(baseItemString)
-				end
-			end
+	-- if there is a random enchant, but no bonusIds, so the itemLevel is the same as the base item
+	local baseIsSame = strmatch(itemString, "^i:[0-9]+:[%-0-9]+$") and true or false
+	local minLevel = private.GetFieldValueHelper(itemString, "minLevel", baseIsSame, true, 0)
+	if not minLevel and private.IsItem(itemString) then
+		local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
+		local classId = TSMAPI_FOUR.Item.GetClassId(itemString)
+		local subClassId = TSMAPI_FOUR.Item.GetClassId(itemString)
+		if itemString ~= baseItemString and classId and subClassId and classId ~= LE_ITEM_CLASS_WEAPON and classId ~= LE_ITEM_CLASS_ARMOR and (classId ~= LE_ITEM_CLASS_GEM or subClassId ~= LE_ITEM_GEM_ARTIFACTRELIC) then
+			-- the bonusId does not affect the minLevel of this item
+			minLevel = TSMAPI_FOUR.Item.GetMinLevel(baseItemString)
 			if minLevel then
-				private.SetField(itemString, "minLevel", minLevel)
+				private.SetSingleField(itemString, "minLevel", minLevel)
 			end
-			TSMAPI_FOUR.Item.FetchInfo(itemString)
 		end
-		return minLevel
 	end
+	return minLevel
 end
 
 --- Get the max stack size.
@@ -319,50 +421,37 @@ end
 function TSMAPI_FOUR.Item.GetMaxStack(item)
 	local itemString = TSMAPI_FOUR.Item.ToItemString(item)
 	if not itemString then return end
-	if strmatch(itemString, "^p:") then
-		-- min level is always 1 for battlepets
-		return 1
-	else
-		local maxStack = private.GetField(itemString, "maxStack")
-		if not maxStack then
-			local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
-			if itemString ~= baseItemString then
-				-- the maxStack is the same as the base item
-				maxStack = TSMAPI_FOUR.Item.GetMaxStack(baseItemString)
-			end
-			if not maxStack then
-				-- we might be able to deduce the maxStack based on the classId and subClassId
-				local classId = TSMAPI_FOUR.Item.GetClassId(item)
-				local subClassId = TSMAPI_FOUR.Item.GetClassId(item)
-				if classId and subClassId then
-					if classId == 1 then
-						maxStack = 1
-					elseif classId == 2 then
-						maxStack = 1
-					elseif classId == 4 then
-						if subClassId > 0 then
-							maxStack = 1
-						end
-					elseif classId == 15 then
-						if subClassId == 5 then
-							maxStack = 1
-						end
-					elseif classId == 16 then
-						maxStack = 20
-					elseif classId == 17 then
-						maxStack = 1
-					elseif classId == 18 then
-						maxStack = 1
-					end
+	local maxStack = private.GetFieldValueHelper(itemString, "maxStack", true, true, 1)
+	if not maxStack and private.IsItem(itemString) then
+		-- we might be able to deduce the maxStack based on the classId and subClassId
+		local classId = TSMAPI_FOUR.Item.GetClassId(item)
+		local subClassId = TSMAPI_FOUR.Item.GetClassId(item)
+		if classId and subClassId then
+			if classId == 1 then
+				maxStack = 1
+			elseif classId == 2 then
+				maxStack = 1
+			elseif classId == 4 then
+				if subClassId > 0 then
+					maxStack = 1
 				end
+			elseif classId == 15 then
+				if subClassId == 5 then
+					maxStack = 1
+				end
+			elseif classId == 16 then
+				maxStack = 20
+			elseif classId == 17 then
+				maxStack = 1
+			elseif classId == 18 then
+				maxStack = 1
 			end
-			if maxStack then
-				private.SetField(itemString, "maxStack", maxStack)
-			end
-			TSMAPI_FOUR.Item.FetchInfo(itemString)
 		end
-		return maxStack
+		if maxStack then
+			private.SetSingleField(itemString, "maxStack", maxStack)
+		end
 	end
+	return maxStack
 end
 
 --- Get the inventory slot id.
@@ -371,18 +460,7 @@ end
 function TSMAPI_FOUR.Item.GetInvSlotId(item)
 	local itemString = TSMAPI_FOUR.Item.ToItemString(item)
 	if not itemString then return end
-	local invSlotId = private.GetField(itemString, "invSlotId")
-	if not invSlotId then
-		-- the invSlotId is the same for the base item
-		local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
-		if baseItemString ~= itemString then
-			return TSMAPI_FOUR.Item.GetInvSlotId(baseItemString)
-		end
-	end
-	if not invSlotId then
-		private.StoreGetItemInfoInstant(itemString)
-		invSlotId = private.GetField(itemString, "invSlotId")
-	end
+	local invSlotId = private.GetFieldValueHelper(itemString, "invSlotId", true, true, 0)
 	return invSlotId
 end
 
@@ -392,19 +470,12 @@ end
 function TSMAPI_FOUR.Item.GetTexture(item)
 	local itemString = TSMAPI_FOUR.Item.ToItemString(item)
 	if not itemString then return end
-	local texture = private.GetField(itemString, "texture")
-	if not texture then
-		-- the texture is the same for the base item (at least as far as we care)
-		local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
-		if baseItemString ~= itemString then
-			return TSMAPI_FOUR.Item.GetTexture(baseItemString)
-		end
+	local texture = private.GetFieldValueHelper(itemString, "texture", true, false, nil)
+	if texture then
+		return texture
 	end
-	if not texture then
-		private.StoreGetItemInfoInstant(itemString)
-		texture = private.GetField(itemString, "texture")
-	end
-	return texture
+	private.StoreGetItemInfoInstant(itemString)
+	return private.GetField(itemString, "texture")
 end
 
 --- Get the vendor sell price.
@@ -413,16 +484,7 @@ end
 function TSMAPI_FOUR.Item.GetVendorSell(item)
 	local itemString = TSMAPI_FOUR.Item.ToItemString(item)
 	if not itemString then return end
-	if strmatch(itemString, "^p:") then
-		-- battlepets can't be sold to a vendor
-		return
-	else
-		local vendorSell = private.GetField(itemString, "vendorSell")
-		if not vendorSell then
-			TSMAPI_FOUR.Item.FetchInfo(itemString)
-		end
-		return vendorSell
-	end
+	return private.GetFieldValueHelper(itemString, "vendorSell", false, false, 0)
 end
 
 --- Get the class id.
@@ -431,19 +493,12 @@ end
 function TSMAPI_FOUR.Item.GetClassId(item)
 	local itemString = TSMAPI_FOUR.Item.ToItemString(item)
 	if not itemString then return end
-	local classId = private.GetField(itemString, "classId")
-	if not classId then
-		-- the classId is the same for the base item
-		local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
-		if baseItemString ~= itemString then
-			return TSMAPI_FOUR.Item.GetClassId(baseItemString)
-		end
+	local classId = private.GetFieldValueHelper(itemString, "classId", true, true, LE_ITEM_CLASS_BATTLEPET)
+	if classId then
+		return classId
 	end
-	if not classId then
-		private.StoreGetItemInfoInstant(itemString)
-		classId = private.GetField(itemString, "classId")
-	end
-	return classId
+	private.StoreGetItemInfoInstant(itemString)
+	return private.GetField(itemString, "classId")
 end
 
 --- Get the sub-class id.
@@ -452,19 +507,12 @@ end
 function TSMAPI_FOUR.Item.GetSubClassId(item)
 	local itemString = TSMAPI_FOUR.Item.ToItemString(item)
 	if not itemString then return end
-	local subClassId = private.GetField(itemString, "subClassId")
-	if not subClassId then
-		-- the subClassId is the same for the base item
-		local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
-		if baseItemString ~= itemString then
-			return TSMAPI_FOUR.Item.GetSubClassId(baseItemString)
-		end
+	local subClassId = private.GetFieldValueHelper(itemString, "subClassId", true, true, nil)
+	if subClassId then
+		return subClassId
 	end
-	if not subClassId then
-		private.StoreGetItemInfoInstant(itemString)
-		subClassId = private.GetField(itemString, "subClassId")
-	end
-	return subClassId
+	private.StoreGetItemInfoInstant(itemString)
+	return private.GetField(itemString, "subClassId")
 end
 
 
@@ -474,26 +522,11 @@ end
 function TSMAPI_FOUR.Item.IsSoulbound(item)
 	local itemString = TSMAPI_FOUR.Item.ToItemString(item)
 	if not itemString then return end
-	if strmatch(itemString, "^p:") then
-		-- battlepets are never soulbound
-		return false
-	else
-		local isBOP = private.GetBitfield(itemString, "isBOP")
-		if isBOP == nil then
-			local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
-			if itemString ~= baseItemString then
-				-- the bindType is the same as the base item
-				isBOP = TSMAPI_FOUR.Item.IsSoulbound(baseItemString)
-			end
-			if isBOP ~= nil then
-				private.SetBitfield(itemString, "isBOP", isBOP and 1 or 0)
-			end
-			TSMAPI_FOUR.Item.FetchInfo(itemString)
-		else
-			isBOP = isBOP == 1
-		end
-		return isBOP
+	local isBOP = private.GetFieldValueHelper(itemString, "isBOP", true, true, false)
+	if type(isBOP) == "number" then
+		isBOP = isBOP == 1
 	end
+	return isBOP
 end
 
 --- Get whether or not the item is a crafting reagent.
@@ -502,26 +535,11 @@ end
 function TSMAPI_FOUR.Item.IsCraftingReagent(item)
 	local itemString = TSMAPI_FOUR.Item.ToItemString(item)
 	if not itemString then return end
-	if strmatch(itemString, "^p:") then
-		-- battlepets are never crafting reagents
-		return false
-	else
-		local isCraftingReagent = private.GetBitfield(itemString, "isCraftingReagent")
-		if isCraftingReagent == nil then
-			local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
-			if itemString ~= baseItemString then
-				-- the isCraftingReagent field is the same as the base item
-				isCraftingReagent = TSMAPI_FOUR.Item.IsCraftingReagent(baseItemString)
-			end
-			if isCraftingReagent ~= nil then
-				private.SetBitfield(itemString, "isCraftingReagent", isCraftingReagent and 1 or 0)
-			end
-			TSMAPI_FOUR.Item.FetchInfo(itemString)
-		else
-			isCraftingReagent = isCraftingReagent == 1
-		end
-		return isCraftingReagent
+	local isCraftingReagent = private.GetFieldValueHelper(itemString, "isCraftingReagent", true, true, false)
+	if type(isCraftingReagent) == "number" then
+		isCraftingReagent = isCraftingReagent == 1
 	end
+	return isCraftingReagent
 end
 
 --- Get whether or not the item is a soulbound material.
@@ -561,13 +579,18 @@ end
 -- This function can be called ahead of time for items which we know we need to have info cached for.
 -- @tparam string item The item
 function TSMAPI_FOUR.Item.FetchInfo(item)
+	if item == TSM.CONST.UNKNOWN_ITEM_ITEMSTRING then return end
 	local itemString = TSMAPI_FOUR.Item.ToItemString(item)
 	if not itemString then return end
-	if strmatch(itemString, "^p:") then
-		-- no point in fetching info for battlepets
+	if private.IsPet(itemString) then
+		if not private.GetField(itemString, "name") then
+			private.StoreGetItemInfoInstant(itemString)
+		end
 		return
 	end
 	private.pendingItems[itemString] = true
+
+	TSMAPI_FOUR.Delay.AfterTime("processItemInfo", 0, private.ProcessItemInfo, ITEM_INFO_INTERVAL)
 end
 
 --- Generalize an item link.
@@ -576,7 +599,7 @@ end
 function TSMAPI_FOUR.Item.GeneralizeLink(itemLink)
 	local itemString = TSMAPI_FOUR.Item.ToItemString(itemLink)
 	if not itemString then return end
-	if not strmatch(itemString, "p:") and not strmatch(itemString, "i:[0-9]+:[0-9%-]*:[0-9]*") then
+	if private.IsItem(itemString) and not strmatch(itemString, "i:[0-9]+:[0-9%-]*:[0-9]*") then
 		-- swap out the itemString part of the link
 		local leader, quality, _, name, trailer, trailer2, extra = ("\124"):split(itemLink)
 		if trailer2 and not extra then
@@ -592,17 +615,66 @@ end
 -- Helper Functions
 -- ============================================================================
 
+function private.IsPet(itemString)
+	return strmatch(itemString, "^p:") and true or false
+end
+
+function private.IsItem(itemString)
+	return strmatch(itemString, "^i:") and true or false
+end
+
+function private.GetFieldValueHelper(itemString, field, baseIsSame, storeBaseValue, petDefaultValue)
+	local value = private.GetField(itemString, field)
+	if value ~= nil then
+		return value
+	end
+	TSMAPI_FOUR.Item.FetchInfo(itemString)
+	if private.IsPet(itemString) then
+		-- we can fetch info instantly for pets so try again
+		value = private.GetField(itemString, field)
+		if value == nil and petDefaultValue ~= nil then
+			value = petDefaultValue
+			private.SetSingleField(itemString, field, value)
+		end
+	end
+	if value ~= nil and baseIsSame then
+		-- the value is the same for the base item
+		local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
+		if baseItemString ~= itemString then
+			value = private.GetFieldValueHelper(baseItemString, field)
+			if value ~= nil and storeBaseValue then
+				private.SetSingleField(itemString, field, value)
+			end
+		end
+	end
+	return value
+end
+
 function private.ProcessItemInfo()
 	local toRemove = TSMAPI_FOUR.Util.AcquireTempTable()
 	local numRequested = 0
 	for itemString in pairs(private.pendingItems) do
-		local index = private.itemStringLookup[itemString]
-		if index and private.names[index] ~= "" then
+		local name = private.GetField(itemString, "name")
+		local quality = private.GetField(itemString, "quality")
+		if (private.numRequests[itemString] or 0) > MAX_REQUESTS_PER_ITEM then
+			-- give up on this item
+			if private.numRequests[itemString] ~= math.huge then
+				TSM:LOG_ERR("Giving up on item info for %s", itemString)
+				private.numRequests[itemString] = math.huge
+				local itemId = TSMAPI_FOUR.Item.ToItemID(itemString)
+				if itemId then
+					private.numRequests[itemId] = math.huge
+				end
+			end
+			tinsert(toRemove, itemString)
+		elseif name and name ~= "" and quality and quality >= 0 then
 			-- we have info for this item
 			tinsert(toRemove, itemString)
+			private.numRequests[itemString] = nil
 		elseif numRequested < MAX_REQUESTED_ITEM_INFO then
 			-- request info for this item
 			if not private.StoreGetItemInfo(itemString) then
+				private.numRequests[itemString] = (private.numRequests[itemString] or 0) + 1
 				numRequested = numRequested + 1
 			end
 		end
@@ -611,13 +683,17 @@ function private.ProcessItemInfo()
 		private.pendingItems[itemString] = nil
 	end
 	TSMAPI_FOUR.Util.ReleaseTempTable(toRemove)
+
+	if not next(private.pendingItems) then
+		TSMAPI_FOUR.Delay.Cancel("processItemInfo")
+	end
 end
 
 function private.ScanMerchant()
 	for i = 1, GetMerchantNumItems() do
 		local itemString = TSMAPI_FOUR.Item.ToItemString(GetMerchantItemLink(i))
 		if itemString then
-			local price, quantity, _, _, _, extendedCost = select(3, GetMerchantItemInfo(i))
+			local _, _, price, quantity, _, _, _, extendedCost = GetMerchantItemInfo(i)
 			-- bug with big keech vendor returning extendedCost = true for gold only items so need to check GetMerchantItemCostInfo
 			if price > 0 and (not extendedCost or GetMerchantItemCostInfo(i) == 0) then
 				TSM.db.global.internalData.vendorItems[itemString] = TSMAPI_FOUR.Util.Round(price / quantity)
@@ -628,113 +704,80 @@ function private.ScanMerchant()
 	end
 end
 
-function private.EncodeNumber(value, length)
-	if value == nil then
-		value = 2 ^ (length * 8) - 1
-	end
-	if length == 1 then
-		return strchar(value)
-	elseif length == 2 then
-		return strchar(value % 256, value / 256)
-	elseif length == 3 then
-		return strchar(value % 256, (value % 65536) / 256, value / 65536)
-	elseif length == 4 then
-		return strchar(value % 256, (value % 65536) / 256, (value % 16777216) / 65536, value / 16777216)
-	else
-		error("Invalid length: "..tostring(length))
-	end
+function private.UpdateMerchant()
+	TSMAPI_FOUR.Delay.AfterTime(0.1, private.ScanMerchant)
 end
 
-function private.DecodeNumber(str, length, offset)
-	offset = (offset or 0) + 1
-	local value = nil
-	if length == 1 then
-		value = strbyte(str, offset)
-	elseif length == 2 then
-		value = strbyte(str, offset) + strbyte(str, offset + 1) * 256
-	elseif length == 3 then
-		value = strbyte(str, offset) + strbyte(str, offset + 1) * 256 + strbyte(str, offset + 2) * 65536
-	elseif length == 4 then
-		value = strbyte(str, offset) + strbyte(str, offset + 1) * 256 + strbyte(str, offset + 2) * 65536 + strbyte(str, offset + 3) * 16777216
-	else
-		error("Invalid length: "..tostring(length))
-	end
-	-- a max value indiciates nil
-	if value == 2 ^ (length * 8) - 1 then
+function private.CheckFieldValue(key, value)
+	if value == -1 then
 		return
+	end
+	assert(value >= 0 and value < 2 ^ FIELD_LENGTH_BITS[key] - 1)
+end
+
+function private.GetField(itemString, key)
+	local value = private.db:GetUniqueRowField("itemString", itemString, key)
+	if value == -1 or value == "" then
+		return nil
 	end
 	return value
 end
 
-function private.CreateNewRecord(itemString, copyIndex)
-	assert(not copyIndex or copyIndex <= private.maxLoadedIndex)
-	-- create a new record for this item
-	local index = #private.names + 1
-	private.names[index] = copyIndex and private.names[copyIndex] or ""
-	private.itemStringLookup[itemString] = index
-	private.newData[itemString] = {}
-	for key, info in pairs(FIELD_INFO) do
-		private.newData[itemString][key] = copyIndex and private.DecodeNumber(TSMItemInfoDB.data, info.length, info.offset + RECORD_DATA_LENGTH * (copyIndex - 1)) or (2 ^ (info.length * 8) - 1)
+function private.GetOrCreateDBRow(itemString)
+	local row = private.db:GetUniqueRow("itemString", itemString)
+	if not row then
+		row = private.db:NewRow()
+			:SetField("itemString", itemString)
+			:SetField("name", "")
+			:SetField("minLevel", -1)
+			:SetField("itemLevel", -1)
+			:SetField("maxStack", -1)
+			:SetField("vendorSell", -1)
+			:SetField("quality", -1)
+			:SetField("isBOP", -1)
+			:SetField("isCraftingReagent", -1)
+			:SetField("texture", -1)
+			:SetField("classId", -1)
+			:SetField("subClassId", -1)
+			:SetField("invSlotId", -1)
 	end
-	return index
+	return row
 end
 
-function private.GetItemRecordIndex(itemString)
-	return private.itemStringLookup[itemString] or private.CreateNewRecord(itemString)
-end
-
-function private.GetField(itemString, key)
-	local index = private.GetItemRecordIndex(itemString)
-	if index > private.maxLoadedIndex then
-		-- this is new data so get it directly
-		local value = private.newData[itemString][key]
-		if value == 2 ^ (FIELD_INFO[key].length * 8) - 1 then
-			-- all high bits means it wasn't yet set
-			value = nil
-		end
-		return value
-	else
-		-- get the field from the DB string
-		return private.DecodeNumber(TSMItemInfoDB.data, FIELD_INFO[key].length, FIELD_INFO[key].offset + RECORD_DATA_LENGTH * (index - 1))
+function private.SetSingleField(itemString, key, value)
+	if key ~= "name" then
+		private.CheckFieldValue(key, value)
 	end
-end
-
-function private.SetField(itemString, key, value)
-	-- validate that the value can actually be encoded later and avoid crashes during logout
-	-- note needs to be max length -2 as max length -1 is used to indicate nil
-	assert(value >= 0 and value <= 2 ^ (FIELD_INFO[key].length * 8) - 2)
-	local index = private.GetItemRecordIndex(itemString)
-	if index <= private.maxLoadedIndex then
-		-- "delete" the existing record and copy the existing data to a new one
-		private.CreateNewRecord(itemString, index)
+	if type(value) == "boolean" then
+		value = value and 1 or 0
 	end
-	private.newData[itemString][key] = value
-end
-
-function private.GetBitfield(itemString, key)
-	local value = private.GetField(itemString, "bitfield")
-	if not value then return end
-
-	value = bit.band(value, BITFIELD_INFO[key].mask)
-	if value == BITFIELD_INFO[key].mask then
-		-- all high bits indicates a nil value
-		return nil
+	if private.db:GetUniqueRowField("itemString", itemString, key) == value then
+		-- no change
+		return
 	end
-	return bit.rshift(value, BITFIELD_INFO[key].offset)
+	private.GetOrCreateDBRow(itemString)
+		:SetField(key, value)
+		:CreateOrUpdateAndRelease()
 end
 
-function private.SetBitfield(itemString, key, value)
-	value = bit.lshift(value, BITFIELD_INFO[key].offset)
-	assert(bit.band(value, BITFIELD_INFO[key].mask) == value)
-	local bitfieldValue = private.GetField(itemString, "bitfield") or (2 ^ (FIELD_INFO.bitfield.length * 8) - 1)
-	bitfieldValue = bit.band(bitfieldValue, bit.bnot(BITFIELD_INFO[key].mask))
-	bitfieldValue = bit.bor(bitfieldValue, value)
-	private.SetField(itemString, "bitfield", bitfieldValue)
+function private.SetItemInfoInstantFields(itemString, texture, classId, subClassId, invSlotId)
+	private.CheckFieldValue("texture", texture)
+	private.CheckFieldValue("classId", classId)
+	private.CheckFieldValue("subClassId", subClassId)
+	private.CheckFieldValue("invSlotId", invSlotId)
+	private.GetOrCreateDBRow(itemString)
+		:SetField("texture", texture)
+		:SetField("classId", classId)
+		:SetField("subClassId", subClassId)
+		:SetField("invSlotId", invSlotId)
+		:CreateOrUpdateAndRelease()
 end
 
 function private.StoreGetItemInfoInstant(itemString)
-	local itemStringType, id = strmatch(itemString, "^([pi]):([0-9]+)")
+	local itemStringType, id, extra1, extra2 = strmatch(itemString, "^([pi]):([0-9]+):?([0-9]*):?([0-9]*)")
 	id = tonumber(id)
+	extra1 = tonumber(extra1)
+	extra2 = tonumber(extra2)
 
 	if itemStringType == "i" then
 		local _, classStr, subClassStr, equipSlot, texture, classId, subClassId = GetItemInfoInstant(id)
@@ -747,84 +790,140 @@ function private.StoreGetItemInfoInstant(itemString)
 			assert(subClassStr == "")
 			subClassId = 0
 		end
-		private.SetField(itemString, "texture", texture)
-		private.SetField(itemString, "classId", classId)
-		private.SetField(itemString, "subClassId", subClassId)
-		private.SetField(itemString, "invSlotId", TSMAPI_FOUR.Item.GetInventorySlotIdFromInventorySlotString(equipSlot) or 0)
+		local invSlotId = TSMAPI_FOUR.Item.GetInventorySlotIdFromInventorySlotString(equipSlot) or 0
+		private.SetItemInfoInstantFields(itemString, texture, classId, subClassId, invSlotId)
 		local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
 		if baseItemString ~= itemString then
-			private.SetField(baseItemString, "texture", texture)
-			private.SetField(baseItemString, "classId", classId)
-			private.SetField(baseItemString, "subClassId", subClassId)
-			private.SetField(baseItemString, "invSlotId", TSMAPI_FOUR.Item.GetInventorySlotIdFromInventorySlotString(equipSlot) or 0)
+			private.SetItemInfoInstantFields(baseItemString, texture, classId, subClassId, invSlotId)
 		end
 	elseif itemStringType == "p" then
-		local _, texture, petTypeId = C_PetJournal.GetPetInfoBySpeciesID(id)
+		local name, texture, petTypeId = C_PetJournal.GetPetInfoBySpeciesID(id)
 		if not texture then
 			return
 		end
-		private.SetField(itemString, "texture", texture)
-		private.SetField(itemString, "classId", LE_ITEM_CLASS_BATTLEPET)
-		private.SetField(itemString, "subClassId", petTypeId - 1)
-		private.SetField(itemString, "invSlotId", 0)
+		-- we can now store all the info for this pet
+		local classId = LE_ITEM_CLASS_BATTLEPET
+		local subClassId = petTypeId - 1
+		local invSlotId = 0
+		local minLevel = 0
+		local itemLevel = extra1 or 0
+		local quality = extra2 or 0
+		local maxStack = 1
+		local vendorSell = 0
+		local isBOP = 0
+		local isCraftingReagent = 0
+		private.SetItemInfoInstantFields(itemString, texture, classId, subClassId, invSlotId)
+		private.SetGetItemInfoFields(itemString, name, minLevel, itemLevel, maxStack, vendorSell, quality, isBOP, isCraftingReagent)
 		local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
 		if baseItemString ~= itemString then
-			private.SetField(baseItemString, "texture", texture)
-			private.SetField(baseItemString, "classId", LE_ITEM_CLASS_BATTLEPET)
-			private.SetField(baseItemString, "subClassId", petTypeId - 1)
-			private.SetField(baseItemString, "invSlotId", 0)
+			itemLevel = 0
+			quality = 0
+			private.SetItemInfoInstantFields(baseItemString, texture, classId, subClassId, invSlotId)
+			private.SetGetItemInfoFields(baseItemString, name, minLevel, itemLevel, maxStack, vendorSell, quality, isBOP, isCraftingReagent)
 		end
 	else
 		assert("Invalid itemString: "..itemString)
 	end
 end
 
+function private.SetGetItemInfoFields(itemString, name, minLevel, itemLevel, maxStack, vendorSell, quality, isBOP, isCraftingReagent)
+	private.CheckFieldValue("minLevel", minLevel)
+	private.CheckFieldValue("itemLevel", itemLevel)
+	private.CheckFieldValue("maxStack", maxStack)
+	private.CheckFieldValue("vendorSell", vendorSell)
+	private.CheckFieldValue("quality", quality)
+	private.CheckFieldValue("isBOP", isBOP)
+	private.CheckFieldValue("isCraftingReagent", isCraftingReagent)
+	private.GetOrCreateDBRow(itemString)
+		:SetField("name", name)
+		:SetField("minLevel", minLevel)
+		:SetField("itemLevel", itemLevel)
+		:SetField("maxStack", maxStack)
+		:SetField("vendorSell", vendorSell)
+		:SetField("quality", quality)
+		:SetField("isBOP", isBOP)
+		:SetField("isCraftingReagent", isCraftingReagent)
+		:CreateOrUpdateAndRelease()
+end
+
 function private.StoreGetItemInfo(itemString)
+	assert(private.IsItem(itemString))
 	local wowItemString = TSMAPI_FOUR.Item.ToWowItemString(itemString)
 	local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
 	local baseWowItemString = TSMAPI_FOUR.Item.ToWowItemString(baseItemString)
 
-	-- store info for the base item
 	local name, _, quality, itemLevel, minLevel, _, _, maxStack, _, _, vendorSell, _, _, bindType, _, _, isCraftingReagent = GetItemInfo(baseWowItemString)
-	if name then
-		private.SetField(baseItemString, "minLevel", minLevel)
-		private.SetField(baseItemString, "itemLevel", itemLevel)
-		-- some items (i.e. "i:40752" produce a very high max stack, so cap it)
-		maxStack = min(maxStack, 2 ^ (8 * FIELD_INFO.maxStack.length) - 2)
-		private.SetField(baseItemString, "maxStack", maxStack)
-		private.SetField(baseItemString, "vendorSell", vendorSell)
-		private.SetBitfield(baseItemString, "quality", quality)
-		private.SetBitfield(baseItemString, "isBOP", (bindType == LE_ITEM_BIND_ON_ACQUIRE or bindType == LE_ITEM_BIND_QUEST) and 1 or 0)
-		private.SetBitfield(baseItemString, "isCraftingReagent", isCraftingReagent and 1 or 0)
-		-- need to set at least one other field before the name to create the record
-		private.names[private.GetItemRecordIndex(baseItemString)] = name
+	local isBOP = (bindType == LE_ITEM_BIND_ON_ACQUIRE or bindType == LE_ITEM_BIND_QUEST) and 1 or 0
+	isCraftingReagent = isCraftingReagent and 1 or 0
+	-- some items (i.e. "i:40752" produce a very high max stack, so cap it)
+	maxStack = maxStack and min(maxStack, 2 ^ FIELD_LENGTH_BITS.maxStack - 2) or nil
+	-- some items (i.e. "i:117356::1:573") produce an negative min level
+	minLevel = minLevel and max(minLevel, 0) or nil
+
+	-- store info for the base item
+	if name and quality then
+		private.SetGetItemInfoFields(baseItemString, name, minLevel, itemLevel, maxStack, vendorSell, quality, isBOP, isCraftingReagent)
 	end
 
 	-- store info for the specific item if it's different
 	if itemString ~= baseItemString then
 		-- get new values of the fields which can change from the base item
-		name, _, quality, _, minLevel = GetItemInfo(wowItemString)
+		local baseVendorSell = vendorSell
+		name, _, quality, _, minLevel, _, _, _, _, _, vendorSell = GetItemInfo(wowItemString)
+		-- some items (i.e. "i:130064::2:196:1812") produce a negative vendor sell, so just use the base one
+		if vendorSell and vendorSell < 0 then
+			vendorSell = baseVendorSell
+		end
+		-- some items (i.e. "i:117356::1:573") produce an negative min level
+		minLevel = minLevel and max(minLevel, 0) or nil
 		itemLevel = GetDetailedItemLevelInfo(wowItemString)
-		if name then
-			private.SetBitfield(itemString, "quality", quality)
-			-- some items (i.e. "i:117356::1:573") produce an negative min level
-			minLevel = max(minLevel, 0)
-			private.SetField(itemString, "minLevel", minLevel)
-			-- need to set at least one other field before the name to create the record
-			private.names[private.GetItemRecordIndex(itemString)] = name
-		end
-		if itemLevel then
-			private.SetField(itemString, "itemLevel", itemLevel)
-		end
-		if maxStack then
-			-- some items (i.e. "i:40752" produce a very high max stack, so cap it)
-			maxStack = min(maxStack, 2 ^ (8 * FIELD_INFO.maxStack.length) - 2)
-			private.SetField(itemString, "maxStack", maxStack)
-			private.SetField(itemString, "vendorSell", vendorSell)
-			private.SetBitfield(itemString, "isBOP", (bindType == LE_ITEM_BIND_ON_ACQUIRE or bindType == LE_ITEM_BIND_QUEST) and 1 or 0)
-			private.SetBitfield(itemString, "isCraftingReagent", isCraftingReagent and 1 or 0)
+		if name or quality or itemLevel or maxStack then
+			if name then
+				private.CheckFieldValue("minLevel", minLevel)
+			else
+				name = ""
+				minLevel = -1
+			end
+			if quality then
+				private.CheckFieldValue("quality", quality)
+			else
+				quality = -1
+			end
+			if itemLevel then
+				private.CheckFieldValue("itemLevel", itemLevel)
+			else
+				itemLevel = -1
+			end
+			if maxStack then
+				private.CheckFieldValue("maxStack", maxStack)
+				private.CheckFieldValue("vendorSell", vendorSell)
+				private.CheckFieldValue("isBOP", isBOP)
+				private.CheckFieldValue("isCraftingReagent", isCraftingReagent)
+			else
+				maxStack = -1
+				vendorSell = -1
+				isBOP = -1
+				isCraftingReagent = -1
+			end
+			private.SetGetItemInfoFields(itemString, name, minLevel, itemLevel, maxStack, vendorSell, quality, isBOP, isCraftingReagent)
 		end
 	end
 
 	return name ~= nil
+end
+
+function private.ProcessAvailableItems()
+	-- remove the items we process after processing them all because GET_ITEM_INFO_RECEIVED events may fire as we do this
+	local processedItems = TSMAPI_FOUR.Util.AcquireTempTable()
+	for itemId in pairs(private.availableItems) do
+		processedItems[itemId] = true
+		local itemString = "i:"..itemId
+		if private.StoreGetItemInfo(itemString) then
+			private.pendingItems[itemString] = nil
+		end
+	end
+	for itemId in pairs(processedItems) do
+		private.availableItems[itemId] = nil
+	end
+	TSMAPI_FOUR.Util.ReleaseTempTable(processedItems)
 end

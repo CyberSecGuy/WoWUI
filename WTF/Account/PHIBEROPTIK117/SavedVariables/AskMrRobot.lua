@@ -30,14 +30,14 @@ AskMrRobotDb3 = {
 		},
 		["Phiber - Stormrage"] = {
 			["Talents"] = {
-				"3111321", -- [1]
+				"3213223", -- [1]
 			},
 			["Artifacts"] = {
 				{
 					["Relics"] = {
 						"|cffa335ee|Hitem:152061::::::::110:262::5:3:3611:1487:3528:::|h[Droplets of the Cleansing Storm]|h|r", -- [1]
-						"|cffa335ee|Hitem:147092::::::::110:262::5:3:3562:1527:3337:::|h[Ice-Threaded Conch]|h|r", -- [2]
-						"|cffa335ee|Hitem:136974::::::::110:262::35:3:3510:1597:3337:::|h[Empowerment of Thunder]|h|r", -- [3]
+						"|cffa335ee|Hitem:147092::::::::110:262::5:3:3562:1513:3337:::|h[Ice-Threaded Conch]|h|r", -- [2]
+						"|cffa335ee|Hitem:136974::::::::110:262::35:3:3510:1535:3337:::|h[Empowerment of Thunder]|h|r", -- [3]
 					},
 					["Powers"] = {
 						[1387] = 1,
@@ -67,14 +67,6 @@ AskMrRobotDb3 = {
 					["Crucible"] = {
 						["Equipped"] = {
 							{
-								["Active"] = {
-									true, -- [1]
-									false, -- [2]
-									true, -- [3]
-									false, -- [4]
-									false, -- [5]
-									true, -- [6]
-								},
 								["Powers"] = {
 									1739, -- [1]
 									1771, -- [2]
@@ -83,16 +75,16 @@ AskMrRobotDb3 = {
 									306, -- [5]
 									304, -- [6]
 								},
-							}, -- [1]
-							{
 								["Active"] = {
 									true, -- [1]
-									true, -- [2]
-									false, -- [3]
+									false, -- [2]
+									true, -- [3]
 									false, -- [4]
-									true, -- [5]
-									false, -- [6]
+									false, -- [5]
+									true, -- [6]
 								},
+							}, -- [1]
+							{
 								["Powers"] = {
 									1739, -- [1]
 									1779, -- [2]
@@ -101,16 +93,16 @@ AskMrRobotDb3 = {
 									300, -- [5]
 									302, -- [6]
 								},
-							}, -- [2]
-							{
 								["Active"] = {
 									true, -- [1]
-									false, -- [2]
-									true, -- [3]
+									true, -- [2]
+									false, -- [3]
 									false, -- [4]
 									true, -- [5]
 									false, -- [6]
 								},
+							}, -- [2]
+							{
 								["Powers"] = {
 									1739, -- [1]
 									1774, -- [2]
@@ -118,6 +110,14 @@ AskMrRobotDb3 = {
 									298, -- [4]
 									303, -- [5]
 									1589, -- [6]
+								},
+								["Active"] = {
+									true, -- [1]
+									false, -- [2]
+									true, -- [3]
+									false, -- [4]
+									true, -- [5]
+									false, -- [6]
 								},
 							}, -- [3]
 						},
@@ -256,17 +256,17 @@ AskMrRobotDb3 = {
 						[1619] = 1,
 						[981] = 1,
 						[982] = 1,
-						[1715] = 1,
-						[1357] = 1,
+						[1620] = 21,
+						[996] = 4,
 						[984] = 1,
 						[1394] = 1,
 						[985] = 1,
-						[1618] = 1,
-						[986] = 1,
 						[1617] = 4,
+						[986] = 1,
+						[1618] = 1,
 						[987] = 1,
-						[996] = 4,
-						[1620] = 21,
+						[1357] = 1,
+						[1715] = 1,
 					},
 					["Crucible"] = {
 						["Equipped"] = {
@@ -291,16 +291,13 @@ AskMrRobotDb3 = {
 					[7] = "|cff00ccff|Hitem:122254::::::::6:102:::1:583:::|h[Stained Shadowcraft Pants]|h|r",
 					[15] = "|cff00ccff|Hitem:122262::::::::6:102:::1:583:::|h[Ancient Bloodmoon Cloak]|h|r",
 					[3] = "|cff00ccff|Hitem:122358::::::::6:102:::1:583:::|h[Stained Shadowcraft Spaulders]|h|r",
-					[13] = "|cff00ccff|Hitem:128318::::::::6:102:::1:3592:::|h[Touch of the Void]|h|r",
+					[16] = "|cff00ccff|Hitem:122353::::::::6:102:::1:583:::|h[Dignified Headmaster's Charge]|h|r",
 					[14] = "|cff00ccff|Hitem:122361::::::::6:102:::1:3592:::|h[Swift Hand of Justice]|h|r",
 					[5] = "|cff00ccff|Hitem:122383::::::::6:102:::1:583:::|h[Stained Shadowcraft Tunic]|h|r",
-					[16] = "|cff00ccff|Hitem:122353::::::::6:102:::1:583:::|h[Dignified Headmaster's Charge]|h|r",
+					[13] = "|cff00ccff|Hitem:128318::::::::6:102:::1:3592:::|h[Touch of the Void]|h|r",
 				}, -- [1]
 			},
 		},
-	},
-	["global"] = {
-		["Region"] = "US",
 	},
 	["profileKeys"] = {
 		["Fiber - Stormrage"] = "Fiber - Stormrage",
@@ -308,6 +305,9 @@ AskMrRobotDb3 = {
 		["Fiberoptic - Aggramar"] = "Fiberoptic - Aggramar",
 		["Voidbro - Stormrage"] = "Voidbro - Stormrage",
 		["Fiberboi - Sargeras"] = "Fiberboi - Sargeras",
+	},
+	["global"] = {
+		["Region"] = "US",
 	},
 	["profiles"] = {
 		["Fiber - Stormrage"] = {
@@ -359,17 +359,21 @@ AskMrRobotDb3 = {
 					},
 					[1712] = {
 					},
-					[870] = {
+					[1520] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
 					},
 					[761] = {
-					},
-					[1008] = {
 					},
 					[1676] = {
 						[14] = false,
 						[16] = false,
 						[17] = false,
 						[15] = false,
+					},
+					[870] = {
 					},
 					[1530] = {
 						[14] = false,
@@ -381,11 +385,7 @@ AskMrRobotDb3 = {
 					},
 					[726] = {
 					},
-					[1520] = {
-						[14] = false,
-						[16] = false,
-						[17] = false,
-						[15] = false,
+					[1008] = {
 					},
 				},
 			},
@@ -399,21 +399,17 @@ AskMrRobotDb3 = {
 						[17] = false,
 						[15] = false,
 					},
+					[0] = {
+					},
+					[1220] = {
+					},
+					[1669] = {
+					},
 					[1648] = {
 						[14] = false,
 						[16] = false,
 						[17] = false,
 						[15] = false,
-					},
-					[1220] = {
-					},
-					[1676] = {
-						[14] = false,
-						[16] = false,
-						[17] = false,
-						[15] = false,
-					},
-					[1669] = {
 					},
 					[1750] = {
 					},
@@ -423,7 +419,11 @@ AskMrRobotDb3 = {
 						[17] = false,
 						[15] = false,
 					},
-					[0] = {
+					[1676] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
 					},
 				},
 			},

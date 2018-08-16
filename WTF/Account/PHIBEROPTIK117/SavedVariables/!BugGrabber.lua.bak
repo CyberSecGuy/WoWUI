@@ -1,7 +1,7 @@
 
 BugGrabberDB = {
-	["session"] = 22,
 	["lastSanitation"] = 3,
+	["session"] = 23,
 	["errors"] = {
 		{
 			["message"] = "...illMaster_Accounting\\TradeSkillMaster_Accounting-be60832.lua:68: TradeSkillMaster_Accounting",
@@ -115,8 +115,8 @@ BugGrabberDB = {
 			["message"] = "Interface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: Usage: NewModule(name, [prototype, [lib, lib, lib, ...]): 'name' - Module 'Friendly Fire' already exists.",
 			["time"] = "2018/04/08 20:30:37",
 			["stack"] = "[C]: ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:270: in function `NewModule'\nInterface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: in function `?'\nInterface\\AddOns\\Skada\\Skada-1.7.2.lua:2907: in function <Interface\\AddOns\\Skada\\Skada.lua:2884>\n(tail call): ?\n[C]: ?\n[string \"safecall Dispatcher[1]\"]:9: in function <[string \"safecall Dispatcher[1]\"]:5>\n(tail call): ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:558: in function `EnableAddon'\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:651: in function <...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0.lua:636>\n[C]: in function `LoadAddOn'\nInterface\\FrameXML\\UIParent.lua:429: in function `UIParentLoadAddOn'\nInterface\\FrameXML\\UIParent.lua:528: in function `TimeManager_LoadUI'\nInterface\\FrameXML\\UIParent.lua:1114: in function <Interface\\FrameXML\\UIParent.lua:1011>",
-			["session"] = 22,
-			["counter"] = 22,
+			["session"] = 23,
+			["counter"] = 23,
 		}, -- [16]
 	},
 }

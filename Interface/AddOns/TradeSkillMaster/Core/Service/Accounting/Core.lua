@@ -8,8 +8,8 @@
 
 local _, TSM = ...
 local Accounting = TSM:NewPackage("Accounting")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
-local private = { }
+local L = TSM.L
+local private = {}
 
 
 
@@ -17,77 +17,57 @@ local private = { }
 -- Module Functions
 -- ============================================================================
 
-function Accounting.GetSummarySalesInfo(timePeriod, selectedCharacter)
-	local topItemString, topItemTotal, total, numDays = nil, 0, 0, 1
-	local dateFilter = private.DateFilter(timePeriod)
-	for itemString, data in pairs(TSM.old.Accounting.items) do
-		local itemTotal = 0
-		for _, record in ipairs(data.sales) do
-			if selectedCharacter == record.player or selectedCharacter == TSMAPI_FOUR.PlayerInfo.GetPlayerGuild(record.player) or selectedCharacter == L["All Characters and Guilds"] then
-				if dateFilter <= record.time then
-					local daysAgo = floor((time() - record.time) / (24 * 60 * 60))
-					numDays = max(numDays, daysAgo)
-					itemTotal = itemTotal + record.copper * record.quantity
-				end
-			end
-		end
-		total = total + itemTotal
-		if itemTotal > topItemTotal then
-			topItemString = itemString
-			topItemTotal = itemTotal
-		end
-	end
-	return total, TSMAPI_FOUR.Util.Round(total / numDays), topItemString
+function Accounting.GetSummarySalesInfo(timeFilter, characterFilter)
+	return private.GetSummaryInfoByType("sale", timeFilter, characterFilter)
 end
 
-function Accounting.GetSummaryExpensesInfo(timePeriod, selectedCharacter)
-	local topItemString, topItemTotal, total, numDays = nil, 0, 0, 1
-	local dateFilter = private.DateFilter(timePeriod)
-	for itemString, data in pairs(TSM.old.Accounting.items) do
-		local itemTotal = 0
-		for _, record in ipairs(data.buys) do
-			if selectedCharacter == record.player or selectedCharacter == TSMAPI_FOUR.PlayerInfo.GetPlayerGuild(record.player) or selectedCharacter == L["All Characters and Guilds"] then
-				if dateFilter <= record.time then
-					local daysAgo = floor((time() - record.time) / (24 * 60 * 60))
-					numDays = max(numDays, daysAgo)
-					itemTotal = itemTotal + record.copper * record.quantity
-				end
-			end
-		end
-		total = total + itemTotal
-		if itemTotal > topItemTotal then
-			topItemString = itemString
-			topItemTotal = itemTotal
-		end
-	end
-	return total, TSMAPI_FOUR.Util.Round(total / numDays), topItemString
+function Accounting.GetSummaryExpensesInfo(timeFilter, characterFilter)
+	return private.GetSummaryInfoByType("buy", timeFilter, characterFilter)
 end
 
-function Accounting.GetSummaryProfitTopItem(timePeriod, selectedCharacter)
+function Accounting.GetSummaryProfitTopItem(timeFilter, characterFilter)
+	local query = TSM.Accounting.Transactions.CreateQuery()
+		:Select("type", "itemString", "price", "quantity")
+		:GreaterThan("time", private.DateFilter(timeFilter))
+	if characterFilter then
+		query:Or()
+				:Equal("player", characterFilter)
+				:Custom(private.GuildQueryFilter, characterFilter)
+			:End()
+	end
+
+	local totalSalePrice = TSMAPI_FOUR.Util.AcquireTempTable()
+	local numSales = TSMAPI_FOUR.Util.AcquireTempTable()
+	local totalBuyPrice = TSMAPI_FOUR.Util.AcquireTempTable()
+	local numBuys = TSMAPI_FOUR.Util.AcquireTempTable()
+	for _, recordType, itemString, price, quantity in query:Iterator() do
+		if recordType == "sale" then
+			totalSalePrice[itemString] = (totalSalePrice[itemString] or 0) + price * quantity
+			numSales[itemString] = (numSales[itemString] or 0) + quantity
+		elseif recordType == "buy" then
+			totalBuyPrice[itemString] = (totalBuyPrice[itemString] or 0) + price * quantity
+			numBuys[itemString] = (numBuys[itemString] or 0) + quantity
+		else
+			error("Invalid recordType: "..tostring(recordType))
+		end
+	end
+	query:Release()
+
 	local topItemString, topItemProfit = nil, 0
-	local dateFilter = private.DateFilter(timePeriod)
-	for itemString, data in pairs(TSM.old.Accounting.items) do
-		local totalBuy, numBuys, totalSale, numSales = 0, 0, 0, 0
-		for _, record in ipairs(data.buys) do
-			totalBuy = totalBuy + record.copper * record.quantity
-			numBuys = numBuys + record.quantity
-		end
-		for _, record in ipairs(data.sales) do
-			if selectedCharacter == record.player or selectedCharacter == TSMAPI_FOUR.PlayerInfo.GetPlayerGuild(record.player) or selectedCharacter == L["All Characters and Guilds"] then
-				if dateFilter <= record.time then
-					totalSale = totalSale + record.copper * record.quantity
-					numSales = numSales + record.quantity
-				end
-			end
-		end
-		if numBuys > 0 and numSales > 0 then
-			local profit = (totalSale / numSales - totalBuy / numBuys) * min(numBuys, numSales)
+	for itemString in pairs(numSales) do
+		if numBuys[itemString] then
+			local profit = (totalSalePrice[itemString] / numSales[itemString] - totalBuyPrice[itemString] / numBuys[itemString]) * min(numSales[itemString], numBuys[itemString])
 			if profit > topItemProfit then
 				topItemString = itemString
 				topItemProfit = profit
 			end
 		end
 	end
+	TSMAPI_FOUR.Util.ReleaseTempTable(totalSalePrice)
+	TSMAPI_FOUR.Util.ReleaseTempTable(numSales)
+	TSMAPI_FOUR.Util.ReleaseTempTable(totalBuyPrice)
+	TSMAPI_FOUR.Util.ReleaseTempTable(numBuys)
+
 	return topItemString
 end
 
@@ -111,4 +91,44 @@ function private.DateFilter(timePeriod)
 		error("Unknown Time Period")
 	end
 	return dateFilter
+end
+
+function private.GuildQueryFilter(row, guildFilter)
+	return TSMAPI_FOUR.PlayerInfo.GetPlayerGuild(row:GetField("player")) == guildFilter
+end
+
+function private.GetSummaryInfoByType(recordType, timeFilter, characterFilter)
+	local query = TSM.Accounting.Transactions.CreateQuery()
+		:Select("itemString", "price", "quantity", "time")
+		:Equal("type", recordType)
+		:GreaterThan("time", private.DateFilter(timeFilter))
+	if characterFilter then
+		query:Or()
+				:Equal("player", characterFilter)
+				:Custom(private.GuildQueryFilter, characterFilter)
+			:End()
+	end
+
+	local numDays = 1
+	local itemTotals = TSMAPI_FOUR.Util.AcquireTempTable()
+	for _, itemString, price, quantity, timestamp in query:Iterator() do
+		local daysAgo = floor((time() - timestamp) / (24 * 60 * 60))
+		numDays = max(numDays, daysAgo)
+		itemTotals[itemString] = (itemTotals[itemString] or 0) + price * quantity
+	end
+	query:Release()
+
+	local topItemString = nil
+	local topItemTotal = 0
+	local total = 0
+	for itemString, itemTotal in pairs(itemTotals) do
+		total = total + itemTotal
+		if itemTotal > topItemTotal then
+			topItemString = itemString
+			topItemTotal = itemTotal
+		end
+	end
+	TSMAPI_FOUR.Util.ReleaseTempTable(itemTotals)
+
+	return total, TSMAPI_FOUR.Util.Round(total / numDays), topItemString
 end

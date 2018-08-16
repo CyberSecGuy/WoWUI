@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Tooltip = TSM.MainUI.Settings:NewPackage("Tooltip")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 
 
 

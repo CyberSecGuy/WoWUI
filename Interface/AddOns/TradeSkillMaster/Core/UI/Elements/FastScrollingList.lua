@@ -20,6 +20,7 @@ local private = {
 	rowFrameLookup = {},
 }
 local MOUSE_WHEEL_SCROLL_AMOUNT = 60
+local SCROLL_TO_DATA_TOTAL_TIME_S = 0.1
 
 
 
@@ -42,7 +43,7 @@ function FastScrollingList.__init(self)
 	self._scrollFrame:SetScript("OnMouseWheel", private.FrameOnMouseWheel)
 	private.frameFastScrollingListLookup[self._scrollFrame] = self
 
-	self._scrollbar = TSM.UI.CreateScrollbar(self._scrollFrame, 0)
+	self._scrollbar = TSM.UI.CreateScrollbar(self._scrollFrame)
 
 	self._content = CreateFrame("Frame", nil, self._scrollFrame)
 	self._content:SetPoint("TOPLEFT")
@@ -52,6 +53,8 @@ function FastScrollingList.__init(self)
 	self._rows = {}
 	self._data = {}
 	self._scrollValue = 0
+	self._targetScrollValue = nil
+	self._totalScrollDistance = nil
 end
 
 function FastScrollingList.Acquire(self)
@@ -73,6 +76,8 @@ function FastScrollingList.Acquire(self)
 end
 
 function FastScrollingList.Release(self)
+	self._targetScrollValue = nil
+	self._totalScrollDistance = nil
 	for _, row in ipairs(self._rows) do
 		row:Release()
 		tinsert(private.recycledRows, row)
@@ -170,6 +175,35 @@ function FastScrollingList._GetListRow(self)
 	return row
 end
 
+function FastScrollingList._ScrollToData(self, data)
+	-- Dont scroll up to root group (happens after deletion etc)
+	if self._selectedGroup == TSM.CONST.ROOT_GROUP_PATH then
+		return
+	end
+
+	local rowHeight = self:_GetStyle("rowHeight")
+	local visibleHeight = self._scrollFrame:GetHeight()
+	local currentOffset = self._scrollbar:GetValue()
+	local dataIndex = TSMAPI_FOUR.Util.TableKeyByValue(self._data, data)
+	-- if we are going to scroll up/down, we want to scroll such that the top of the passed row is in the visible area
+	-- by at least 1 row height
+	local scrollUpOffset = max(rowHeight * (dataIndex - 1) - rowHeight, 0)
+	local scrollDownOffset = min(rowHeight * dataIndex + rowHeight - visibleHeight, self:_GetMaxScroll())
+	if scrollUpOffset < currentOffset and scrollDownOffset > currentOffset then
+		-- it's impossible to scroll to the right place, so do nothing
+	elseif scrollUpOffset < currentOffset then
+		-- we need to scroll up
+		self._targetScrollValue = scrollUpOffset
+		self._totalScrollDistance = currentOffset - scrollUpOffset
+	elseif scrollDownOffset > currentOffset then
+		-- we need to scroll down
+		self._targetScrollValue = scrollDownOffset
+		self._totalScrollDistance = scrollDownOffset - currentOffset
+	else
+		-- the data is already in the visible area, so do nothing
+	end
+end
+
 function FastScrollingList._OnScrollValueChanged(self, value, noDraw)
 	self._scrollValue = value
 	if not noDraw then
@@ -205,9 +239,23 @@ function private.OnScrollbarValueChangedNoDraw(scrollbar, value)
 	self:_OnScrollValueChanged(value, true)
 end
 
-function private.FrameOnUpdate(frame)
+function private.FrameOnUpdate(frame, elapsed)
+	elapsed = min(elapsed, 0.01)
 	local self = private.frameFastScrollingListLookup[frame]
-	if frame:IsMouseOver() and self:_GetMaxScroll() > 0 then
+
+	local scrollValue = self._scrollbar:GetValue()
+	if self._targetScrollValue then
+		local direction = scrollValue < self._targetScrollValue and 1 or -1
+		local newScrollValue = scrollValue + direction * self._totalScrollDistance * elapsed / SCROLL_TO_DATA_TOTAL_TIME_S
+		self._scrollbar:SetValue(newScrollValue)
+		if direction * newScrollValue >= direction * self._targetScrollValue or newScrollValue <= 0 or newScrollValue >= self:_GetMaxScroll() then
+			-- we are done scrolling
+			self._targetScrollValue = nil
+			self._totalScrollDistance = nil
+		end
+	end
+
+	if (frame:IsMouseOver() and self:_GetMaxScroll() > 0) or self._scrollbar.dragging then
 		self._scrollbar:Show()
 	else
 		self._scrollbar:Hide()
@@ -216,6 +264,8 @@ end
 
 function private.FrameOnMouseWheel(frame, direction)
 	local self = private.frameFastScrollingListLookup[frame]
+	self._targetScrollValue = nil
+	self._totalScrollDistance = nil
 	local scrollAmount = MOUSE_WHEEL_SCROLL_AMOUNT
 	self._scrollbar:SetValue(self._scrollbar:GetValue() + -1 * direction * scrollAmount)
 end

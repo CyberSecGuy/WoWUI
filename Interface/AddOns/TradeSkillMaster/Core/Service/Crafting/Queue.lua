@@ -8,13 +8,11 @@
 
 local _, TSM = ...
 local Queue = TSM.Crafting:NewPackage("Queue")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { db = nil }
 local QUEUE_DB_SCHEMA = {
 	fields = {
 		spellId = "number",
-		profession = "string",
-		players = "string",
 		num = "number",
 	},
 	fieldAttributes = {
@@ -29,10 +27,16 @@ local QUEUE_DB_SCHEMA = {
 -- ============================================================================
 
 function Queue.OnEnable()
-	private.db = TSMAPI_FOUR.Database.New(QUEUE_DB_SCHEMA)
+	private.db = TSMAPI_FOUR.Database.New(QUEUE_DB_SCHEMA, "CRAFTING_QUEUE")
+	private.db:SetQueryUpdatesPaused(true)
 	for spellId, data in pairs(TSM.db.factionrealm.internalData.crafts) do
 		Queue.SetNum(spellId, data.queued) -- sanitize / cache the number queued
 	end
+	private.db:SetQueryUpdatesPaused(false)
+end
+
+function Queue.GetDBForJoin()
+	return private.db
 end
 
 function Queue.CreateQuery()
@@ -46,37 +50,28 @@ function Queue.SetNum(spellId, num)
 		return
 	end
 	craftInfo.queued = max(TSMAPI_FOUR.Util.Round(num or 0), 0)
-	local row = private.db:NewQuery()
+	local query = private.db:NewQuery()
 		:Equal("spellId", spellId)
-		:GetFirstResultAndRelease()
+	local row = query:GetFirstResult()
 	if row and craftInfo.queued == 0 then
 		-- delete this row
 		private.db:DeleteRow(row)
 	elseif row then
 		-- update this row
 		row:SetField("num", num)
-		row:Save()
+			:Update()
 	elseif craftInfo.queued > 0 then
 		-- insert a new row
-		local players = TSMAPI_FOUR.Util.AcquireTempTable()
-		for player in pairs(craftInfo.players) do
-			tinsert(players, player)
-		end
-		local playersStr = strjoin(",", TSMAPI_FOUR.Util.UnpackAndReleaseTempTable(players))
 		private.db:NewRow()
 			:SetField("spellId", spellId)
-			:SetField("profession", craftInfo.profession)
-			:SetField("players", playersStr)
 			:SetField("num", num)
-			:Save()
+			:Create()
 	end
+	query:Release()
 end
 
 function Queue.GetNum(spellId)
-	local row = private.db:NewQuery()
-		:Equal("spellId", spellId)
-		:GetFirstResultAndRelease()
-	return row and row:GetField("num") or 0
+	return private.db:GetUniqueRowField("spellId", spellId, "num") or 0
 end
 
 function Queue.Add(spellId, quantity)
@@ -90,7 +85,7 @@ end
 function Queue.Clear()
 	local query = private.db:NewQuery()
 		:Select("spellId")
-	for _, spellId in query:Iterator(true) do
+	for _, spellId in query:Iterator() do
 		local craftInfo = TSM.db.factionrealm.internalData.crafts[spellId]
 		if craftInfo then
 			craftInfo.queued = 0
@@ -101,17 +96,14 @@ function Queue.Clear()
 end
 
 function Queue.GetNumItems()
-	local query = private.db:NewQuery()
-	local num = query:Count()
-	query:Release()
-	return num
+	return private.db:NewQuery():CountAndRelease()
 end
 
 function Queue.GetTotalCostAndProfit()
 	local totalCost, totalProfit = nil, nil
 	local query = private.db:NewQuery()
 		:Select("spellId", "num")
-	for _, spellId, numQueued in query:Iterator(true) do
+	for _, spellId, numQueued in query:Iterator() do
 		local numResult = TSM.db.factionrealm.internalData.crafts[spellId] and TSM.db.factionrealm.internalData.crafts[spellId].numResult or 0
 		local cost, _, profit = TSM.Crafting.Cost.GetCostsBySpellId(spellId)
 		if cost then
@@ -128,10 +120,14 @@ end
 function Queue.RestockGroups(groups)
 	private.db:SetQueryUpdatesPaused(true)
 	for _, groupPath in ipairs(groups) do
-		for operationName, operationSettings in TSMAPI_FOUR.Operations.Iterator("Crafting", groupPath) do
+		for _, operationName, operationSettings in TSM.Operations.GroupOperationIterator("Crafting", groupPath) do
 			if private.IsOperationValid(operationName, operationSettings) then
-				for _, itemString in TSMAPI_FOUR.Groups.ItemIterator(groupPath) do
-					private.RestockItem(itemString, operationSettings)
+				if groupPath == TSM.CONST.ROOT_GROUP_PATH then
+					-- TODO
+				else
+					for _, itemString in TSM.Groups.ItemIterator(groupPath) do
+						private.RestockItem(itemString, operationSettings)
+					end
 				end
 			end
 		end

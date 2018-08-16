@@ -1,8 +1,6 @@
 local E, L, V, P, G = unpack(ElvUI);
 local BUI = E:GetModule('BenikUI');
-local BUID = E:GetModule('BuiDashboard');
-local BUIT = E:GetModule('BuiTokensDashboard');
-local BUIP = E:GetModule('BuiProfessionsDashboard')
+local BUID = E:GetModule('BuiDashboards');
 
 local tinsert, pairs, ipairs, gsub, unpack, format = table.insert, pairs, ipairs, gsub, unpack, string.format
 local GetCurrencyInfo = GetCurrencyInfo
@@ -24,23 +22,22 @@ local dungeonTokens = {
 	614,	-- Mote of Darkness
 	615,	-- Essence of Corrupted Deathwing
 	395,	-- Justice Points
-	--396,	-- Valor Points
 	823,	-- Apexis Crystal (for gear, like the valors)
 	994,	-- Seal of Tempered Fate (Raid loot roll)
 	1129,	-- Seal of Inevitable Fate
 	1191, 	-- Valor Points (6.23)
 	1273,	-- Seal of Broken Fate (Raid)
+	1580,	-- Seal of Wartorn Fate
 }
 
 local pvpTokens = {
-	--390,	-- Conquest Points
-	--392,	-- Honor Points
 	391,	-- Tol Barad Commendation
 	944,	-- Artifact Fragment (PvP)
 	1149,	-- Sightless Eye (PvP)
 	1268,	-- Timeworn Artifact (Honor Points?)
 	1356,	-- Echoes of Battle (PvP Gear)
 	1357,	-- Echoes of Domination (Elite PvP Gear)
+	1587,	-- War Supplies
 }
 
 local secondaryTokens = {
@@ -73,6 +70,11 @@ local miscTokens = {
 	1416,	-- Coins of Air
 	1508,	-- Veiled Argunite
 	1533,	-- Wakening Essence
+	-- BfA
+	1560, 	-- War Resources
+	1565,	-- Rich Azerite Fragment
+	1710,	-- Seafarer's Dubloon
+	
 }
 
 local archyTokens = {
@@ -84,7 +86,7 @@ local archyTokens = {
 	398,	-- Draenei Archaeology Fragment
 	399,	-- Vrykul Archaeology Fragment
 	400,	-- Nerubian Archaeology Fragment
-	401,	-- Tol'vir Archaeology Fragment	
+	401,	-- Tol'vir Archaeology Fragment
 	676,	-- Pandaren Archaeology Fragment
 	677,	-- Mogu Archaeology Fragment
 	754,	-- Mantid Archaeology Fragment
@@ -94,6 +96,8 @@ local archyTokens = {
 	1172,	-- Highborne Archaeology Fragment
 	1173,	-- Highmountain Tauren Archaeology Fragment
 	1174,	-- Demonic Archaeology Fragment
+	1534,	-- Zandalari Archaeology Fragment
+	1535,	-- Drust Archaeology Fragment
 }
 
 local currencyTables = {
@@ -104,7 +108,7 @@ local currencyTables = {
 	{archyTokens, 'aTokens'},
 }
 
-local boards = {"FPS", "MS", "Memory", "Durability", "Volume"}
+local boards = {"FPS", "MS", "Durability", "Bags", "Volume"}
 
 local function UpdateSystemOptions()
 	for _, boardname in pairs(boards) do
@@ -129,7 +133,7 @@ local function UpdateSystemOptions()
 		},
 		disabled = function() return not E.db.dashboards.system.chooseSystem.MS end,
 		get = function(info) return E.db.dashboards.system.latency end,
-		set = function(info, value) E.db.dashboards.system.latency = value; BUID:CreateMs(); end,
+		set = function(info, value) E.db.dashboards.system.latency = value; E:StaticPopup_Show('PRIVATE_RL'); end,
 	}
 end
 
@@ -152,7 +156,7 @@ local function UpdateTokenOptions()
 					name = '|T'..icon..':18|t '..(tname:gsub(' '..PROFESSIONS_ARCHAEOLOGY..' ', ' ')), -- remove 'Archaeology' from the name, to shorten the options a bit.
 					desc = L['Enable/Disable ']..tname,
 					get = function(info) return E.private.dashboards.tokens.chooseTokens[id] end,
-					set = function(info, value) E.private.dashboards.tokens.chooseTokens[id] = value; BUIT:UpdateTokens(); end,
+					set = function(info, value) E.private.dashboards.tokens.chooseTokens[id] = value; BUID:UpdateTokens(); BUID:UpdateTokenSettings(); end,
 					disabled = function() return not isDiscovered end,
 				}
 			end
@@ -183,7 +187,7 @@ local function UpdateProfessionOptions()
 					name = '|T'..icon..':18|t '..pname,
 					desc = L['Enable/Disable ']..pname,
 					get = function(info) return E.private.dashboards.professions.choosePofessions[id] end,
-					set = function(info, value) E.private.dashboards.professions.choosePofessions[id] = value; BUIP:UpdateProfessions(); end,
+					set = function(info, value) E.private.dashboards.professions.choosePofessions[id] = value; BUID:UpdateProfessions(); BUID:UpdateProfessionSettings(); end,
 				}
 			end
 		end
@@ -223,10 +227,26 @@ local function dashboardsTable()
 				guiInline = true,
 				args = {
 					barColor = {
-						type = "color",
+						type = "select",
 						order = 1,
 						name = L['Bar Color'],
-						hasAlpha = false,
+						values = {
+							[1] = CLASS_COLORS,
+							[2] = CUSTOM,
+						},
+						get = function(info) return E.db.dashboards[ info[#info] ] end,
+						set = function(info, value) E.db.dashboards[ info[#info] ] = value;
+							if E.db.dashboards.professions.enableProfessions then BUID:UpdateProfessionSettings(); end
+							if E.db.dashboards.tokens.enableTokens then BUID:UpdateTokenSettings(); end
+							if E.db.dashboards.system.enableSystem then BUID:UpdateSystemSettings(); end
+						end,
+					},
+					customBarColor = {
+						type = "select",
+						order = 2,
+						type = "color",
+						name = COLOR_PICKER,
+						disabled = function() return E.db.dashboards.barColor == 1 end,
 						get = function(info)
 							local t = E.db.dashboards[ info[#info] ]
 							local d = P.dashboards[info[#info]]
@@ -236,13 +256,18 @@ local function dashboardsTable()
 							E.db.dashboards[ info[#info] ] = {}
 							local t = E.db.dashboards[ info[#info] ]
 							t.r, t.g, t.b, t.a = r, g, b, a
-							if E.db.dashboards.professions.enableProfessions then BUIP:UpdateProfessions() end
-							if E.db.dashboards.tokens.enableTokens then BUIT:UpdateTokens() end
-							if E.db.dashboards.system.enableSystem then BUID:BarColor() end
+							if E.db.dashboards.professions.enableProfessions then BUID:UpdateProfessionSettings(); end
+							if E.db.dashboards.tokens.enableTokens then BUID:UpdateTokenSettings(); end
+							if E.db.dashboards.system.enableSystem then BUID:UpdateSystemSettings(); end
 						end,
 					},
+					spacer = {
+						order = 3,
+						type = 'header',
+						name = '',
+					},
 					textColor = {
-						order = 2,
+						order = 4,
 						type = "select",
 						name = L['Text Color'],
 						values = {
@@ -250,14 +275,14 @@ local function dashboardsTable()
 							[2] = CUSTOM,
 						},
 						get = function(info) return E.db.dashboards[ info[#info] ] end,
-						set = function(info, value) E.db.dashboards[ info[#info] ] = value; 
-							if E.db.dashboards.professions.enableProfessions then BUIP:UpdateProfessions() end
-							if E.db.dashboards.tokens.enableTokens then BUIT:UpdateTokens() end
-							if E.db.dashboards.system.enableSystem then BUID:FontColor() end
+						set = function(info, value) E.db.dashboards[ info[#info] ] = value;
+							if E.db.dashboards.professions.enableProfessions then BUID:UpdateProfessionSettings(); end
+							if E.db.dashboards.tokens.enableTokens then BUID:UpdateTokenSettings(); end
+							if E.db.dashboards.system.enableSystem then BUID:UpdateSystemSettings(); end
 						end,
 					},
 					customTextColor = {
-						order = 3,
+						order = 5,
 						type = "color",
 						name = COLOR_PICKER,
 						disabled = function() return E.db.dashboards.textColor == 1 end,
@@ -270,9 +295,9 @@ local function dashboardsTable()
 							E.db.dashboards[ info[#info] ] = {}
 							local t = E.db.dashboards[ info[#info] ]
 							t.r, t.g, t.b, t.a = r, g, b, a
-							if E.db.dashboards.professions.enableProfessions then BUIP:UpdateProfessions() end
-							if E.db.dashboards.tokens.enableTokens then BUIT:UpdateTokens() end
-							if E.db.dashboards.system.enableSystem then BUID:FontColor() end
+							if E.db.dashboards.professions.enableProfessions then BUID:UpdateProfessionSettings(); end
+							if E.db.dashboards.tokens.enableTokens then BUID:UpdateTokenSettings(); end
+							if E.db.dashboards.system.enableSystem then BUID:UpdateSystemSettings(); end
 						end,
 					},
 				},
@@ -285,9 +310,9 @@ local function dashboardsTable()
 				disabled = function() return not E.db.dashboards.system.enableSystem and not E.db.dashboards.tokens.enableTokens and not E.db.dashboards.professions.enableProfessions end,
 				get = function(info) return E.db.dashboards.dashfont[ info[#info] ] end,
 				set = function(info, value) E.db.dashboards.dashfont[ info[#info] ] = value;
-					if E.db.dashboards.system.enableSystem then BUID:ChangeFont() end;
-					if E.db.dashboards.tokens.enableTokens then BUIT:UpdateTokens() end;
-					if E.db.dashboards.professions.enableProfessions then BUIP:UpdateProfessions() end;
+					if E.db.dashboards.system.enableSystem then BUID:UpdateSystemSettings(); end;
+					if E.db.dashboards.professions.enableProfessions then BUID:UpdateProfessionSettings(); end;
+					if E.db.dashboards.tokens.enableTokens then BUID:UpdateTokenSettings(); end;
 					end,
 				args = {
 					useDTfont = {
@@ -352,7 +377,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.system.enableSystem end,
 						get = function(info) return E.db.dashboards.system.combat end,
-						set = function(info, value) E.db.dashboards.system.combat = value; BUID:EnableDisableCombat(); end,
+						set = function(info, value) E.db.dashboards.system.combat = value; BUID:EnableDisableCombat(BUI_SystemDashboard, 'system'); end,
 					},
 					width = {
 						order = 4,
@@ -362,7 +387,7 @@ local function dashboardsTable()
 						min = 120, max = 220, step = 1,
 						disabled = function() return not E.db.dashboards.system.enableSystem end,
 						get = function(info) return E.db.dashboards.system.width end,
-						set = function(info, value) E.db.dashboards.system.width = value; BUID:UpdateSysHolderDimensions() end,
+						set = function(info, value) E.db.dashboards.system.width = value; BUID:UpdateHolderDimensions(BUI_SystemDashboard, 'system', BUI.SystemDB); BUID:UpdateSystemSettings(); end,
 					},
 					style = {
 						order = 5,
@@ -370,7 +395,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.system.enableSystem end,
 						get = function(info) return E.db.dashboards.system.style end,
-						set = function(info, value) E.db.dashboards.system.style = value; BUID:ToggleStyle(); end,
+						set = function(info, value) E.db.dashboards.system.style = value; BUID:ToggleStyle(BUI_SystemDashboard, 'system'); end,
 					},
 					transparency = {
 						order = 6,
@@ -378,7 +403,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.system.enableSystem end,
 						get = function(info) return E.db.dashboards.system.transparency end,
-						set = function(info, value) E.db.dashboards.system.transparency = value; BUID:ToggleTransparency(); end,
+						set = function(info, value) E.db.dashboards.system.transparency = value; BUID:ToggleTransparency(BUI_SystemDashboard, 'system'); end,
 					},
 					backdrop = {
 						order = 7,
@@ -386,7 +411,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.system.enableSystem end,
 						get = function(info) return E.db.dashboards.system.backdrop end,
-						set = function(info, value) E.db.dashboards.system.backdrop = value; BUID:ToggleTransparency(); end,
+						set = function(info, value) E.db.dashboards.system.backdrop = value; BUID:ToggleTransparency(BUI_SystemDashboard, 'system'); end,
 					},
 					chooseSystem = {
 						order = 8,
@@ -426,7 +451,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.tokens.enableTokens end,
 						get = function(info) return E.db.dashboards.tokens.combat end,
-						set = function(info, value) E.db.dashboards.tokens.combat = value; BUIT:EnableDisableCombat(); end,
+						set = function(info, value) E.db.dashboards.tokens.combat = value; BUID:EnableDisableCombat(BUI_TokensDashboard, 'tokens'); end,
 					},
 					mouseover = {
 						order = 4,
@@ -435,7 +460,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.tokens.enableTokens end,
 						get = function(info) return E.db.dashboards.tokens.mouseover end,
-						set = function(info, value) E.db.dashboards.tokens.mouseover = value; BUIT:UpdateTokens(); end,
+						set = function(info, value) E.db.dashboards.tokens.mouseover = value; BUID:UpdateTokens(); BUID:UpdateTokenSettings(); end,
 					},
 					width = {
 						order = 5,
@@ -445,7 +470,7 @@ local function dashboardsTable()
 						min = 120, max = 220, step = 1,
 						disabled = function() return not E.db.dashboards.tokens.enableTokens end,
 						get = function(info) return E.db.dashboards.tokens.width end,
-						set = function(info, value) E.db.dashboards.tokens.width = value; BUIT:UpdateTHolderDimensions(); end,
+						set = function(info, value) E.db.dashboards.tokens.width = value; BUID:UpdateHolderDimensions(BUI_TokensDashboard, 'tokens', BUI.TokensDB); BUID:UpdateTokenSettings(); end,
 					},
 					style = {
 						order = 6,
@@ -453,7 +478,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.tokens.enableTokens end,
 						get = function(info) return E.db.dashboards.tokens.style end,
-						set = function(info, value) E.db.dashboards.tokens.style = value; BUIT:ToggleStyle(); end,
+						set = function(info, value) E.db.dashboards.tokens.style = value; BUID:ToggleStyle(BUI_TokensDashboard, 'tokens'); end,
 					},
 					transparency = {
 						order = 7,
@@ -461,7 +486,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.tokens.enableTokens end,
 						get = function(info) return E.db.dashboards.tokens.transparency end,
-						set = function(info, value) E.db.dashboards.tokens.transparency = value; BUIT:ToggleTransparency(); end,
+						set = function(info, value) E.db.dashboards.tokens.transparency = value; BUID:ToggleTransparency(BUI_TokensDashboard, 'tokens'); end,
 					},
 					backdrop = {
 						order = 8,
@@ -469,7 +494,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.tokens.enableTokens end,
 						get = function(info) return E.db.dashboards.tokens.backdrop end,
-						set = function(info, value) E.db.dashboards.tokens.backdrop = value; BUIT:ToggleTransparency(); end,
+						set = function(info, value) E.db.dashboards.tokens.backdrop = value; BUID:ToggleTransparency(BUI_TokensDashboard, 'tokens'); end,
 					},
 					tooltip = {
 						order = 9,
@@ -478,7 +503,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.tokens.enableTokens end,
 						get = function(info) return E.db.dashboards.tokens.tooltip end,
-						set = function(info, value) E.db.dashboards.tokens.tooltip = value; BUIT:UpdateTokens(); end,
+						set = function(info, value) E.db.dashboards.tokens.tooltip = value; BUID:UpdateTokens(); BUID:UpdateTokenSettings(); end,
 					},
 					zeroamount = {
 						order = 10,
@@ -487,7 +512,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.tokens.enableTokens end,
 						get = function(info) return E.db.dashboards.tokens.zeroamount end,
-						set = function(info, value) E.db.dashboards.tokens.zeroamount = value; BUIT:UpdateTokens(); end,
+						set = function(info, value) E.db.dashboards.tokens.zeroamount = value; BUID:UpdateTokens(); BUID:UpdateTokenSettings(); end,
 					},
 					weekly = {
 						order = 11,
@@ -496,7 +521,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.tokens.enableTokens end,
 						get = function(info) return E.db.dashboards.tokens.weekly end,
-						set = function(info, value) E.db.dashboards.tokens.weekly = value; BUIT:UpdateTokens(); end,
+						set = function(info, value) E.db.dashboards.tokens.weekly = value; BUID:UpdateTokens(); BUID:UpdateTokenSettings(); end,
 					},
 					spacer = {
 						order = 20,
@@ -566,7 +591,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.professions.enableProfessions end,
 						get = function(info) return E.db.dashboards.professions.combat end,
-						set = function(info, value) E.db.dashboards.professions.combat = value; BUIP:EnableDisableCombat(); end,
+						set = function(info, value) E.db.dashboards.professions.combat = value; BUID:EnableDisableCombat(BUI_ProfessionsDashboard, 'professions'); end,
 					},
 					mouseover = {
 						order = 4,
@@ -575,7 +600,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.professions.enableProfessions end,
 						get = function(info) return E.db.dashboards.professions.mouseover end,
-						set = function(info, value) E.db.dashboards.professions.mouseover = value; BUIP:UpdateProfessions(); end,
+						set = function(info, value) E.db.dashboards.professions.mouseover = value; BUID:UpdateProfessions(); BUID:UpdateProfessionSettings(); end,
 					},
 					width = {
 						order = 5,
@@ -585,7 +610,7 @@ local function dashboardsTable()
 						min = 120, max = 220, step = 1,
 						disabled = function() return not E.db.dashboards.professions.enableProfessions end,
 						get = function(info) return E.db.dashboards.professions.width end,
-						set = function(info, value) E.db.dashboards.professions.width = value; BUIP:UpdatePholderDimensions(); end,
+						set = function(info, value) E.db.dashboards.professions.width = value; BUID:UpdateHolderDimensions(BUI_ProfessionsDashboard, 'professions', BUI.ProfessionsDB); BUID:UpdateProfessionSettings(); end,
 					},
 					style = {
 						order = 6,
@@ -593,7 +618,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.professions.enableProfessions end,
 						get = function(info) return E.db.dashboards.professions.style end,
-						set = function(info, value) E.db.dashboards.professions.style = value; BUIP:ToggleStyle(); end,
+						set = function(info, value) E.db.dashboards.professions.style = value; BUID:ToggleStyle(BUI_ProfessionsDashboard, 'professions'); end,
 					},
 					transparency = {
 						order = 7,
@@ -601,7 +626,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.professions.enableProfessions end,
 						get = function(info) return E.db.dashboards.professions.transparency end,
-						set = function(info, value) E.db.dashboards.professions.transparency = value; BUIP:ToggleTransparency(); end,
+						set = function(info, value) E.db.dashboards.professions.transparency = value; BUID:ToggleTransparency(BUI_ProfessionsDashboard, 'professions'); end,
 					},
 					backdrop = {
 						order = 8,
@@ -609,7 +634,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.professions.enableProfessions end,
 						get = function(info) return E.db.dashboards.professions.backdrop end,
-						set = function(info, value) E.db.dashboards.professions.backdrop = value; BUIP:ToggleTransparency(); end,
+						set = function(info, value) E.db.dashboards.professions.backdrop = value; BUID:ToggleTransparency(BUI_ProfessionsDashboard, 'professions'); end,
 					},
 					capped = {
 						order = 9,
@@ -618,7 +643,7 @@ local function dashboardsTable()
 						type = 'toggle',
 						disabled = function() return not E.db.dashboards.professions.enableProfessions end,
 						get = function(info) return E.db.dashboards.professions.capped end,
-						set = function(info, value) E.db.dashboards.professions.capped = value; BUIP:UpdateProfessions(); end,
+						set = function(info, value) E.db.dashboards.professions.capped = value; BUID:UpdateProfessions(); BUID:UpdateProfessionSettings(); end,
 					},
 				},
 			},

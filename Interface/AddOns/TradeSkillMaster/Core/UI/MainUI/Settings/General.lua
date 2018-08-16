@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local General = TSM.MainUI.Settings:NewPackage("General")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local LibDBIcon = LibStub("LibDBIcon-1.0")
 local private = { frame = nil, characterList = {}, guildList = {}, chatFrameList = {} }
 
@@ -86,6 +86,33 @@ function private.GetGeneralSettingsFrame()
 				:SetStyle("fontHeight", 12)
 				:SetText(L["Store operations globally"])
 				:SetScript("OnValueChanged", private.GlobalOperationsOnValueChanged)
+			)
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "groupPriceLabel")
+			:SetStyle("height", 18)
+			:SetStyle("margin.bottom", 4)
+			:SetStyle("fontHeight", 14)
+			:SetStyle("textColor", "#ffffff")
+			:SetText(L["Filter group item lists based on the following price source"])
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "groupPriceLine")
+			:SetLayout("HORIZONTAL")
+			:SetStyle("height", 26)
+			:SetStyle("margin.top", 8)
+			:SetStyle("margin.bottom", 24)
+			:AddChild(TSMAPI_FOUR.UI.NewElement("Input", "input")
+				:SetStyle("margin.right", 16)
+				:SetStyle("font", TSM.UI.Fonts.MontserratRegular)
+				:SetStyle("fontHeight", 14)
+				:SetStyle("justifyH", "LEFT")
+				:SetSettingInfo(TSM.db.global.coreOptions, "groupPriceSource", private.CheckCustomPrice)
+			)
+			:AddChild(TSMAPI_FOUR.UI.NewElement("ActionButton", "btn")
+				:SetStyle("width", 240)
+				:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
+				:SetStyle("fontHeight", 14)
+				:SetText(strupper(RESET))
+				:SetScript("OnClick", private.GroupPriceResetBtnOnClick)
 			)
 		)
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "dropdownLabelLine")
@@ -214,9 +241,9 @@ function private.GetGeneralSettingsFrame()
 end
 
 function private.AddProfileRows(frame)
-	for _, profileName in TSM.db:ProfileIterator() do
+	for index, profileName in TSM.db:ProfileIterator() do
 		local isCurrentProfile = profileName == TSM.db:GetCurrentProfile()
-		frame:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "profileRow_"..profileName)
+		frame:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "profileRow_"..index)
 			:SetLayout("HORIZONTAL")
 			:SetStyle("height", 28)
 			:SetStyle("margin.left", -16)
@@ -257,8 +284,8 @@ function private.AddProfileRows(frame)
 				:SetScript("OnLeave", TSM.UI.GetPropagateScriptFunc("OnLeave"))
 			)
 		)
-		frame:GetElement("profileRow_"..profileName..".duplicateBtn"):Hide()
-		frame:GetElement("profileRow_"..profileName..".deleteResetBtn"):Hide()
+		frame:GetElement("profileRow_"..index..".duplicateBtn"):Hide()
+		frame:GetElement("profileRow_"..index..".deleteResetBtn"):Hide()
 	end
 end
 
@@ -370,26 +397,8 @@ end
 
 function private.GlobalOperationsConfirmed(checkbox, newValue)
 	checkbox:SetChecked(newValue, true)
-	-- we shouldn't be running the OnProfileUpdated callback while switching profiles
-	TSM.Modules.ignoreProfileUpdated = true
 	TSM.db.global.coreOptions.globalOperations = newValue
-	if TSM.db.global.coreOptions.globalOperations then
-		-- move current profile to global
-		TSM.db.global.userData.operations = CopyTable(TSM.db.profile.userData.operations)
-		-- clear out old operations
-		for profile in TSMAPI:GetTSMProfileIterator() do
-			TSM.db.profile.userData.operations = nil
-		end
-	else
-		-- move global to all profiles
-		for profile in TSMAPI:GetTSMProfileIterator() do
-			TSM.db.profile.userData.operations = CopyTable(TSM.db.global.userData.operations)
-		end
-		-- clear out old operations
-		TSM.db.global.userData.operations = nil
-	end
-	TSM.Modules.ignoreProfileUpdated = false
-	TSM.Modules.ProfileUpdated()
+	TSM.Operations.SetStoredGlobally(newValue)
 end
 
 function private.ChatTabOnSelectionChanged(self, selection)
@@ -433,7 +442,14 @@ function private.ProfileCheckboxOnValueChanged(checkbox, value)
 		return
 	end
 	-- uncheck the current profile row
-	local currentProfileRow = checkbox:GetElement("__parent.__parent.profileRow_"..TSM.db:GetCurrentProfile())
+	local currentProfileIndex = nil
+	for index, profileName in TSM.db:ProfileIterator() do
+		if profileName == TSM.db:GetCurrentProfile() then
+			assert(not currentProfileIndex)
+			currentProfileIndex = index
+		end
+	end
+	local currentProfileRow = checkbox:GetElement("__parent.__parent.profileRow_"..currentProfileIndex)
 	currentProfileRow:GetElement("checkbox")
 		:SetChecked(false, true)
 	currentProfileRow:GetElement("deleteResetBtn")
@@ -450,8 +466,6 @@ function private.ProfileCheckboxOnValueChanged(checkbox, value)
 end
 
 function private.DuplicateProfileOnClick(button)
-	button:SetPressed(false)
-		:Draw()
 	local profileName = button:GetContext()
 	local desc = format(L["This will copy the settings from '%s' into your currently-active one."], profileName)
 	button:GetBaseElement():ShowConfirmationDialog(L["Duplicate Profile Confirmation"], desc, OKAY, private.DuplicateProfileConfirmed, profileName)
@@ -462,8 +476,6 @@ function private.DuplicateProfileConfirmed(profileName)
 end
 
 function private.ResetProfileOnClick(button)
-	button:SetPressed(false)
-		:Draw()
 	local desc = L["This will reset all groups and operations (if not stored globally) to be wiped from this profile."]
 	button:GetBaseElement():ShowConfirmationDialog(L["Reset Profile Confirmation"], desc, OKAY, private.ResetProfileConfirmed)
 end
@@ -473,8 +485,6 @@ function private.ResetProfileConfirmed()
 end
 
 function private.RemoveProfileOnClick(button)
-	button:SetPressed(false)
-		:Draw()
 	local profileName = button:GetContext()
 	local desc = format(L["This will permanently delete the '%s' profile."], profileName)
 	button:GetBaseElement():ShowConfirmationDialog(L["Delete Profile Confirmation"], desc, OKAY, private.DeleteProfileConfirmed, button, profileName)
@@ -490,8 +500,6 @@ function private.NewProfileInputOnEnterPressed(input)
 end
 
 function private.NewProfileBtnOnClick(button)
-	button:SetPressed(false)
-		:Draw()
 	local profileName = strtrim(button:GetElement("__parent.newProfileInput"):GetText())
 	if not TSM.db:IsValidProfileName(profileName) then
 		return TSM:Print(L["This is not a valid profile name. Profile names must be at least one character long and may not contain '@' characters."])
@@ -523,8 +531,6 @@ function private.NewAccountSyncInputOnEnterPressed(input)
 end
 
 function private.NewAccountSyncBtnOnClick(button)
-	button:SetPressed(false)
-		:Draw()
 	local input = button:GetElement("__parent.newAccountSyncInput")
 	local character = strtrim(input:GetText())
 	if TSM.Sync.Connection.Establish(character) then
@@ -534,4 +540,21 @@ function private.NewAccountSyncBtnOnClick(button)
 		input:SetText("")
 		input:Draw()
 	end
+end
+
+function private.CheckCustomPrice(value)
+	local isValid, err = TSMAPI_FOUR.CustomPrice.Validate(value)
+	if isValid then
+		return true
+	else
+		TSM:Print(L["Invalid custom price."].." "..err)
+		return false
+	end
+end
+
+function private.GroupPriceResetBtnOnClick(button)
+	TSM.db.global.coreOptions.groupPriceSource = TSM.db:GetDefault("global", "coreOptions", "groupPriceSource")
+    button:GetElement("__parent.input")
+        :SetText(TSM.db.global.coreOptions.groupPriceSource)
+        :Draw()
 end

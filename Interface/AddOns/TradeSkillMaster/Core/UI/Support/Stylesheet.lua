@@ -28,6 +28,11 @@ local DEFAULT_STYLESHEET = {
 	-- Element -> Text
 	[TSM.UI.Text] = {
 	},
+	-- Element -> PlayerGoldText
+	[TSM.UI.PlayerGoldText] = {
+		font =  TSM.UI.Fonts.RobotoMedium,
+		textColor =  "#ffffff",
+	},
 	-- Element -> Button
 	[TSM.UI.Button] = {
 		justifyH = "CENTER",
@@ -199,11 +204,12 @@ local DEFAULT_STYLESHEET = {
 	-- Element -> FastScrollingList -> GroupTree -> SelectionGroupTree
 	[TSM.UI.SelectionGroupTree] = {
 	},
-	-- Element -> FastScrollingTable
-	[TSM.UI.FastScrollingTable] = {
+	-- Element -> ScrollingTable
+	[TSM.UI.ScrollingTable] = {
 		rowHeight = 20,
 		highlight = "#996f6f6f",
 		headerBackground = "#585858",
+		lineColor = "#585858",
 		headerFont = TSM.UI.Fonts.MontserratBold,
 		headerFontHeight = 14,
 		background = "#000000",
@@ -215,25 +221,28 @@ local DEFAULT_STYLESHEET = {
 		scrollbarThumbHeight = 95,
 		colSpacing = 16,
 	},
-	-- Element -> FastScrollingTable -> SelectionScrollingTable
+	-- Element -> ScrollingTable -> QueryScrollingTable
+	[TSM.UI.QueryScrollingTable] = {
+	},
+	-- Element -> ScrollingTable -> QueryScrollingTable -> SelectionScrollingTable
 	[TSM.UI.SelectionScrollingTable] = {
 	},
-	-- Element -> FastScrollingTable -> ProfessionScrollingTable
+	-- Element -> ScrollingTable -> ProfessionScrollingTable
 	[TSM.UI.ProfessionScrollingTable] = {
 		altBackground = "#000000",
 		headerBackground = "#404040",
-		headerFont = TSM.UI.Fonts.MontserratRegular,
+		headerFont = TSM.UI.Fonts.MontserratMedium,
 		headerFontHeight = 12,
 		colSpacing = 10,
 	},
-	-- Element -> FastScrollingTable -> AuctionScrollingTable
+	-- Element -> ScrollingTable -> AuctionScrollingTable
 	[TSM.UI.AuctionScrollingTable] = {
 		headerFontHeight = 12,
 	},
-	-- Element -> FastScrollingTable -> AuctionScrollingTable -> ShoppingScrollingTable
+	-- Element -> ScrollingTable -> AuctionScrollingTable -> ShoppingScrollingTable
 	[TSM.UI.ShoppingScrollingTable] = {
 	},
-	-- Element -> FastScrollingTable -> AuctionScrollingTable -> SniperScrollingTable
+	-- Element -> ScrollingTable -> AuctionScrollingTable -> SniperScrollingTable
 	[TSM.UI.SniperScrollingTable] = {
 	},
 	-- Element -> Container
@@ -260,6 +269,10 @@ local DEFAULT_STYLESHEET = {
 	-- Element -> Container -> Frame
 	[TSM.UI.Frame] = {
 	},
+	-- Element -> Container -> Frame -> BorderedFrame
+	[TSM.UI.BorderedFrame] = {
+		borderTheme = "roundLight"
+	},
 	-- Element -> Container -> Frame -> AlphaAnimatedFrame
 	[TSM.UI.AlphaAnimatedFrame] = {
 	},
@@ -271,21 +284,14 @@ local DEFAULT_STYLESHEET = {
 	},
 	-- Element -> Container -> Frame -> ApplicationFrame
 	[TSM.UI.ApplicationFrame] = {
-	},
-	-- Element -> Container -> Frame -> ApplicationFrame -> SmallApplicationFrame
-	[TSM.UI.SmallApplicationFrame] = {
+		titleStyle = "TITLE_ONLY",
 	},
 	-- Element -> Container -> Frame -> ApplicationFrame -> LargeApplicationFrame
 	[TSM.UI.LargeApplicationFrame] = {
+		titleStyle = "FULL",
 		selectedTextColor = "#ffd839",
 		buttonFont = TSM.UI.Fonts.MontserratMedium,
 		buttonFontHeight = 16,
-	},
-	-- Element -> Container -> Frame -> ScrollingTable
-	[TSM.UI.ScrollingTable] = {
-		headerBackground = "#585858",
-		background = "#000000",
-		altBackground = "#171717",
 	},
 	-- Element -> Container -> Frame -> DividedContainer
 	[TSM.UI.DividedContainer] = {
@@ -385,9 +391,6 @@ local DEFAULT_STYLESHEET = {
 		expanderCollapsedBackgroundTexturePack = "iconPack.18x18/Carot/Collapsed",
 		expanderExpandedBackgroundTexturePack = "iconPack.18x18/Carot/Expanded",
 	},
-	-- Element -> Container -> ScrollList -> ScrollingTable_ScrollList
-	[TSM.UI.ScrollingTable_ScrollList] = {
-	},
 	-- Element -> Container -> ScrollList -> SelectionList
 	[TSM.UI.SelectionList] = {
 		rowHeight = 40,
@@ -398,6 +401,24 @@ local DEFAULT_STYLESHEET = {
 		rowHeight = 28,
 		headerFontHeight = 18,
 		fontHeight = 14,
+		expanderCollapsedBackgroundTexturePack = "iconPack.18x18/Carot/Collapsed",
+		expanderExpandedBackgroundTexturePack = "iconPack.18x18/Carot/Expanded",
+	},
+	[TSM.UI.ExportConfirmationList] = {
+		cancelButtonFont = TSM.UI.Fonts.title,
+		cancelButtonFontHeight = 14,
+		cancelButtonHeight = 15,
+		collapsableFont = TSM.UI.Fonts.semibold,
+		collapsableFontHeight = 18,
+		collapsableTextColor = "#ffd839",
+		groupFont = TSM.UI.Fonts.semibold,
+		groupFontHeight = 18,
+		moduleFont = TSM.UI.Fonts.semibold,
+		moduleFontHeight = 18,
+		operationFont = TSM.UI.Fonts.regular,
+		operationFontHeight = 14,
+		rowHeight = 28,
+		textColor = "#e2e2e2",
 		expanderCollapsedBackgroundTexturePack = "iconPack.18x18/Carot/Collapsed",
 		expanderExpandedBackgroundTexturePack = "iconPack.18x18/Carot/Expanded",
 	},

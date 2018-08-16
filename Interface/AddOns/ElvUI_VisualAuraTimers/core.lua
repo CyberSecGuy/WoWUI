@@ -18,8 +18,6 @@ local GetTime = GetTime
 local GetWeaponEnchantInfo = GetWeaponEnchantInfo
 local hooksecurefunc = hooksecurefunc
 local UnitAura = UnitAura
-local UnitBuff = UnitBuff
-local UnitDebuff = UnitDebuff
 local CUSTOM_CLASS_COLORS = CUSTOM_CLASS_COLORS
 local DebuffTypeColor = DebuffTypeColor
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
@@ -107,7 +105,7 @@ function VAT:UpdateAura(button, index)
 	local isDebuff
 	local filter = button:GetParent():GetAttribute('filter')
 	local unit = button:GetParent():GetAttribute("unit")
-	local name, _, _, _, dtype, duration, expiration = UnitAura(unit, index, filter)
+	local name, _, _, dtype, duration, expiration = UnitAura(unit, index, filter)
 
 	if(name) then
 		if(duration > 0 and expiration) then
@@ -127,18 +125,14 @@ function VAT:UpdateAura(button, index)
 			button.time:SetText("")
 			button:SetScript("OnUpdate", nil)			
 		end
-		
-		if UnitBuff('player',name) then
-			isDebuff = false
-		elseif UnitDebuff('player',name) then
-			isDebuff = true
-		end
 	
 		if filter == 'HARMFUL' then
+			isDebuff = true
 			local color = DebuffTypeColor[dtype or ""]
 			-- Match color of statusbar border to color of the border of the debuff aura
 			button.Holder:SetBackdropBorderColor(color.r, color.g, color.b)
 		else
+			isDebuff = false
 			button.Holder:SetBackdropBorderColor(unpack(E.media.bordercolor))
 		end
 

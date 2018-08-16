@@ -6,10 +6,9 @@
 --    All Rights Reserved* - Detailed license information included with addon.    --
 -- ------------------------------------------------------------------------------ --
 
-TSMAPI_FOUR.Sync = {}
 local _, TSM = ...
 local Sync = TSM:NewPackage("Sync")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = {
 	didShowSVError = 0,
 }
@@ -20,7 +19,7 @@ local private = {
 -- Module Constants
 -- ============================================================================
 
-Sync.SYNC_VERSION = 2
+Sync.SYNC_VERSION = 4
 Sync.DATA_TYPES = {
 	-- new connection types (40-49)
 	WHOAMI_ACCOUNT = strchar(40),
@@ -39,6 +38,7 @@ Sync.DATA_TYPES = {
 	-- RPC types (100-109)
 	RPC_CALL = strchar(100),
 	RPC_RETURN = strchar(101),
+	RPC_PREAMBLE = strchar(102),
 }
 
 

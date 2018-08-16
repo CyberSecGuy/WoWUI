@@ -9,6 +9,7 @@
 TSMAPI_FOUR.Settings = {}
 local _, TSM = ...
 local private = { context = {}, proxies = {}, profileWarning = nil, protectedAccessAllowed = {}, cachedConnectedRealms = nil, upgradeContext = {} }
+local LibRealmInfo = LibStub("LibRealmInfo")
 local KEY_SEP = "@"
 local SCOPE_KEY_SEP = " - "
 local GLOBAL_SCOPE_KEY = " "
@@ -151,26 +152,25 @@ function private.Constructor(name, rawSettingsInfo)
 
 	-- reset the DB if it's not valid
 	local isValid = true
-	local preUpgradeDB = nil
 	if not next(db) then
 		-- new DB
 		isValid = false
 	elseif not private.ValidateDB(db) then
 		-- corrupted DB
-		assert(GetAddOnMetadata("TradeSkillMaster", "version") ~= "@project-version@", "DB is not valid!")
+		assert(not TSMAPI_FOUR.Util.IsDevVersion("TradeSkillMaster"), "DB is not valid!")
 		isValid = false
 	elseif db._version == version and db._hash ~= hash then
 		-- the hash didn't match
-		assert(GetAddOnMetadata("TradeSkillMaster", "version") ~= "@project-version@", "Invalid settings hash! Did you forget to increase the version?")
+		assert(not TSMAPI_FOUR.Util.IsDevVersion("TradeSkillMaster"), "Invalid settings hash! Did you forget to increase the version?")
 		isValid = false
 	elseif db._version > version then
 		-- this is a downgrade
-		assert(GetAddOnMetadata("TradeSkillMaster", "version") ~= "@project-version@", "Unexpected DB version! If you really want to downgrade, comment out this line (remember to uncomment before committing).")
+		assert(not TSMAPI_FOUR.Util.IsDevVersion("TradeSkillMaster"), "Unexpected DB version! If you really want to downgrade, comment out this line (remember to uncomment before committing).")
 		isValid = false
 	elseif db._syncOwner and db._syncOwner[SCOPE_KEYS.sync] and db._syncOwner[SCOPE_KEYS.sync] ~= db._syncAccountKey[SCOPE_KEYS.factionrealm] then
 		-- we aren't the owner of this character, so wipe the DB and show a manual error
 		TSM.Sync.ShowSVCopyError()
-		assert(GetAddOnMetadata("TradeSkillMaster", "version") ~= "@project-version@", "Settings are corrupted due to manual copying of saved variables file")
+		assert(not TSMAPI_FOUR.Util.IsDevVersion("TradeSkillMaster"), "Settings are corrupted due to manual copying of saved variables file")
 		isValid = false
 	end
 	if not isValid then
@@ -215,7 +215,7 @@ function private.Constructor(name, rawSettingsInfo)
 	if version ~= db._version then
 		-- clear any settings which no longer exist, and set new/updated settings to their default values
 		removedSettings = {}
-		for key, value in pairs(db) do
+		for key in pairs(db) do
 			-- ignore metadata (keys starting with "_")
 			if strsub(key, 1, 1) ~= "_" then
 				local scopeTypeShort, namespace, settingKey = strmatch(key, "^(.+)"..KEY_SEP..".+"..KEY_SEP.."(.+)"..KEY_SEP.."(.+)$")
@@ -266,13 +266,10 @@ function private.Constructor(name, rawSettingsInfo)
 	}
 	for scopeType, scopeInfo in pairs(rawSettingsInfo) do
 		if scopeType ~= "version" then
-			for namespace, namespaceInfo in pairs(scopeInfo) do
+			for namespace in pairs(scopeInfo) do
 				private.context[new].namespaceProxies[scopeType..KEY_SEP..namespace] = private.CreateNamespace(new, namespace, scopeType)
 			end
 			private.context[new].scopeProxies[scopeType] = private.CreateScope(new, scopeType)
-			for namespace in pairs(scopeInfo) do
-				private.context[new].scopeProxies[scopeType] = private.CreateScope(new, scopeType)
-			end
 		end
 	end
 	local upgradeObj = nil
@@ -372,6 +369,10 @@ private.SettingsDBMethods = {
 		return name ~= "" and not strfind(name, KEY_SEP)
 	end,
 
+	ProfileExists = function(self, name)
+		return tContains(private.context[self].db._scopeKeys.profile, name) and true or false
+	end,
+
 	GetCurrentProfile = function(self)
 		return private.context[self].currentScopeKeys.profile
 	end,
@@ -426,7 +427,7 @@ private.SettingsDBMethods = {
 
 		-- copy all the settings from the source profile to the current one
 		for namespace, namespaceInfo in pairs(context.settingsInfo.profile) do
-			for settingKey, info in pairs(namespaceInfo) do
+			for settingKey in pairs(namespaceInfo) do
 				local srcKey = strjoin(KEY_SEP, SCOPE_TYPES.profile, sourceProfileName, namespace, settingKey)
 				local destKey = strjoin(KEY_SEP, SCOPE_TYPES.profile, context.currentScopeKeys.profile, namespace, settingKey)
 				private.SetDBKeyValue(context.db, destKey, private.CopyData(context.db[srcKey]))
@@ -563,6 +564,10 @@ private.SettingsDBMethods = {
 
 	GetSyncScopeKeyByCharacter = function(self, character, factionrealm)
 		return character..SCOPE_KEY_SEP..(factionrealm or SCOPE_KEYS.factionrealm)
+	end,
+
+	FactionrealmByRealmIterator = function(self, realm)
+		return private.FactionrealmByRealmIteratorHelper, realm
 	end,
 }
 
@@ -718,19 +723,15 @@ end
 
 function private.ConnectedRealmIterator(self, prevScopeKey)
 	if not private.cachedConnectedRealms then
-		local currentRealm = gsub(SCOPE_KEYS.realm, "[ %-]", "")
-		local connectedRealms = GetAutoCompleteRealms() or {}
-
-		if #connectedRealms > 0 then
-			local currentRealmIndex = nil
-			for i, realm in ipairs(connectedRealms) do
-				if realm == currentRealm then
-					currentRealmIndex = i
-					break
+		local realmId, _, _, _, _, _, _, _, connectedRealmIds = LibRealmInfo:GetRealmInfo(REALM)
+		local connectedRealms = {}
+		if connectedRealmIds then
+			for _, id in ipairs(connectedRealmIds) do
+				if id ~= realmId then
+					local _, connectedRealmName = LibRealmInfo:GetRealmInfoByID(id)
+					tinsert(connectedRealms, connectedRealmName)
 				end
 			end
-			assert(currentRealmIndex, "Could not find current realm")
-			tremove(connectedRealms, currentRealmIndex)
 		end
 		private.cachedConnectedRealms = connectedRealms
 	end
@@ -748,7 +749,7 @@ function private.ConnectedRealmIterator(self, prevScopeKey)
 		local realm = index == 0 and SCOPE_KEYS.realm or private.cachedConnectedRealms[index]
 		if not realm then return end
 		index = index + 1
-		local scopeKey = (scope == "factionrealm") and (FACTION.." - "..realm) or realm
+		local scopeKey = (scope == "factionrealm") and (FACTION..SCOPE_KEY_SEP..realm) or realm
 		if scopeKey == prevScopeKey then
 			foundPrev = true
 		elseif foundPrev and tContains(private.context[self].db._scopeKeys[scope], scopeKey) then
@@ -759,6 +760,16 @@ end
 
 function private.SyncSettingIteratorHelper(_, value)
 	return strsplit(KEY_SEP, value)
+end
+
+function private.FactionrealmByRealmIteratorHelper(realm, prevValue)
+	if not prevValue then
+		return strjoin(SCOPE_KEY_SEP, "Horde", realm)
+	elseif strmatch(prevValue, "^Horde") then
+		return strjoin(SCOPE_KEY_SEP, "Alliance", realm)
+	elseif strmatch(prevValue, "^Alliance") then
+		return strjoin(SCOPE_KEY_SEP, "Neutral", realm)
+	end
 end
 
 do

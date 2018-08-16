@@ -70,16 +70,29 @@ end
 -- ============================================================================
 
 function SelectionList._CreateRow(self)
-	return self.__super:_CreateRow()
+	local color = self:_GetStyle("textColor") or "#e2e2e2"
+	local row = self.__super:_CreateRow()
+		:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Texture", "highlight")
+			:SetStyle("anchors", { { "TOPLEFT" }, { "BOTTOMRIGHT" } })
+			:SetStyle("color", "#30290b")
+		)
+
 		:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Button", "button")
 			:SetStyle("anchors", { { "TOPLEFT" }, { "BOTTOMRIGHT" } })
+			:SetScript("OnEnter", private.RowOnEnter)
+			:SetScript("OnLeave", private.RowOnLeave)
 			:SetScript("OnClick", private.RowOnClick)
 		)
+
 		:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Text", "text")
 			:SetStyle("fontHeight", 12)
-			:SetStyle("textColor", "#e2e2e2")
+			:SetStyle("textColor", color)
 			:SetStyle("anchors", { { "TOPLEFT", 8, 0 }, { "BOTTOMRIGHT", -8, 0 } })
 		)
+
+	row:GetElement("highlight"):Hide()
+
+	return row
 end
 
 function SelectionList._SetRowHitRectInsets(self, row, top, bottom)
@@ -91,8 +104,10 @@ function SelectionList._DrawRow(self, row, dataIndex)
 	local operationName = row:GetContext()
 	local isSelected = operationName == self._selectedEntry
 
+	local color = self:_GetStyle("textColor") or "#e2e2e2"
+
 	row:GetElement("text")
-		:SetStyle("textColor", isSelected and "#ffd839" or "#e2e2e2")
+		:SetStyle("textColor", isSelected and "#ffd839" or color)
 		:SetStyle("font", isSelected and TSM.UI.Fonts.bold or TSM.UI.Fonts.MontserratRegular)
 		:SetText(operationName)
 
@@ -104,6 +119,14 @@ end
 -- ============================================================================
 -- Local Script Handlers
 -- ============================================================================
+
+function private.RowOnEnter(button)
+	button:GetParentElement():GetElement("highlight"):Show()
+end
+
+function private.RowOnLeave(button)
+	button:GetParentElement():GetElement("highlight"):Hide()
+end
 
 function private.RowOnClick(button)
 	local row = button:GetParentElement()

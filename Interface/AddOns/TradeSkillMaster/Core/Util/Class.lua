@@ -146,8 +146,6 @@ private.INST_MT = {
 		-- check if it's a static field in the superclass
 		local superStaticRes = classInfo.superStatic[key]
 		if superStaticRes then
-			local superclass = superStaticRes.class
-			local superclassInfo = private.classInfo[superclass]
 			res = superStaticRes.value
 			return res
 		end
@@ -213,14 +211,7 @@ private.CLASS_MT = {
 	__call = function(self, ...)
 		assert(not private.classInfo[self].abstract, "Attempting to instantiate an abstract class!")
 		-- Create a new instance of this class
-		local inst, constructTblCopy = nil, nil
-		if private.constructTbl then
-			constructTblCopy = CopyTable(private.constructTbl)
-			inst = private.constructTbl
-			private.constructTbl = nil
-		else
-			inst = {}
-		end
+		local inst = private.constructTbl or {}
 		local instStr = strmatch(tostring(inst), "table:[^0-9a-fA-F]*([0-9a-fA-F]+)")
 		setmetatable(inst, private.INST_MT)
 		local hasSuperclass = private.classInfo[self].superclass and true or false
@@ -247,11 +238,13 @@ private.CLASS_MT = {
 			private.instInfo[inst].isClassLookup[c] = true
 			c = private.classInfo[c].superclass
 		end
-		if constructTblCopy then
-			for k, v in pairs(constructTblCopy) do
+		if private.constructTbl then
+			-- re-set all the object attributes through the proper metamethod
+			for k, v in pairs(inst) do
 				rawset(inst, k, nil)
 				inst[k] = v
 			end
+			private.constructTbl = nil
 		end
 		assert(select("#", inst:__init(...)) == 0, "__init must not return any values")
 		return inst

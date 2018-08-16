@@ -12,29 +12,45 @@ local private = {
 	combineThread = nil,
 	destroyThread = nil,
 	destroyThreadRunning = false,
-	bagDB = nil,
-	bagQuery = nil,
 	canDestroyCache = {},
 	destroyQuantityCache = {},
 	pendingCombines = {},
 	newBagUpdate = false,
 	bagUpdateCallback = nil,
-	canDestroy = false,
 	pendingSpellId = nil,
-	sessionIgnoreItems = {},
 	didAutoShow = false,
+	ignoreDB = nil,
+	destroyInfoDB = nil,
 }
-local DB_SCHEMA = {
+local IGNORED_ITEMS_DB_SCHEMA = {
 	fields = {
 		itemString = "string",
-		itemLink = "string",
-		itemTexture = "number",
-		bag = "number",
-		slot = "number",
-		slotId = "number",
-		stackSize = "number",
-		destroySpellId = "number",
-	}
+		ignoreSession = "boolean",
+		ignorePermanent = "boolean",
+	},
+	fieldAttributes = {
+		itemString = { "unique" },
+	},
+	fieldOrder = {
+		"itemString",
+		"ignoreSession",
+		"ignorePermanent",
+	},
+}
+local DESTROY_INFO_DB_SCHEMA = {
+	fields = {
+		itemString = "string",
+		minQuantity = "number",
+		spellId = "number",
+	},
+	fieldAttributes = {
+		itemString = { "unique" },
+	},
+	fieldOrder = {
+		"itemString",
+		"minQuantity",
+		"spellId",
+	},
 }
 local SPELL_IDS = {
 	milling = 51005,
@@ -43,8 +59,7 @@ local SPELL_IDS = {
 }
 local ITEM_SUB_CLASS_METAL_AND_STONE = 7
 local ITEM_SUB_CLASS_HERB = 9
-local SLOT_ID_BAG_MULTIPLIER = 1000
-local TARGET_SLOT_ID_MULTIPLIER = 100000
+local TARGET_SLOT_ID_MULTIPLIER = 1000000
 local GEM_CHIPS = {
 	["i:129099"] = "i:129100",
 	["i:130200"] = "i:129100",
@@ -60,13 +75,26 @@ local GEM_CHIPS = {
 -- Module Functions
 -- ============================================================================
 
-
 function Destroying.OnInitialize()
 	private.combineThread = TSMAPI_FOUR.Thread.New("COMBINE_STACKS", private.CombineThread)
 	private.destroyThread = TSMAPI_FOUR.Thread.New("DESTROY", private.DestroyThread)
-	private.bagDB = TSMAPI_FOUR.Database.New(DB_SCHEMA)
-	private.bagQuery = private.bagDB:NewQuery()
 	TSM.Inventory.BagTracking.RegisterCallback(private.UpdateBagDB)
+
+	private.ignoreDB =  TSMAPI_FOUR.Database.New(IGNORED_ITEMS_DB_SCHEMA, "DESTROYING_IGNORE")
+	private.ignoreDB:BulkInsertStart()
+	local used = TSMAPI_FOUR.Util.AcquireTempTable()
+	for itemString in pairs(TSM.db.global.userData.destroyingIgnore) do
+		itemString = TSMAPI_FOUR.Item.ToItemString(itemString)
+		if not used[itemString] then
+			used[itemString] = true
+			private.ignoreDB:BulkInsertNewRow(itemString, false, true)
+		end
+	end
+	TSMAPI_FOUR.Util.ReleaseTempTable(used)
+	private.ignoreDB:BulkInsertEnd()
+
+	private.destroyInfoDB = TSMAPI_FOUR.Database.New(DESTROY_INFO_DB_SCHEMA, "DESTROYING_INFO")
+
 	TSMAPI_FOUR.Event.Register("UNIT_SPELLCAST_START", private.SpellCastEventHandler)
 	TSMAPI_FOUR.Event.Register("UNIT_SPELLCAST_INTERRUPTED", private.SpellCastEventHandler)
 	TSMAPI_FOUR.Event.Register("UNIT_SPELLCAST_SUCCEEDED", private.SpellCastEventHandler)
@@ -78,16 +106,18 @@ function Destroying.SetBagUpdateCallback(callback)
 	private.bagUpdateCallback = callback
 end
 
-function Destroying.GetBagQuery()
-	return private.bagQuery
+function Destroying.CreateBagQuery()
+	return TSM.Inventory.BagTracking.CreateQuery()
+		:LeftJoin(private.ignoreDB, "itemString")
+		:InnerJoin(private.destroyInfoDB, "itemString")
+		:InnerJoin(TSM.ItemInfo.GetDBForJoin(), "itemString")
+		:NotEqual("ignoreSession", true)
+		:NotEqual("ignorePermanent", true)
+		:GreaterThanOrEqual("quantity", TSM.CONST.OTHER_FIELD_QUERY_PARAM, "minQuantity")
 end
 
 function Destroying.CanCombine()
 	return #private.pendingCombines > 0
-end
-
-function Destroying.CanDestroy()
-	return private.canDestroy
 end
 
 function Destroying.GetCombineThread()
@@ -104,13 +134,60 @@ function Destroying.KillDestroyThread()
 end
 
 function Destroying.IgnoreItemSession(itemString)
-	private.sessionIgnoreItems[itemString] = true
-	private.UpdateBagDB(true)
+	local row = private.ignoreDB:GetUniqueRow("itemString", itemString)
+	if row then
+		assert(not row:GetField("ignoreSession"))
+		row:SetField("ignoreSession", true)
+		row:Update()
+		row:Release()
+	else
+		private.ignoreDB:NewRow()
+			:SetField("itemString", itemString)
+			:SetField("ignoreSession", true)
+			:SetField("ignorePermanent", false)
+			:Create()
+	end
 end
 
 function Destroying.IgnoreItemPermanent(itemString)
+	assert(not TSM.db.global.userData.destroyingIgnore[itemString])
 	TSM.db.global.userData.destroyingIgnore[itemString] = true
-	private.UpdateBagDB(true)
+
+	local row = private.ignoreDB:GetUniqueRow("itemString", itemString)
+	if row then
+		assert(not row:GetField("ignorePermanent"))
+		row:SetField("ignorePermanent", true)
+		row:Update()
+		row:Release()
+	else
+		private.ignoreDB:NewRow()
+			:SetField("itemString", itemString)
+			:SetField("ignoreSession", false)
+			:SetField("ignorePermanent", true)
+			:Create()
+	end
+end
+
+function Destroying.ForgetIgnoreItemPermanent(itemString)
+	assert(TSM.db.global.userData.destroyingIgnore[itemString])
+	TSM.db.global.userData.destroyingIgnore[itemString] = nil
+
+	local row = private.ignoreDB:GetUniqueRow("itemString", itemString)
+	assert(row and row:GetField("ignorePermanent"))
+	if row:GetField("ignoreSession") then
+		row:SetField("ignorePermanent", false)
+		row:Update()
+	else
+		private.ignoreDB:DeleteRow(row)
+	end
+	row:Release()
+end
+
+function Destroying.CreateIgnoreQuery()
+	return private.ignoreDB:NewQuery()
+		:InnerJoin(TSM.ItemInfo.GetDBForJoin(), "itemString")
+		:Equal("ignorePermanent", true)
+		:OrderBy("name", true)
 end
 
 
@@ -135,7 +212,9 @@ end
 function private.CombineSlotIdToBagSlot(combineSlotId)
 	local sourceSlotId = combineSlotId % TARGET_SLOT_ID_MULTIPLIER
 	local targetSlotId = floor(combineSlotId / TARGET_SLOT_ID_MULTIPLIER)
-	return floor(sourceSlotId / SLOT_ID_BAG_MULTIPLIER), sourceSlotId % SLOT_ID_BAG_MULTIPLIER, floor(targetSlotId / SLOT_ID_BAG_MULTIPLIER), targetSlotId % SLOT_ID_BAG_MULTIPLIER
+	local sourceBag, sourceSlot = TSMAPI_FOUR.Util.SplitSlotId(sourceSlotId)
+	local targetBag, targetSlot = TSMAPI_FOUR.Util.SplitSlotId(targetSlotId)
+	return sourceBag, sourceSlot, targetBag, targetSlot
 end
 
 function private.HasNewBagUpdate()
@@ -150,13 +229,12 @@ end
 
 function private.DestroyThread(button, row)
 	private.destroyThreadRunning = true
-	-- we get send a sync message so we run right away
+	-- we get sent a sync message so we run right away
 	TSMAPI_FOUR.Thread.ReceiveMessage()
 
-	local itemString = row:GetField("itemString")
-	local spellId = row:GetField("destroySpellId")
+	local itemString, spellId, bag, slot = row:GetFields("itemString", "spellId", "bag", "slot")
 	local spellName = GetSpellInfo(spellId)
-	button:SetMacroText(format("/cast %s;\n/use %d %d", spellName, row:GetField("bag"), row:GetField("slot")))
+	button:SetMacroText(format("/cast %s;\n/use %d %d", spellName, bag, slot))
 
 	-- wait for the spell cast to start or fail
 	private.pendingSpellId = spellId
@@ -175,7 +253,7 @@ function private.DestroyThread(button, row)
 	end
 
 	-- wait for the spell cast to finish
-	local event = TSMAPI_FOUR.Thread.ReceiveMessage()
+	event = TSMAPI_FOUR.Thread.ReceiveMessage()
 	if event ~= "UNIT_SPELLCAST_SUCCEEDED" then
 		-- the spell cast was interrupted
 		private.destroyThreadRunning = false
@@ -193,11 +271,11 @@ function private.DestroyThread(button, row)
 	}
 	assert(GetNumLootItems() > 0)
 	for i = 1, GetNumLootItems() do
-		local itemString = TSMAPI_FOUR.Item.ToItemString(GetLootSlotLink(i))
+		local lootItemString = TSMAPI_FOUR.Item.ToItemString(GetLootSlotLink(i))
 		local _, _, quantity = GetLootSlotInfo(i)
-		if itemString and (quantity or 0) > 0 then
-			itemString = GEM_CHIPS[itemString] or itemString
-			newEntry.result[itemString] = quantity
+		if lootItemString and (quantity or 0) > 0 then
+			lootItemString = GEM_CHIPS[lootItemString] or lootItemString
+			newEntry.result[lootItemString] = quantity
 		end
 	end
 	TSM.db.global.internalData.destroyingHistory[spellName] = TSM.db.global.internalData.destroyingHistory[spellName] or {}
@@ -210,7 +288,7 @@ function private.DestroyThread(button, row)
 	private.destroyThreadRunning = false
 end
 
-function private.SpellCastEventHandler(event, unit, _, _, _, spellId)
+function private.SpellCastEventHandler(event, unit, _, spellId)
 	if not private.destroyThreadRunning or unit ~= "player" or spellId ~= private.pendingSpellId then
 		return
 	end
@@ -223,67 +301,63 @@ end
 -- Bag Update Functions
 -- ============================================================================
 
-function private.UpdateBagDB(isManual)
-	private.bagDB:SetQueryUpdatesPaused(true)
-	private.bagDB:Truncate()
-	private.canDestroy = false
+function private.UpdateBagDB()
 	wipe(private.pendingCombines)
+	private.destroyInfoDB:SetQueryUpdatesPaused(true)
+	private.destroyInfoDB:Truncate()
+	private.destroyInfoDB:BulkInsertStart()
 	local itemPrevSlotId = TSMAPI_FOUR.Util.AcquireTempTable()
-	for _, bag, slot, itemString, stackSize in TSMAPI_FOUR.Inventory.BagIterator(nil, TSM.db.global.destroyingOptions.includeSoulbound, TSM.db.global.destroyingOptions.includeSoulbound) do
-		private.ProcessBagSlot(bag, slot, itemString, stackSize, itemPrevSlotId)
+	local checkedItem = TSMAPI_FOUR.Util.AcquireTempTable()
+	for _, bag, slot, itemString, quantity in TSMAPI_FOUR.Inventory.BagIterator(nil, TSM.db.global.destroyingOptions.includeSoulbound, TSM.db.global.destroyingOptions.includeSoulbound) do
+		local minQuantity = nil
+		if checkedItem[itemString] then
+			minQuantity = private.destroyInfoDB:GetUniqueRowField("itemString", itemString, "minQuantity")
+		else
+			checkedItem[itemString] = true
+			local spellId = nil
+			minQuantity, spellId = private.ProcessBagItem(itemString)
+			if minQuantity then
+				private.destroyInfoDB:BulkInsertNewRow(itemString, minQuantity, spellId)
+			end
+		end
+		if minQuantity and quantity % minQuantity ~= 0 then
+			local slotId = TSMAPI_FOUR.Util.JoinSlotId(bag, slot)
+			if itemPrevSlotId[itemString] then
+				-- we can combine this with the previous partial stack
+				tinsert(private.pendingCombines, itemPrevSlotId[itemString] * TARGET_SLOT_ID_MULTIPLIER + slotId)
+				itemPrevSlotId[itemString] = nil
+			else
+				itemPrevSlotId[itemString] = slotId
+			end
+		end
 	end
+	TSMAPI_FOUR.Util.ReleaseTempTable(checkedItem)
 	TSMAPI_FOUR.Util.ReleaseTempTable(itemPrevSlotId)
-	if not isManual then
-		private.newBagUpdate = true
-	end
-	private.bagDB:SetQueryUpdatesPaused(false)
+	private.destroyInfoDB:BulkInsertEnd()
+	private.destroyInfoDB:SetQueryUpdatesPaused(false)
+
+	private.newBagUpdate = true
 	if private.bagUpdateCallback then
 		private.bagUpdateCallback()
 	end
 end
 
-function private.ProcessBagSlot(bag, slot, itemString, stackSize, itemPrevSlotId)
-	if private.sessionIgnoreItems[itemString] or TSM.db.global.userData.destroyingIgnore[itemString] then
+function private.ProcessBagItem(itemString)
+	if private.ignoreDB:HasUniqueRow("itemString", itemString) then
 		return
 	end
 
-	local destroySpellId, destroyStackSize = private.IsDestroyable(itemString)
-	if not destroySpellId then
+	local spellId, minQuantity = private.IsDestroyable(itemString)
+	if not spellId then
 		return
-	end
-
-	local deSpellName = GetSpellInfo(SPELL_IDS.disenchant)
-	if destroySpellId == SPELL_IDS.disenchant then
+	elseif spellId == SPELL_IDS.disenchant then
 		local deAbovePrice = TSMAPI_FOUR.CustomPrice.GetValue(TSM.db.global.destroyingOptions.deAbovePrice, itemString) or 0
 		local deValue = TSMAPI_FOUR.CustomPrice.GetValue("Destroy", itemString) or math.huge
 		if deValue < deAbovePrice then
 			return
 		end
 	end
-
-	local slotId = bag * SLOT_ID_BAG_MULTIPLIER + slot
-	if stackSize >= destroyStackSize then
-		private.bagDB:NewRow()
-			:SetField("itemString", itemString)
-			:SetField("itemLink", TSMAPI_FOUR.Item.GetLink(itemString))
-			:SetField("bag", bag)
-			:SetField("slot", slot)
-			:SetField("slotId", slotId)
-			:SetField("stackSize", stackSize)
-			:SetField("destroySpellId", destroySpellId)
-			:Save()
-		private.canDestroy = true
-	end
-
-	if stackSize % destroyStackSize ~= 0 then
-		if itemPrevSlotId[itemString] then
-			-- we can combine this with the previous partial stack
-			tinsert(private.pendingCombines, itemPrevSlotId[itemString] * TARGET_SLOT_ID_MULTIPLIER + slotId)
-			itemPrevSlotId[itemString] = nil
-		else
-			itemPrevSlotId[itemString] = slotId
-		end
-	end
+	return minQuantity, spellId
 end
 
 function private.IsDestroyable(itemString)

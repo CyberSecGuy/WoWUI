@@ -1,0 +1,35 @@
+VER 3 000000000000001D "adsf" "INV_MISC_QUESTIONMARK"
+/raid Details!: Damage Done for Trash Cleanup [0:16 EF]
+/raid 1. Phiber ...... 32.18 (15.03m, 89.18%)
+/raid 2. The rest of you scrubs lol.
+END
+VER 3 0000000000000019 "Fel" "INV_MISC_QUESTIONMARK"
+/target Fel Explosives
+END
+VER 3 000000000000001B "Guild" "134331"
+/2 955 1/11M Ele Sham LF weekend raid team Fri/Sat/Sun.
+END
+VER 3 0000000000000014 "Prospect" "INV_MISC_QUESTIONMARK"
+#show Prospecting
+/run function FnO() for i=0,4 do for j=1,GetContainerNumSlots(i) do local t={GetItemInfo(GetContainerItemLink(i,j) or 0)} if t[7]=="Metal & Stone" and select(2,GetContainerItemInfo(i,j))>4 then return i.." "..j,t[1] end end end end
+END
+VER 3 0000000000000015 "Prospecting2" "134081"
+/run local f,l,n=AuP or CreateFrame("Button","AuP",nil,"SecureActionButtonTemplate") f:SetAttribute("type","macro") l,n=FnO() if l then f:SetAttribute("macrotext","/cast Prospecting\n/use "..l) SetMacroItem("Prospecting2",n) end
+/click AuP
+END
+VER 3 000000000000001A "Skull" "132097"
+/script SetRaidTarget("target",8);
+END
+VER 3 000000000000001C "Suckers" "INV_MISC_QUESTIONMARK"
+/tar Sha of Anger
+/script SetRaidTarget("target",8);
+END
+VER 3 0000000000000013 "Time Lost" "INV_MISC_QUESTIONMARK"
+/cleartarget
+/target time
+/target Vyragosa
+/target dirkee
+/stopmacro [noexists]
+/run RaidNotice_AddMessage(RaidBossEmoteFrame,"THERE IT IS! KILL IT!", ChatTypeInfo["RAID_WARNING"])
+/script PlaySoundFile("Sound\\interface\\RaidWarning.wav")
+END

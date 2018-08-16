@@ -7,4 +7,4 @@
 -- ------------------------------------------------------------------------------ --
 
 local _, TSM = ...
-local Auctioning = TSM:NewPackage("Auctioning")
+TSM:NewPackage("Auctioning")

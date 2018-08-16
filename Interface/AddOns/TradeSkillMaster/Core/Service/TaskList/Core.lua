@@ -8,17 +8,11 @@
 
 local _, TSM = ...
 local TaskList = TSM:NewPackage("TaskList")
-local private = { db = nil, nextId = 1 }
-local DB_SCHEMA = {
-	fields = {
-		id = "number",
-		categoryDesc = "string",
-		character = "string",
-		taskDesc = "string",
-		subTaskDesc = "string",
-		buttonText = "string",
-		isActive = "boolean",
-	}
+local Task = TSMAPI_FOUR.Class.DefineClass("TASK", nil, "ABSTRACT")
+TaskList.Task = Task
+local private = {
+	updateCallback = nil,
+	iterFuncs = {},
 }
 
 
@@ -27,56 +21,35 @@ local DB_SCHEMA = {
 -- Module Functions
 -- ============================================================================
 
-function TaskList.OnInitialize()
-	private.db = TSMAPI_FOUR.Database.New(DB_SCHEMA)
+function TaskList.RegisterTaskPool(iterFunc)
+	tinsert(private.iterFuncs, iterFunc)
+end
 
-	-- FIXME: test tasks
-	TaskList.AddTask("Cool Downs", "Sapy", "Scroll of Wisdom", "", "Craft", false)
-	TaskList.AddTask("Cool Downs", "Polyu", "Wild Transmutation", "", "Craft", false)
-	TaskList.AddTask("Gathering", "", "Buy from AH", "Buy 90 Shadow Pigment", "Scan", false)
-	TaskList.AddTask("Gathering", "Sapy", "Craft with Inscription", "Craft 45 Ink of Dreams", "Craft", false)
+function TaskList.SetUpdateCallback(func)
+	assert(func and not private.updateCallback)
+	private.updateCallback = func
+end
+
+function TaskList.GetNumTasks()
+	local num = 0
+	for _, iterFunc in ipairs(private.iterFuncs) do
+		for _ in iterFunc() do
+			num = num + 1
+		end
+	end
+	return num
 end
 
 function TaskList.Iterator()
-	-- wrap the query iterator with our own
-	local context = TSMAPI_FOUR.Util.AcquireTempTable()
-	context.query = private.db:NewQuery()
-		:OrderBy("categoryDesc", true)
-		:OrderBy("character", true)
-		:OrderBy("taskDesc", true)
-		:OrderBy("subTaskDesc", false)
-		:OrderBy("isActive", false)
-	local func, tbl, index = context.query:Iterator()
-	context.iterFunc = func
-	context.iterTable = tbl
-	return private.IteratorHelper, context, index
-end
-
-function TaskList.AddTask(categoryDesc, character, taskDesc, subTaskDesc, buttonText, isActive)
-	private.db:NewRow()
-		:SetField("id", private.nextId)
-		:SetField("categoryDesc", categoryDesc)
-		:SetField("character", character)
-		:SetField("taskDesc", taskDesc)
-		:SetField("subTaskDesc", subTaskDesc)
-		:SetField("buttonText", buttonText)
-		:SetField("isActive", isActive)
-		:Save()
-	private.nextId = private.nextId + 1
-end
-
-
-
--- ============================================================================
--- Private Helper Functions
--- ============================================================================
-
-function private.IteratorHelper(context, index)
-	local nextIndex, row = context.iterFunc(context.iterTable, index)
-	if not nextIndex then
-		context.query:Release()
-		TSMAPI_FOUR.Util.ReleaseTempTable(context)
-		return
+	local tasks = TSMAPI_FOUR.Util.AcquireTempTable()
+	for _, iterFunc in ipairs(private.iterFuncs) do
+		for _, task in iterFunc() do
+			tinsert(tasks, task)
+		end
 	end
-	return nextIndex, row:GetFields("categoryDesc", "character", "taskDesc", "subTaskDesc", "buttonText", "isActive")
+	return TSMAPI_FOUR.Util.TempTableIterator(tasks)
+end
+
+function TaskList.OnTaskUpdated()
+	private.updateCallback()
 end

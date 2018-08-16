@@ -212,7 +212,7 @@ function CraftingQueueList._DrawRow(self, row, dataIndex)
 		spellIcon:Hide()
 		expander:SetStyle("backgroundTexturePack", self._collapsed[data] and "iconPack.18x18/Carot/Collapsed" or "iconPack.18x18/Carot/Expanded")
 		expander:Show()
-		local _, currentProfession = C_TradeSkillUI.GetTradeSkillLine()
+		local currentProfession = TSM.Crafting.ProfessionUtil.GetCurrentProfessionName()
 		local profession, players = strsplit(CATEGORY_SEP, data)
 		if strlower(profession) ~= strlower(currentProfession or "") then
 			profession = "|cfff21319"..profession.."|r"
@@ -239,10 +239,10 @@ function CraftingQueueList._DrawRow(self, row, dataIndex)
 		local tooltipLines = TSMAPI_FOUR.Util.AcquireTempTable()
 		tinsert(tooltipLines, name)
 		for _, matItemString, quantity in TSM.Crafting.MatIterator(spellId) do
-			local numHave = TSMAPI_FOUR.Inventory.GetBagQuantity(matItemString) + TSMAPI_FOUR.Inventory.GetReagentBankQuantity(matItemString)
+			local numHave = TSMAPI_FOUR.Inventory.GetBagQuantity(matItemString) + TSMAPI_FOUR.Inventory.GetReagentBankQuantity(matItemString) + TSMAPI_FOUR.Inventory.GetBankQuantity(matItemString)
 			local numNeed = quantity * numQueued
 			local color = numHave >= numNeed and "|cff2cec0d" or "|cfff21319"
-			tinsert(tooltipLines, format("%s%d/%d|r - %s", color, numHave, numNeed, TSMAPI_FOUR.Item.GetName(matItemString)))
+			tinsert(tooltipLines, format("%s%d/%d|r - %s", color, numHave, numNeed, TSMAPI_FOUR.Item.GetName(matItemString) or "?"))
 		end
 		row:SetTooltip(strjoin("\n", TSMAPI_FOUR.Util.UnpackAndReleaseTempTable(tooltipLines)))
 		spellIcon:SetStyle("texture", texture)
@@ -287,7 +287,7 @@ function private.CategorySortComparator(a, b)
 	local aProfession, aPlayers = strsplit(CATEGORY_SEP, a)
 	local bProfession, bPlayers = strsplit(CATEGORY_SEP, b)
 	if aProfession ~= bProfession then
-		local _, currentProfession = C_TradeSkillUI.GetTradeSkillLine()
+		local currentProfession = TSM.Crafting.ProfessionUtil.GetCurrentProfessionName()
 		currentProfession = strlower(currentProfession or "")
 		if aProfession == currentProfession then
 			return true

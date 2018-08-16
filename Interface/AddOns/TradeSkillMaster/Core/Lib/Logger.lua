@@ -65,7 +65,7 @@ function Logger.LogMessage(self, severity, ...)
 		end
 		private.temp[i] = arg
 	end
-	local file, line = strmatch(TSMAPI_FOUR.Util.GetDebugStackInfo(3), "([^\\/]+%.lua):([0-9]+)")
+	local file, line = strmatch(TSMAPI_FOUR.Util.GetDebugStackInfo(3) or "", "([^\\/]+%.lua):([0-9]+)")
 	file = file or "?"
 	line = line or "?"
 	local timestamp = (debugprofilestop() - private.startDebugTime) / 1000 + private.startTime

@@ -8,7 +8,6 @@
 
 local _, TSM = ...
 local GreatDealsSearch = TSM.Shopping:NewPackage("GreatDealsSearch")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 local private = { filter = nil }
 
 

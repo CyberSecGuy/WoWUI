@@ -8,17 +8,19 @@
 
 local _, TSM = ...
 local Log = TSM.Auctioning:NewPackage("Log")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
-local private = { db = nil, query = nil }
+local L = TSM.L
+local private = { db = nil }
 local DB_SCHEMA = {
 	fields = {
+		index = "number",
 		itemString = "string",
-		itemLink = "string",
-		itemTexture = "number",
 		seller = "string",
 		buyout = "number",
 		operation = "string",
 		info = "string",
+	},
+	fieldAttributes = {
+		index = { "index" },
 	}
 }
 local RED = "|cffff2211"
@@ -73,28 +75,28 @@ local REASON_STRINGS = {
 -- ============================================================================
 
 function Log.OnInitialize()
-	private.db = TSMAPI_FOUR.Database.New(DB_SCHEMA)
-	private.query = private.db:NewQuery()
+	private.db = TSMAPI_FOUR.Database.New(DB_SCHEMA, "AUCTIONING_LOG")
 end
 
 function Log.Truncate()
 	private.db:Truncate()
 end
 
-function Log.GetQuery()
-	return private.query
+function Log.CreateQuery()
+	return private.db:NewQuery()
+		:InnerJoin(TSM.ItemInfo.GetDBForJoin(), "itemString")
+		:OrderBy("index", true)
 end
 
-function Log.AddEntry(itemString, operationName, reasonKey, seller, buyout)
+function Log.AddEntry(itemString, operationName, reasonKey, seller, buyout, index)
 	local reasonStr = REASON_STRINGS[reasonKey]
 	assert(reasonStr)
 	private.db:NewRow()
 		:SetField("itemString", itemString)
-		:SetField("itemLink", TSMAPI_FOUR.Item.GetLink(itemString))
-		:SetField("itemTexture", TSMAPI_FOUR.Item.GetTexture(itemString))
 		:SetField("seller", seller)
 		:SetField("buyout", buyout)
 		:SetField("operation", operationName)
 		:SetField("info", reasonStr)
-		:Save()
+		:SetField("index", index)
+		:Create()
 end

@@ -12,6 +12,7 @@ local LoadAddOn = LoadAddOn
 -- GLOBALS: hooksecurefunc
 
 local MAX_STATIC_POPUPS = 4
+local SPACING = (E.PixelMode and 1 or 3)
 
 local tooltips = {
 	FriendsTooltip,
@@ -30,12 +31,6 @@ local function styleFreeBlizzardFrames()
 	ColorPickerFrame:Style('Outside')
 	MinimapRightClickMenu:Style('Outside')
 
-	for _, frame in pairs(tooltips) do
-		if frame and not frame.style then
-			frame:Style('Outside')
-		end
-	end
-
 	if E.private.skins.blizzard.enable ~= true then return end
 
 	local db = E.private.skins.blizzard
@@ -53,7 +48,9 @@ local function styleFreeBlizzardFrames()
 		PaperDollFrame:Style('Outside')
 		ReputationDetailFrame:Style('Outside')
 		ReputationFrame:Style('Outside')
-		ReputationParagonTooltip:Style('Outside')
+		if db.tooltip then
+			--ReputationParagonTooltip:Style('Outside')
+		end
 		TokenFrame:Style('Outside')
 		TokenFramePopup:Style('Outside')
 	end
@@ -68,10 +65,12 @@ local function styleFreeBlizzardFrames()
 
 	if db.friends then
 		AddFriendFrame:Style('Outside')
-		ChannelFrameDaughterFrame.backdrop:Style('Outside')
+		--ChannelFrameDaughterFrame.backdrop:Style('Outside')
 		FriendsFrame:Style('Outside')
 		FriendsFriendsFrame.backdrop:Style('Outside')
 		RecruitAFriendFrame:Style('Outside')
+		RecruitAFriendSentFrame:Style('Outside')
+		RecruitAFriendSentFrame.MoreDetails.Text:FontTemplate()
 	end
 
 	if db.gossip then
@@ -135,12 +134,8 @@ local function styleFreeBlizzardFrames()
 		ChatConfigFrame:Style('Outside')
 		ChatMenu:Style('Outside')
 		CinematicFrameCloseDialog:Style('Outside')
-		DropDownList1:Style('Outside') -- Maybe this get replaced with new Lib_Dropdown
-		DropDownList2:Style('Outside') -- Maybe this get replaced with new Lib_Dropdown
-		L_DropDownList1MenuBackdrop:Style('Outside')
-		L_DropDownList2MenuBackdrop:Style('Outside')
-		L_DropDownList1Backdrop:Style('Outside')
-		L_DropDownList2Backdrop:Style('Outside')
+		DropDownList1MenuBackdrop:Style('Outside')
+		DropDownList2MenuBackdrop:Style('Outside')
 		EmoteMenu:Style('Outside')
 		GameMenuFrame:Style('Outside')
 		GhostFrame:Style('Outside')
@@ -206,6 +201,14 @@ local function styleFreeBlizzardFrames()
 	if db.taxi then
 		TaxiFrame.backdrop:Style('Outside')
 	end
+	
+	if db.tooltip then
+		for _, frame in pairs(tooltips) do
+			if frame and not frame.style then
+				frame:Style('Outside')
+			end
+		end
+	end
 
 	if db.trade then
 		TradeFrame:Style('Outside')
@@ -218,7 +221,6 @@ local function StyleCagedBattlePetTooltip(tooltipFrame)
 		tooltipFrame:Style('Outside')
 	end
 end
-hooksecurefunc('BattlePetTooltipTemplate_SetBattlePet', StyleCagedBattlePetTooltip)
 
 -- SpellBook tabs
 local function styleSpellbook()
@@ -240,20 +242,6 @@ local function styleSpellbook()
 end
 S:AddCallback("BenikUI_Spellbook", styleSpellbook)
 
--- Order Hall
-local function styleOrderHall()
-	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.orderhall ~= true then return end
-	if (not _G["OrderHallMissionFrame"]) then LoadAddOn("Blizzard_OrderHallUI") end
-
-	_G["OrderHallMissionFrame"]:Style('Small')
-	if _G["AdventureMapQuestChoiceDialog"].backdrop then
-		_G["AdventureMapQuestChoiceDialog"].backdrop:Style('Outside')
-	end
-	_G["OrderHallTalentFrame"]:Style('Outside')
-	_G["GarrisonFollowerAbilityWithoutCountersTooltip"]:Style('Outside')
-	_G["GarrisonFollowerMissionAbilityWithoutCountersTooltip"]:Style('Outside')
-end
-
 -- Garrison Style
 local fRecruits = {}
 local function styleGarrison()
@@ -264,28 +252,30 @@ local function styleGarrison()
 	_G["GarrisonLandingPage"].backdrop:Style('Outside')
 	_G["GarrisonBuildingFrame"].backdrop:Style('Outside')
 	_G["GarrisonCapacitiveDisplayFrame"].backdrop:Style('Outside')
-	_G["GarrisonBuildingFrame"].BuildingLevelTooltip:Style('Outside')
-	_G["GarrisonFollowerAbilityTooltip"]:Style('Outside')
-	_G["GarrisonMissionMechanicTooltip"]:StripTextures()
-	_G["GarrisonMissionMechanicTooltip"]:CreateBackdrop('Transparent')
-	_G["GarrisonMissionMechanicTooltip"].backdrop:Style('Outside')
-	_G["GarrisonMissionMechanicFollowerCounterTooltip"]:StripTextures()
-	_G["GarrisonMissionMechanicFollowerCounterTooltip"]:CreateBackdrop('Transparent')
-	_G["GarrisonMissionMechanicFollowerCounterTooltip"].backdrop:Style('Outside')
-	_G["FloatingGarrisonFollowerTooltip"]:Style('Outside')
-	_G["GarrisonFollowerTooltip"]:Style('Outside')
 
 	-- ShipYard
 	_G["GarrisonShipyardFrame"].backdrop:Style('Outside')
 	-- Tooltips
-	_G["GarrisonShipyardMapMissionTooltip"]:Style('Outside')
-	_G["GarrisonBonusAreaTooltip"]:StripTextures()
-	_G["GarrisonBonusAreaTooltip"]:CreateBackdrop('Transparent')
-	_G["GarrisonBonusAreaTooltip"].backdrop:Style('Outside')
-	_G["GarrisonMissionMechanicFollowerCounterTooltip"]:Style('Outside')
-	_G["GarrisonMissionMechanicTooltip"]:Style('Outside')
-	_G["FloatingGarrisonShipyardFollowerTooltip"]:Style('Outside')
-	_G["GarrisonShipyardFollowerTooltip"]:Style('Outside')
+	if E.private.skins.blizzard.tooltip then
+		_G["GarrisonShipyardMapMissionTooltip"]:Style('Outside')
+		_G["GarrisonBonusAreaTooltip"]:StripTextures()
+		_G["GarrisonBonusAreaTooltip"]:CreateBackdrop('Transparent')
+		_G["GarrisonBonusAreaTooltip"].backdrop:Style('Outside')
+		_G["GarrisonMissionMechanicFollowerCounterTooltip"]:Style('Outside')
+		_G["GarrisonMissionMechanicTooltip"]:Style('Outside')
+		_G["FloatingGarrisonShipyardFollowerTooltip"]:Style('Outside')
+		_G["GarrisonShipyardFollowerTooltip"]:Style('Outside')
+		_G["GarrisonBuildingFrame"].BuildingLevelTooltip:Style('Outside')
+		_G["GarrisonFollowerAbilityTooltip"]:Style('Outside')
+		_G["GarrisonMissionMechanicTooltip"]:StripTextures()
+		_G["GarrisonMissionMechanicTooltip"]:CreateBackdrop('Transparent')
+		_G["GarrisonMissionMechanicTooltip"].backdrop:Style('Outside')
+		_G["GarrisonMissionMechanicFollowerCounterTooltip"]:StripTextures()
+		_G["GarrisonMissionMechanicFollowerCounterTooltip"]:CreateBackdrop('Transparent')
+		_G["GarrisonMissionMechanicFollowerCounterTooltip"].backdrop:Style('Outside')
+		_G["FloatingGarrisonFollowerTooltip"]:Style('Outside')
+		_G["GarrisonFollowerTooltip"]:Style('Outside')
+	end
 
 	-- Garrison Monument
 	_G["GarrisonMonumentFrame"]:StripTextures()
@@ -351,16 +341,22 @@ local function styleGarrison()
 	S:HandleButton(_G["GarrisonRecruitSelectFrame"].FollowerSelection.Recruit3.HireRecruits)
 end
 
--- Map styling fix
-local function FixMapStyle()
+-- WorldMap
+local function styleWorldMap()
 	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.worldmap ~= true then return end
 
 	local mapFrame = _G["WorldMapFrame"]
-	if not mapFrame.BorderFrame.backdrop.style then
-		mapFrame.BorderFrame.backdrop:Style('Outside')
+	if not mapFrame.backdrop.style then
+		mapFrame.backdrop:Style('Outside')
 	end
 
-	mapFrame.UIElementsFrame.BountyBoard.BountyName:FontTemplate(nil, 12, 'OUTLINE')
+	if E.private.skins.blizzard.tooltip ~= true then return end
+
+	local questFrame = _G["QuestMapFrame"]
+	questFrame.QuestsFrame.StoryTooltip:SetTemplate('Transparent')
+	if not questFrame.QuestsFrame.StoryTooltip.style then
+		questFrame.QuestsFrame.StoryTooltip:Style('Outside')
+	end
 
 	local mapTooltip = _G["WorldMapTooltip"]
 	if mapTooltip then
@@ -374,12 +370,6 @@ local function FixMapStyle()
 		if not tooltip.style then
 			tooltip:Style('Outside')
 		end
-	end
-
-	local questFrame = _G["QuestMapFrame"]
-	questFrame.QuestsFrame.StoryTooltip:SetTemplate('Transparent')
-	if not questFrame.QuestsFrame.StoryTooltip.style then
-		questFrame.QuestsFrame.StoryTooltip:Style('Outside')
 	end
 end
 
@@ -447,28 +437,131 @@ local function styleAddons()
 		local stFrame = _G["stAMFrame"]
 		if stFrame then
 			stFrame:Style('Outside')
+			stAMAddOns:SetTemplate('Transparent')
 		end
 	end
 end
 
-function BUIS:init()
+local function skinDecursive()
+	if not IsAddOnLoaded('Decursive') or not E.db.benikuiSkins.variousSkins.decursive then return end
+
+	-- Main Buttons
+	_G["DecursiveMainBar"]:StripTextures()
+	_G["DecursiveMainBar"]:SetTemplate('Default', true)
+	_G["DecursiveMainBar"]:Height(20)
+
+	local mainButtons = {_G["DecursiveMainBarPriority"], _G["DecursiveMainBarSkip"], _G["DecursiveMainBarHide"]}
+	for i, button in pairs(mainButtons) do
+		S:HandleButton(button)
+		button:SetTemplate('Default', true)
+		button:ClearAllPoints()
+		if(i == 1) then
+			button:Point('LEFT', _G["DecursiveMainBar"], 'RIGHT', SPACING, 0)
+		else
+			button:Point('LEFT', mainButtons[i - 1], 'RIGHT', SPACING, 0)
+		end
+	end
+
+	-- Priority List Frame
+	_G["DecursivePriorityListFrame"]:StripTextures()
+	_G["DecursivePriorityListFrame"]:CreateBackdrop('Transparent')
+	_G["DecursivePriorityListFrame"].backdrop:Style('Outside')
+
+	local priorityButton = {_G["DecursivePriorityListFrameAdd"], _G["DecursivePriorityListFramePopulate"], _G["DecursivePriorityListFrameClear"], _G["DecursivePriorityListFrameClose"]}
+	for i, button in pairs(priorityButton) do
+		S:HandleButton(button)
+		button:ClearAllPoints()
+		if(i == 1) then
+			button:Point('TOP', _G["DecursivePriorityListFrame"], 'TOPLEFT', 54, -20)
+		else
+			button:Point('LEFT', priorityButton[i - 1], 'RIGHT', SPACING, 0)
+		end
+	end
+
+	_G["DecursivePopulateListFrame"]:StripTextures()
+	_G["DecursivePopulateListFrame"]:CreateBackdrop('Transparent')
+	_G["DecursivePopulateListFrame"].backdrop:Style('Outside')
+
+	for i = 1, 8 do
+		local groupButton = _G["DecursivePopulateListFrameGroup"..i]
+		S:HandleButton(groupButton)
+	end
+
+	local classPop = {'Warrior', 'Priest', 'Mage', 'Warlock', 'Hunter', 'Rogue', 'Druid', 'Shaman', 'Monk', 'Paladin', 'Deathknight', 'Close'}
+	for _, classBtn in pairs(classPop) do
+		local btnName = _G["DecursivePopulateListFrame"..classBtn]
+		S:HandleButton(btnName)
+	end
+
+	-- Skip List Frame
+	_G["DecursiveSkipListFrame"]:StripTextures()
+	_G["DecursiveSkipListFrame"]:CreateBackdrop('Transparent')
+	_G["DecursiveSkipListFrame"].backdrop:Style('Outside')
+
+	local skipButton = {_G["DecursiveSkipListFrameAdd"], _G["DecursiveSkipListFramePopulate"], _G["DecursiveSkipListFrameClear"], _G["DecursiveSkipListFrameClose"]}
+	for i, button in pairs(skipButton) do
+		S:HandleButton(button)
+		button:ClearAllPoints()
+		if(i == 1) then
+			button:Point('TOP', _G["DecursiveSkipListFrame"], 'TOPLEFT', 54, -20)
+		else
+			button:Point('LEFT', skipButton[i - 1], 'RIGHT', SPACING, 0)
+		end
+	end
+
+	-- Tooltip
+	if E.private.skins.blizzard.tooltip then
+		_G["DcrDisplay_Tooltip"]:StripTextures()
+		_G["DcrDisplay_Tooltip"]:CreateBackdrop('Transparent')
+		_G["DcrDisplay_Tooltip"].backdrop:Style('Outside')
+	end
+end
+
+local function skinStoryline()
+	if not IsAddOnLoaded('Storyline') or not E.db.benikuiSkins.variousSkins.storyline then return end
+	_G["Storyline_NPCFrame"]:StripTextures()
+	_G["Storyline_NPCFrame"]:CreateBackdrop('Transparent')
+	_G["Storyline_NPCFrame"].backdrop:Style('Outside')
+	S:HandleCloseButton(_G["Storyline_NPCFrameClose"])
+	_G["Storyline_NPCFrameChat"]:StripTextures()
+	_G["Storyline_NPCFrameChat"]:CreateBackdrop('Transparent')
+end
+
+local function StyleDBM_Options()
+	if not E.db.benikuiSkins.addonSkins.dbm or not BUI.AS then return end
+
+	DBM_GUI_OptionsFrame:HookScript('OnShow', function()
+		DBM_GUI_OptionsFrame:Style('Outside')
+	end)
+end
+
+function BUIS:LoD_AddOns(_, addon)
+	if addon == "DBM-GUI" then
+		StyleDBM_Options()
+	end
+end
+
+function BUIS:PLAYER_ENTERING_WORLD(...)
 	self:styleAlertFrames()
 	styleFreeBlizzardFrames()
 	styleAddons()
 	styleGarrison()
+	styleWorldMap()
 
-	local reason = select(5, GetAddOnInfo("GarrisonCommander"))
-	if reason == "DISABLED" or reason == "MISSING" then 
-		styleOrderHall()
-	end
-
-	_G["WorldMapFrame"]:HookScript('OnShow', FixMapStyle)
-	hooksecurefunc('WorldMap_ToggleSizeUp', FixMapStyle)
+	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end
 
 function BUIS:Initialize()
 	if E.db.benikui.general.benikuiStyle ~= true then return end
-	self:RegisterEvent('PLAYER_ENTERING_WORLD', 'init')
+
+	skinDecursive()
+	skinStoryline()
+
+	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+	self:RegisterEvent("ADDON_LOADED", "LoD_AddOns")
+
+	if E.private.skins.blizzard.tooltip ~= true then return end
+	hooksecurefunc('BattlePetTooltipTemplate_SetBattlePet', StyleCagedBattlePetTooltip)
 end
 
 local function InitializeCallback()

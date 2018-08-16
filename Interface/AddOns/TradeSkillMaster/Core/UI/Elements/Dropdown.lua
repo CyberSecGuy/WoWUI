@@ -11,7 +11,6 @@
 -- @classmod Dropdown
 
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 local Dropdown = TSMAPI_FOUR.Class.DefineClass("Dropdown", TSM.UI.Element)
 TSM.UI.Dropdown = Dropdown
 local private = { dropdownLookup = {} }
@@ -269,11 +268,7 @@ function Dropdown.SetOpen(self, open)
 				:SetItems(itemTable, selection)
 				:SetScript("OnSelectionChanged", private.OnSelectionChanged)
 			)
-			:SetScript("OnHide", function(frame)
-				local self = private.dropdownLookup[frame]
-				private.dropdownLookup[frame] = nil
-				self._isOpen = false
-			end)
+			:SetScript("OnHide", private.DropdownFrameOnHide)
 		if self._multiselect then
 			TSMAPI_FOUR.Util.ReleaseTempTable(selection)
 		end
@@ -344,6 +339,20 @@ function Dropdown._GetCurrentSelectionString(self)
 	return selectedText
 end
 
+function Dropdown._UpdateSettingTable(self)
+	if self._settingTable and self._settingKey then
+		if self._multiselect then
+			wipe(self._settingTable[self._settingKey])
+
+			for item, selectedValue in pairs(self:GetSelection()) do
+				self._settingTable[self._settingKey][item] = selectedValue
+			end
+		else
+			self._settingTable[self._settingKey] = self._items[self:GetSelection()]
+		end
+	end
+end
+
 
 
 -- ============================================================================
@@ -373,7 +382,7 @@ function private.OnSelectionChanged(dropdownList, selection)
 	else
 		self._selection[selection] = true
 	end
-	private.UpdateSettingTable(self)
+	self:_UpdateSettingTable()
 	if self._multiselect then
 		dropdownList:GetElement("__parent.topRow.current")
 			:SetText(self:_GetCurrentSelectionString())
@@ -385,16 +394,8 @@ function private.OnSelectionChanged(dropdownList, selection)
 	end
 end
 
-function private.UpdateSettingTable(self)
-	if self._settingTable and self._settingKey then
-		if self._multiselect then
-			wipe(self._settingTable[self._settingKey])
-
-			for item, selectedValue in pairs(self:GetSelection()) do
-				self._settingTable[self._settingKey][item] = selectedValue
-			end
-		else
-			self._settingTable[self._settingKey] = self._items[self:GetSelection()]
-		end
-	end
+function private.DropdownFrameOnHide(frame)
+	local self = private.dropdownLookup[frame]
+	private.dropdownLookup[frame] = nil
+	self._isOpen = false
 end

@@ -16,6 +16,7 @@ local ActionButton = TSMAPI_FOUR.Class.DefineClass("ActionButton", TSM.UI.Elemen
 TSM.UI.ActionButton = ActionButton
 local private = { frameButtonLookup = {} }
 local ICON_PADDING = 2
+local CLICK_COOLDOWN = 0.2
 
 
 
@@ -58,6 +59,8 @@ function ActionButton.__init(self, name, isSecure)
 	self._onClickHandler = nil
 	self._onEnterHandler = nil
 	self._onLeaveHandler = nil
+	self._clickCooldown = nil
+	self._clickCooldownDisabled = false
 end
 
 function ActionButton.Acquire(self)
@@ -74,6 +77,9 @@ function ActionButton.Release(self)
 	self._onClickHandler = nil
 	self._onEnterHandler = nil
 	self._onLeaveHandler = nil
+	self._clickCooldown = nil
+	self._clickCooldownDisabled = false
+	self:_GetBaseFrame():SetScript("OnUpdate", nil)
 	self.__super:Release()
 end
 
@@ -91,6 +97,8 @@ function ActionButton.SetScript(self, script, handler)
 		self._onEnterHandler = handler
 	elseif script == "OnLeave" then
 		self._onLeaveHandler = handler
+	elseif script == "OnMouseDown" or script == "OnMouseUp" then
+		self.__super:SetScript(script, handler)
 	else
 		error("Unknown ActionButton script: "..tostring(script))
 	end
@@ -126,10 +134,21 @@ function ActionButton.SetPressed(self, pressed)
 	return self
 end
 
+--- Disables the default click cooldown to allow the button to be spammed (i.e. for macro-able buttons).
+-- @tparam ActionButton self The action button object
+-- @treturn ActionButton The action button object
+function ActionButton.DisableClickCooldown(self)
+	self._clickCooldownDisabled = true
+	return self
+end
+
 --- Click on the action button.
 -- @tparam ActionButton self The action button object
 function ActionButton.Click(self)
-	self:_GetBaseFrame():Click()
+	local frame = self:_GetBaseFrame()
+	if frame:IsEnabled() and frame:IsVisible() then
+		private.OnClick(frame)
+	end
 end
 
 function ActionButton.Draw(self)
@@ -142,7 +161,7 @@ function ActionButton.Draw(self)
 
 	local height = TSMAPI_FOUR.Util.Round(self:_GetDimension("HEIGHT"))
 	local size = nil
-	if height == 15 then
+	if height == 15 or height == 16 then
 		size = "Small"
 	elseif height == 20 then
 		size = "Medium"
@@ -154,7 +173,7 @@ function ActionButton.Draw(self)
 
 	-- set textures and text color depending on the state
 	local textColor = nil
-	if self._pressed then
+	if self._pressed or self._clickCooldown then
 		textColor = self:_GetStyle("pressedTextColor")
 		TSM.UI.TexturePacks.SetTextureAndWidth(frame.bgLeft, "uiFrames."..size.."ClickedButtonLeft")
 		TSM.UI.TexturePacks.SetTexture(frame.bgMiddle, "uiFrames."..size.."ClickedButtonMiddle")
@@ -210,7 +229,7 @@ end
 
 function ActionButton._UpdateDisabled(self)
 	local frame = self:_GetBaseFrame()
-	if self._disabled or self._pressed then
+	if self._disabled or self._pressed or self._clickCooldown then
 		self._hover = false
 		frame:Disable()
 	else
@@ -226,7 +245,14 @@ end
 
 function private.OnClick(frame)
 	local self = private.frameButtonLookup[frame]
-	self:SetPressed(true)
+	if not self._acquired then
+		return
+	end
+	if not self._clickCooldownDisabled then
+		self._clickCooldown = CLICK_COOLDOWN
+		self:_UpdateDisabled()
+		self:_GetBaseFrame():SetScript("OnUpdate", private.OnUpdate)
+	end
 	self:Draw()
 	if self._onClickHandler then
 		self:_onClickHandler()
@@ -238,7 +264,7 @@ function private.OnEnter(frame)
 	if self._onEnterHandler then
 		self:_onEnterHandler()
 	end
-	if self._disabled or self._pressed then
+	if self._disabled or self._pressed or self._clickCooldown then
 		return
 	end
 	self._hover = true
@@ -250,9 +276,20 @@ function private.OnLeave(frame)
 	if self._onLeaveHandler then
 		self:_onLeaveHandler()
 	end
-	if self._disabled or self._pressed then
+	if self._disabled or self._pressed or self._clickCooldown then
 		return
 	end
 	self._hover = false
 	self:Draw()
+end
+
+function private.OnUpdate(frame, elapsed)
+	local self = private.frameButtonLookup[frame]
+	self._clickCooldown = self._clickCooldown - elapsed
+	if self._clickCooldown <= 0 then
+		frame:SetScript("OnUpdate", nil)
+		self._clickCooldown = nil
+		self:_UpdateDisabled()
+		self:Draw()
+	end
 end

@@ -1,3 +1,4 @@
+-- Curseforge test 3: Curseforge bugaloo
 local AddOnName, Engine = ...
 
 if IsAddOnLoaded('Tukui') and not IsAddOnLoaded('ProjectAzilroka') then
@@ -12,11 +13,11 @@ if IsAddOnLoaded('Tukui') and not IsAddOnLoaded('ProjectAzilroka') then
 		showAlert = 1,
 		maxLetters = 38,
 		EditBoxOnEscapePressed = function(self)
-			self:GetParent():Hide();
+			self:GetParent():Hide()
 		end,
 		OnShow = function(self)
-			self.editBox:SetText("https://www.tukui.org/addons.php?id=79");
-			self.editBox:SetFocus();
+			self.editBox:SetText("https://www.tukui.org/addons.php?id=79")
+			self.editBox:SetFocus()
 		end,
 	}
 
@@ -28,12 +29,13 @@ end
 local AddOn = LibStub('AceAddon-3.0'):NewAddon('AddOnSkins', 'AceEvent-3.0', 'AceHook-3.0')
 
 Engine[1] = AddOn
-Engine[2] = LibStub("AceLocale-3.0"):GetLocale('AddOnSkins', false);
+Engine[2] = LibStub("AceLocale-3.0"):GetLocale('AddOnSkins', false)
 
 _G.AddOnSkins = Engine
+AddOnSkinsDS = {}
 
 AddOn.Title = GetAddOnMetadata('AddOnSkins', 'Title')
-AddOn.Version = GetAddOnMetadata('AddOnSkins', 'Version')
+AddOn.Version = tonumber(GetAddOnMetadata('AddOnSkins', 'Version'))
 AddOn.Authors = GetAddOnMetadata('AddOnSkins', 'Author'):gsub(", ", "    ")
 AddOn.LSM = LibStub('LibSharedMedia-3.0')
 AddOn.TicketTracker = 'https://git.tukui.org/Azilroka/AddOnSkins/issues'

@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Expenses = TSM.MainUI.Ledger:NewPackage("Expenses")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 
 
 

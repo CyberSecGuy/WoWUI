@@ -9,7 +9,6 @@
 --- Item Class functions
 -- @submodule Item
 
-local private = {}
 local STATIC_DATA = { classes = {}, subClasses = {}, classLookup = {}, classIdLookup = {}, inventorySlotIdLookup = {} }
 
 

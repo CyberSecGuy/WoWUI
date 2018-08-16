@@ -8,7 +8,6 @@
 
 local _, TSM = ...
 local BidSearch = TSM.Sniper:NewPackage("BidSearch")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 local private = { scanThreadId = nil }
 
 
@@ -40,7 +39,7 @@ function private.ScanThread(auctionScan)
 	else
 		assert(numFilters == 1)
 	end
-	local success = auctionScan:StartScanThreaded()
+	auctionScan:StartScanThreaded()
 	return true
 end
 
@@ -51,8 +50,7 @@ function private.ScanFilter(row)
 	end
 
 	local itemString = row:GetField("itemString")
-	local groupPath = TSMAPI_FOUR.Groups.GetPathByItem(itemString) or TSM.CONST.ROOT_GROUP_PATH
-	local _, operationSettings = TSMAPI.Operations:GetFirstByGroup(groupPath, "Sniper")
+	local _, operationSettings = TSM.Operations.GetFirstOperationByItem("Sniper", itemString)
 	if not operationSettings then
 		return true
 	end
@@ -67,7 +65,6 @@ end
 
 function private.MarketValueFunction(row)
 	local itemString = row:GetField("itemString")
-	local groupPath = TSMAPI_FOUR.Groups.GetPathByItem(itemString) or TSM.CONST.ROOT_GROUP_PATH
-	local _, operationSettings = TSMAPI.Operations:GetFirstByGroup(groupPath, "Sniper")
+	local _, operationSettings = TSM.Operations.GetFirstOperationByItem("Sniper", itemString)
 	return TSMAPI_FOUR.CustomPrice.GetValue(operationSettings.belowPrice, itemString)
 end

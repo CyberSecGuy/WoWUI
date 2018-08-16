@@ -44,7 +44,7 @@ end
 
 function TSMAPI_FOUR.Conversions.GetTargetItemByName(targetItemName)
 	targetItemName = strlower(targetItemName)
-	for itemString, data in pairs(private.data) do
+	for itemString in pairs(private.data) do
 		local name = TSMAPI_FOUR.Item.GetName(itemString)
 		if name and strlower(name) == targetItemName then
 			return TSMAPI_FOUR.Item.ToItemString(itemString)

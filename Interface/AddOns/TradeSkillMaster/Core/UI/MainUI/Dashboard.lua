@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Dashboard = TSM.MainUI:NewPackage("Dashboard")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = {
 	xData = {},
 	yData = {},
@@ -19,7 +19,7 @@ local private = {
 	playerList = {},
 	selectedGraphCharacter = L["All Characters and Guilds"],
 	selectedGraphTime = L["Past Year"],
-	selectedSummaryCharacter = L["All Characters and Guilds"],
+	selectedSummaryCharacter = nil,
 	selectedSummaryTime = L["Past Year"]
 }
 local TIMELIST = { halfMonth = L["Past Year"], month = L["Past Month"], sevenDays = L["Past 7 Days"], hour = L["Past Day"] }
@@ -51,11 +51,8 @@ function private.GetDashboardFrame()
 
 	wipe(private.playerList)
 	tinsert(private.playerList, L["All Characters and Guilds"])
-	for _, playerName in TSM.db:FactionrealmCharacterByAccountIterator() do
-		tinsert(private.playerList, playerName)
-	end
-	for name in pairs(TSMAPI_FOUR.PlayerInfo.GetGuilds()) do
-		tinsert(private.playerList, name)
+	for characterGuild in TSM.Accounting.GoldTracker.CharacterGuildIterator() do
+		tinsert(private.playerList, characterGuild)
 	end
 
 	local frame = TSMAPI_FOUR.UI.NewElement("DividedContainer", "dashboard")
@@ -461,24 +458,20 @@ function private.GetDashboardFrame()
 					:SetStyle("textColor", "#ffffff")
 					:SetText(info.content)
 				)
-				:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "title")
-					:SetLayout("HORIZONTAL")
+				:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "readMore")
 					:SetStyle("height", 16)
-					:AddChild(TSMAPI_FOUR.UI.NewElement("Button", "btn")
-						:SetStyle("width", 80)
-						:SetStyle("font", TSM.UI.Fonts.MontserratBold)
-						:SetStyle("fontHeight", 12)
-						:SetStyle("justifyH", "LEFT")
-						:SetStyle("textColor", "#ffd839")
-						:SetText(L["Read More"])
-					)
-					:AddChild(TSMAPI_FOUR.UI.NewElement("Spacer", "spacer"))
+					:SetStyle("font", TSM.UI.Fonts.MontserratBold)
+					:SetStyle("fontHeight", 12)
+					:SetStyle("justifyH", "LEFT")
+					:SetStyle("textColor", "#ffd839")
+					:SetContext(info)
+					:SetText(L["Read More"])
 				)
 			)
 			:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Button", "btn")
 				:SetStyle("anchors", { { "TOPLEFT", "news"..i }, { "BOTTOMRIGHT", "news"..i } })
-				:SetContext(info.link)
-				-- TODO: show popup with the link when this is clicked
+				:SetContext(info)
+				:SetScript("OnClick", private.ButtonOnClick)
 			)
 			if time() - info.timestamp < 48 * 60 * 60 then
 				newsContent:GetElement("news"..i..".title"):AddChildBeforeById("text", TSMAPI_FOUR.UI.NewElement("Texture", "icon")
@@ -493,6 +486,64 @@ function private.GetDashboardFrame()
 	end
 
 	return frame
+end
+
+
+-- ============================================================================
+-- Local Script Handlers
+-- ============================================================================
+
+function private.ButtonOnClick(button)
+	local info = button:GetContext()
+	button:GetBaseElement():ShowDialogFrame(TSMAPI_FOUR.UI.NewElement("Frame", "frame")
+		:SetLayout("VERTICAL")
+		:SetStyle("width", 600)
+		:SetStyle("height", 188)
+		:SetStyle("anchors", { { "CENTER" } })
+		:SetStyle("background", "#2e2e2e")
+		:SetStyle("border", "#e2e2e2")
+		:SetStyle("borderSize", 2)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "title")
+			:SetStyle("height", 44)
+			:SetStyle("margin", { top = 24, left = 16, right = 16, bottom = 16 })
+			:SetStyle("font", TSM.UI.Fonts.MontserratBold)
+			:SetStyle("fontHeight", 18)
+			:SetStyle("justifyH", "CENTER")
+			:SetText(info.title)
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Input", "linkInput")
+			:SetStyle("height", 26)
+			:SetStyle("margin", { left = 16, right = 16, bottom = 25 })
+			:SetStyle("background", "#5c5c5c")
+			:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
+			:SetStyle("fontHeight", 12)
+			:SetStyle("justifyH", "LEFT")
+			:SetStyle("textColor", "#ffffff")
+			:SetText(info.link)
+			:SetScript("OnEditFocusGained", private.LinkInputOnEditFocusGained)
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "buttons")
+			:SetLayout("HORIZONTAL")
+			:SetStyle("margin", { left = 16, right = 16, bottom = 16 })
+			:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "spacer")
+				-- spacer
+			)
+			:AddChild(TSMAPI_FOUR.UI.NewElement("ActionButton", "confirmBtn")
+				:SetStyle("width", 126)
+				:SetStyle("height", 26)
+				:SetText(CLOSE)
+				:SetScript("OnClick", private.DialogCloseBtnOnClick)
+			)
+		)
+	)
+end
+
+function private.LinkInputOnEditFocusGained(input)
+	input:HighlightText()
+end
+
+function private.DialogCloseBtnOnClick(button)
+	button:GetBaseElement():HideDialog()
 end
 
 
@@ -553,9 +604,7 @@ end
 
 function private.UpdateGraphCharacter(self, selectedItem)
 	private.selectedGraphCharacter = selectedItem
-
 	private.PopulateData()
-	TSM.Accounting.GetSummarySalesInfo(private.selectedGraphTime, private.selectedGraphCharacter)
 	self:GetElement("__parent.__parent.goldGraph"):Draw()
 end
 
@@ -587,7 +636,7 @@ function private.SetGraphSettings()
 end
 
 function private.UpdateSummaryCharacter(self, selectedItem)
-	private.selectedSummaryCharacter = selectedItem
+	private.selectedSummaryCharacter = selectedItem ~= L["All Characters and Guilds"] and selectedItem or nil
 	private.PopulateSalesSummary(self:GetElement("__parent.__parent.__parent"), true)
 end
 

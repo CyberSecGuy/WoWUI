@@ -36,6 +36,7 @@ function Checkbox.__init(self)
 
 	self._textStr = ""
 	self._position = "LEFT"
+	self._disabled = false
 	self._value = false
 	self._onValueChangedHandler = nil
 	self._settingTable = nil
@@ -45,6 +46,7 @@ end
 function Checkbox.Acquire(self)
 	self._textStr = ""
 	self._position = "LEFT"
+	self._disabled = false
 	self._value = false
 	self.__super:Acquire()
 end
@@ -67,6 +69,15 @@ function Checkbox.SetCheckboxPosition(self, position)
 	else
 		error("Invalid checkbox position: "..tostring(position))
 	end
+	return self
+end
+
+--- Sets whether or not the checkbox is disabled.
+-- @tparam Input self The checkbox object
+-- @tparam boolean disabled Whether or not the checkbox is disabled
+-- @treturn Input The checkbox object
+function Checkbox.SetDisabled(self, disabled)
+	self._disabled = disabled
 	return self
 end
 
@@ -101,7 +112,7 @@ end
 -- @tparam[opt=false] boolean silent If true, will not trigger the `OnValueChanged` script
 -- @treturn Checkbox The checkbox object
 function Checkbox.SetChecked(self, value, silent)
-	self._value = value
+	self._value = value and true or false
 	if self._onValueChangedHandler and not silent then
 		self:_onValueChangedHandler(value)
 	end
@@ -160,7 +171,7 @@ function Checkbox.Draw(self)
 	self.__super:Draw()
 	local frame = self:_GetBaseFrame()
 	self:_ApplyFrameStyle(frame)
-	self:_ApplyTextStyle(frame.text)
+	self:_ApplyTextStyle(frame.text, self._disabled)
 
 	frame.text:SetText(self._textStr)
 	TSM.UI.TexturePacks.SetTextureAndSize(frame.check, self:_GetStyle(self._value and "checkedTexturePack" or "uncheckedTexturePack"))
@@ -181,6 +192,13 @@ function Checkbox.Draw(self)
 		frame.text:SetPoint("RIGHT", frame.check, "LEFT", -self:_GetStyle("checkboxSpacing"), 0)
 	else
 		error("Invalid position: "..tostring(self._position))
+	end
+	if self._disabled then
+		frame.check:SetAlpha(0.3)
+		self:_GetBaseFrame():Disable()
+	else
+		frame.check:SetAlpha(1)
+		self:_GetBaseFrame():Enable()
 	end
 end
 

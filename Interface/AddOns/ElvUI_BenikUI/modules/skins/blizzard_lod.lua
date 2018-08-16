@@ -44,12 +44,6 @@ local function style_ArtifactUI()
 	frame.backdrop:Style('Outside')
 	frame.CloseButton:ClearAllPoints()
 	frame.CloseButton:SetPoint("TOPRIGHT", ArtifactFrame, "TOPRIGHT", 2, 2)
-
-	local forgeFrame = _G["ArtifactRelicForgeFrame"]
-	forgeFrame.backdrop:Style('Outside')
-	forgeFrame.benik = CreateFrame('Frame', nil, forgeFrame)
-	forgeFrame.benik:SetTemplate("Transparent")
-	forgeFrame.benik:SetAllPoints(forgeFrame.TalentsBackground)
 end
 S:AddCallbackForAddon("Blizzard_ArtifactUI", "BenikUI_ArtifactUI", style_ArtifactUI)
 
@@ -72,13 +66,13 @@ local function style_BarbershopUI()
 end
 S:AddCallbackForAddon("Blizzard_BarbershopUI", "BenikUI_BarbershopUI", style_BarbershopUI)
 
--- BattlefieldMinimap
-local function style_BattlefieldMinimap()
+-- BattlefieldMap
+local function style_BattlefieldMap()
 	if E.private.skins.blizzard.bgmap ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
 
-	_G["BattlefieldMinimap"]:Style('Outside')
+	_G["BattlefieldMapFrame"].backdrop:Style('Outside')
 end
-S:AddCallbackForAddon("Blizzard_BattlefieldMinimap", "BenikUI_BattlefieldMinimap", style_BattlefieldMinimap)
+S:AddCallbackForAddon("Blizzard_BattlefieldMap", "BenikUI_BattlefieldMap", style_BattlefieldMap)
 
 -- BindingUI
 local function style_BindingUI()
@@ -114,15 +108,39 @@ local function style_Calendar()
 end
 S:AddCallbackForAddon("Blizzard_Calendar", "BenikUI_Calendar", style_Calendar)
 
+-- Channels
+local function style_Channels()
+	if E.private.skins.blizzard.Channels ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
+
+	_G["ChannelFrame"].backdrop:Style('Outside')
+	_G["CreateChannelPopup"]:Style('Outside')
+
+end
+S:AddCallbackForAddon("Blizzard_Channels", "BenikUI_Channels", style_Channels)
+
 -- Collections
 local function style_Collections()
 	if E.private.skins.blizzard.collections ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
 
 	_G["CollectionsJournal"]:Style('Outside')
 	_G["WardrobeFrame"]:Style('Outside')
-	_G["WardrobeOutfitEditFrame"]:Style('Outside')
+	_G["WardrobeOutfitEditFrame"].backdrop:Style('Outside')
 end
 S:AddCallbackForAddon("Blizzard_Collections", "BenikUI_Collections", style_Collections)
+
+-- Communities
+local function style_Communities()
+	if E.private.skins.blizzard.Communities ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
+
+	local frame = _G["CommunitiesFrame"]
+	if frame then
+		frame.backdrop:Style('Outside')
+		frame.GuildMemberDetailFrame.backdrop:Style('Outside')
+		frame.NotificationSettingsDialog.backdrop:Style('Outside')
+	end
+	_G["CommunitiesGuildLogFrame"].backdrop:Style('Outside')
+end
+S:AddCallbackForAddon("Blizzard_Communities", "BenikUI_Communities", style_Communities)
 
 -- Contribution
 local function style_Contribution()
@@ -137,11 +155,9 @@ local function style_Contribution()
 		frame.backdrop:Style('Outside')
 	end
 
+	-- Not sure about this tooltip tho -- Merathilis
+	if E.private.skins.blizzard.tooltip ~= true then return end
 	ContributionBuffTooltip:Style('Outside')
-
-	if ContributionTooltip.backdrop then
-		ContributionTooltip.backdrop:Style('Outside')
-	end
 end
 S:AddCallbackForAddon("Blizzard_Contribution", "BenikUI_Contribution", style_Contribution)
 
@@ -158,7 +174,7 @@ local function style_EncounterJournal()
 	if E.private.skins.blizzard.encounterjournal ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
 
 	_G["EncounterJournal"]:Style('Small')
-	_G["EncounterJournalTooltip"]:Style('Outside')
+
 	local Tabs = {
 		_G["EncounterJournalEncounterFrameInfoBossTab"],
 		_G["EncounterJournalEncounterFrameInfoLootTab"],
@@ -189,6 +205,9 @@ local function style_EncounterJournal()
 			end
 		end
 	end
+
+	if E.private.skins.blizzard.tooltip ~= true then return end
+	_G["EncounterJournalTooltip"]:Style('Outside')
 end
 S:AddCallbackForAddon("Blizzard_EncounterJournal", "BenikUI_EncounterJournal", style_EncounterJournal)
 
@@ -197,6 +216,8 @@ local function style_FlightMap()
 	if E.private.skins.blizzard.taxi ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
 
 	_G["FlightMapFrame"]:Style('Small')
+
+	if E.private.skins.blizzard.tooltip ~= true then return end
 	local tooltip = _G["WorldMapTooltip"]
 	if tooltip then
 		tooltip:Style('Outside')
@@ -275,7 +296,17 @@ local function style_LookingForGuildUI()
 
 	_G["LookingForGuildFrame"]:Style('Outside')
 end
-S:AddCallbackForAddon("Blizzard_LookingForGuildUI", "BenikUI_LookingForGuildUI", style_LookingForGuildUI)
+
+local function LoadStyle()
+	if LookingForGuildFrame then
+		--Frame already created
+		style_LookingForGuildUI()
+	else
+		--Frame not created yet, wait until it is
+		hooksecurefunc("LookingForGuildFrame_CreateUIElements", style_LookingForGuildUI)
+	end
+end
+S:AddCallbackForAddon("Blizzard_LookingForGuildUI", "BenikUI_LookingForGuildUI", LoadStyle)
 
 -- MacroUI
 local function style_MacroUI()
@@ -293,11 +324,39 @@ local function style_ObliterumUI()
 end
 S:AddCallbackForAddon("Blizzard_ObliterumUI", "BenikUI_ObliterumUI", style_ObliterumUI)
 
+-- GarrisonUI
+local function style_GarrisonUI()
+	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.orderhall ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
+
+	_G["OrderHallMissionFrame"]:Style('Small')
+	if _G["AdventureMapQuestChoiceDialog"].backdrop then
+		_G["AdventureMapQuestChoiceDialog"].backdrop:Style('Outside')
+	end
+
+	if E.private.skins.blizzard.tooltip then
+		_G["GarrisonFollowerAbilityWithoutCountersTooltip"]:Style('Outside')
+		_G["GarrisonFollowerMissionAbilityWithoutCountersTooltip"]:Style('Outside')
+	end
+end
+S:AddCallbackForAddon("Blizzard_GarrisonUI", "BenikUI_GarrisonUI", style_GarrisonUI)
+
+-- OrderHallUI
+local function style_OrderHallUI()
+	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.orderhall ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
+
+	_G["OrderHallTalentFrame"]:HookScript("OnShow", function(self)
+		if self.styled then return end
+		self:Style('Outside')
+		self.styled = true
+	end)
+end
+S:AddCallbackForAddon("Blizzard_OrderHallUI", "BenikUI_OrderHallUI", style_OrderHallUI)
+
 -- PVPUI
 local function style_PVPUI()
-	if E.private.skins.blizzard.pvp ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
+	if E.private.skins.blizzard.pvp ~= true or E.private.skins.blizzard.tooltip ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
 
-	_G["PVPRewardTooltip"]:Style('Outside')
+	_G["ConquestTooltip"]:Style('Outside')
 end
 S:AddCallbackForAddon("Blizzard_PVPUI", "BenikUI_PVPUI", style_PVPUI)
 
@@ -323,6 +382,7 @@ local function style_TalentUI()
 			tab:GetNormalTexture():SetInside()
 		end
 	end
+	PlayerTalentFrameTalents.PvpTalentFrame.TalentList.backdrop:Style('Outside')
 end
 S:AddCallbackForAddon("Blizzard_TalentUI", "BenikUI_TalentUI", style_TalentUI)
 
@@ -337,7 +397,7 @@ local function style_TalkingHeadUI()
 		frame.BackgroundFrame.backdrop:SetAllPoints()
 		frame.BackgroundFrame.backdrop:CreateWideShadow() -- to hide the borders not showing due to scaling
 		frame.MainFrame.Model:SetTemplate('Transparent')
-		frame.MainFrame.Model:CreateShadow('Default')
+		frame.MainFrame.Model:CreateSoftShadow()
 
 		local button = frame.MainFrame.CloseButton
 		S:HandleCloseButton(button)
@@ -407,7 +467,7 @@ S:AddCallbackForAddon("Blizzard_VoidStorageUI", "BenikUI_VoidStorageUI", style_V
 -- WarboardUI
 local function style_WarboardUI()
 	if E.private.skins.blizzard.Warboard ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
-	
+
 	local frame = _G["WarboardQuestChoiceFrame"]
 	frame.backdrop:Style('Outside')
 	frame.backdrop.style:SetFrameLevel(1)

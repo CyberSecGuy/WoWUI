@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local SlashCommands = TSM:NewPackage("SlashCommands")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { commandInfo = {}, commandOrder = {} }
 
 
@@ -25,10 +25,9 @@ function SlashCommands.OnInitialize()
 	_G["SLASH_TRADESKILLMASTER1"] = "/tradeskillmaster"
 end
 
-function SlashCommands.Register(moduleName, key, callback, label)
+function SlashCommands.Register(key, callback, label)
 	local keyLower = strlower(key)
 	private.commandInfo[keyLower] = {
-		moduleName = moduleName,
 		key = key,
 		label = label,
 		callback = callback,

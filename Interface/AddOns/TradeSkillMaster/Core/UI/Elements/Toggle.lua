@@ -136,7 +136,6 @@ function Toggle.Draw(self)
 	end
 
 	local selectedPath = self._selectedOption
-	local width = self:_GetDimension("WIDTH")
 	local height = self:_GetDimension("HEIGHT")
 	local buttonWidth = self:_GetDimension("WIDTH") / #self._buttons
 	local offsetX = 0

@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local PostScan = TSM.Auctioning:NewPackage("PostScan")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = {
 	scanThreadId = nil,
 	queueDB = nil,
@@ -16,7 +16,7 @@ local private = {
 	bagDB = nil,
 	auctionScanDB = nil,
 	itemList = {},
-	postBagsQuery = nil,
+	operationDB = nil,
 }
 local QUEUE_DB_SCHEMA = {
 	fields = {
@@ -29,9 +29,13 @@ local QUEUE_DB_SCHEMA = {
 		stackSize = "number",
 		numStacks = "number",
 		postTime = "number",
-		numPosted = "number",
+		numProcessed = "number",
 		numConfirmed = "number",
 		numFailed = "number",
+	},
+	fieldAttributes = {
+		index = { "index" },
+		itemString = { "index" },
 	}
 }
 local BAG_DB_SCHEMA = {
@@ -41,11 +45,30 @@ local BAG_DB_SCHEMA = {
 		slot = "number",
 		quantity = "number",
 		slotId = "number",
+	},
+	fieldAttributes = {
+		itemString = { "index" },
+		slotId = { "unique", "index" },
+	},
+	fieldOrder = {
+		"itemString",
+		"bag",
+		"slot",
+		"quantity",
+		"slotId",
 	}
 }
-local BAGS_EXTENDED_DB_SCHEMA = {
+local OPERATION_DB_SCHEMA = {
 	fields = {
-		operation = "string",
+		autoBaseItemString = "string",
+		firstOperation = "string",
+	},
+	fieldAttributes = {
+		autoBaseItemString = { "unique" },
+	},
+	fieldOrder = {
+		"autoBaseItemString",
+		"firstOperation",
 	},
 }
 local RESET_REASON_LOOKUP = {
@@ -59,7 +82,6 @@ local ABOVE_MAX_REASON_LOOKUP = {
 	normalPrice = "postAboveMaxNormal",
 	none = "postAboveMaxNoPost"
 }
-local SLOT_ID_BAG_MULTIPLIER = 1000
 
 
 
@@ -68,79 +90,95 @@ local SLOT_ID_BAG_MULTIPLIER = 1000
 -- ============================================================================
 
 function PostScan.OnInitialize()
-	TSM.Inventory.BagTracking.ExtendDatabaseSchema(BAGS_EXTENDED_DB_SCHEMA, private.PostBagsRowSetExtendedFields)
-	private.postBagsQuery = TSM.Inventory.BagTracking.CreateQuery()
-		:GreaterThanOrEqual("bag", 0)
-		:LessThanOrEqual("bag", NUM_BAG_SLOTS)
-		:Distinct("autoBaseItemString")
-		:Custom(function(row)
-			-- don't include BoP or BoA items
-			local isBoP, isBoA = TSMAPI_FOUR.Inventory.IsSoulbound(row:GetFields("bag", "slot"))
-			return not isBoP and not isBoA
-		end)
+	TSM.Inventory.BagTracking.RegisterCallback(private.UpdateOperationDB)
+	private.operationDB = TSMAPI_FOUR.Database.New(OPERATION_DB_SCHEMA, "AUCTIONING_OPERATIONS")
 	private.scanThreadId = TSMAPI_FOUR.Thread.New("POST_SCAN", private.ScanThread)
-	private.queueDB = TSMAPI_FOUR.Database.New(QUEUE_DB_SCHEMA)
+	private.queueDB = TSMAPI_FOUR.Database.New(QUEUE_DB_SCHEMA, "AUCTIONING_POST_QUEUE")
 	-- We maintain our own bag database rather than using the one in BagTracking since we need to be able to remove items
 	-- as they are posted, without waiting for bag update events, and control when our DB updates.
-	private.bagDB = TSMAPI_FOUR.Database.New(BAG_DB_SCHEMA)
+	private.bagDB = TSMAPI_FOUR.Database.New(BAG_DB_SCHEMA, "AUCTIONING_POST_BAGS")
 end
 
-function PostScan.GetBagsQuery()
-	return private.postBagsQuery
+function private.UpdateOperationDB()
+	local used = TSMAPI_FOUR.Util.AcquireTempTable()
+	private.operationDB:SetQueryUpdatesPaused(true)
+	private.operationDB:Truncate()
+	private.operationDB:BulkInsertStart()
+	for _, _, _, itemString in TSMAPI_FOUR.Inventory.BagIterator(true, false, false, true) do
+		if not used[itemString] then
+			used[itemString] = true
+			local firstOperation = TSM.Operations.GetFirstOperationByItem("Auctioning", itemString)
+			if firstOperation then
+				private.operationDB:BulkInsertNewRow(itemString, firstOperation)
+			end
+		end
+	end
+	private.operationDB:BulkInsertEnd()
+	private.operationDB:SetQueryUpdatesPaused(false)
+	TSMAPI_FOUR.Util.ReleaseTempTable(used)
+end
+
+function PostScan.CreateBagsQuery()
+	return TSM.Inventory.BagTracking.CreateQuery()
+		:GreaterThanOrEqual("bag", 0)
+		:LessThanOrEqual("bag", NUM_BAG_SLOTS)
+		:Equal("isBoP", false)
+		:Equal("isBoA", false)
+		:Equal("usedCharges", false)
+		:Distinct("autoBaseItemString")
+		:LeftJoin(private.operationDB, "autoBaseItemString")
+		:InnerJoin(TSM.ItemInfo.GetDBForJoin(), "itemString")
+		:OrderBy("name", true)
 end
 
 function PostScan.Prepare()
 	return private.scanThreadId
 end
 
-function PostScan.GetStatus()
-	local nextProcessRow = nil
-	local numPosted, numConfirmed, numFailed, totalNum = 0, 0, 0, 0
-	local query = private.queueDB:NewQuery()
+function PostScan.GetCurrentRow()
+	return private.queueDB:NewQuery()
+		:Custom(private.NextProcessRowQueryHelper)
 		:OrderBy("index", true)
-	for _, row in query:Iterator(true) do
-		local rowNumStacks, rowNumPosted, rowNumConfirmed, rowNumFailed = row:GetFields("numStacks", "numPosted", "numConfirmed", "numFailed")
-		totalNum = totalNum + rowNumStacks
-		numPosted = numPosted + rowNumPosted
-		numConfirmed = numConfirmed + rowNumConfirmed
-		numFailed = numFailed + rowNumFailed
-		if not nextProcessRow and rowNumPosted < rowNumStacks then
-			nextProcessRow = row
-		end
-	end
-	query:Release()
-	return nextProcessRow, numPosted, numConfirmed, numFailed, totalNum
+		:GetFirstResultAndRelease()
+end
+
+function PostScan.GetStatus()
+	return TSM.Auctioning.Util.GetQueueStatus(private.queueDB:NewQuery())
 end
 
 function PostScan.DoProcess()
-	local postRow = PostScan.GetStatus()
-	local bag, slot = private.GetPostBagSlot(postRow:GetField("itemString"), postRow:GetField("stackSize"))
+	local success = nil
+	local postRow = PostScan.GetCurrentRow()
+	local itemString, stackSize, bid, buyout, postTime = postRow:GetFields("itemString", "stackSize", "bid", "buyout", "postTime")
+	local bag, slot = private.GetPostBagSlot(itemString, stackSize)
 	if bag and slot then
 		-- need to set the duration in the default UI to avoid Blizzard errors
-		AuctionFrameAuctions.duration = postRow:GetField("postTime")
+		AuctionFrameAuctions.duration = postTime
 		ClearCursor()
 		PickupContainerItem(bag, slot)
 		ClickAuctionSellItemButton(AuctionsItemButton, "LeftButton")
-		StartAuction(postRow:GetField("bid"), postRow:GetField("buyout"), postRow:GetField("postTime"), postRow:GetField("stackSize"), 1)
+		StartAuction(bid, buyout, postTime, stackSize, 1)
 		ClearCursor()
-
-		postRow:IncrementField("numPosted")
-			:Save()
-		return true
+		local _, bagQuantity = GetContainerItemInfo(bag, slot)
+		TSM:LOG_INFO("Posting %s x %d from %d,%d (%d)", itemString, stackSize, bag, slot, bagQuantity or -1)
+		success = true
 	else
 		-- we couldn't find this item, so mark this post as failed and we'll try again later
-		postRow:IncrementField("numPosted")
-			:Save()
-		return false
+		success = false
 	end
+	postRow:SetField("numProcessed", postRow:GetField("numProcessed") + 1)
+		:Update()
+	postRow:Release()
+	return success
 end
 
 function PostScan.DoSkip()
-	local postRow = PostScan.GetStatus()
+	local postRow = PostScan.GetCurrentRow()
 	local numStacks = postRow:GetField("numStacks")
-	postRow:SetField("numPosted", numStacks)
+	postRow:SetField("numProcessed", numStacks)
 		:SetField("numConfirmed", numStacks)
-		:Save()
+		:Update()
+	postRow:Release()
 end
 
 function PostScan.HandleConfirm(success, canRetry)
@@ -148,41 +186,38 @@ function PostScan.HandleConfirm(success, canRetry)
 		ClearCursor()
 	end
 
-	local confirmRow = nil
-	local query = private.queueDB:NewQuery()
+	local confirmRow = private.queueDB:NewQuery()
+		:Custom(private.ConfirmRowQueryHelper)
 		:OrderBy("index", true)
-	for _, row in query:Iterator(true) do
-		-- can't break from an iterator so just grab the one we care about and continue looping
-		if not confirmRow and row:GetField("numConfirmed") < row:GetField("numPosted") then
-			confirmRow = row
-		end
-	end
-	query:Release()
+		:GetFirstResultAndRelease()
 	if not confirmRow then
 		-- we may have posted something outside of TSM
 		return
 	end
 
 	if canRetry then
-		confirmRow:IncrementField("numFailed")
+		confirmRow:SetField("numFailed", confirmRow:GetField("numFailed") + 1)
 	end
-	confirmRow:IncrementField("numConfirmed")
-		:Save()
+	confirmRow:SetField("numConfirmed", confirmRow:GetField("numConfirmed") + 1)
+		:Update()
+	confirmRow:Release()
 end
 
 function PostScan.PrepareFailedPosts()
+	private.queueDB:SetQueryUpdatesPaused(true)
 	local query = private.queueDB:NewQuery()
 		:GreaterThan("numFailed", 0)
 		:OrderBy("index", true)
 	for _, row in query:Iterator() do
-		local numFailed, numPosted, numConfirmed = row:GetFields("numFailed", "numPosted", "numConfirmed")
-		assert(numPosted >= numFailed and numConfirmed >= numFailed)
+		local numFailed, numProcessed, numConfirmed = row:GetFields("numFailed", "numProcessed", "numConfirmed")
+		assert(numProcessed >= numFailed and numConfirmed >= numFailed)
 		row:SetField("numFailed", 0)
-			:SetField("numPosted", numPosted - numFailed)
+			:SetField("numProcessed", numProcessed - numFailed)
 			:SetField("numConfirmed", numConfirmed - numFailed)
-			:Save()
+			:Update()
 	end
 	query:Release()
+	private.queueDB:SetQueryUpdatesPaused(false)
 	private.UpdateBagDB()
 end
 
@@ -194,12 +229,13 @@ function PostScan.Reset()
 end
 
 function PostScan.ChangePostDetail(field, value)
-	local postRow = PostScan.GetStatus()
+	local postRow = PostScan.GetCurrentRow()
 	if field == "bid" then
 		value = min(max(value, 1), postRow:GetField("buyout"))
 	end
 	postRow:SetField(field, value)
-		:Save()
+		:Update()
+	postRow:Release()
 end
 
 
@@ -217,7 +253,7 @@ function private.ScanThread(auctionScan, auctionScanDB, scanContext)
 	local bagCounts = TSMAPI_FOUR.Util.AcquireTempTable()
 	local bagQuery = private.bagDB:NewQuery()
 		:Select("itemString", "quantity")
-	for _, itemString, quantity in bagQuery:Iterator(true) do
+	for _, itemString, quantity in bagQuery:Iterator() do
 		bagCounts[itemString] = (bagCounts[itemString] or 0) + quantity
 	end
 	bagQuery:Release()
@@ -225,7 +261,7 @@ function private.ScanThread(auctionScan, auctionScanDB, scanContext)
 	-- generate the list of items we want to scan for
 	wipe(private.itemList)
 	for itemString, numHave in pairs(bagCounts) do
-		local groupPath = TSMAPI_FOUR.Groups.GetPathByItem(itemString)
+		local groupPath = TSM.Groups.GetPathByItem(itemString)
 		local contextFilter = scanContext.isItems and itemString or groupPath
 		if groupPath and tContains(scanContext, contextFilter) and private.CanPostItem(itemString, groupPath, numHave) then
 			tinsert(private.itemList, itemString)
@@ -250,21 +286,19 @@ end
 -- ============================================================================
 
 function private.UpdateBagDB()
+	private.bagDB:SetQueryUpdatesPaused(true)
 	private.bagDB:Truncate()
-	for _, bag, slot, itemString, quantity in TSMAPI_FOUR.Inventory.BagIterator(true) do
-		private.bagDB:NewRow()
-			:SetField("itemString", itemString)
-			:SetField("bag", bag)
-			:SetField("slot", slot)
-			:SetField("quantity", quantity)
-			:SetField("slotId", bag * SLOT_ID_BAG_MULTIPLIER + slot)
-			:Save()
+	private.bagDB:BulkInsertStart()
+	for _, bag, slot, itemString, quantity in TSMAPI_FOUR.Inventory.BagIterator(true, false, false, true) do
+		private.bagDB:BulkInsertNewRow(itemString, bag, slot, quantity, TSMAPI_FOUR.Util.JoinSlotId(bag, slot))
 	end
+	private.bagDB:BulkInsertEnd()
+	private.bagDB:SetQueryUpdatesPaused(false)
 end
 
 function private.CanPostItem(itemString, groupPath, numHave)
 	local hasValidOperation, hasInvalidOperation = false, false
-	for operationName, operationSettings in TSM.Operations.IteratorByGroup("Auctioning", groupPath) do
+	for _, operationName, operationSettings in TSM.Operations.GroupOperationIterator("Auctioning", groupPath) do
 		local isValid, numUsed = private.IsOperationValid(itemString, numHave, operationName, operationSettings)
 		if isValid == true then
 			assert(numUsed and numUsed > 0)
@@ -295,7 +329,7 @@ end
 function private.IsOperationValid(itemString, num, operationName, operationSettings)
 	if operationSettings.postCap == 0 then
 		-- posting is disabled, so ignore this operation
-		TSM.Auctioning.Log.AddEntry(itemString, operationName, "postDisabled", "", 0)
+		TSM.Auctioning.Log.AddEntry(itemString, operationName, "postDisabled", "", 0, math.huge)
 		return nil
 	end
 
@@ -307,31 +341,27 @@ function private.IsOperationValid(itemString, num, operationName, operationSetti
 		if not TSM.db.global.auctioningOptions.disableInvalidMsg then
 			TSM:Printf(L["Did not post %s because Blizzard didn't provide all necessary information for it. Try again later."], TSMAPI_FOUR.Item.GetLink(itemString))
 		end
-		TSM.Auctioning.Log.AddEntry(itemString, operationName, "invalidItemGroup", "", 0)
+		TSM.Auctioning.Log.AddEntry(itemString, operationName, "invalidItemGroup", "", 0, math.huge)
 		return false
 	elseif maxStackSize < minPostStackSize then
 		-- invalid stack size
-		if not TSM.db.global.auctioningOptions.disableInvalidMsg then
-			TSM:Printf(L["Did not post %s because your stack size (%d) is higher than the max stack size of the item (%d)."], TSMAPI_FOUR.Item.GetLink(itemString), minPostStackSize, maxStackSize)
-		end
-		TSM.Auctioning.Log.AddEntry(itemString, operationName, "invalidItemGroup", "", 0)
-		return false
+		return nil
 	end
 
 	-- check that we have enough to post
 	num = num - private.GetKeepQuantity(itemString, operationSettings)
 	if num < minPostStackSize then
 		-- not enough items to post for this operation
-		TSM.Auctioning.Log.AddEntry(itemString, operationName, "postNotEnough", "", 0)
+		TSM.Auctioning.Log.AddEntry(itemString, operationName, "postNotEnough", "", 0, math.huge)
 		return nil
 	end
 
 	-- check the max expires
 	if operationSettings.maxExpires > 0 then
-		local _, numExpires = TSMAPI_FOUR.Modules.API("Accounting", "getAuctionStatsSinceLastSale", itemString)
-		if type(numExpires) == "number" and numExpires > operationSettings.maxExpires then
+		local numExpires = TSM.Accounting.Auctions.GetNumExpiresSinceSale(itemString)
+		if numExpires and numExpires > operationSettings.maxExpires then
 			-- too many expires, so ignore this operation
-			TSM.Auctioning.Log.AddEntry(itemString, operationName, "postMaxExpires", "", 0)
+			TSM.Auctioning.Log.AddEntry(itemString, operationName, "postMaxExpires", "", 0, math.huge)
 			return nil
 		end
 	end
@@ -359,7 +389,7 @@ function private.IsOperationValid(itemString, num, operationName, operationSetti
 		if not TSM.db.global.auctioningOptions.disableInvalidMsg then
 			TSM:Print(errMsg)
 		end
-		TSM.Auctioning.Log.AddEntry(itemString, operationName, "invalidItemGroup", "", 0)
+		TSM.Auctioning.Log.AddEntry(itemString, operationName, "invalidItemGroup", "", 0, math.huge)
 		return false
 	else
 		local vendorSellPrice = TSMAPI_FOUR.Item.GetVendorSell(itemString) or 0
@@ -379,28 +409,30 @@ function private.AuctionScanOnFilterDone(_, filter)
 			:Equal(isBaseItemString and "baseItemString" or "itemString", itemString)
 			:GreaterThan("itemBuyout", 0)
 			:OrderBy("itemBuyout", true)
-		local groupPath = TSMAPI_FOUR.Groups.GetPathByItem(itemString)
+		local groupPath = TSM.Groups.GetPathByItem(itemString)
 		if groupPath then
 			local numHave = 0
 			local bagQuery = private.bagDB:NewQuery()
 				:Select("quantity")
 				:Equal("itemString", itemString)
-			for _, quantity in bagQuery:Iterator(true) do
+			for _, quantity in bagQuery:Iterator() do
 				numHave = numHave + quantity
 			end
 			bagQuery:Release()
 
-			for operationName, operationSettings in TSM.Operations.IteratorByGroup("Auctioning", groupPath) do
+			for _, operationName, operationSettings in TSM.Operations.GroupOperationIterator("Auctioning", groupPath) do
 				if private.IsOperationValid(itemString, numHave, operationName, operationSettings) then
 					local operationNumHave = numHave - private.GetKeepQuantity(itemString, operationSettings)
 					if operationNumHave > 0 then
-						local reason, numUsed, itemBuyout, seller = private.GeneratePosts(itemString, operationName, operationSettings, operationNumHave, query)
+						local reason, numUsed, itemBuyout, seller, index = private.GeneratePosts(itemString, operationName, operationSettings, operationNumHave, query)
 						numHave = numHave - (numUsed or 0)
 						seller = seller or ""
-						TSM.Auctioning.Log.AddEntry(itemString, operationName, reason, seller, itemBuyout or 0)
+						index = index or math.huge
+						TSM.Auctioning.Log.AddEntry(itemString, operationName, reason, seller, itemBuyout or 0, index)
 					end
 				end
 			end
+			assert(numHave >= 0)
 		else
 			TSM:LOG_WARN("Item removed from group since start of scan: %s", itemString)
 		end
@@ -527,7 +559,7 @@ function private.GeneratePosts(itemString, operationName, operationSettings, num
 		:Equal("itemString", itemString)
 		:Equal("stackSize", perAuction)
 		:Equal("itemBuyout", buyout)
-	for _, numStacks in queueQuery:Iterator(true) do
+	for _, numStacks in queueQuery:Iterator() do
 		activeAuctions = activeAuctions + numStacks
 	end
 	queueQuery:Release()
@@ -537,6 +569,7 @@ function private.GeneratePosts(itemString, operationName, operationSettings, num
 	end
 
 	-- insert the posts into our DB
+	local index = private.nextQueueIndex
 	local postTime = (operationSettings.duration == 48 and 3) or (operationSettings.duration == 24 and 2) or 1
 	private.AddToQueue(itemString, operationName, bid, buyout, perAuction, maxCanPost, postTime)
 	-- check if we can post an extra partial stack
@@ -544,7 +577,7 @@ function private.GeneratePosts(itemString, operationName, operationSettings, num
 	if extraStack > 0 then
 		private.AddToQueue(itemString, operationName, bid, buyout, extraStack, 1, postTime)
 	end
-	return reason, (perAuction * maxCanPost) - extraStack, buyout, seller
+	return reason, (perAuction * maxCanPost) + extraStack, buyout, seller, index
 end
 
 function private.AddToQueue(itemString, operationName, itemBid, itemBuyout, stackSize, numStacks, postTime)
@@ -558,10 +591,10 @@ function private.AddToQueue(itemString, operationName, itemBid, itemBuyout, stac
 		:SetField("stackSize", stackSize)
 		:SetField("numStacks", numStacks)
 		:SetField("postTime", postTime)
-		:SetField("numPosted", 0)
+		:SetField("numProcessed", 0)
 		:SetField("numConfirmed", 0)
 		:SetField("numFailed", 0)
-		:Save()
+		:Create()
 	private.nextQueueIndex = private.nextQueueIndex + 1
 end
 
@@ -573,113 +606,130 @@ end
 
 function private.GetPostBagSlot(itemString, quantity)
 	-- start with the slot which is closest to the desired stack size
-	local row = private.bagDB:NewQuery()
+	local bag, slot = private.bagDB:NewQuery()
+		:Select("bag", "slot")
 		:Equal("itemString", itemString)
 		:GreaterThanOrEqual("quantity", quantity)
 		:OrderBy("quantity", true)
 		:GetFirstResultAndRelease()
-	if not row then
-		row = private.bagDB:NewQuery()
+	if not bag then
+		bag, slot = private.bagDB:NewQuery()
+			:Select("bag", "slot")
 			:Equal("itemString", itemString)
 			:LessThanOrEqual("quantity", quantity)
 			:OrderBy("quantity", false)
 			:GetFirstResultAndRelease()
 	end
-	local bag, slot = private.ItemBagSlotHelper(itemString, row:GetField("bag"), row:GetField("slot"), quantity)
+	assert(bag and slot)
+	local removeContext = TSMAPI_FOUR.Util.AcquireTempTable()
+	bag, slot = private.ItemBagSlotHelper(itemString, bag, slot, quantity, removeContext)
 
 	if TSMAPI_FOUR.Item.ToBaseItemString(GetContainerItemLink(bag, slot), true) ~= itemString then
 		-- something changed with the player's bags so we can't post the item right now
+		TSMAPI_FOUR.Util.ReleaseTempTable(removeContext)
 		return
 	end
 	local _, _, _, quality = GetContainerItemInfo(bag, slot)
 	assert(quality)
 	if quality == -1 then
 		-- the game client doesn't have item info cached for this item, so we can't post it yet
+		TSMAPI_FOUR.Util.ReleaseTempTable(removeContext)
 		return
 	end
+	for slotId, removeQuantity in pairs(removeContext) do
+		private.RemoveBagQuantity(slotId, removeQuantity)
+	end
+	TSMAPI_FOUR.Util.ReleaseTempTable(removeContext)
 	return bag, slot
 end
 
-function private.ItemBagSlotHelper(itemString, bag, slot, quantity)
-	local slotId = bag * SLOT_ID_BAG_MULTIPLIER + slot
+function private.ItemBagSlotHelper(itemString, bag, slot, quantity, removeContext)
+	local slotId = TSMAPI_FOUR.Util.JoinSlotId(bag, slot)
 
 	-- try to post completely from the selected slot
-	local row = private.bagDB:NewQuery()
+	local found = private.bagDB:NewQuery()
+		:Select("slotId")
 		:Equal("slotId", slotId)
 		:GreaterThanOrEqual("quantity", quantity)
 		:GetFirstResultAndRelease()
-	if row then
-		private.RemoveBagQuantity(row, quantity)
+	if found then
+		removeContext[slotId] = quantity
 		return bag, slot
 	end
 
 	-- try to find a stack at a lower slot which has enough to post from
-	local row = private.bagDB:NewQuery()
+	local foundSlotId, foundBag, foundSlot = private.bagDB:NewQuery()
+		:Select("slotId", "bag", "slot")
 		:Equal("itemString", itemString)
 		:LessThan("slotId", slotId)
 		:GreaterThanOrEqual("quantity", quantity)
 		:OrderBy("slotId", true)
 		:GetFirstResultAndRelease()
-	if row then
-		private.RemoveBagQuantity(row, quantity)
-		return bag, slot
+	if foundSlotId then
+		removeContext[foundSlotId] = quantity
+		return foundBag, foundSlot
 	end
 
 	-- try to post using the selected slot and the lower slots
 	local selectedQuantity = private.bagDB:NewQuery()
+		:Select("quantity")
 		:Equal("slotId", slotId)
 		:GetFirstResultAndRelease()
-		:GetField("quantity")
 	local query = private.bagDB:NewQuery()
+		:Select("slotId", "quantity")
 		:Equal("itemString", itemString)
 		:LessThan("slotId", slotId)
 		:OrderBy("slotId", true)
 	local numNeeded = quantity - selectedQuantity
 	local numUsed = 0
-	local usedRows = TSMAPI_FOUR.Util.AcquireTempTable()
-	for _, row in query:Iterator(true) do
+	local usedSlotIds = TSMAPI_FOUR.Util.AcquireTempTable()
+	for _, rowSlotId, rowQuantity in query:Iterator() do
 		if numNeeded ~= numUsed then
-			numUsed = min(numUsed + row:GetField("quantity"), numNeeded)
-			tinsert(usedRows, row)
+			numUsed = min(numUsed + rowQuantity, numNeeded)
+			tinsert(usedSlotIds, rowSlotId)
 		end
 	end
 	query:Release()
 	if numNeeded == numUsed then
-		for _, row in TSMAPI_FOUR.Util.TempTableIterator(usedRows) do
-			local rowNumUsed = min(numUsed, row:GetField("quantity"))
+		removeContext[slotId] = selectedQuantity
+		for _, rowSlotId in TSMAPI_FOUR.Util.TempTableIterator(usedSlotIds) do
+			local rowQuantity = private.bagDB:GetUniqueRowField("slotId", rowSlotId, "quantity")
+			local rowNumUsed = min(numUsed, rowQuantity)
 			numUsed = numUsed - rowNumUsed
-			private.RemoveBagQuantity(row, rowNumUsed)
+			removeContext[rowSlotId] = (removeContext[rowSlotId] or 0) + rowNumUsed
 		end
 		return bag, slot
 	else
-		TSMAPI_FOUR.Util.ReleaseTempTable(usedRows)
+		TSMAPI_FOUR.Util.ReleaseTempTable(usedSlotIds)
 	end
 
 	-- try posting from the next highest slot
-	local nextRow = private.bagDB:NewQuery()
+	local rowBag, rowSlot = private.bagDB:NewQuery()
+		:Select("bag", "slot")
 		:Equal("itemString", itemString)
 		:GreaterThan("slotId", slotId)
 		:OrderBy("slotId", true)
 		:GetFirstResultAndRelease()
-	return private.ItemBagSlotHelper(itemString, nextRow:GetField("bag"), nextRow:GetField("slot"), quantity)
+	return private.ItemBagSlotHelper(itemString, rowBag, rowSlot, quantity, removeContext)
 end
 
-function private.RemoveBagQuantity(row, quantity)
+function private.RemoveBagQuantity(slotId, quantity)
+	local row = private.bagDB:GetUniqueRow("slotId", slotId)
 	local remainingQuantity = row:GetField("quantity") - quantity
 	if remainingQuantity > 0 then
 		row:SetField("quantity", remainingQuantity)
-			:Save()
+			:Update()
 	else
 		assert(remainingQuantity == 0)
 		private.bagDB:DeleteRow(row)
 	end
+	row:Release()
 end
 
-function private.PostBagsRowSetExtendedFields(row)
-	local itemString = row:GetField("autoBaseItemString")
-	if TSMAPI_FOUR.Groups.GetPathByItem(itemString) == TSM.CONST.ROOT_GROUP_PATH then
-		row:SetField("operation", TSMAPI.Operations:GetFirstByGroup(TSM.CONST.ROOT_GROUP_PATH, "Auctioning") or "")
-	else
-		row:SetField("operation", TSMAPI.Operations:GetFirstByItem(itemString, "Auctioning") or "")
-	end
+function private.ConfirmRowQueryHelper(row)
+	return row:GetField("numConfirmed") < row:GetField("numProcessed")
+end
+
+function private.NextProcessRowQueryHelper(row)
+	return row:GetField("numProcessed") < row:GetField("numStacks")
 end

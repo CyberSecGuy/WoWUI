@@ -7,14 +7,71 @@
 -- ------------------------------------------------------------------------------ --
 
 --- ApplicationFrame UI Element Class.
--- An application frame is an abstract class which contains common functionality for @{LargeApplicationFrame} and
--- @{SmallApplicationFrame}. It is a subclass of the @{Frame} class.
+-- An application frame is the base frame of all of the TSM UIs. It is a subclass of the @{Frame} class.
 -- @classmod ApplicationFrame
 
 local _, TSM = ...
-local ApplicationFrame = TSMAPI_FOUR.Class.DefineClass("ApplicationFrame", TSM.UI.Frame, "ABSTRACT")
+local L = TSM.L
+local ApplicationFrame = TSMAPI_FOUR.Class.DefineClass("ApplicationFrame", TSM.UI.Frame)
 TSM.UI.ApplicationFrame = ApplicationFrame
 local private = {}
+local INNER_FRAME_OFFSET = 10
+local INNER_BORDER_RELATIVE_LEVEL = 20
+local TITLE_BG_OFFSET_TOP = -11
+local TITLE_BG_LEFT_OFFSET = 19
+local TITLE_BG_CLOSE_PADDING = 6
+local OUTER_TEXTURE_INFO = {
+	SMALL = {
+		titleBGRightOffset = -10,
+		closeBackground = "uiFrames.SmallApplicationCloseFrameBackground",
+		topLeft = "uiFrames.SmallApplicationOuterFrameTopLeftCorner",
+		topRight = "uiFrames.SmallApplicationOuterFrameTopRightCorner",
+		bottomLeft = "uiFrames.SmallApplicationOuterFrameBottomLeftCorner",
+		bottomRight = "uiFrames.SmallApplicationOuterFrameBottomRightCorner",
+		top = "uiFrames.SmallApplicationOuterFrameTopEdge",
+		bottom = "uiFrames.SmallApplicationOuterFrameBottomEdge",
+		left = "uiFrames.SmallApplicationOuterFrameLeftEdge",
+		right = "uiFrames.SmallApplicationOuterFrameRightEdge",
+	},
+	LARGE = {
+		titleBGRightOffset = -19,
+		closeBackground = "uiFrames.LargeApplicationCloseFrameBackground",
+		closeButtonWidth = 36,
+		topLeft = "uiFrames.LargeApplicationOuterFrameTopLeftCorner",
+		topRight = "uiFrames.LargeApplicationOuterFrameTopRightCorner",
+		bottomLeft = "uiFrames.LargeApplicationOuterFrameBottomLeftCorner",
+		bottomRight = "uiFrames.LargeApplicationOuterFrameBottomRightCorner",
+		top = "uiFrames.LargeApplicationOuterFrameTopEdge",
+		bottom = "uiFrames.LargeApplicationOuterFrameBottomEdge",
+		left = "uiFrames.LargeApplicationOuterFrameLeftEdge",
+		right = "uiFrames.LargeApplicationOuterFrameRightEdge",
+	},
+}
+local INNER_TEXTURE_INFO = {
+	SMALL = {
+		topOffset = -46,
+		topLeft = "uiFrames.SmallApplicationInnerFrameTopLeftCorner",
+		topRight = "uiFrames.SmallApplicationInnerFrameTopRightCorner",
+		bottomLeft = "uiFrames.SmallApplicationInnerFrameBottomLeftCorner",
+		bottomRight = "uiFrames.SmallApplicationInnerFrameBottomRightCorner",
+		top = "uiFrames.SmallApplicationInnerFrameTopEdge",
+		bottom = "uiFrames.SmallApplicationInnerFrameBottomEdge",
+		left = "uiFrames.SmallApplicationInnerFrameLeftEdge",
+		right = "uiFrames.SmallApplicationInnerFrameRightEdge",
+	},
+	LARGE = {
+		topOffset = -64,
+		showTopEdge = true,
+		topLeft = "uiFrames.LargeApplicationInnerFrameTopLeftCorner",
+		topRight = "uiFrames.LargeApplicationInnerFrameTopRightCorner",
+		bottomLeft = "uiFrames.LargeApplicationFrameInnerFrameBottomLeftCorner",
+		bottomRight = "uiFrames.LargeApplicationFrameInnerFrameBottomRightCorner",
+		top = "uiFrames.LargeApplicationInnerFrameTopEdge",
+		bottom = "uiFrames.LargeApplicationFrameInnerFrameBottomEdge",
+		left = "uiFrames.LargeApplicationFrameInnerFrameLeftEdge",
+		right = "uiFrames.LargeApplicationFrameInnerFrameRightEdge",
+	},
+}
 
 
 
@@ -27,9 +84,107 @@ function ApplicationFrame.__init(self)
 	self._contentFrame = nil
 	self._contextTable = nil
 	self._defaultContextTable = nil
+	self._innerTextureInfo = nil
+	self._outerTextureInfo = nil
+
+	local frame = self:_GetBaseFrame()
+	local globalFrameName = tostring(frame)
+	_G[globalFrameName] = frame
+	tinsert(UISpecialFrames, globalFrameName)
+
+	frame.headerBgLeft = frame:CreateTexture(nil, "BACKGROUND")
+	frame.headerBgLeft:SetPoint("TOPLEFT")
+
+	frame.headerBgRight = frame:CreateTexture(nil, "BACKGROUND")
+	frame.headerBgRight:SetPoint("TOPRIGHT")
+
+	frame.headerBgCenter = frame:CreateTexture(nil, "BACKGROUND")
+	frame.headerBgCenter:SetPoint("TOPLEFT", frame.headerBgLeft, "TOPRIGHT")
+	frame.headerBgCenter:SetPoint("TOPRIGHT", frame.headerBgRight, "TOPLEFT")
+
+	frame.titleBgLeft = frame:CreateTexture(nil, "BACKGROUND", nil, 1)
+	frame.titleBgLeft:SetPoint("TOPLEFT", TITLE_BG_LEFT_OFFSET, TITLE_BG_OFFSET_TOP)
+	TSM.UI.TexturePacks.SetTextureAndSize(frame.titleBgLeft, "uiFrames.HeaderLeft")
+
+	frame.titleBgClose = frame:CreateTexture(nil, "BACKGROUND", nil, 1)
+	frame.titleBgClose:SetPoint("TOPRIGHT", 0, TITLE_BG_OFFSET_TOP) -- x offset set later
+
+	frame.titleBgRight = frame:CreateTexture(nil, "BACKGROUND", nil, 1)
+	frame.titleBgRight:SetPoint("TOPRIGHT", frame.titleBgClose, "TOPLEFT", -TITLE_BG_CLOSE_PADDING, 0)
+	TSM.UI.TexturePacks.SetTextureAndSize(frame.titleBgRight, "uiFrames.HeaderRight")
+
+	frame.titleBgCenter = frame:CreateTexture(nil, "BACKGROUND", nil, 1)
+	frame.titleBgCenter:SetPoint("TOPLEFT", frame.titleBgLeft, "TOPRIGHT")
+	frame.titleBgCenter:SetPoint("TOPRIGHT", frame.titleBgRight, "TOPLEFT")
+	TSM.UI.TexturePacks.SetTextureAndHeight(frame.titleBgCenter, "uiFrames.HeaderMiddle")
+
+	frame.bottomLeftCorner = frame:CreateTexture(nil, "BACKGROUND")
+	frame.bottomLeftCorner:SetPoint("BOTTOMLEFT")
+
+	frame.bottomRightCorner = frame:CreateTexture(nil, "BACKGROUND")
+	frame.bottomRightCorner:SetPoint("BOTTOMRIGHT")
+
+	frame.leftEdge = frame:CreateTexture(nil, "BACKGROUND")
+	frame.leftEdge:SetPoint("TOPLEFT", frame.headerBgLeft, "BOTTOMLEFT")
+	frame.leftEdge:SetPoint("BOTTOMLEFT", frame.bottomLeftCorner, "TOPLEFT")
+
+	frame.rightEdge = frame:CreateTexture(nil, "BACKGROUND")
+	frame.rightEdge:SetPoint("TOPRIGHT", frame.headerBgRight, "BOTTOMRIGHT")
+	frame.rightEdge:SetPoint("BOTTOMRIGHT", frame.bottomRightCorner, "TOPRIGHT")
+
+	frame.bottomEdge = frame:CreateTexture(nil, "BACKGROUND")
+	frame.bottomEdge:SetPoint("BOTTOMLEFT", frame.bottomLeftCorner, "BOTTOMRIGHT")
+	frame.bottomEdge:SetPoint("BOTTOMRIGHT", frame.bottomRightCorner, "BOTTOMLEFT")
+
+	frame.innerBorderFrame = CreateFrame("Frame", nil, frame, nil)
+	frame.innerBorderFrame:SetPoint("TOPLEFT", INNER_FRAME_OFFSET, 0) -- y offset set later
+	frame.innerBorderFrame:SetPoint("BOTTOMRIGHT", -INNER_FRAME_OFFSET, INNER_FRAME_OFFSET)
+
+	frame.innerBottomRightCorner = frame.innerBorderFrame:CreateTexture(nil, "BACKGROUND")
+	frame.innerBottomRightCorner:SetPoint("BOTTOMRIGHT")
+
+	frame.innerBottomLeftCorner = frame.innerBorderFrame:CreateTexture(nil, "BACKGROUND")
+	frame.innerBottomLeftCorner:SetPoint("BOTTOMLEFT")
+
+	frame.innerTopRightCorner = frame.innerBorderFrame:CreateTexture(nil, "BACKGROUND")
+	frame.innerTopRightCorner:SetPoint("TOPRIGHT")
+
+	frame.innerTopLeftCorner = frame.innerBorderFrame:CreateTexture(nil, "BACKGROUND")
+	frame.innerTopLeftCorner:SetPoint("TOPLEFT")
+
+	frame.innerLeftEdge = frame.innerBorderFrame:CreateTexture(nil, "BACKGROUND")
+	frame.innerLeftEdge:SetPoint("TOPLEFT", frame.innerTopLeftCorner, "BOTTOMLEFT")
+	frame.innerLeftEdge:SetPoint("BOTTOMLEFT", frame.innerBottomLeftCorner, "TOPLEFT")
+
+	frame.innerRightEdge = frame.innerBorderFrame:CreateTexture(nil, "BACKGROUND")
+	frame.innerRightEdge:SetPoint("TOPRIGHT", frame.innerTopRightCorner, "BOTTOMRIGHT")
+	frame.innerRightEdge:SetPoint("BOTTOMRIGHT", frame.innerBottomRightCorner, "TOPRIGHT")
+
+	frame.innerTopEdge = frame.innerBorderFrame:CreateTexture(nil, "BACKGROUND")
+	frame.innerTopEdge:SetPoint("TOPLEFT", frame.innerTopLeftCorner, "TOPRIGHT")
+	frame.innerTopEdge:SetPoint("TOPRIGHT", frame.innerTopRightCorner, "TOPLEFT")
+
+	frame.innerBottomEdge = frame.innerBorderFrame:CreateTexture(nil, "BACKGROUND")
+	frame.innerBottomEdge:SetPoint("BOTTOMLEFT", frame.innerBottomLeftCorner, "BOTTOMRIGHT")
+	frame.innerBottomEdge:SetPoint("BOTTOMRIGHT", frame.innerBottomRightCorner, "BOTTOMLEFT")
+
+	frame.resizingContent = CreateFrame("Frame", nil, frame.innerBorderFrame, nil)
+	frame.resizingContent:SetAllPoints()
+	frame.resizingContent:Hide()
+	frame.resizingContent.texture = frame.resizingContent:CreateTexture(nil, "ARTWORK")
+	frame.resizingContent.texture:SetAllPoints()
+	frame.resizingContent.texture:SetColorTexture(TSM.UI.HexToRGBA("#363636"))
+	frame.resizingContent.texture:Show()
+
+	frame.topEdge = frame:CreateTexture(nil, "BACKGROUND")
+	frame.topEdge:SetPoint("BOTTOMLEFT", frame.innerBorderFrame, "TOPLEFT")
+	frame.topEdge:SetPoint("BOTTOMRIGHT", frame.innerBorderFrame, "TOPRIGHT")
+	frame.topEdge:SetPoint("TOP", frame.headerBgCenter, "BOTTOM")
+	frame.topEdge:SetColorTexture(TSM.UI.HexToRGBA("#363636"))
 end
 
 function ApplicationFrame.Acquire(self)
+	local frame = self:_GetBaseFrame()
 	self:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Button", "resizeBtn")
 		:SetStyle("anchors", { { "BOTTOMRIGHT" } })
 		:SetStyle("height", TSM.UI.TexturePacks.GetHeight("iconPack.14x14/Resize"))
@@ -40,15 +195,62 @@ function ApplicationFrame.Acquire(self)
 		:SetScript("OnMouseUp", private.ResizeButtonOnMouseUp)
 		:SetScript("OnClick", private.ResizeButtonOnClick)
 	)
+	local lastScan = TSM.AuctionDB.GetLastCompleteScanTime()
+	self:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Frame", "titleFrame")
+		:SetLayout("HORIZONTAL")
+		:SetStyle("height", 15)
+		:SetStyle("anchors", { { "LEFT", frame.titleBgLeft, "LEFT", 28, 0 }, { "RIGHT", frame.titleBgRight, "RIGHT", -8, 0 } })
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Spacer", "leftSpacer"))
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "title")
+			:SetStyle("autoWidth", true)
+			:SetStyle("font", TSM.UI.Fonts.MontserratBold)
+			:SetStyle("fontHeight", 12)
+			:SetStyle("textColor", "#ffffff")
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "sep")
+			:SetStyle("autoWidth", true)
+			:SetStyle("font", TSM.UI.Fonts.MontserratBold)
+			:SetStyle("fontHeight", 12)
+			:SetStyle("textColor", "#ffffff")
+			:SetText(" - ")
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "version")
+			:SetStyle("autoWidth", true)
+			:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
+			:SetStyle("fontHeight", 12)
+			:SetStyle("textColor", "#ffffff")
+			:SetText(TSM:GetVersion())
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")
+			:SetStyle("width", 1)
+			:SetStyle("margin", { left = 8, right = 8 })
+			:SetStyle("color", "#80e2e2e2")
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "lastUpdate")
+			:SetStyle("autoWidth", true)
+			:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
+			:SetStyle("fontHeight", 12)
+			:SetText(L["Last Data Update:"].." "..(lastScan and date("%c", lastScan) or L["No Data"]))
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Spacer", "middleSpacer"))
+		:AddChild(TSMAPI_FOUR.UI.NewElement("PlayerGoldText", "money")
+			:SetStyle("autoWidth", true)
+			:SetStyle("fontHeight", 14)
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Spacer", "rightSpacer"))
+	)
+	self:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Button", "closeBtn")
+		:SetStyle("anchors", { { "TOPLEFT", frame.titleBgClose } })
+		:SetStyle("backgroundTexturePack", "iconPack.24x24/Close/Default")
+		:SetScript("OnClick", private.CloseButtonOnClick)
+	)
 	self.__super:Acquire()
-	local frame = self:_GetBaseFrame()
 	frame:EnableMouse(true)
 	frame:SetMovable(true)
 	frame:SetResizable(true)
 	frame:RegisterForDrag("LeftButton")
 	self:SetScript("OnDragStart", private.FrameOnDragStart)
 	self:SetScript("OnDragStop", private.FrameOnDragStop)
-	self:GetElement("closeBtn"):SetScript("OnClick", private.CloseButtonOnClick)
 end
 
 function ApplicationFrame.Release(self)
@@ -56,7 +258,69 @@ function ApplicationFrame.Release(self)
 	self._contextTable = nil
 	self._defaultContextTable = nil
 	self:_GetBaseFrame():SetMinResize(0, 0)
+	self._innerTextureInfo = nil
+	self._outerTextureInfo = nil
 	self.__super:Release()
+end
+
+--- Sets the texture set to use.
+-- @tparam ApplicationFrame self The application frame object
+-- @tparam string outer The texture set to use for the outer textures
+-- @tparam string inner The texture set to use for the inner textures
+-- @treturn ApplicationFrame The application frame object
+function ApplicationFrame.SetTextureSet(self, outer, inner)
+	self._outerTextureInfo = OUTER_TEXTURE_INFO[outer]
+	self._innerTextureInfo = INNER_TEXTURE_INFO[inner]
+
+	-- update all the textures
+	local frame = self:_GetBaseFrame()
+	TSM.UI.TexturePacks.SetTextureAndSize(frame.headerBgLeft, self._outerTextureInfo.topLeft)
+	TSM.UI.TexturePacks.SetTextureAndSize(frame.headerBgRight, self._outerTextureInfo.topRight)
+	TSM.UI.TexturePacks.SetTextureAndHeight(frame.headerBgCenter, self._outerTextureInfo.top)
+	frame.titleBgClose:SetPoint("TOPRIGHT", self._outerTextureInfo.titleBGRightOffset, TITLE_BG_OFFSET_TOP)
+	TSM.UI.TexturePacks.SetTextureAndSize(frame.titleBgClose, self._outerTextureInfo.closeBackground)
+	TSM.UI.TexturePacks.SetTextureAndSize(frame.bottomLeftCorner, self._outerTextureInfo.bottomLeft)
+	TSM.UI.TexturePacks.SetTextureAndSize(frame.bottomRightCorner, self._outerTextureInfo.bottomRight)
+	TSM.UI.TexturePacks.SetTextureAndWidth(frame.leftEdge, self._outerTextureInfo.left)
+	TSM.UI.TexturePacks.SetTextureAndWidth(frame.rightEdge, self._outerTextureInfo.right)
+	TSM.UI.TexturePacks.SetTextureAndHeight(frame.bottomEdge, self._outerTextureInfo.bottom)
+	frame.innerBorderFrame:SetPoint("TOPLEFT", INNER_FRAME_OFFSET, self._innerTextureInfo.topOffset)
+	TSM.UI.TexturePacks.SetTextureAndSize(frame.innerBottomRightCorner, self._innerTextureInfo.bottomRight)
+	TSM.UI.TexturePacks.SetTextureAndSize(frame.innerBottomLeftCorner, self._innerTextureInfo.bottomLeft)
+	TSM.UI.TexturePacks.SetTextureAndSize(frame.innerTopRightCorner, self._innerTextureInfo.topRight)
+	TSM.UI.TexturePacks.SetTextureAndSize(frame.innerTopLeftCorner, self._innerTextureInfo.topLeft)
+	TSM.UI.TexturePacks.SetTextureAndWidth(frame.innerLeftEdge, self._innerTextureInfo.left)
+	TSM.UI.TexturePacks.SetTextureAndWidth(frame.innerRightEdge, self._innerTextureInfo.right)
+	TSM.UI.TexturePacks.SetTextureAndHeight(frame.innerTopEdge, self._innerTextureInfo.top)
+	TSM.UI.TexturePacks.SetTextureAndHeight(frame.innerBottomEdge, self._innerTextureInfo.bottom)
+
+	if self._innerTextureInfo.showTopEdge then
+		frame.topEdge:Show()
+	else
+		frame.topEdge:Hide()
+	end
+
+	return self
+end
+
+--- Adds a switch button to the title frame.
+-- @tparam ApplicationFrame self The application frame object
+-- @tparam function onClickHandler The handler for the OnClick script for the button
+-- @treturn ApplicationFrame The application frame object
+function ApplicationFrame.AddSwitchButton(self, onClickHandler)
+	self:GetElement("titleFrame")
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Button", "switchBtn")
+			:SetStyle("width", 131)
+			:SetStyle("height", 16)
+			:SetStyle("backgroundTexturePack", "uiFrames.DefaultUIButton")
+			:SetStyle("margin.left", 8)
+			:SetStyle("font", TSM.UI.Fonts.MontserratBold)
+			:SetStyle("fontHeight", 10)
+			:SetStyle("textColor", "#2e2e2e")
+			:SetText(L["Switch to WoW UI"])
+			:SetScript("OnClick", onClickHandler)
+		)
+	return self
 end
 
 --- Sets the title text.
@@ -64,7 +328,9 @@ end
 -- @tparam string title The title text
 -- @treturn ApplicationFrame The application frame object
 function ApplicationFrame.SetTitle(self, title)
-	self:GetElement("title"):SetText(title)
+	local titleFrame = self:GetElement("titleFrame")
+	titleFrame:GetElement("title"):SetText(title)
+	titleFrame:Draw()
 	return self
 end
 
@@ -74,6 +340,8 @@ end
 -- @treturn ApplicationFrame The application frame object
 function ApplicationFrame.SetContentFrame(self, frame)
 	assert(frame:__isa(TSM.UI.Frame))
+	-- y offset of TOPLEFT is set later
+	frame:SetStyle("anchors", { { "TOPLEFT", INNER_FRAME_OFFSET, 0 }, { "BOTTOMRIGHT", -INNER_FRAME_OFFSET, INNER_FRAME_OFFSET } })
 	self._contentFrame = frame
 	self:AddChildNoLayout(frame)
 	return self
@@ -108,8 +376,136 @@ function ApplicationFrame.SetMinResize(self, minWidth, minHeight)
 	return self
 end
 
+--- Shows a dialog frame.
+-- @tparam ApplicationFrame self The large application frame object
+-- @tparam Element frame The element to show in a dialog
+-- @param context The context to set on the dialog frame
+function ApplicationFrame.ShowDialogFrame(self, frame, context)
+	self._contentFrame:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Frame", "_dialog")
+		:SetStyle("relativeLevel", INNER_BORDER_RELATIVE_LEVEL - 2)
+		:SetStyle("anchors", { { "TOPLEFT" }, { "BOTTOMRIGHT" } })
+		:SetStyle("background", "#592e2e2e")
+		:SetMouseEnabled(true)
+		:SetContext(context)
+		:SetScript("OnMouseUp", private.DialogOnMouseUp)
+		:SetScript("OnHide", private.DialogOnHide)
+		:AddChildNoLayout(frame)
+	)
+	local dialog = self._contentFrame:GetElement("_dialog")
+	dialog:Show()
+	dialog:Draw()
+end
+
+--- Show a confirmation dialog.
+-- @tparam ApplicationFrame self The large application frame object
+-- @tparam string title The title of the dialog
+-- @tparam string subTitle The sub-title of the dialog
+-- @tparam string confirmBtnText The confirm button text
+-- @tparam function callback The callback for when the dialog is closed
+-- @tparam[opt] varag ... Arguments to pass to the callback
+function ApplicationFrame.ShowConfirmationDialog(self, title, subTitle, confirmBtnText, callback, ...)
+	local context = TSMAPI_FOUR.Util.AcquireTempTable(...)
+	context.callback = callback
+	local frame = TSMAPI_FOUR.UI.NewElement("Frame", "frame")
+		:SetLayout("VERTICAL")
+		:SetStyle("width", 412)
+		:SetStyle("height", 188)
+		:SetStyle("anchors", { { "CENTER" } })
+		:SetStyle("background", "#2e2e2e")
+		:SetStyle("border", "#e2e2e2")
+		:SetStyle("borderSize", 2)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "title")
+			:SetStyle("height", 20)
+			:SetStyle("margin", { top = 24, left = 16, right = 16, bottom = 16 })
+			:SetStyle("font", TSM.UI.Fonts.bold)
+			:SetStyle("fontHeight", 18)
+			:SetStyle("justifyH", "CENTER")
+			:SetText(title)
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "desc")
+			:SetStyle("height", 60)
+			:SetStyle("margin", { left = 32, right = 32, bottom = 25 })
+			:SetStyle("font", TSM.UI.Fonts.MontserratItalic)
+			:SetStyle("fontHeight", 14)
+			:SetStyle("justifyH", "CENTER")
+			:SetText(subTitle)
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "buttons")
+			:SetLayout("HORIZONTAL")
+			:SetStyle("margin", { left = 16, right = 16, bottom = 16 })
+			:AddChild(TSMAPI_FOUR.UI.NewElement("Spacer", "spacer"))
+			:AddChild(TSMAPI_FOUR.UI.NewElement("Button", "cancelBtn")
+				:SetStyle("width", 80)
+				:SetStyle("height", 26)
+				:SetStyle("margin", { right = 16 })
+				:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
+				:SetStyle("fontHeight", 16)
+				:SetText(CANCEL)
+				:SetScript("OnClick", private.DialogCancelBtnOnClick)
+			)
+			:AddChild(TSMAPI_FOUR.UI.NewElement("ActionButton", "deleteBtn")
+				:SetStyle("width", 126)
+				:SetStyle("height", 26)
+				:SetText(confirmBtnText)
+				:SetScript("OnClick", private.DialogConfirmBtnOnClick)
+			)
+		)
+	self:ShowDialogFrame(frame, context)
+end
+
+--- Show a dialog triggered by a "more" button.
+-- @tparam ApplicationFrame self The large application frame object
+-- @tparam Button moreBtn The "more" button
+-- @tparam function iter A dialog menu row iterator with the following fields: `index, text, callback`
+function ApplicationFrame.ShowMoreButtonDialog(self, moreBtn, iter)
+	local frame = TSMAPI_FOUR.UI.NewElement("MenuDialogFrame", "moreDialog")
+		:SetLayout("VERTICAL")
+		:SetStyle("width", 180)
+		:SetStyle("anchors", { { "TOPRIGHT", moreBtn:_GetBaseFrame(), "BOTTOM", 22, -16 } })
+		:SetStyle("padding.top", 8)
+		:SetStyle("padding.bottom", 4)
+		:SetStyle("background", "#2e2e2e")
+		:SetStyle("borderInset", 8)
+	local numRows = 0
+	for i, text, callback in iter do
+		frame:AddChild(TSMAPI_FOUR.UI.NewElement("Button", "row"..i)
+			:SetStyle("height", 20)
+			:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
+			:SetStyle("fontHeight", 14)
+			:SetStyle("justifyH", "CENTER")
+			:SetStyle("textColor", "#ffffff")
+			:SetText(text)
+			:SetScript("OnClick", callback)
+		)
+		numRows = numRows + 1
+	end
+	frame:SetStyle("height", 4 + numRows * 28)
+	self:ShowDialogFrame(frame)
+end
+
+--- Hides the current dialog.
+-- @tparam ApplicationFrame self The large application frame object
+function ApplicationFrame.HideDialog(self)
+	local dialog = self._contentFrame:GetElement("_dialog")
+	if not dialog then
+		return
+	end
+	dialog:GetParentElement():RemoveChild(dialog)
+	dialog:Hide()
+	dialog:Release()
+end
+
 function ApplicationFrame.Draw(self)
 	local frame = self:_GetBaseFrame()
+	frame:SetToplevel(true)
+	frame.resizingContent:SetFrameLevel(frame:GetFrameLevel() + INNER_BORDER_RELATIVE_LEVEL + 5)
+
+	local contentFrameAnchors = self._contentFrame:_GetStyle("anchors")
+	contentFrameAnchors[1][3] = self._innerTextureInfo.topOffset
+
+	self:GetElement("closeBtn")
+		:SetStyle("width", self._outerTextureInfo.closeButtonWidth or TSM.UI.TexturePacks.GetWidth(self._outerTextureInfo.closeBackground))
+		:SetStyle("height", TSM.UI.TexturePacks.GetHeight(self._outerTextureInfo.closeBackground))
 
 	-- update the size if it's less than the set min size
 	local minWidth, minHeight = frame:GetMinResize()
@@ -133,7 +529,37 @@ function ApplicationFrame.Draw(self)
 	anchors[1][3] = self._contextTable.centerY
 	self:SetStyle("anchors", anchors)
 
+	frame.innerBorderFrame:SetFrameLevel(frame:GetFrameLevel() + INNER_BORDER_RELATIVE_LEVEL)
+	frame.innerBorderFrame:SetPoint("BOTTOMRIGHT", -INNER_FRAME_OFFSET, INNER_FRAME_OFFSET + (self:_GetStyle("bottomPadding") or 0))
+
 	self.__super:Draw()
+
+	local titleFrame = self:GetElement("titleFrame")
+	local titleStyle = self:_GetStyle("titleStyle")
+	if titleStyle == "FULL" then
+		titleFrame:GetElement("leftSpacer"):Hide()
+		titleFrame:GetElement("line"):Show()
+		titleFrame:GetElement("lastUpdate"):Show()
+		titleFrame:GetElement("middleSpacer"):Show()
+		titleFrame:GetElement("money"):Show()
+		titleFrame:GetElement("rightSpacer"):Hide()
+	elseif titleStyle == "TITLE_ONLY" then
+		if self:GetElement("titleFrame.switchBtn") then
+			-- left-align the text
+			titleFrame:GetElement("leftSpacer"):Hide()
+		else
+			-- center the text
+			titleFrame:GetElement("leftSpacer"):Show()
+		end
+		titleFrame:GetElement("line"):Hide()
+		titleFrame:GetElement("lastUpdate"):Hide()
+		titleFrame:GetElement("middleSpacer"):Hide()
+		titleFrame:GetElement("money"):Hide()
+		titleFrame:GetElement("rightSpacer"):Show()
+	else
+		error("Invalid titleStyle: "..tostring(titleStyle))
+	end
+	titleFrame:Draw()
 end
 
 
@@ -156,10 +582,24 @@ function ApplicationFrame._SavePositionAndSize(self)
 end
 
 function ApplicationFrame._SetResizing(self, resizing)
+	local frame = self:_GetBaseFrame()
 	if resizing then
-		self:_GetBaseFrame().resizingContent:Show()
+		frame.resizingContent:Show()
 	else
-		self:_GetBaseFrame().resizingContent:Hide()
+		frame.resizingContent:Hide()
+	end
+	if resizing then
+		self:GetElement("titleFrame"):Hide()
+		local minWidth, minHeight = frame:GetMinResize()
+		self._contentFrame:SetStyle("anchors", { { "CENTER" } })
+		self._contentFrame:SetStyle("width", minWidth - 20)
+		self._contentFrame:SetStyle("height", minHeight - 150)
+		self._contentFrame:Draw()
+	else
+		self:GetElement("titleFrame"):Show()
+		self._contentFrame:SetStyle("anchors", { { "TOPLEFT", INNER_FRAME_OFFSET, self._innerTextureInfo.topOffset }, { "BOTTOMRIGHT", -INNER_FRAME_OFFSET, INNER_FRAME_OFFSET } })
+		self._contentFrame:SetStyle("width", nil)
+		self._contentFrame:SetStyle("height", nil)
 	end
 end
 
@@ -213,4 +653,30 @@ function private.FrameOnDragStop(self)
 	local frame = self:_GetBaseFrame()
 	frame:StopMovingOrSizing()
 	self:_SavePositionAndSize()
+end
+
+function private.DialogOnMouseUp(dialog)
+	local self = dialog:GetParentElement():GetParentElement()
+	self:HideDialog()
+end
+
+function private.DialogOnHide(dialog)
+	local context = dialog:GetContext()
+	if context then
+		TSMAPI_FOUR.Util.ReleaseTempTable(context)
+	end
+end
+
+function private.DialogCancelBtnOnClick(button)
+	local self = button:GetBaseElement()
+	self:HideDialog()
+end
+
+function private.DialogConfirmBtnOnClick(button)
+	local self = button:GetBaseElement()
+	local dialog = self._contentFrame:GetElement("_dialog")
+	local context = dialog:GetContext()
+	dialog:SetContext(nil)
+	self:HideDialog()
+	context.callback(TSMAPI_FOUR.Util.UnpackAndReleaseTempTable(context))
 end

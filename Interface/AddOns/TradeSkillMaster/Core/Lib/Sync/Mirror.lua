@@ -79,7 +79,7 @@ function private.SendCharacterHashes()
 	end
 
 	-- send the hashes to all connected accounts
-	for account, character in TSM.Sync.Connection.ConnectedAccountIterator() do
+	for _, character in TSM.Sync.Connection.ConnectedAccountIterator() do
 		TSM.Sync.Comm.SendData(TSM.Sync.DATA_TYPES.CHARACTER_HASHES_BROADCAST, character, hashes)
 	end
 	TSMAPI_FOUR.Util.ReleaseTempTable(hashes)

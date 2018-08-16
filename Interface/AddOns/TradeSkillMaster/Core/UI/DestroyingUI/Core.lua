@@ -8,9 +8,22 @@
 
 local _, TSM = ...
 local DestroyingUI = TSM.UI:NewPackage("DestroyingUI")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
-local private = { fsm = nil }
+local L = TSM.L
+local private = { fsm = nil, query = nil }
 local MIN_FRAME_SIZE = { width = 280, height = 280 }
+local BASE_STYLESHEET = TSM.UI.Util.Stylesheet()
+	:SetStyleTable("Text", nil, {
+		height = 16,
+		fontHeight = 12,
+		justifyH = "CENTER",
+	})
+	:SetStyleTable("QueryScrollingTable", nil, {
+		rowHeight = 20,
+	})
+	:SetStyleTable("Texture", "HORIZONTAL_LINE", {
+		height = 2,
+		color = "#9d9d9d",
+	})
 
 
 
@@ -33,12 +46,18 @@ end
 -- ============================================================================
 
 function private.CreateMainFrame()
-	local frame = TSMAPI_FOUR.UI.NewElement("SmallApplicationFrame", "base")
+	private.query = private.query or TSM.Destroying.CreateBagQuery()
+	private.query:ResetOrderBy()
+	private.query:OrderBy("name", true)
+	local frame = TSMAPI_FOUR.UI.NewElement("ApplicationFrame", "base")
+		:SetTextureSet("SMALL", "SMALL")
 		:SetParent(UIParent)
+		:SetStylesheet(BASE_STYLESHEET)
 		:SetMinResize(MIN_FRAME_SIZE.width, MIN_FRAME_SIZE.height)
 		:SetContextTable(TSM.db.global.internalData.destroyingUIFrameContext, TSM.db:GetDefaultReadOnly("global", "internalData", "destroyingUIFrameContext"))
 		:SetStyle("strata", "DIALOG")
-		:SetTitle("TSM Destroying [v4.0]")
+		:SetTitle(L["TSM Destroying"])
+		:SetScript("OnHide", private.FrameOnHide)
 		:SetContentFrame(TSMAPI_FOUR.UI.NewElement("Frame", "content")
 			:SetLayout("VERTICAL")
 			:SetStyle("background", "#2e2e2e")
@@ -48,70 +67,56 @@ function private.CreateMainFrame()
 				:SetStyle("background", "#404040")
 				:SetStyle("padding", { left = 13, right = 13, top = 13 })
 				:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "desc")
-					:SetStyle("height", 16)
-					:SetStyle("fontHeight", 12)
-					:SetStyle("justifyV", "CENTER")
-					:SetStyle("justifyH", "CENTER")
 					:SetText(L["|cffffd839Left-Click|r to ignore an item this session."])
 				)
 				:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "desc2")
-					:SetStyle("height", 16)
-					:SetStyle("fontHeight", 12)
-					:SetStyle("justifyV", "CENTER")
-					:SetStyle("justifyH", "CENTER")
 					:SetText(L["|cffffd839Shift-Left-Click|r to ignore it permanently."])
 				)
-				:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "desc")
+				:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "desc3")
 					:SetStyle("margin", { top = 4 })
 					:SetStyle("height", 13)
 					:SetStyle("font", TSM.UI.Fonts.MontserratItalic)
 					:SetStyle("fontHeight", 10)
-					:SetStyle("justifyV", "CENTER")
-					:SetStyle("justifyH", "CENTER")
 					:SetText(L["View ignored items in the Destroying options."])
 				)
 			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")
-				:SetStyle("height", 2)
-				:SetStyle("color", "#9d9d9d")
-			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("ScrollingTable", "items")
-				:SetStyle("rowHeight", 20)
+			:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line", "HORIZONTAL_LINE"))
+			:AddChild(TSMAPI_FOUR.UI.NewElement("QueryScrollingTable", "items")
 				:GetScrollingTableInfo()
 					:NewColumn("item")
 						:SetTitles(L["Item"])
-						:SetJustifyH("LEFT")
 						:SetIconSize(12)
-						:SetTextFunction(private.ItemsGetItemText)
-						:SetIconFunction(private.ItemsGetItemIcon)
-						:SetSortValueFunction(private.ItemsGetItemSortValue)
-						:SetTooltipFunction(private.ItemsGetItemTooltip)
+						:SetFont(TSM.UI.Fonts.FRIZQT)
+						:SetFontHeight(12)
+						:SetJustifyH("LEFT")
+						:SetTextInfo("itemString", TSM.UI.GetColoredItemName)
+						:SetIconInfo("itemString", TSMAPI_FOUR.Item.GetTexture)
+						:SetTooltipInfo("itemString")
+						:SetSortInfo("name")
+						:SetTooltipLinkingDisabled(true)
 						:Commit()
-					:NewColumn("stack")
+					:NewColumn("num")
 						:SetTitles("#")
 						:SetWidth(30)
+						:SetFont(TSM.UI.Fonts.RobotoMedium)
+						:SetFontHeight(12)
 						:SetJustifyH("CENTER")
-						:SetTextFunction(private.ItemsGetStackText)
-						:SetSortValueFunction(private.ItemsGetStackSortValue)
+						:SetTextInfo("quantity")
+						:SetSortInfo("quantity")
 						:Commit()
-					:SetDefaultSort("item", true)
-					:SetSecondarySortComparator(private.ItemsGetSecondarySortComparator)
 					:Commit()
-				:SetQuery(TSM.Destroying.GetBagQuery())
+				:SetQuery(private.query)
 				:SetSelectionDisabled(true)
 				:SetScript("OnRowClick", private.ItemsOnRowClick)
 			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")
-				:SetStyle("height", 2)
-				:SetStyle("color", "#9d9d9d")
-			)
+			:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line", "HORIZONTAL_LINE"))
 			:AddChild(TSMAPI_FOUR.UI.NewElement("ActionButton", "combineBtn")
 				:SetStyle("height", 26)
 				:SetStyle("margin", { left = 24, right = 24, top = 12 })
 				:SetText(L["Combine Partial Stacks"])
 				:SetScript("OnClick", private.CombineButtonOnClick)
 			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("SecureMacroActionButton", "destroyBtn", "TSMDestroyBtn")
+			:AddChild(TSMAPI_FOUR.UI.NewNamedElement("SecureMacroActionButton", "destroyBtn", "TSMDestroyBtn")
 				:SetStyle("height", 26)
 				:SetStyle("margin", { left = 24, right = 24, top = 8, bottom = 15 })
 				:SetText(L["Destroy Next"])
@@ -128,6 +133,10 @@ end
 -- Local Script Handlers
 -- ============================================================================
 
+function private.FrameOnHide(frame)
+	private.fsm:ProcessEvent("EV_FRAME_TOGGLE")
+end
+
 function private.ItemsOnRowClick(_, record, mouseButton)
 	if mouseButton ~= "LeftButton" then
 		return
@@ -137,6 +146,9 @@ function private.ItemsOnRowClick(_, record, mouseButton)
 	else
 		TSM.Destroying.IgnoreItemSession(record:GetField("itemString"))
 	end
+	if private.query:Count() == 0 then
+		private.fsm:ProcessEvent("EV_FRAME_TOGGLE")
+	end
 end
 
 function private.CloseButtonOnClick(button)
@@ -144,45 +156,15 @@ function private.CloseButtonOnClick(button)
 end
 
 function private.CombineButtonOnClick(button)
+	button:SetPressed(true)
+	button:Draw()
 	private.fsm:ProcessEvent("EV_COMBINE_BUTTON_CLICKED")
 end
 
 function private.DestroyButtonPreClick(button)
+	button:SetPressed(true)
+	button:Draw()
 	private.fsm:ProcessEvent("EV_DESTROY_BUTTON_PRE_CLICK")
-end
-
-
-
--- ============================================================================
--- Private Helper Functions
--- ============================================================================
-
-function private.ItemsGetItemText(_, record)
-	return TSM.UI.GetColoredItemName(record:GetField("itemLink"))
-end
-
-function private.ItemsGetStackText(_, record)
-	return record:GetField("stackSize")
-end
-
-function private.ItemsGetItemIcon(_, record)
-	return TSMAPI_FOUR.Item.GetTexture(record:GetField("itemString"))
-end
-
-function private.ItemsGetItemSortValue(_, record)
-	return TSMAPI_FOUR.Item.GetName(record:GetField("itemLink")) or "?"
-end
-
-function private.ItemsGetItemTooltip(_, record)
-	return record:GetField("itemString")
-end
-
-function private.ItemsGetStackSortValue(_, record)
-	return record:GetField("stackSize")
-end
-
-function private.ItemsGetSecondarySortComparator(_, aRecord, bRecord)
-	return aRecord:GetField("slotId") < bRecord:GetField("slotId")
 end
 
 
@@ -210,7 +192,7 @@ function private.FSMCreate()
 		combineBtn:SetDisabled(context.combineThread or context.destroyThread or not TSM.Destroying.CanCombine())
 		local destroyBtn = context.frame:GetElement("content.destroyBtn")
 		destroyBtn:SetText(context.destroyThread and L["Destroying..."] or L["Destroy Next"])
-		destroyBtn:SetDisabled(context.combineThread or context.destroyThread or not TSM.Destroying.CanDestroy())
+		destroyBtn:SetDisabled(context.combineThread or context.destroyThread or private.query:Count() == 0)
 		context.frame:Draw()
 	end
 	private.fsm = TSMAPI_FOUR.FSM.New("DESTROYING")
@@ -234,7 +216,7 @@ function private.FSMCreate()
 			:AddTransition("ST_FRAME_OPENING")
 			:AddEvent("EV_FRAME_TOGGLE", TSMAPI_FOUR.FSM.SimpleTransitionEventHandler("ST_FRAME_OPENING"))
 			:AddEvent("EV_BAG_UPDATE", function(context)
-				if not context.didShowOnce and TSM.db.global.destroyingOptions.autoShow and (TSM.Destroying.CanCombine() or TSM.Destroying.CanDestroy()) then
+				if not context.didShowOnce and TSM.db.global.destroyingOptions.autoShow then
 					return "ST_FRAME_OPENING"
 				end
 			end)
@@ -253,9 +235,11 @@ function private.FSMCreate()
 				UpdateDestroyingFrame(context)
 				if TSM.db.global.destroyingOptions.autoStack and not context.didAutoCombine and TSM.Destroying.CanCombine() then
 					context.didAutoCombine = true
-					context.frame:GetElement("content.combineBtn"):SetPressed(true)
+					context.frame:GetElement("content.combineBtn")
+						:SetPressed(true)
+						:Draw()
 					return "ST_COMBINING_STACKS"
-				elseif not TSM.Destroying.CanCombine() and not TSM.Destroying.CanDestroy() then
+				elseif not TSM.Destroying.CanCombine() and private.query:Count() == 0 then
 					-- nothing left to destroy or combine
 					return "ST_FRAME_CLOSED"
 				end
@@ -284,7 +268,9 @@ function private.FSMCreate()
 		:AddState(TSMAPI_FOUR.FSM.NewState("ST_COMBINING_DONE")
 			:SetOnEnter(function(context)
 				context.combineThread = nil
-				context.frame:GetElement("content.combineBtn"):SetPressed(false)
+				context.frame:GetElement("content.combineBtn")
+					:SetPressed(false)
+					:Draw()
 				return "ST_FRAME_OPEN"
 			end)
 			:AddTransition("ST_FRAME_OPEN")
@@ -294,7 +280,7 @@ function private.FSMCreate()
 				assert(not context.destroyThread)
 				context.destroyThread = TSM.Destroying.GetDestroyThread()
 				TSMAPI_FOUR.Thread.SetCallback(context.destroyThread, private.FSMDestroyCallback)
-				TSMAPI_FOUR.Thread.Start(context.destroyThread, context.frame:GetElement("content.destroyBtn"), context.frame:GetElement("content.items"):GetDataByIndex(1))
+				TSMAPI_FOUR.Thread.Start(context.destroyThread, context.frame:GetElement("content.destroyBtn"), private.query:GetFirstResult())
 				-- we need the thread to run now so send it a sync message
 				TSMAPI_FOUR.Thread.SendSyncMessage(context.destroyThread)
 				UpdateDestroyingFrame(context)
@@ -306,7 +292,9 @@ function private.FSMCreate()
 		:AddState(TSMAPI_FOUR.FSM.NewState("ST_DESTROYING_DONE")
 			:SetOnEnter(function(context)
 				context.destroyThread = nil
-				context.frame:GetElement("content.destroyBtn"):SetPressed(false)
+				context.frame:GetElement("content.destroyBtn")
+					:SetPressed(false)
+					:Draw()
 				return "ST_FRAME_OPEN"
 			end)
 			:AddTransition("ST_FRAME_OPEN")

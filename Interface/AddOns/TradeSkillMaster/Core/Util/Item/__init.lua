@@ -9,5 +9,4 @@
 --- Item TSMAPI_FOUR Functions
 -- @module Item
 
-local _, TSM = ...
 TSMAPI_FOUR.Item = {}

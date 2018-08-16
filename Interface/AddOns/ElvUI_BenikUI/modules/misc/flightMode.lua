@@ -13,7 +13,9 @@ local C_TimerAfter = C_Timer.After
 local CreateFrame = CreateFrame
 local UnitOnTaxi, IsAddOnLoaded = UnitOnTaxi, IsAddOnLoaded
 local MoveViewLeftStart, MoveViewLeftStop = MoveViewLeftStart, MoveViewLeftStop
-local GetRealZoneText, GetMinimapZoneText, GetPlayerMapPosition, GetZonePVPInfo = GetRealZoneText, GetMinimapZoneText, GetPlayerMapPosition, GetZonePVPInfo
+local GetRealZoneText, GetMinimapZoneText, GetZonePVPInfo = GetRealZoneText, GetMinimapZoneText, GetZonePVPInfo
+local C_Map_GetBestMapForUnit = C_Map.GetBestMapForUnit
+local C_Map_GetPlayerMapPosition = C_Map.GetPlayerMapPosition
 local GetScreenWidth = GetScreenWidth
 local InCombatLockdown = InCombatLockdown
 local TaxiRequestEarlyLanding = TaxiRequestEarlyLanding
@@ -53,10 +55,12 @@ local function AutoColoring()
 end
 
 function BFM:CreateCoords()
-	local x, y = GetPlayerMapPosition("player")
+	local mapID = C_Map_GetBestMapForUnit("player")
+	local mapPos = mapID and C_Map_GetPlayerMapPosition(mapID, "player")
+	if mapPos then x, y = mapPos:GetXY() end
 
-	x = tonumber(E:Round(100 * x))
-	y = tonumber(E:Round(100 * y))
+	x = (mapPos and x) and E:Round(100 * x) or 0
+	y = (mapPos and y) and E:Round(100 * y) or 0
 
 	return x, y
 end
@@ -160,13 +164,16 @@ function BFM:SetFlightMode(status)
 			LeftChatPanel.backdrop.shadow:Hide()
 		end
 		LeftChatPanel.backdrop.wideshadow:Show()
+		LeftChatPanel.backdrop.wideshadow:SetFrameStrata('BACKGROUND') -- it loses its framestrata somehow. Needs digging
 		LeftChatPanel:ClearAllPoints()
 		LeftChatPanel:Point("BOTTOMLEFT", self.FlightMode.bottom, "TOPLEFT", 24, 24)
 		
 		-- Hide SquareMinimapButtonBar
 		if (BUI.PA and _G.ProjectAzilroka.db['SMB'] and not BUI.SLE) then
-			_G.SquareMinimapButtons:CancelAllTimers()
-			SquareMinimapButtonBar:SetAlpha(0)
+			if SquareMinimapButtonBar then
+				_G.SquareMinimapButtons:CancelAllTimers()
+				SquareMinimapButtonBar:SetAlpha(0)
+			end
 		end
 
 		-- Disable Blizz location messsages
@@ -174,6 +181,10 @@ function BFM:SetFlightMode(status)
 
 		if IsAddOnLoaded("XIV_Databar") then
 			XIV_Databar:Hide()
+		end
+
+		if LeftChatPanel_Bui.styleShadow then
+			LeftChatPanel_Bui.styleShadow:Hide()
 		end
 
 		self.startTime = GetTime()
@@ -240,12 +251,19 @@ function BFM:SetFlightMode(status)
 
 		-- Show SquareMinimapButtonBar
 		if (BUI.PA and _G.ProjectAzilroka.db['SMB'] and not BUI.SLE) then
-			_G.SquareMinimapButtons:ScheduleRepeatingTimer('GrabMinimapButtons', 5)
-			SquareMinimapButtonBar:SetAlpha(1)
+			if SquareMinimapButtonBar then
+				_G.SquareMinimapButtons:ScheduleRepeatingTimer('GrabMinimapButtons', 5)
+				SquareMinimapButtonBar:SetAlpha(1)
+			end
 		end
 
 		if IsAddOnLoaded("XIV_Databar") then
 			XIV_Databar:Show()
+		end
+
+		if LeftChatPanel_Bui.styleShadow then
+			LeftChatPanel_Bui.styleShadow:Show()
+			LeftChatPanel_Bui.styleShadow:SetFrameStrata('BACKGROUND') -- it loses its framestrata somehow. Needs digging
 		end
 
 		self.inFlightMode = false

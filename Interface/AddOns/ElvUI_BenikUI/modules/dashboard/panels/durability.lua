@@ -1,5 +1,5 @@
 local E, L, V, P, G = unpack(ElvUI);
-local BUID = E:GetModule('BuiDashboard')
+local mod = E:GetModule('BuiDashboards');
 
 local _G = _G
 local pairs, format, join = pairs, string.format, string.join
@@ -11,10 +11,9 @@ local ToggleCharacter = ToggleCharacter
 
 local DURABILITY = DURABILITY
 
-local displayString = ''
 local tooltipString = '%d%%'
 local totalDurability = 0
-local current, max, lastPanel
+local current, max
 local invDurability = {}
 
 local function OnEnter(self)
@@ -51,13 +50,19 @@ local slots = {
 	['HeadSlot'] = L['Head'],
 }
 
-function BUID:CreateDurability()
-	local boardName = _G['Durability']
+local statusColors = {
+	'|cff0CD809',	-- green
+	'|cffE8DA0F',	-- yellow
+	'|cffD80909'	-- red
+}
 
-	boardName.Status:SetScript('OnEvent', function( self, ...)
+function mod:CreateDurability()
+	local boardName = _G['BUI_Durability']
 
-		lastPanel = self
+	boardName.Status:SetScript('OnEvent', function(self)
+
 		totalDurability = 100
+		local textColor = 1
 
 		for index, value in pairs(slots) do
 			local slot = GetInventorySlotInfo(index)
@@ -72,6 +77,15 @@ function BUID:CreateDurability()
 			end
 		end
 
+		if totalDurability >= 90 then
+			textColor = 1
+		elseif totalDurability >= 70 and totalDurability < 90 then
+			textColor = 2
+		else
+			textColor = 3
+		end
+
+		local displayString = join('', DURABILITY, ': ', statusColors[textColor], '%d%%|r')
 		boardName.Text:SetFormattedText(displayString, totalDurability)
 
 		self:SetMinMaxValues(0, 100)
@@ -87,8 +101,3 @@ function BUID:CreateDurability()
 	boardName.Status:RegisterEvent('MERCHANT_SHOW')
 	boardName.Status:RegisterEvent('PLAYER_ENTERING_WORLD')
 end
-
-local function ValueColorUpdate(hex)
-	displayString = join('', DURABILITY, ': ', hex, '%d%%|r')
-end
-E['valueColorUpdateFuncs'][ValueColorUpdate] = true

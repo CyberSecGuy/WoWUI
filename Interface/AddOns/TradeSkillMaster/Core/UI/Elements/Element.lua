@@ -11,7 +11,6 @@
 -- @classmod Element
 
 local _, TSM = ...
-local private = {}
 local Element = TSMAPI_FOUR.Class.DefineClass("Element", nil, "ABSTRACT")
 TSM.UI.Element = Element
 local private = { elementLookup = {}, scriptWrappers = {} }
@@ -24,8 +23,10 @@ local SCRIPT_CALLBACK_TIME_WARNING_THRESHOLD_MS = 20
 -- ============================================================================
 
 function Element.__init(self, frame)
+	self._tags = {}
 	self._frame = frame
 	self._style = {}
+	self._stylesheet = nil
 	self._scripts = {}
 	self._baseElementCache = nil
 	self._parent = nil
@@ -40,6 +41,16 @@ function Element.SetId(self, id)
 	self._id = id or tostring(self)
 end
 
+function Element.SetTags(self, ...)
+	-- should only be called by core UI code before acquiring the element
+	assert(not self._acquired)
+	assert(#self._tags == 0)
+	for i = 1, select("#", ...) do
+		local tag = select(i, ...)
+		tinsert(self._tags, tag)
+	end
+end
+
 function Element.Acquire(self)
 	assert(not self._acquired)
 	self._acquired = true
@@ -47,7 +58,7 @@ function Element.Acquire(self)
 end
 
 function Element.Release(self)
-	if not self._acquired then return end
+	assert(self._acquired)
 
 	self:Hide()
 
@@ -59,8 +70,10 @@ function Element.Release(self)
 		frame:SetScript(script, nil)
 	end
 
+	wipe(self._tags)
 	wipe(self._style)
 	wipe(self._scripts)
+	self._stylesheet = nil
 	self._baseElementCache = nil
 	self._parent = nil
 	self._context = nil
@@ -96,6 +109,15 @@ end
 -- @treturn Element The element object
 function Element.SetStyle(self, key, value)
 	self._style[key] = value
+	return self
+end
+
+--- Set the @{Stylesheet} for this element.
+-- @tparam Element self The element object
+-- @tparam Stylesheet stylesheet The stylesheet object
+-- @treturn Element The element object
+function Element.SetStylesheet(self, stylesheet)
+	self._stylesheet = stylesheet
 	return self
 end
 
@@ -176,18 +198,22 @@ function Element.SetScript(self, script, handler)
 	local frame = self:_GetBaseFrame()
 	private.elementLookup[frame] = self
 	if not private.scriptWrappers[script] then
-		private.scriptWrappers[script] = function(frame, ...)
-			local self = private.elementLookup[frame]
-			local startTime = debugprofilestop()
-			self._scripts[script](self, ...)
-			local timeTaken = debugprofilestop() - startTime
-			if timeTaken > SCRIPT_CALLBACK_TIME_WARNING_THRESHOLD_MS then
-				TSM:LOG_WARN("Script handler (%s) for frame (%s) took %0.2fms", script, self._id or tostring(self), timeTaken)
-			end
+		private.scriptWrappers[script] = function(...)
+			private.ScriptHandlerCommon(script, ...)
 		end
 	end
 	frame:SetScript(script, handler and private.scriptWrappers[script] or nil)
 	return self
+end
+
+function private.ScriptHandlerCommon(script, frame, ...)
+	local self = private.elementLookup[frame]
+	local startTime = debugprofilestop()
+	self._scripts[script](self, ...)
+	local timeTaken = debugprofilestop() - startTime
+	if timeTaken > SCRIPT_CALLBACK_TIME_WARNING_THRESHOLD_MS then
+		TSM:LOG_WARN("Script handler (%s) for frame (%s) took %0.2fms", script, self._id or tostring(self), timeTaken)
+	end
 end
 
 --- Propogates a script event to the parent element.
@@ -204,6 +230,7 @@ function Element.PropagateScript(self, script, ...)
 end
 
 function Element.Draw(self)
+	assert(self._acquired)
 	local frame = self:_GetBaseFrame()
 	local anchors = self:_GetStyle("anchors")
 	if anchors then
@@ -260,11 +287,26 @@ end
 -- ============================================================================
 
 function Element._GetStyle(self, key)
+	-- check if we already have this key set directly or cached
 	local res = self._style[key]
 	if res ~= nil then
 		return res
 	end
-	-- cache the default style on this element
+
+	-- check if this key is part of a stylesheet
+	local element = self
+	while element do
+		if element._stylesheet then
+			res = element._stylesheet:_GetStyle(self.__class.__name, self._tags, key)
+			if res ~= nil then
+				self._style[key] = res
+				return res
+			end
+		end
+		element = element:GetParentElement()
+	end
+
+	-- use the default style
 	res = TSM.UI.Stylesheet.GetDefaultStyle(self.__class, key)
 	self._style[key] = res
 	return res
@@ -418,17 +460,26 @@ function Element._ApplyFrameStyle(self, frame)
 	end
 end
 
-function Element._ApplyTextStyle(self, text)
+function Element._ApplyTextStyle(self, text, disabled)
 	-- set the font
 	-- wow renders the font slightly bigger than the designs would indicate, so subtract one from the font height
-	text:SetFont(self:_GetStyle("font"), self:_GetStyle("fontHeight") - 1)
+	local fontHeight = self:_GetStyle("fontHeight") - 1
+	if self:_GetStyle("font") == "Fonts\\ARKai_C.ttf" then
+		fontHeight = fontHeight + 2
+	end
+
+	text:SetFont(self:_GetStyle("font"), fontHeight)
 
 	-- set the justification
 	text:SetJustifyH(self:_GetStyle("justifyH") or "CENTER")
 	text:SetJustifyV(self:_GetStyle("justifyV") or "MIDDLE")
 
 	-- set the text color
-	text:SetTextColor(TSM.UI.HexToRGBA(self:_GetStyle("textColor")))
+	if disabled then
+		text:SetTextColor(TSM.UI.HexToRGBA(self:_GetStyle("disabledTextColor") or "#60ffffff"))
+	else
+		text:SetTextColor(TSM.UI.HexToRGBA(self:_GetStyle("textColor")))
+	end
 end
 
 
@@ -443,7 +494,17 @@ function private.GetElementHelper(element, path)
 	while partIndex <= numParts do
 		local part = select(partIndex, strsplit(".", path))
 		if part == "__parent" then
-			element = element:GetParentElement()
+			local parentElement = element:GetParentElement()
+			if not parentElement then
+				error(format("Element (%s) has no parent", tostring(element._id)))
+			end
+			element = parentElement
+		elseif part == "__base" then
+			local baseElement = element:GetBaseElement()
+			if not baseElement then
+				error(format("Element (%s) has no base element", tostring(element._id)))
+			end
+			element = baseElement
 		else
 			local found = false
 			for _, child in ipairs(element._children) do

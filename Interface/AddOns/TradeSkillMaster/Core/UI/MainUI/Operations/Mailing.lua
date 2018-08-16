@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Mailing = TSM.MainUI.Operations:NewPackage("Mailing")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { currentOperationName = nil }
 local RESTOCK_SOURCES = { bank = BANK, guild = GUILD }
 local RESTOCK_SOURCES_ORDER = { "bank", "guild" }
@@ -30,8 +30,8 @@ end
 
 function private.GetMailingOperationSettings(operationName)
 	private.currentOperationName = operationName
-	local operation = TSM.operations.Mailing[private.currentOperationName]
-	
+	local operation = TSM.Operations.GetSettings("Mailing", private.currentOperationName)
+
 	return TSMAPI_FOUR.UI.NewElement("Frame", "content")
 		:SetLayout("VERTICAL")
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")
@@ -99,7 +99,7 @@ function private.GetMailingOperationSettings(operationName)
 end
 
 function private.CreateNumericInputLine(key, label, maxValue, disabled)
-	local operation = TSM.operations.Mailing[private.currentOperationName]
+	local operation = TSM.Operations.GetSettings("Mailing", private.currentOperationName)
 	return TSM.MainUI.Operations.CreateLinkedSettingLine(key, label, disabled)
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", key.."Frame")
 			:SetLayout("HORIZONTAL")

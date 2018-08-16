@@ -11,7 +11,7 @@
 -- @classmod SearchList
 
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local SearchList = TSMAPI_FOUR.Class.DefineClass("SearchList", TSM.UI.ScrollList)
 TSM.UI.SearchList = SearchList
 local private = { querySearchListLookup = {} }
@@ -116,7 +116,8 @@ end
 function SearchList._CreateRow(self)
 	local row = self.__super:_CreateRow()
 		:SetLayout("HORIZONTAL")
-		:SetScript("OnUpdate", private.RowOnUpdate)
+		:SetScript("OnEnter", private.RowOnEnter)
+		:SetScript("OnLeave", private.RowOnLeave)
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "modeIcon")
 			:SetStyle("width", 60)
 			:SetStyle("height", 12)
@@ -139,21 +140,29 @@ function SearchList._CreateRow(self)
 		:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Button", "button")
 			:SetStyle("anchors", { { "TOPLEFT" }, { "BOTTOMRIGHT", "text" } })
 			:SetScript("OnClick", private.RowOnClick)
+			:SetScript("OnEnter", private.RowButtonOnEnter)
+			:SetScript("OnLeave", private.RowButtonOnLeave)
 		)
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Button", "favoriteBtn")
 			:SetStyle("width", 15)
 			:SetStyle("margin", 4)
 			:SetScript("OnClick", private.FavoriteButtonOnClick)
+			:SetScript("OnEnter", private.RowButtonOnEnter)
+			:SetScript("OnLeave", private.RowButtonOnLeave)
 		)
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Button", "editBtn")
 			:SetStyle("width", 15)
 			:SetStyle("margin", 4)
 			:SetScript("OnClick", private.EditButtonOnClick)
+			:SetScript("OnEnter", private.RowButtonOnEnter)
+			:SetScript("OnLeave", private.RowButtonOnLeave)
 		)
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Button", "deleteBtn")
 			:SetStyle("width", 15)
 			:SetStyle("margin", { top = 4, left = 4, right = 25, bottom = 4 })
 			:SetScript("OnClick", private.DeleteButtonOnClick)
+			:SetScript("OnEnter", private.RowButtonOnEnter)
+			:SetScript("OnLeave", private.RowButtonOnLeave)
 		)
 		:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Input", "input")
 			:SetStyle("relativeLevel", 2)
@@ -239,12 +248,22 @@ function private.RowOnClick(button)
 	end
 end
 
-function private.RowOnUpdate(frame)
-	if frame:IsMouseOver() then
-		frame:GetElement("highlight"):Show()
-	else
-		frame:GetElement("highlight"):Hide()
-	end
+function private.RowButtonOnEnter(button)
+	local frame = button:GetParentElement()
+	frame:GetElement("highlight"):Show()
+end
+
+function private.RowButtonOnLeave(button)
+	local frame = button:GetParentElement()
+	frame:GetElement("highlight"):Hide()
+end
+
+function private.RowOnEnter(frame)
+	frame:GetElement("highlight"):Show()
+end
+
+function private.RowOnLeave(frame)
+	frame:GetElement("highlight"):Hide()
 end
 
 function private.RowInputOnEditFocusLost(input)
@@ -275,7 +294,6 @@ end
 
 function private.EditButtonOnClick(button)
 	local row = button:GetParentElement()
-	local self = row:GetParentElement()
 	local input = row:GetElement("input")
 	input:SetText(row:GetContext():GetField("name"))
 	input:Show()

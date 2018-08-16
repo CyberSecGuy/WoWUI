@@ -1,6 +1,7 @@
 # BigWigs
 
-## [v95.1](https://github.com/BigWigsMods/BigWigs/tree/v95.1) (2018-04-09)
-[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v95...v95.1)
+## [v104.2](https://github.com/BigWigsMods/BigWigs/tree/v104.2) (2018-08-16)
+[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v104.1...v104.2)
 
-- Remove locales.xml from certain toc files  
+- bump version  
+- update zhCN. (#525)  

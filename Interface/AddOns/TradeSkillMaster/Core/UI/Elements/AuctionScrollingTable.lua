@@ -8,14 +8,23 @@
 
 --- AuctionScrollingTable UI Element Class.
 -- An auction scrolling table displays a scrollable list of auctions with a fixed set of columns. It operations on
--- auction records returned by the scanning code. It is a subclass of the @{FastScrollingTable} class.
+-- auction records returned by the scanning code. It is a subclass of the @{ScrollingTable} class.
 -- @classmod AuctionScrollingTable
 
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
-local AuctionScrollingTable = TSMAPI_FOUR.Class.DefineClass("AuctionScrollingTable", TSM.UI.FastScrollingTable)
+local L = TSM.L
+local AuctionScrollingTable = TSMAPI_FOUR.Class.DefineClass("AuctionScrollingTable", TSM.UI.ScrollingTable)
 TSM.UI.AuctionScrollingTable = AuctionScrollingTable
-local private = { sortContext = { baseRecordSortValues = {}, sortValueByHash = {}, baseItemStringByHash = {}, isBaseItemHash = {} }, rowFrameLookup = {} }
+local private = {
+	sortContext = {
+		baseRecordSortValues = {},
+		sortValueByHash = {},
+		baseItemStringByHash = {},
+		isBaseItemHash = {},
+	},
+	rowFrameLookup = {},
+	queryAuctionScrollingTableLookup = {},
+}
 local AUCTION_PCT_COLORS = {
 	{ -- blue
 		color = "|cff2992ff",
@@ -40,7 +49,6 @@ local AUCTION_PCT_COLORS = {
 }
 local EXPANDER_LEFT_SPACING = 4
 local EXPANDER_RIGHT_SPACING = 4
-local ICON_SPACING = 4
 local ICON_SIZE = 12
 local INDENT_WIDTH = 8
 
@@ -52,7 +60,7 @@ local INDENT_WIDTH = 8
 
 function AuctionScrollingTable.__init(self)
 	self.__super:__init()
-
+	self._query = nil
 	self._marketValueFunc = nil
 	self._expanded = {}
 	self._baseRecordByItem = {}
@@ -124,7 +132,7 @@ function AuctionScrollingTable.Acquire(self)
 			:SetTextFunction(private.GetBuyoutCellText)
 			:Commit()
 		:NewColumn("pct")
-			:SetTitles(L["%"])
+			:SetTitles("%")
 			:SetWidth(40)
 			:SetFont(TSM.UI.Fonts.RobotoRegular)
 			:SetFontHeight(12)
@@ -136,6 +144,11 @@ function AuctionScrollingTable.Acquire(self)
 end
 
 function AuctionScrollingTable.Release(self)
+	if self._query then
+		self._query:SetUpdateCallback()
+		private.queryAuctionScrollingTableLookup[self._query] = nil
+		self._query = nil
+	end
 	self._marketValueFunc = nil
 	wipe(self._expanded)
 	wipe(self._baseRecordByItem)
@@ -152,12 +165,68 @@ function AuctionScrollingTable.Release(self)
 	self.__super:Release()
 end
 
+--- Commits the scrolling table info.
+-- This should be called once the scrolling table info is completely set (retrieved via @{AuctionScrollingTable.GetScrollingTableInfo}).
+-- @tparam AuctionScrollingTable self The auction scrolling table object
+-- @treturn AuctionScrollingTable The auction scrolling table object
+function AuctionScrollingTable.CommitTableInfo(self)
+	self.__super:CommitTableInfo()
+	local sortDefaultKey, sortDefaultAscending = self._tableInfo:_GetSortInfo()
+	if sortDefaultKey then
+		for _, col in ipairs(self._tableInfo:_GetCols()) do
+			if col:_GetId() == sortDefaultKey then
+				self._sortCol = col:_GetId()
+				break
+			end
+		end
+		assert(self._sortCol)
+		self._sortAscending = sortDefaultAscending
+	end
+	return self
+end
+
+--- Sets the @{DatabaseQuery} source for this table.
+-- This query is used to populate the entries in the auction scrolling table.
+-- @tparam AuctionScrollingTable self The auction scrolling table object
+-- @tparam DatabaseQuery query The query object
+-- @tparam[opt=false] bool redraw Whether or not to redraw the scrolling table
+-- @treturn AuctionScrollingTable The auction scrolling table object
+function AuctionScrollingTable.SetQuery(self, query, redraw)
+	if query == self._query and not redraw then
+		return self
+	end
+	if self._query then
+		self._query:SetUpdateCallback()
+		private.queryAuctionScrollingTableLookup[self._query] = nil
+	end
+	self._query = query
+	private.queryAuctionScrollingTableLookup[self._query] = self
+	self._query:SetUpdateCallback(private.QueryUpdateCallback)
+	wipe(self._expanded)
+
+	self:_UpdateData()
+	if redraw then
+		self:Draw()
+	end
+
+	return self
+end
+
 --- Sets the market value function.
 -- @tparam AuctionScrollingTable self The auction scrolling table object
 -- @tparam function func The function to call with the item DB record to get the market value
 -- @treturn AuctionScrollingTable The auction scrolling table object
 function AuctionScrollingTable.SetMarketValueFunction(self, func)
 	self._marketValueFunc = func
+	return self
+end
+
+--- Sets the selected auction record.
+-- @tparam AuctionScrollingTable self The auction scrolling table object
+-- @tparam record The auction record or nil to clear the selection
+-- @treturn AuctionScrollingTable self The auction scrolling table object
+function AuctionScrollingTable.SetSelectedRecord(self, record)
+	self.__super:SetSelection(record and record:GetField("hash") or nil)
 	return self
 end
 
@@ -191,18 +260,28 @@ function AuctionScrollingTable.ExpandSingleResult(self)
 	end
 end
 
+function AuctionScrollingTable.Draw(self)
+	self._header:SetSort(self._sortCol, self._sortAscending)
+	self.__super:Draw()
+end
+
 
 
 -- ============================================================================
 -- Private Class Methods
 -- ============================================================================
 
-function AuctionScrollingTable._UpdateData(self, queryChanged)
-	if queryChanged then
-		wipe(self._expanded)
-	end
-	local sortKey = self._sortCol:_GetId()
+function AuctionScrollingTable._CreateScrollingTableInfo(self)
+	return TSM.UI.Util.ScrollingTableInfo()
+end
 
+function AuctionScrollingTable._UpdateSortFromQuery(self)
+	-- do nothing
+end
+
+function AuctionScrollingTable._UpdateData(self)
+	local sortKey = self._sortCol
+	local sortCol = self._tableInfo:_GetSortColById(sortKey)
 	wipe(self._data)
 	wipe(self._baseRecordByItem)
 	wipe(self._baseRecordByHash)
@@ -211,8 +290,8 @@ function AuctionScrollingTable._UpdateData(self, queryChanged)
 
 	local hashes = TSMAPI_FOUR.Util.AcquireTempTable()
 	local sortAscending = self._sortAscending
-	local showingAltTitles = self._showingAltTitles
-	for _, record in self._query:Iterator(true) do
+	local showingAltTitles = self._tableInfo:_GetTitleIndex() ~= 1
+	for _, record in self._query:Iterator() do
 		local baseItemString = record.baseItemString
 		local hash = record.hash
 		local sortValue = private.sortContext.sortValueByHash[hash]
@@ -236,7 +315,7 @@ function AuctionScrollingTable._UpdateData(self, queryChanged)
 				local pct = self:_GetRecordMarketValuePct(record)
 				sortValue = pct or (sortAscending and math.huge or -math.huge)
 			else
-				sortValue = self._sortCol:_GetSortValue(record)
+				sortValue = sortCol:_GetSortValue(record)
 			end
 			private.sortContext.sortValueByHash[hash] = sortValue
 		end
@@ -393,6 +472,29 @@ function AuctionScrollingTable._GetRecordMarketValuePct(self, record)
 	end
 end
 
+function AuctionScrollingTable._ToggleSort(self, id)
+	if not self._sortCol or not self._query then
+		-- sorting disabled so ignore
+		return
+	end
+
+	local sortCol = nil
+	for _, col in ipairs(self._tableInfo:_GetCols()) do
+		if col:_GetId() == id then
+			sortCol = col:_GetId()
+		end
+	end
+	assert(sortCol)
+	if sortCol == self._sortCol then
+		self._sortAscending = not self._sortAscending
+	else
+		self._sortCol = sortCol
+		self._sortAscending = true
+	end
+	self:_UpdateData()
+	self:Draw()
+end
+
 
 
 -- ============================================================================
@@ -426,6 +528,10 @@ end
 -- ============================================================================
 -- Private Helper Functions
 -- ============================================================================
+
+function private.QueryUpdateCallback(query)
+	private.queryAuctionScrollingTableLookup[query]:UpdateData(true)
+end
 
 function private.SortByHashAscendingHelper(a, b)
 	local sortContext = private.sortContext
@@ -499,8 +605,6 @@ end
 
 function private.GetAuctionsCellText(self, context)
 	local record = self._baseRecordByHash[context]
-	local baseItemString = record:GetField("baseItemString")
-	local canExpand = self._numAuctionsByItem[baseItemString] > 1 and not self._expanded[baseItemString]
 	local numAuctions = self._numAuctionsByHash[record:GetField("hash")]
 	return format("%d |cffaaaaaaof|r %d", numAuctions, record:GetField("stackSize"))
 end
@@ -515,14 +619,30 @@ function private.GetSellerCellText(self, context)
 	return record:GetField("seller")
 end
 
-function private.GetBidCellText(self, context)
+function private.GetBidCellText(self, context, titleIndex)
 	local record = self._baseRecordByHash[context]
-	return TSMAPI_FOUR.Money.ToString(record:GetField(self._showingAltTitles and "displayedBid" or "itemDisplayedBid"), "OPT_PAD")
+	local value = nil
+	if titleIndex == 1 then
+		value = record:GetField("itemDisplayedBid")
+	elseif titleIndex == 2 then
+		value = record:GetField("displayedBid")
+	else
+		error("Unexpected titleIndex: "..tostring(titleIndex))
+	end
+	return TSMAPI_FOUR.Money.ToString(value, "OPT_PAD")
 end
 
-function private.GetBuyoutCellText(self, context)
+function private.GetBuyoutCellText(self, context, titleIndex)
 	local record = self._baseRecordByHash[context]
-	return TSMAPI_FOUR.Money.ToString(record:GetField(self._showingAltTitles and "buyout" or "itemBuyout"), "OPT_PAD")
+	local value = nil
+	if titleIndex == 1 then
+		value = record:GetField("itemBuyout")
+	elseif titleIndex == 2 then
+		value = record:GetField("buyout")
+	else
+		error("Unexpected titleIndex: "..tostring(titleIndex))
+	end
+	return TSMAPI_FOUR.Money.ToString(value, "OPT_PAD")
 end
 
 function private.GetPercentCellText(self, context)
@@ -531,7 +651,7 @@ function private.GetPercentCellText(self, context)
 	local pctColor = "|cffffffff"
 	if pct then
 		pct = TSMAPI_FOUR.Util.Round(100 * pct)
-		for i, info in ipairs(AUCTION_PCT_COLORS) do
+		for _, info in ipairs(AUCTION_PCT_COLORS) do
 			if pct < info.value then
 				pctColor = info.color
 				break

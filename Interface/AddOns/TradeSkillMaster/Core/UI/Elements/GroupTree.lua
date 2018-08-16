@@ -11,7 +11,6 @@
 -- @classmod GroupTree
 
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 local GroupTree = TSMAPI_FOUR.Class.DefineClass("GroupTree", TSM.UI.FastScrollingList, "ABSTRACT")
 TSM.UI.GroupTree = GroupTree
 local private = { rowFrameLookup = {} }
@@ -98,6 +97,18 @@ function GroupTree.SetSearchString(self, searchStr)
 	return self
 end
 
+--- Forces an update of the group data.
+-- @tparam GroupTree self The group tree object
+-- @tparam[opt=false] bool redraw Whether or not to redraw the group tree
+-- @treturn GroupTree The group tree object
+function GroupTree.UpdateData(self, redraw)
+	self:_UpdateData()
+	if redraw then
+		self:Draw()
+	end
+	return self
+end
+
 
 
 -- ============================================================================
@@ -113,17 +124,16 @@ function GroupTree._UpdateData(self)
 	self._groupFunc(groups, self._headerNameLookup)
 
 	for i, groupPath in ipairs(groups) do
-		local groupPath = groups[i]
 		tinsert(self._allData, groupPath)
 		if not self:_IsGroupHidden(groupPath) then
-			local _, groupName = TSMAPI_FOUR.Groups.SplitPath(groupPath)
+			local groupName = TSM.Groups.Path.GetName(groupPath)
 			groupName = self._headerNameLookup[groupPath] or groupName
 			if strmatch(strlower(groupName), self._searchStr) then
 				tinsert(self._data, groupPath)
 			end
 		end
 		local nextGroupPath = groups[i + 1]
-		self._hasChildrenLookup[groupPath] = nextGroupPath and TSMAPI_FOUR.Groups.IsChild(nextGroupPath, groupPath) or nil
+		self._hasChildrenLookup[groupPath] = nextGroupPath and TSM.Groups.Path.IsChild(nextGroupPath, groupPath) or nil
 	end
 	TSMAPI_FOUR.Util.ReleaseTempTable(groups)
 end
@@ -185,7 +195,7 @@ function GroupTree._SetRowData(self, row, data)
 		text:SetTextColor(TSM.UI.HexToRGBA(TSM.UI.GetGroupLevelColor(level)))
 	end
 
-	local _, lastPart = TSMAPI_FOUR.Groups.SplitPath(data)
+	local lastPart = TSM.Groups.Path.GetName(data)
 	text:SetText(data == TSM.CONST.ROOT_GROUP_PATH and self._headerNameLookup[data] or lastPart)
 	text:SetPoint("LEFT", indentWidth, 0)
 
@@ -209,12 +219,12 @@ function GroupTree._IsGroupHidden(self, data)
 	elseif self._contextTbl.collapsed[TSM.CONST.ROOT_GROUP_PATH] then
 		return true
 	end
-	local parent = TSMAPI_FOUR.Groups.SplitPath(data)
+	local parent = TSM.Groups.Path.GetParent(data)
 	while parent and parent ~= TSM.CONST.ROOT_GROUP_PATH do
 		if self._contextTbl.collapsed[parent] then
 			return true
 		end
-		parent = TSMAPI_FOUR.Groups.SplitPath(parent)
+		parent = TSM.Groups.Path.GetParent(parent)
 	end
 	return false
 end

@@ -23,12 +23,9 @@ local ITEM_UPGRADE_VALUE_SHIFT = 1000000
 -- @tparam ?number|string item Either an itemId, itemLink, or itemString to be converted
 -- @treturn string The itemString
 function TSMAPI_FOUR.Item.ToItemString(item)
-	if not item then return end
-	assert(type(item) == "number" or type(item) == "string")
-
-	-- quickly return if we're certain it's already a valid itemString
-	if type(item) == "string" and strmatch(item, "^[ip]:[0-9]+$") then return item end
-
+	if not item then
+		return nil
+	end
 	if not private.itemStringCache[item] then
 		private.itemStringCache[item] = private.ToItemString(item)
 	end
@@ -58,8 +55,7 @@ function TSMAPI_FOUR.Item.ToBaseItemString(item, doGroupLookup)
 	if type(itemString) == "string" and strmatch(itemString, "^[ip]:[0-9]+$") then return itemString end
 
 	local baseItemString = strmatch(itemString, "([ip]:%d+)")
-
-	if not doGroupLookup or (TSM.db.profile.userData.items[baseItemString] and not TSM.db.profile.userData.items[itemString]) then
+	if not doGroupLookup or (TSM.Groups.IsItemInGroup(baseItemString) and not TSM.Groups.IsItemInGroup(itemString)) then
 		-- either we're not doing a group lookup, or the base item is in a group and the specific item is not, so return the base item
 		return baseItemString
 	end
@@ -90,11 +86,30 @@ end
 -- ============================================================================
 
 function private.ToItemString(item)
-	if tonumber(item) then
+	local paramType = type(item)
+	if paramType == "string" then
+		item = strtrim(item)
+		local itemId = strmatch(item, "^[ip]:([0-9]+)$")
+		if itemId then
+			if tonumber(itemId) > TSM.CONST.ITEM_MAX_ID then
+				return nil
+			end
+			-- this is already an itemString
+			return item
+		end
+		itemId = strmatch(item, "item:(%d+)")
+		if itemId and tonumber(itemId) > TSM.CONST.ITEM_MAX_ID then
+			return nil
+		end
+	elseif paramType == "number" or tonumber(item) then
+		local itemId = tonumber(item)
+		if itemId > TSM.CONST.ITEM_MAX_ID then
+			return nil
+		end
 		-- assume this is an itemId
 		return "i:"..item
 	else
-		item = strtrim(item)
+		error("Invalid item parameter type: "..tostring(item))
 	end
 
 	-- test if it's already (likely) an item string or battle pet string
@@ -168,7 +183,7 @@ function private.FixItemString(itemString)
 		count = tonumber(count) or 0
 		local numExtraParts = numParts - 1 - count
 		local lastExtraPart = tonumber(strmatch(itemString, ":([0-9]+)$"))
-		for i=1, numExtraParts do
+		for _ = 1, numExtraParts do
 			itemString = gsub(itemString, ":[0-9]*$", "")
 		end
 		-- we might have already applied the upgrade value shift

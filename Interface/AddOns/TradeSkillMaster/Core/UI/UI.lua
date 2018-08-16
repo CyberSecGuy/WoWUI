@@ -12,8 +12,13 @@
 local _, TSM = ...
 TSMAPI_FOUR.UI = {}
 local UI = TSM:NewPackage("UI")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
-local private = { namedElements = {}, recycledElements = {}, elementIdMap = {}, propagateScripts = {} }
+local L = TSM.L
+local private = {
+	namedElements = {},
+	elementIdMap = {},
+	propagateScripts = {},
+	objectPools = {},
+}
 local TIME_LEFT_STRINGS = {
 	"|cfff72d1f30m|r",
 	"|cfff72d1f2h|r",
@@ -36,9 +41,29 @@ local GROUP_LEVEL_COLORS = {
 --- Creates a new UI element.
 -- @tparam ?string|Class elementType Either the name of the element class or the class itself
 -- @tparam string id The id to assign to the element
--- @tparam[opt] string name The global name of the element (should be used only for very specific macro-able buttons)
+-- @param ... Tags to set on the element
 -- @return The created UI element object
-function TSMAPI_FOUR.UI.NewElement(elementType, id, name)
+function TSMAPI_FOUR.UI.NewElement(elementType, id, ...)
+	return private.NewElementHelper(elementType, id, nil, ...)
+end
+
+--- Creates a new named UI element.
+-- @tparam ?string|Class elementType Either the name of the element class or the class itself
+-- @tparam string id The id to assign to the element
+-- @tparam string name The global name of the element
+-- @return The created UI element object
+function TSMAPI_FOUR.UI.NewNamedElement(elementType, id, name, ...)
+	assert(name)
+	return private.NewElementHelper(elementType, id, name, ...)
+end
+
+
+
+-- ============================================================================
+-- Private Helper Functions
+-- ============================================================================
+
+function private.NewElementHelper(elementType, id, name, ...)
 	local class = nil
 	if type(elementType) == "string" then
 		class = TSM.UI[elementType]
@@ -51,15 +76,29 @@ function TSMAPI_FOUR.UI.NewElement(elementType, id, name)
 		private.namedElements[name] = private.namedElements[name] or class(name)
 		element = private.namedElements[name]
 		assert(_G[name] == element:_GetBaseFrame())
-	elseif private.recycledElements[class] and #private.recycledElements[class] > 0 then
-		element = tremove(private.recycledElements[class])
 	else
-		element = class()
+		if not private.objectPools[class] then
+			private.objectPools[class] = TSMAPI_FOUR.ObjectPool.New("UI_"..class.__name, class, 1)
+		end
+		element = private.objectPools[class]:Get()
 	end
 	element:SetId(id)
+	element:SetTags(...)
 	element:Acquire()
 	private.elementIdMap[element:_GetBaseFrame()] = element._id
 	return element
+end
+
+function private.ScrollbarOnUpdate(scrollbar)
+	scrollbar:SetFrameLevel(scrollbar:GetParent():GetFrameLevel() + 5)
+end
+
+function private.ScrollbarOnMouseDown(scrollbar)
+	scrollbar.dragging = true
+end
+
+function private.ScrollbarOnMouseUp(scrollbar)
+	scrollbar.dragging = nil
 end
 
 
@@ -113,6 +152,15 @@ function TSM.UI.GetQualityColoredText(name, quality, colorMultiplier)
 	return format("|cff%02x%02x%02x", r, g, b)..name.."|r"
 end
 
+--- Gets the applied font from a multi-alphabet font object.
+-- @tparam Font Object fontObject The refernce for the global font family object
+-- @treturn string The path to the font
+function TSM.UI.GetFont(fontObject)
+	local font = CreateFrame("Frame"):CreateFontString()
+	font:SetFontObject(fontObject)
+	return font:GetFont()
+end
+
 --- Gets the UI color of the specified group level.
 -- @tparam number level The group level
 -- @treturn string The color as a hex value (`#xxxxxx`)
@@ -139,24 +187,24 @@ function UI.RecyleElement(element)
 		end
 	end
 	if not isNamed then
-		private.recycledElements[element.__class] = private.recycledElements[element.__class] or {}
-		tinsert(private.recycledElements[element.__class], element)
+		private.objectPools[element.__class]:Recycle(element)
 	end
 end
 
 --- Creates a scrollbar.
--- @tparam Frame frame The parent frame
--- @tparam number scrollbarWidth The width of the scrollbar
 -- @return The newly-created scrollbar
-function TSM.UI.CreateScrollbar(frame, scrollbarWidth)
-	assert(frame and scrollbarWidth)
+function TSM.UI.CreateScrollbar(frame)
 	local scrollbar = CreateFrame("Slider", nil, frame, nil)
 	scrollbar:ClearAllPoints()
 	scrollbar:SetPoint("TOPRIGHT", 0, -4)
 	scrollbar:SetPoint("BOTTOMRIGHT", 0, 4)
-	scrollbar:SetWidth(scrollbarWidth)
 	scrollbar:SetValueStep(1)
 	scrollbar:SetObeyStepOnDrag(true)
+	scrollbar:SetHitRectInsets(-6, -10, 0, 0)
+	scrollbar:SetScript("OnHide", private.ScrollbarOnMouseUp)
+	scrollbar:SetScript("OnUpdate", private.ScrollbarOnUpdate)
+	scrollbar:SetScript("OnMouseDown", private.ScrollbarOnMouseDown)
+	scrollbar:SetScript("OnMouseUp", private.ScrollbarOnMouseUp)
 
 	scrollbar:SetThumbTexture(scrollbar:CreateTexture())
 	scrollbar.thumb = scrollbar:GetThumbTexture()
@@ -228,7 +276,6 @@ function UI.ToggleFrameStack()
 			local frame = EnumerateFrames()
 			while frame do
 				if frame ~= self.highlightFrame and not frame:IsForbidden() and frame:IsVisible() and MouseIsOver(frame) then
-					local strata = frame:GetFrameStrata()
 					tinsert(framesByStrata[frame:GetFrameStrata()], frame)
 				end
 				frame = EnumerateFrames(frame)
@@ -241,13 +288,13 @@ function UI.ToggleFrameStack()
 				if #framesByStrata[strata] > 0 then
 					sort(framesByStrata[strata], FrameLevelSortFunction)
 					self:AddLine(strata, 0.6, 0.6, 1)
-					for _, frame in ipairs(framesByStrata[strata]) do
-						local level = frame:GetFrameLevel()
-						local width = frame:GetWidth()
-						local height = frame:GetHeight()
-						local mouseEnabled = frame:IsMouseEnabled()
+					for _, strataFrame in ipairs(framesByStrata[strata]) do
+						local level = strataFrame:GetFrameLevel()
+						local width = strataFrame:GetWidth()
+						local height = strataFrame:GetHeight()
+						local mouseEnabled = strataFrame:IsMouseEnabled()
 						local name = ""
-						local childFrame = frame
+						local childFrame = strataFrame
 						while childFrame and (childFrame ~= UIParent or name == "") do
 							name = GetFrameName(childFrame)..(#name > 0 and "." or "")..name
 							childFrame = childFrame:GetParent()
@@ -258,8 +305,8 @@ function UI.ToggleFrameStack()
 						else
 							self:AddLine(text, 0.8, 0.8, 0.8)
 						end
-						if not topFrame and GetFrameName(frame) ~= "innerBorderFrame" then
-							topFrame = frame
+						if not topFrame and GetFrameName(strataFrame) ~= "innerBorderFrame" then
+							topFrame = strataFrame
 						end
 					end
 				end
@@ -288,19 +335,24 @@ end
 -- @tparam table headerNameLookup The lookup table to populate with the group header (currently just "Base Group")
 -- @tparam string moduleName The name of the module to filter groups by
 function TSM.UI.ApplicationGroupTreeGetGroupList(groups, headerNameLookup, moduleName)
-	TSM.Groups:GetSortedGroupPathList(groups)
+	for _, groupPath in TSM.Groups.GroupIterator() do
+		tinsert(groups, groupPath)
+	end
 
 	-- need to filter out the groups without operations
 	local keep = TSMAPI_FOUR.Util.AcquireTempTable()
 	for i = #groups, 1, -1 do
 		local groupPath = groups[i]
-		local _, groupName = TSMAPI_FOUR.Groups.SplitPath(groupPath)
-		if TSMAPI_FOUR.Groups.HasOperationsByModule(groupPath, moduleName) then
+		local hasOperations = false
+		for _ in TSM.Operations.GroupOperationIterator(moduleName, groupPath) do
+			hasOperations = true
+		end
+		if hasOperations then
 			-- add all parent groups to the keep table so we don't remove those
-			local checkPath = TSMAPI_FOUR.Groups.SplitPath(groupPath)
+			local checkPath = TSM.Groups.Path.GetParent(groupPath)
 			while checkPath and checkPath ~= TSM.CONST.ROOT_GROUP_PATH do
 				keep[checkPath] = true
-				checkPath = TSMAPI_FOUR.Groups.SplitPath(checkPath)
+				checkPath = TSM.Groups.Path.GetParent(checkPath)
 			end
 		elseif not keep[groupPath] then
 			tremove(groups, i)

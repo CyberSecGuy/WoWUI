@@ -24,6 +24,7 @@ TSM.UI.InputNumeric = InputNumeric
 
 function InputNumeric.__init(self)
 	self.__super:__init()
+	self._minNumber = nil
 	self._maxNumber = nil
 
 	local frame = self:_GetBaseFrame()
@@ -33,7 +34,13 @@ function InputNumeric.__init(self)
 	private.frameInputLookup[frame] = self
 end
 
+function InputNumeric.Acquire(self)
+	self.__super:Acquire()
+	self:_GetBaseFrame():SetScript("OnEnterPressed", private.OnEnterPressed)
+end
+
 function InputNumeric.Release(self)
+	self._minNumber = nil
 	self._maxNumber = nil
 	self.__super:Release()
 end
@@ -54,6 +61,15 @@ function InputNumeric.SetMaxNumber(self, maxNumber)
 	return self
 end
 
+--- Sets the minimum number.
+-- @tparam InputNumeric self The input numeric object
+-- @tparam number minNumber The minimum number
+-- @treturn InputNumeric The input numeric object
+function InputNumeric.SetMinNumber(self, minNumber)
+	self._minNumber = minNumber
+	return self
+end
+
 
 
 -- ============================================================================
@@ -64,7 +80,8 @@ function private.OnEnterPressed(frame)
 	frame:HighlightText(0, 0)
 	local self = private.frameInputLookup[frame]
 
-	local value = min(self:GetNumber(), self._maxNumber or math.huge)
+	local value = max(min(self:GetNumber(), self._maxNumber or math.huge), self._minNumber or -math.huge)
+
 	if self._settingTable and self._settingKey then
 		if self._validation and self._validation(value) or not self._validation then
 			self._settingTable[self._settingKey] = value

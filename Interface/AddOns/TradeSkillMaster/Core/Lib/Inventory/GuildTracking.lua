@@ -9,6 +9,7 @@
 local _, TSM = ...
 local GuildTracking = TSM.Inventory:NewPackage("GuildTracking")
 local private = {
+	db = nil,
 	isOpen = nil,
 	lastUpdate = 0,
 	pendingPetSlotIds = {},
@@ -16,10 +17,35 @@ local private = {
 }
 local PLAYER_NAME = UnitName("player")
 local PLAYER_GUILD = nil
-local SLOT_ID_TAB_MULTIPLIER = 1000
 local MAX_PET_SCANS = 10
 -- don't use MAX_GUILDBANK_SLOTS_PER_TAB since it isn't available right away
 local GUILD_BANK_TAB_SLOTS = 98
+local GUILD_BANK_DB_SCHEMA = {
+	fields = {
+		slotId = "number",
+		tab = "number",
+		slot = "number",
+		itemString = "string",
+		baseItemString = "string",
+		autoBaseItemString = "string",
+		quantity = "number",
+	},
+	fieldAttributes = {
+		slotId = { "unique", "index" },
+		itemString = { "index" },
+		baseItemString = { "index" },
+		autoBaseItemString = { "index" },
+	},
+	fieldOrder = {
+		"slotId",
+		"tab",
+		"slot",
+		"itemString",
+		"baseItemString",
+		"autoBaseItemString",
+		"quantity",
+	},
+}
 
 
 
@@ -28,10 +54,38 @@ local GUILD_BANK_TAB_SLOTS = 98
 -- ============================================================================
 
 function GuildTracking.OnEnable()
+	private.db = TSMAPI_FOUR.Database.New(GUILD_BANK_DB_SCHEMA, "GUILD_BANK")
 	TSMAPI_FOUR.Event.Register("GUILDBANKFRAME_OPENED", private.GuildBankFrameOpenedHandler)
 	TSMAPI_FOUR.Event.Register("GUILDBANKFRAME_CLOSED", private.GuildBankFrameClosedHandler)
 	TSMAPI_FOUR.Event.Register("GUILDBANKBAGSLOTS_CHANGED", private.GuildBankBagSlotsChangedHandler)
 	TSMAPI_FOUR.Delay.AfterFrame(1, private.GetGuildName)
+	TSMAPI_FOUR.Event.Register("PLAYER_GUILD_UPDATE", private.GetGuildName)
+end
+
+function GuildTracking.CreateQuery()
+	return private.db:NewQuery()
+end
+
+function GuildTracking.GetQuantityBySlotId(slotId)
+	return private.db:GetUniqueRowField("slotId", slotId, "quantity")
+end
+
+function GuildTracking.GetItemStringBySlotId(slotId)
+	return private.db:GetUniqueRowField("slotId", slotId, "itemString")
+end
+
+function GuildTracking.GetQuantityByAutoBaseItemString(autoBaseItemString)
+	local query = private.db:NewQuery()
+		:Equal("autoBaseItemString", autoBaseItemString)
+	local result = query:Sum("quantity")
+	query:Release()
+	return result or 0
+end
+
+function GuildTracking.GuildBankIterator(autoBaseItems)
+	local query = private.db:NewQuery()
+		:Select("tab", "slot", autoBaseItems and "autoBaseItemString" or "itemString", "quantity")
+	return query:IteratorAndRelease()
 end
 
 
@@ -78,11 +132,13 @@ function private.GetGuildName()
 		end
 	end
 	for _, guild in ipairs(toRemove) do
-		TSM.db.factionrealm.internalData.guildVaults[guild] = nil
+		TSM.Inventory.WipeGuildQuantity(guild)
 	end
 	TSMAPI_FOUR.Util.ReleaseTempTable(toRemove)
 	TSMAPI_FOUR.Util.ReleaseTempTable(validGuilds)
+
 	TSM.db.factionrealm.internalData.guildVaults[PLAYER_GUILD] = TSM.db.factionrealm.internalData.guildVaults[PLAYER_GUILD] or {}
+	TSM.Inventory.OnGuildLoaded()
 end
 
 function private.GuildBankFrameOpenedHandler()
@@ -117,30 +173,48 @@ end
 
 
 function private.ScanGuildBank()
-	local guildVaultItems = TSM.db.factionrealm.internalData.guildVaults[PLAYER_GUILD]
-	wipe(guildVaultItems)
+	TSM.Inventory.WipeGuildQuantity(PLAYER_GUILD)
 	wipe(private.pendingPetSlotIds)
+	private.db:TruncateAndBulkInsertStart()
+	local didFail = false
 	for tab = 1, GetNumGuildBankTabs() do
 		-- only scan tabs which we have at least enough withdrawals to withdraw every slot
 		local _, _, _, _, numWithdrawals = GetGuildBankTabInfo(tab)
 		if numWithdrawals == -1 or numWithdrawals >= GUILD_BANK_TAB_SLOTS then
 			for slot = 1, GUILD_BANK_TAB_SLOTS do
-				local link = GetGuildBankItemLink(tab, slot)
-				local itemString = TSMAPI_FOUR.Item.ToBaseItemString(link)
-				if itemString == TSM.CONST.PET_CAGE_ITEMSTRING then
-					if not private.petSpeciesCache[link] then
+				local slotId = TSMAPI_FOUR.Util.JoinSlotId(tab, slot)
+				local itemLink = GetGuildBankItemLink(tab, slot)
+				local baseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemLink)
+				if baseItemString == TSM.CONST.PET_CAGE_ITEMSTRING then
+					if not private.petSpeciesCache[itemLink] then
 						-- defer the scanning of pets which we don't have cached info for
-						private.pendingPetSlotIds[tab * SLOT_ID_TAB_MULTIPLIER + slot] = true
+						private.pendingPetSlotIds[slotId] = true
 					end
-					itemString = private.petSpeciesCache[link] and ("p:" .. private.petSpeciesCache[link])
+					baseItemString = private.petSpeciesCache[itemLink] and ("p:" .. private.petSpeciesCache[itemLink])
 				end
-				if itemString then
-					guildVaultItems[itemString] = (guildVaultItems[itemString] or 0) + select(2, GetGuildBankItemInfo(tab, slot))
+				if baseItemString then
+					local _, quantity = GetGuildBankItemInfo(tab, slot)
+					if quantity == 0 then
+						-- the info for this slot isn't fully loaded yet
+						TSM:LOG_ERR("Failed to scan guild bank slot (%d)", slotId)
+						didFail = true
+						break
+					end
+					TSM.Inventory.ChangeGuildQuantity(baseItemString, quantity)
+					local itemString = TSMAPI_FOUR.Item.ToItemString(itemLink)
+					local autoBaseItemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString, true)
+					private.db:BulkInsertNewRow(slotId, tab, slot, itemString, baseItemString, autoBaseItemString, quantity)
 				end
 			end
 		end
+		if didFail then
+			break
+		end
 	end
-	if next(private.pendingPetSlotIds) then
+	private.db:BulkInsertEnd()
+	if didFail then
+		TSMAPI_FOUR.Delay.AfterFrame("guildBankScan", 2, private.GuildBankChangedDelayed)
+	elseif next(private.pendingPetSlotIds) then
 		TSMAPI_FOUR.Delay.AfterFrame("guildBankPetScan", 2, private.ScanPetsDeferred)
 	else
 		TSMAPI_FOUR.Delay.Cancel("guildBankPetScan")
@@ -148,17 +222,19 @@ function private.ScanGuildBank()
 end
 
 function private.ScanPetsDeferred()
-	local guildVaultItems = TSM.db.factionrealm.internalData.guildVaults[PLAYER_GUILD]
 	local numPetSlotIdsScanned = 0
 	local toRemove = TSMAPI_FOUR.Util.AcquireTempTable()
+	private.db:BulkInsertStart()
 	for slotId in pairs(private.pendingPetSlotIds) do
-		local tab, slot = floor(slotId / SLOT_ID_TAB_MULTIPLIER), slotId % SLOT_ID_TAB_MULTIPLIER
-		local link = GetGuildBankItemLink(tab, slot)
-		private.petSpeciesCache[link] = GameTooltip:SetGuildBankItem(tab, slot)
-		local itemString = private.petSpeciesCache[link] and ("p:" .. private.petSpeciesCache[link])
+		local tab, slot = TSMAPI_FOUR.Util.SplitSlotId(slotId)
+		local itemLink = GetGuildBankItemLink(tab, slot)
+		private.petSpeciesCache[itemLink] = GameTooltip:SetGuildBankItem(tab, slot)
+		local itemString = private.petSpeciesCache[itemLink] and ("p:" .. private.petSpeciesCache[itemLink])
 		if itemString then
 			tinsert(toRemove, slotId)
-			guildVaultItems[itemString] = (guildVaultItems[itemString] or 0) + select(2, GetGuildBankItemInfo(tab, slot))
+			local _, quantity = GetGuildBankItemInfo(tab, slot)
+			TSM.Inventory.ChangeGuildQuantity(itemString, quantity)
+			private.db:BulkInsertNewRow(slotId, tab, slot, itemString, itemString, itemString, quantity)
 		end
 		-- throttle how many pet slots we scan per call (regardless of whether or not it was successful)
 		numPetSlotIdsScanned = numPetSlotIdsScanned + 1
@@ -166,6 +242,7 @@ function private.ScanPetsDeferred()
 			break
 		end
 	end
+	private.db:BulkInsertEnd()
 	TSM:LOG_INFO("Scanned %d pet slots", numPetSlotIdsScanned)
 	for _, slotId in ipairs(toRemove) do
 		private.pendingPetSlotIds[slotId] = nil

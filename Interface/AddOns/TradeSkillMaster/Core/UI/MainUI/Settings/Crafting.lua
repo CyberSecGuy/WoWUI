@@ -8,10 +8,8 @@
 
 local _, TSM = ...
 local Crafting = TSM.MainUI.Settings:NewPackage("Crafting")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { altCharacters = {}, altGuilds = {} }
-
-local SORTING_METHODS = { L["Can Craft At Least One, Profit, Craftable Quantity"], L["Profit, Craftable Quantity"], L["Craftable Quantity, Profit"] }
 
 
 
@@ -42,73 +40,6 @@ function private.GetCraftingSettingsFrame()
 	return TSMAPI_FOUR.UI.NewElement("ScrollFrame", "craftingSettings")
 		:SetStyle("padding.left", 12)
 		:SetStyle("padding.right", 12)
-		:AddChild(TSM.MainUI.Settings.CreateHeading("generalOptionsTitle", L["General Options"])
-				:SetStyle("margin.bottom", 15)
-			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "label")
-				:SetStyle("height", 18)
-				:SetStyle("margin.bottom", 4)
-				:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
-				:SetStyle("fontHeight", 14)
-				:SetStyle("textColor", "#ffffff")
-				:SetText(L["Profit Deduction"])
-		)
-		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "profitDeductionInputFrame")
-			:SetLayout("HORIZONTAL")
-			:SetStyle("height", 20)
-			:SetStyle("margin.bottom", 16)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("InputNumeric", "profitPercentInput")
-				:SetStyle("height", 20)
-				:SetStyle("width", 50)
-				:SetStyle("margin.right", 10)
-				:SetStyle("background", "#5c5c5c")
-				:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
-				:SetStyle("textColor", "#ffffff")
-				:SetStyle("fontHeight", 14)
-				:SetStyle("justifyH", "CENTER")
-				:SetMaxNumber(50)
-				:SetSettingInfo(TSM.db.global.craftingOptions, "profitPercent")
-			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "profitPercentRangeLabel")
-				:SetStyle("fontHeight", 12)
-				:SetText(L["(minimum 0% - maximum 50%)"])
-			)
-		)
-		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "label")
-			:SetStyle("height", 18)
-			:SetStyle("margin.bottom", 4)
-			:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
-			:SetStyle("fontHeight", 14)
-			:SetStyle("textColor", "#ffffff")
-			:SetText(L["Queue Sorting Method"])
-		)
-		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "queueSortingMethodFrame")
-			:SetLayout("HORIZONTAL")
-			:SetStyle("height", 26)
-			:SetStyle("margin.bottom", 18)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("SelectionDropdown", "queueSortingDropdown")
-				:SetStyle("margin.right", 16)
-				:SetItems(SORTING_METHODS)
-				:SetSettingInfo(TSM.db.global.craftingOptions, "queueSort")
-			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Spacer", "spacer"))
-		)
-		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "toggleRow")
-			:SetLayout("HORIZONTAL")
-			:SetStyle("height", 20)
-			:SetStyle("margin.bottom", 24)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "label")
-				:SetStyle("autoWidth", true)
-				:SetStyle("margin.right", 8)
-				:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
-				:SetStyle("fontHeight", 12)
-				:SetText(L["Enable smart crafting for quests"])
-			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("ToggleOnOff", "enableToggle")
-				:SetSettingInfo(TSM.db.global.craftingOptions, "questSmartCrafting")
-			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Spacer", "spacer"))
-		)		
 		:AddChild(TSM.MainUI.Settings.CreateHeading("generalOptionsTitle", L["Inventory Options"])
 			:SetStyle("margin.bottom", 15)
 		)
@@ -159,12 +90,35 @@ function private.GetCraftingSettingsFrame()
 			:SetText(L["Exclude crafts with cooldowns"])
 			:SetSettingInfo(TSM.db.global.craftingOptions, "ignoreCDCraftCost")
 		)
+		:AddChild(TSM.MainUI.Settings.CreateHeading("ignoredCooldownsTitle", L["Ignored Cooldowns"])
+			:SetStyle("margin.top", 24)
+			:SetStyle("margin.bottom", 6)
+		)
+		:AddChild(TSMAPI_FOUR.UI.NewElement("QueryScrollingTable", "cooldowns")
+			:SetStyle("height", 150)
+			:SetStyle("headerFontHeight", 12)
+			:SetStyle("margin.bottom", 12)
+			:SetStyle("rowHeight", 20)
+			:GetScrollingTableInfo()
+				:NewColumn("item")
+					:SetTitles(L["Cooldown"])
+					:SetFont(TSM.UI.Fonts.MontserratRegular)
+					:SetFontHeight(12)
+					:SetJustifyH("LEFT")
+					:SetTextInfo(nil, private.CooldownGetText)
+					:Commit()
+				:Commit()
+			:SetQuery(TSM.Crafting.CreateIgnoredCooldownQuery())
+			:SetAutoReleaseQuery(true)
+			:SetSelectionDisabled(true)
+			:SetScript("OnRowClick", private.IgnoredCooldownOnRowClick)
+		)
 end
 
 
 
 -- ============================================================================
--- Helper Functions
+-- Private Helper Functions
 -- ============================================================================
 
 function private.CheckMatPrice(value)
@@ -174,4 +128,12 @@ function private.CheckMatPrice(value)
 	else
 		TSM:Print(L["Invalid custom price."].." "..err)
 	end
+end
+
+function private.CooldownGetText(row)
+	return row:GetField("characterKey").." - "..TSM.Crafting.GetName(row:GetField("spellId"))
+end
+
+function private.IgnoredCooldownOnRowClick(_, row)
+	TSM.Crafting.RemoveIgnoredCooldown(row:GetFields("characterKey", "spellId"))
 end

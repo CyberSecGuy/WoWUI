@@ -163,15 +163,12 @@ function private.FormatNumber(num, pad, color, sep)
 	if num < 10 and pad then
 		num = "0"..num
 	elseif sep and num >= 1000 then
+		num = tostring(num)
 		local result = ""
-		while num > 0 do
-			local part = num % 1000
-			num = floor(num / 1000)
-			if result ~= "" then
-				result = LARGE_NUMBER_SEPERATOR..result
-			end
-			result = (num == 0 and part or format("%03d", part))..result
+		for i = 4, #num, 3 do
+			result = LARGE_NUMBER_SEPERATOR..strsub(num, -(i - 1), -(i - 3))..result
 		end
+		result = strsub(num, 1, (#num % 3 == 0) and 3 or (#num % 3))..result
 		num = result
 	end
 

@@ -8,7 +8,6 @@
 
 local _, TSM = ...
 local MainUI = TSM:NewPackage("MainUI")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 local private = { topLevelPages = {}, frame = nil }
 local MIN_FRAME_SIZE = { width = 948, height = 757 }
 

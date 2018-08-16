@@ -11,7 +11,6 @@
 -- @classmod ShoppingScrollingTable
 
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 local ShoppingScrollingTable = TSMAPI_FOUR.Class.DefineClass("ShoppingScrollingTable", TSM.UI.AuctionScrollingTable)
 TSM.UI.ShoppingScrollingTable = ShoppingScrollingTable
 local private = { rowFrameLookup = {} }
@@ -79,6 +78,9 @@ function ShoppingScrollingTable.SelectNextRecord(self)
 		local prevHash = self._data[i-1]
 		if prevHash == self._selection then
 			nextItemHash = hash
+			while self._baseRecordByHash[hash].seller == UnitName("player") and self._data[i + 1] do
+				hash = self._data[i + 1]
+			end
 			if self._baseRecordByHash[hash].baseItemString == self._baseRecordByHash[prevHash].baseItemString then
 				-- found the next auction for this item
 				self:SetSelection(hash)
@@ -116,7 +118,7 @@ function ShoppingScrollingTable._GetTableRow(self, isHeader)
 		-- add the post button
 		local post = row:_GetTexture()
 		TSM.UI.TexturePacks.SetTextureAndSize(post, "iconPack.12x12/Post")
-		post:SetPoint("CENTER", row._texts.post, 0, 0)
+		post:SetPoint("CENTER", row._texts.post, -4, 0)
 		row._icons.post = post
 
 		local postBtn = row:_GetButton()
@@ -146,7 +148,7 @@ end
 -- Private Helper Functions
 -- ============================================================================
 
-function private.PostSortFunction(self, record)
+function private.PostSortFunction(_, record)
 	return TSMAPI_FOUR.Inventory.GetBagQuantity(record:GetField("itemString"))
 end
 

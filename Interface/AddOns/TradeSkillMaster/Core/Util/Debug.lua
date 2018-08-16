@@ -10,7 +10,6 @@
 -- @module Debug
 
 TSMAPI_FOUR.Debug = {}
-local _, TSM = ...
 local private = {
 	functionSymbols = {},
 	userdataSymbols = {},
@@ -23,6 +22,8 @@ local private = {
 		nodeRuns = {},
 		nodeStart = {},
 		nodeTotal = {},
+		nodeMaxContext = {},
+		nodeMaxTime = {},
 	},
 }
 
@@ -78,7 +79,7 @@ function TSMAPI_FOUR.Debug.TreeTraversal(from, to)
 	end
 
 	local result = {}
-	for i = 1, #startPaths do
+	for _ = 1, #startPaths do
 		tinsert(result, "__parent")
 	end
 	for i = 1, #destinationPaths do
@@ -131,6 +132,8 @@ function TSMAPI_FOUR.Debug.StartProfilingNode(node)
 		tinsert(private.profilingContext.nodes, node)
 		private.profilingContext.nodeTotal[node] = 0
 		private.profilingContext.nodeRuns[node] = 0
+		private.profilingContext.nodeMaxContext[node] = nil
+		private.profilingContext.nodeMaxTime[node] = 0
 	end
 	private.profilingContext.nodeStart[node] = debugprofilestop()
 end
@@ -139,14 +142,19 @@ end
 -- Profiling of this node must have been started for this to have any effect.
 -- @tparam string node The name of the profiling node
 -- @within Profiling
-function TSMAPI_FOUR.Debug.EndProfilingNode(node)
+function TSMAPI_FOUR.Debug.EndProfilingNode(node, arg)
 	if not private.profilingContext.startTime or not private.profilingContext.nodeStart[node] then
 		-- profiling is not running
 		return
 	end
+	local nodeTime = debugprofilestop() - private.profilingContext.nodeStart[node]
 	private.profilingContext.nodeRuns[node] = private.profilingContext.nodeRuns[node] + 1
-	private.profilingContext.nodeTotal[node] = private.profilingContext.nodeTotal[node] + debugprofilestop() - private.profilingContext.nodeStart[node]
+	private.profilingContext.nodeTotal[node] = private.profilingContext.nodeTotal[node] + nodeTime
 	private.profilingContext.nodeStart[node] = nil
+	if nodeTime > private.profilingContext.nodeMaxTime[node] then
+		private.profilingContext.nodeMaxContext[node] = arg
+		private.profilingContext.nodeMaxTime[node] = nodeTime
+	end
 end
 
 --- Ends profiling and prints the results to chat.
@@ -159,13 +167,30 @@ function TSMAPI_FOUR.Debug.EndProfiling()
 	local totalTime = debugprofilestop() - private.profilingContext.startTime
 	print(format("Total: %.03f", TSMAPI_FOUR.Util.Round(totalTime, 0.001)))
 	for _, node in ipairs(private.profilingContext.nodes) do
-		print(format("  %s: %.03f (%d)", node, TSMAPI_FOUR.Util.Round(private.profilingContext.nodeTotal[node], 0.001), private.profilingContext.nodeRuns[node]))
+		local nodeTotalTime = TSMAPI_FOUR.Util.Round(private.profilingContext.nodeTotal[node], 0.001)
+		local nodeRuns = private.profilingContext.nodeRuns[node]
+		local nodeMaxContext = private.profilingContext.nodeMaxContext[node]
+		if nodeMaxContext ~= nil then
+			local nodeMaxTime = private.profilingContext.nodeMaxTime[node]
+			print(format("  %s: %.03f (%d) | Max %.03f (%s)", node, nodeTotalTime, nodeRuns, nodeMaxTime, tostring(nodeMaxContext)))
+		else
+			print(format("  %s: %.03f (%d)", node, nodeTotalTime, nodeRuns))
+		end
 	end
 	private.profilingContext.startTime = nil
 	wipe(private.profilingContext.nodes)
 	wipe(private.profilingContext.nodeRuns)
 	wipe(private.profilingContext.nodeStart)
 	wipe(private.profilingContext.nodeTotal)
+	wipe(private.profilingContext.nodeMaxContext)
+	wipe(private.profilingContext.nodeMaxTime)
+end
+
+--- Checks whether or not we're currently profiling.
+-- @treturn boolean Whether or not we're currently profiling.
+-- @within Profiling
+function TSMAPI_FOUR.Debug.IsProfiling()
+	return private.profilingContext.startTime and true or false
 end
 
 
@@ -315,7 +340,6 @@ function private.DumpTableContents(val, prefix, firstPrefix, key)
 	if cutoff > 0 then
 		private.Write(format("%s|cffff0000<skipped %s>|r", firstPrefix, cutoff))
 	end
-	key = oldKey
 	private.depth = oldDepth
 end
 

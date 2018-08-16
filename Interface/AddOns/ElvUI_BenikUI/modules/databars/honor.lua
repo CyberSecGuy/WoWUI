@@ -11,7 +11,7 @@ local CreateFrame = CreateFrame
 local GameTooltip = _G["GameTooltip"]
 local InCombatLockdown = InCombatLockdown
 local HONOR = HONOR
-local MAX_PLAYER_LEVEL = 110
+local MAX_PLAYER_LEVEL = MAX_PLAYER_LEVEL
 
 -- GLOBALS: hooksecurefunc, selectioncolor, ElvUI_ArtifactBar, ArtifactFrame
 
@@ -39,28 +39,17 @@ local function StyleBar()
 	bar.fb = CreateFrame('Button', nil, bar)
 	bar.fb:CreateSoftGlow()
 	bar.fb.sglow:Hide()
-	if E.db.benikui.general.shadows then
-		bar.fb:CreateShadow('Default')
-		bar.fb:Point('TOPLEFT', bar, 'BOTTOMLEFT', 0, (E.PixelMode and -SPACING -2 or -SPACING))
-		bar.fb:Point('BOTTOMRIGHT', bar, 'BOTTOMRIGHT', 0, -22)
-	else
-		bar.fb:Point('TOPLEFT', bar, 'BOTTOMLEFT', 0, -SPACING)
-		bar.fb:Point('BOTTOMRIGHT', bar, 'BOTTOMRIGHT', 0, (E.PixelMode and -20 or -22))
+	if BUI.ShadowMode then
+		bar.fb:CreateSoftShadow()
 	end
+	bar.fb:Point('TOPLEFT', bar, 'BOTTOMLEFT', 0, -SPACING)
+	bar.fb:Point('BOTTOMRIGHT', bar, 'BOTTOMRIGHT', 0, (E.PixelMode and -20 or -22))
+
 	bar.fb:SetScript('OnEnter', onEnter)
 	bar.fb:SetScript('OnLeave', onLeave)
 
 	bar.fb:SetScript('OnClick', function(self)
-		if not PlayerTalentFrame then
-			TalentFrame_LoadUI()
-		end
-
-		if not PlayerTalentFrame:IsShown() then
-			ShowUIPanel(PlayerTalentFrame)
-			_G["PlayerTalentFrameTab"..PVP_TALENTS_TAB]:Click()
-		else
-			HideUIPanel(PlayerTalentFrame)
-		end
+		TogglePVPUI()
 	end)
 
 	BDB:ToggleHonorBackdrop()
@@ -73,7 +62,7 @@ function BDB:ApplyHonorStyling()
 	local bar = ElvUI_HonorBar
 	if E.db.databars.honor.enable then
 		if bar.fb then
-			if E.db.databars.artifact.orientation == 'VERTICAL' then
+			if E.db.databars.honor.orientation == 'VERTICAL' then
 				bar.fb:Show()
 			else
 				bar.fb:Hide()
@@ -81,7 +70,7 @@ function BDB:ApplyHonorStyling()
 		end
 	end
 
-	if E.db.benikuiDatabars.artifact.buiStyle then
+	if E.db.benikuiDatabars.honor.buiStyle then
 		if bar.style then
 			bar.style:Show()
 		end
@@ -111,10 +100,19 @@ function BDB:ToggleHonorBackdrop()
 	if bar.fb then
 		if db.buttonStyle == 'DEFAULT' then
 			bar.fb:SetTemplate('Default', true)
+			if bar.fb.shadow then
+				bar.fb.shadow:Show()
+			end
 		elseif db.buttonStyle == 'TRANSPARENT' then
 			bar.fb:SetTemplate('Transparent')
+			if bar.fb.shadow then
+				bar.fb.shadow:Show()
+			end
 		else
 			bar.fb:SetTemplate('NoBackdrop')
+			if bar.fb.shadow then
+				bar.fb.shadow:Hide()
+			end
 		end
 	end
 end
@@ -169,25 +167,18 @@ function BDB:UpdateHonorNotifier()
 		local text = ''
 		local current = UnitHonor("player");
 		local max = UnitHonorMax("player");
-		local level = UnitHonorLevel("player");
-		local levelmax = GetMaxPlayerHonorLevel();
 
 		if max == 0 then max = 1 end
 
-		if (CanPrestige()) then
-			text = 'P'
-		elseif (level == levelmax) then
-			text = 'Max'
-		else
-			text = format('%d%%', current / max * 100)
-		end
+		text = format('%d%%', current / max * 100)
+
 		bar.f.txt:SetText(text)
 	end
 end
 
 function BDB:HonorTextOffset()
 	local text = ElvUI_ExperienceBar.text
-	text:Point('CENTER', 0, E.db.databars.experience.textYoffset)
+	text:Point('CENTER', 0, E.db.databars.experience.textYoffset or 0)
 end
 
 function BDB:LoadHonor()
@@ -208,9 +199,9 @@ function BDB:LoadHonor()
 		hooksecurefunc(M, 'UpdateHonorDimensions', BDB.UpdateHonorNotifierPositions)
 	end
 
-	if E.db.benikui.general.shadows then
+	if BUI.ShadowMode then
 		if not bar.style then
-			bar:CreateShadow('Default')
+			bar:CreateSoftShadow()
 		end
 	end
 

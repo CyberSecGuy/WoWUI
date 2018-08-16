@@ -4,13 +4,13 @@
 
 local plugin = BigWigs:NewPlugin("Messages")
 if not plugin then return end
-LibStub("LibSink-2.0"):Embed(plugin)
 
 -------------------------------------------------------------------------------
 -- Locals
 --
 
 local media = LibStub("LibSharedMedia-3.0")
+local sink = LibStub("LibSink-2.0")
 local FONT = media.MediaType and media.MediaType.FONT or "font"
 
 local labels = {}
@@ -35,7 +35,9 @@ local L = BigWigsAPI:GetLocale("BigWigs: Plugins")
 plugin.displayName = L.messages
 
 local fakeEmphasizeMessageAddon = {}
-LibStub("LibSink-2.0"):Embed(fakeEmphasizeMessageAddon)
+
+sink:Embed(plugin)
+sink:Embed(fakeEmphasizeMessageAddon)
 
 --------------------------------------------------------------------------------
 -- Anchors & Frames
@@ -127,7 +129,7 @@ do
 
 	normalAnchor = createAnchor("BWMessageAnchor", L.messages)
 	emphasizeAnchor = createAnchor("BWEmphasizeMessageAnchor", L.emphasizedMessages)
-	emphasizeCountdownAnchor = createAnchor("BWEmphasizeCountdownMessageAnchor", L.emphasizedCountdown)
+	emphasizeCountdownAnchor = createAnchor("BWEmphasizeCountdownMessageAnchor", L.textCountdown)
 
 	BWMessageFrame = CreateFrame("Frame", "BWMessageFrame", UIParent)
 	BWMessageFrame:SetWidth(UIParent:GetWidth())
@@ -327,6 +329,7 @@ plugin.pluginOptions.args.more = {
 			set = function(_, value)
 				local list = media:List(FONT)
 				plugin.db.profile.font = list[value]
+				updateProfile()
 			end,
 		},
 		outline = {

@@ -8,9 +8,8 @@
 
 local _, TSM = ...
 local CustomSources = TSM.MainUI.Settings:NewPackage("CustomSources")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { selectedRow = nil, isEditing = nil, editingElement = nil }
-local NAME_COL_WIDTH = 300
 
 
 
@@ -38,7 +37,7 @@ function private.GetCustomSourcesSettingsFrame()
 			:SetStyle("height", 54)
 			:SetStyle("margin.bottom", 24)
 			:SetStyle("fontHeight", 14)
-			:SetText(L["Price Variables allow you to create more advanced custom prices for use throughout the addon. You’ll be able to use these new variables in the same way you can use the built-in price sources such as 'vendorsell' and 'vendorbuy'."])
+			:SetText(L["Price Variables allow you to create more advanced custom prices for use throughout the addon. You'll be able to use these new variables in the same way you can use the built-in price sources such as 'vendorsell' and 'vendorbuy'."])
 		)
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line1")
 			:SetStyle("height", 1)
@@ -217,9 +216,6 @@ function private.DeleteCustomPriceOnClick(button)
 end
 
 function private.AddNewButtonOnClick(button)
-	button:SetPressed(false)
-	button:Draw()
-
 	-- generate a placeholder name
 	local newName = nil
 	local suffix = ""

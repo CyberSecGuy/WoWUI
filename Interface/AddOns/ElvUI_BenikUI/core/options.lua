@@ -20,6 +20,13 @@ local DONATORS = {
 	'Justin',
 	'Scott C',
 	'Edward F',
+	'Marcus G',
+	'Michael W',
+	'Ara M',
+	'CHRONiC',
+	'Tlareg',
+	'Sumidian',
+	'Nizz',
 }
 tsort(DONATORS, function(a, b) return a < b end)
 local DONATOR_STRING = tconcat(DONATORS, ", ")
@@ -121,7 +128,7 @@ local function Core()
 					shadows = {
 						order = 3,
 						type = 'toggle',
-						name = L['Shadows'].." (Beta)",
+						name = L['Shadows'],
 						disabled = function() return E.db.benikui.general.benikuiStyle ~= true end,
 						get = function(info) return E.db.benikui.general[ info[#info] ] end,
 						set = function(info, value) E.db.benikui.general[ info[#info] ] = value; E:StaticPopup_Show('PRIVATE_RL'); end,
@@ -228,7 +235,7 @@ local function Core()
 									E.db.benikui.colors[ info[#info] ] = {}
 									local t = E.db.benikui.colors[ info[#info] ]
 									t.r, t.g, t.b, t.a = r, g, b, a
-									BUI:UpdateStyleColors(); 
+									BUI:UpdateStyleColors();
 								end,
 							},
 							styleAlpha = {
@@ -286,7 +293,7 @@ local function Core()
 								disabled = function() return E.db.benikui.general.benikuiStyle ~= true end,
 								get = function(info) return E.db.benikui.colors[ info[#info] ] end,
 								set = function(info, value) E.db.benikui.colors[ info[#info] ] = value; E:GetModule('BuiActionbars'):ColorBackdrops(); end,
-							},	
+							},
 						},
 					},
 					gameMenu = {
@@ -346,7 +353,7 @@ local function Core()
 								order = 1,
 								type = 'execute',
 								name = L['Tukui.org'],
-								func = function() StaticPopup_Show("BENIKUI_CREDITS", nil, nil, "http://www.tukui.org/addons/index.php?act=view&id=228") end,
+								func = function() StaticPopup_Show("BENIKUI_CREDITS", nil, nil, "https://www.tukui.org/forum/viewforum.php?f=33") end,
 								},
 							git = {
 								order = 2,
@@ -377,17 +384,11 @@ local function Core()
 							curse = {
 								order = 2,
 								type = 'execute',
-								name = L['Curse.com'],
-								func = function() StaticPopup_Show("BENIKUI_CREDITS", nil, nil, "https://mods.curse.com/addons/wow/benikui-v3") end,
-							},
-							wowint = {
-								order = 3,
-								type = 'execute',
-								name = L['WoW Interface'],
-								func = function() StaticPopup_Show("BENIKUI_CREDITS", nil, nil, "http://www.wowinterface.com/downloads/info23675-BenikUIv3.html") end,
+								name = L['Curseforge'],
+								func = function() StaticPopup_Show("BENIKUI_CREDITS", nil, nil, "https://www.curseforge.com/wow/addons/benikui-v3") end,
 							},
 							beta = {
-								order = 4,
+								order = 3,
 								type = 'execute',
 								name = L['Beta versions'],
 								func = function() StaticPopup_Show("BENIKUI_CREDITS", nil, nil, "https://git.tukui.org/Benik/ElvUI_BenikUI/repository/archive.zip?ref=development") end,

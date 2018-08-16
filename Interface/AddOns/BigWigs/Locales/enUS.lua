@@ -37,8 +37,6 @@ L.offline = "Offline"
 L.missingAddOn = "Please note that this zone requires the |cFF436EEE%s|r plugin for timers to be displayed."
 L.disabledAddOn = "You have the |cFF436EEE%s|r addon disabled, timers will not be shown."
 
-L.coreAddonDisabled = "BigWigs won't function properly since the addon %s is disabled. You can enable it from the addon control panel at the character selection screen."
-
 L.removeAddon = "Please remove '|cFF436EEE%s|r' as it's been replaced by '|cFF436EEE%s|r'."
 
 -- Options.lua
@@ -114,6 +112,12 @@ L.COUNTDOWN = "Countdown"
 L.COUNTDOWN_desc = "If enabled, a vocal and visual countdown will be added for the last 5 seconds. Imagine someone counting down \"5... 4... 3... 2... 1...\" with a big number in the middle of your screen."
 L.INFOBOX = L.infobox
 L.INFOBOX_desc = L.infobox_desc
+L.SOUND = "Sound"
+L.SOUND_desc = "Boss abilities usually play sounds to help you notice them. If you disable this option, none of the sounds attached to it will play."
+L.CASTBAR = "Cast Bars"
+L.CASTBAR_desc = "Cast bars are sometimes shown on certain bosses, usually to bring attention to a critical ability incoming. If this ability is accompanied by a cast bar that you want to hide, disable this option."
+L.SAY_COUNTDOWN = "Say Countdown"
+L.SAY_COUNTDOWN_desc = "Chat bubbles are easy to spot. BigWigs will use multiple say messages counting down to alert people nearby that an ability on you is about to expire."
 
 L.advanced = "Advanced options"
 L.back = "<< Back"

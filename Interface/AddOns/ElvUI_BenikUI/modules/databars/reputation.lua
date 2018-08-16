@@ -52,14 +52,11 @@ local function StyleBar()
 	rp.fb = CreateFrame('Button', nil, rp)
 	rp.fb:CreateSoftGlow()
 	rp.fb.sglow:Hide()
-	if E.db.benikui.general.shadows then
-		rp.fb:CreateShadow('Default')
-		rp.fb:Point('TOPLEFT', rp, 'BOTTOMLEFT', 0, (E.PixelMode and -SPACING -2 or -SPACING))
-		rp.fb:Point('BOTTOMRIGHT', rp, 'BOTTOMRIGHT', 0, -22)
-	else
-		rp.fb:Point('TOPLEFT', rp, 'BOTTOMLEFT', 0, -SPACING)
-		rp.fb:Point('BOTTOMRIGHT', rp, 'BOTTOMRIGHT', 0, (E.PixelMode and -20 or -22))
+	if BUI.ShadowMode then
+		rp.fb:CreateSoftShadow()
 	end
+	rp.fb:Point('TOPLEFT', rp, 'BOTTOMLEFT', 0, -SPACING)
+	rp.fb:Point('BOTTOMRIGHT', rp, 'BOTTOMRIGHT', 0, (E.PixelMode and -20 or -22))
 
 	rp.fb:SetScript('OnEnter', onEnter)
 	rp.fb:SetScript('OnLeave', onLeave)
@@ -67,7 +64,7 @@ local function StyleBar()
 	rp.fb:SetScript('OnClick', function(self)
 		ToggleCharacter("ReputationFrame")
 	end)
-	
+
 	BDB:ToggleRepBackdrop()
 
 	if E.db.benikui.general.benikuiStyle ~= true then return end
@@ -106,7 +103,7 @@ function BDB:ChangeRepColor()
 
 	if db.default then
 		elvstatus:SetStatusBarColor(color.r, color.g, color.b)
-	else 
+	else
 		if reaction >= 5 then
 			elvstatus:SetStatusBarColor(BUI:unpackColor(db.friendly))
 		elseif reaction == 4 then
@@ -127,10 +124,19 @@ function BDB:ToggleRepBackdrop()
 	if bar.fb then
 		if db.buttonStyle == 'DEFAULT' then
 			bar.fb:SetTemplate('Default', true)
+			if bar.fb.shadow then
+				bar.fb.shadow:Show()
+			end
 		elseif db.buttonStyle == 'TRANSPARENT' then
 			bar.fb:SetTemplate('Transparent')
+			if bar.fb.shadow then
+				bar.fb.shadow:Show()
+			end
 		else
 			bar.fb:SetTemplate('NoBackdrop')
+			if bar.fb.shadow then
+				bar.fb.shadow:Hide()
+			end
 		end
 	end
 end
@@ -184,7 +190,7 @@ function BDB:UpdateRepNotifier()
 		if currentValue and threshold then
 			min, max = 0, threshold
 			value = currentValue % threshold
-			if hasRewardPending then 
+			if hasRewardPending then
 				value = value + threshold
 			end
 		end
@@ -200,7 +206,7 @@ end
 
 function BDB:RepTextOffset()
 	local text = ElvUI_ReputationBar.text
-	text:Point('CENTER', 0, E.db.databars.reputation.textYoffset)
+	text:Point('CENTER', 0, E.db.databars.reputation.textYoffset or 0)
 end
 
 -- Credit: Feraldin, ElvUI Enhanced (Legion)
@@ -252,9 +258,9 @@ function BDB:LoadRep()
 		hooksecurefunc(M, 'UpdateReputationDimensions', BDB.UpdateRepNotifierPositions)
 	end
 
-	if E.db.benikui.general.shadows then
+	if BUI.ShadowMode then
 		if not bar.style then
-			bar:CreateShadow('Default')
+			bar:CreateSoftShadow()
 		end
 	end
 

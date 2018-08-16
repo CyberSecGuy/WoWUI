@@ -12,7 +12,6 @@
 -- @classmod OperationTree
 
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 local OperationTree = TSMAPI_FOUR.Class.DefineClass("OperationTree", TSM.UI.ScrollList)
 TSM.UI.OperationTree = OperationTree
 local private = {}
@@ -30,6 +29,7 @@ function OperationTree.__init(self)
 	self.__super:__init()
 
 	self._operationNameFilter = ""
+	self._selected = nil
 	self._contextTable = nil
 	self._defaultContextTable = nil
 	self._selectedOperation = nil
@@ -53,6 +53,10 @@ function OperationTree.Acquire(self)
 end
 
 function OperationTree.Release(self)
+	if not self._selected then
+		self._selectedRowFrame:Release()
+	end
+	self._selected = nil
 	self._operationNameFilter = ""
 	self._contextTable = nil
 	self._defaultContextTable = nil
@@ -61,7 +65,6 @@ function OperationTree.Release(self)
 	self._onOperationSelectedHandler = nil
 	self._onOperationAddedHandler = nil
 	self._onOperationDeletedHandler = nil
-	self._selectedRowFrame:Release()
 	self._selectedRowFrame = nil
 	self.__super:Release()
 end
@@ -128,18 +131,18 @@ end
 function OperationTree.SetSelectedOperation(self, moduleName, operationName)
 	if moduleName and operationName then
 		self._selectedOperation = moduleName..DATA_SEP..operationName
+		self._contextTable.expandedModule = moduleName
 	else
 		self._selectedOperation = nil
 	end
 	if self._onOperationSelectedHandler then
 		self:_onOperationSelectedHandler(moduleName, operationName)
 	end
-	self:_UpdateSelectedRowIcons()
+	self:Draw()
 	return self
 end
 
 function OperationTree.Draw(self)
-	local selectedRowVisible = false
 	self._selectedRowFrame:GetElement("duplicateButton"):SetStyle("backgroundTexturePack", self:_GetStyle("duplicateBackgroundTexturePack"))
 	self._selectedRowFrame:GetElement("deleteButton"):SetStyle("backgroundTexturePack", self:_GetStyle("deleteBackgroundTexturePack"))
 	self.__super:Draw()
@@ -157,6 +160,8 @@ function OperationTree._CreateRow(self)
 			:SetStyle("anchors", { { "TOPLEFT" }, { "BOTTOMRIGHT" } })
 			:SetStyle("justifyH", "LEFT")
 			:SetScript("OnClick", private.RowButtonOnClick)
+			:SetScript("OnEnter", private.RowButtonOnEnter)
+			:SetScript("OnLeave", private.RowButtonOnLeave)
 		)
 		:AddChildNoLayout(TSMAPI_FOUR.UI.NewElement("Texture", "highlight")
 			:SetStyle("anchors", { { "TOPLEFT" }, { "BOTTOMRIGHT" } })
@@ -171,8 +176,11 @@ function OperationTree._CreateRow(self)
 			:SetStyle("anchors", { { "TOPRIGHT", -SCROLLBAR_WIDTH, 0 }, { "BOTTOMRIGHT", -SCROLLBAR_WIDTH, 0 } })
 			:SetText(ADD)
 			:SetScript("OnClick", private.AddNewOnClick)
+			:SetScript("OnEnter", private.RowButtonOnEnter)
+			:SetScript("OnLeave", private.RowButtonOnLeave)
 		)
-		:SetScript("OnUpdate", private.RowOnUpdate)
+		:SetScript("OnEnter", private.RowOnEnter)
+		:SetScript("OnLeave", private.RowOnLeave)
 
 	-- hide the highlight
 	row:GetElement("highlight"):Hide()
@@ -233,15 +241,12 @@ end
 
 function OperationTree._UpdateData(self)
 	wipe(self._data)
-	for moduleName, operations in pairs(TSM.operations) do
-		if TSMAPI_FOUR.Operations.ModuleHasOperations(moduleName) then
-			tinsert(self._data, moduleName)
-			for operationName in pairs(operations) do
-				tinsert(self._data, moduleName..DATA_SEP..operationName)
-			end
+	for _, moduleName in TSM.Operations.ModuleIterator() do
+		tinsert(self._data, moduleName)
+		for _, operationName in TSM.Operations.OperationIterator(moduleName) do
+			tinsert(self._data, moduleName..DATA_SEP..operationName)
 		end
 	end
-	sort(self._data)
 end
 
 function OperationTree._DrawRows(self)
@@ -263,6 +268,9 @@ function OperationTree._UpdateSelectedRowIcons(self)
 	if currentParentRow then
 		currentParentRow:RemoveChild(self._selectedRowFrame)
 	end
+	if self._selected then
+		self._selected:GetElement("highlight"):Hide()
+	end
 	if selectedRow then
 		selectedRow:AddChildNoLayout(self._selectedRowFrame)
 		local buttonSize = self:_GetStyle("selectedRowButtonSize")
@@ -278,8 +286,11 @@ function OperationTree._UpdateSelectedRowIcons(self)
 			:SetStyle("height", buttonSize)
 			:SetStyle("width", buttonSize)
 		self._selectedRowFrame:Show()
+		selectedRow:GetElement("highlight"):Show()
+		self._selected = selectedRow
 		self._selectedRowFrame:Draw()
 	else
+		self._selected = nil
 		self._selectedRowFrame:Hide()
 	end
 end
@@ -313,7 +324,7 @@ function private.AddNewOnClick(button)
 	local moduleName = row:GetContext()
 	local operationName = "New Operation"
 	local num = 1
-	while TSM.operations[moduleName][operationName.." "..num] do
+	while TSM.Operations.Exists(moduleName, operationName.." "..num) do
 		num = num + 1
 	end
 	operationName = operationName .. " " .. num
@@ -322,14 +333,38 @@ function private.AddNewOnClick(button)
 	self:SetSelectedOperation(moduleName, operationName)
 end
 
-function private.RowOnUpdate(frame)
+function private.RowOnEnter(frame)
 	local self = frame:GetParentElement()
-	local rowData = frame:GetContext()
-	if frame:IsMouseOver() or (rowData and rowData == self._selectedOperation) then
-		frame:GetElement("highlight"):Show()
-	else
-		frame:GetElement("highlight"):Hide()
+	if self._selected == frame then
+		return
 	end
+	frame:GetElement("highlight"):Show()
+end
+
+function private.RowOnLeave(frame)
+	local self = frame:GetParentElement()
+	if self._selected == frame then
+		return
+	end
+	frame:GetElement("highlight"):Hide()
+end
+
+function private.RowButtonOnEnter(frame)
+	frame = frame:GetParentElement()
+	local self = frame:GetParentElement()
+	if self._selected == frame then
+		return
+	end
+	frame:GetElement("highlight"):Show()
+end
+
+function private.RowButtonOnLeave(frame)
+	frame = frame:GetParentElement()
+	local self = frame:GetParentElement()
+	if self._selected == frame then
+		return
+	end
+	frame:GetElement("highlight"):Hide()
 end
 
 function private.CopyButtonOnClick(button)
@@ -337,7 +372,7 @@ function private.CopyButtonOnClick(button)
 	local self = row:GetParentElement()
 	local moduleName, operationName = self:_SplitOperationKey(row:GetContext())
 	local num = 1
-	while TSM.operations[moduleName][operationName.." "..num] do
+	while TSM.Operations.Exists(moduleName, operationName.." "..num) do
 		num = num + 1
 	end
 	local newOperationName = operationName.." "..num

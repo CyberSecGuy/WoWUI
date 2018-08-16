@@ -24,6 +24,8 @@ function ViewContainer.__init(self)
 	local frame = CreateFrame("Frame", nil, nil, nil)
 	self.__super:__init(frame)
 	self._pathsList = {}
+	self._contextTable = nil
+	self._defaultContextTable = nil
 end
 
 function ViewContainer.Acquire(self)
@@ -35,6 +37,8 @@ end
 function ViewContainer.Release(self)
 	wipe(self._pathsList)
 	self.__super:Release()
+	self._contextTable = nil
+	self._defaultContextTable = nil
 end
 
 function ViewContainer.SetLayout(self, layout)
@@ -65,7 +69,13 @@ end
 -- @treturn ViewContainer The view container object
 function ViewContainer.AddPath(self, path, setSelected)
 	tinsert(self._pathsList, path)
-	if setSelected then
+	if self._contextTable then
+		assert(setSelected == nil, "Cannot set selected path when using a context table")
+		local newPathIndex = TSMAPI_FOUR.Util.TableKeyByValue(self._pathsList, path)
+		if self._contextTable.pathIndex == newPathIndex then
+			self:SetPath(path)
+		end
+	elseif setSelected then
 		self:SetPath(path)
 	end
 	return self
@@ -101,6 +111,10 @@ function ViewContainer.SetPath(self, path, redraw)
 		end
 		self.__super:AddChild(self:_navCallback(path))
 		self._path = path
+		-- Save the path index of the new selected path to the context table
+		if self._contextTable then
+			self._contextTable.pathIndex = TSMAPI_FOUR.Util.TableKeyByValue(self._pathsList, path)
+		end
 	end
 	if redraw then
 		self:Draw()
@@ -123,6 +137,13 @@ function ViewContainer.GetPath(self)
 	return self._path
 end
 
+--- Get a list of the paths for the view container.
+-- @tparam ViewContainer self The view container object
+-- @treturn table The path list
+function ViewContainer.GetPathList(self)
+	return self._pathsList
+end
+
 function ViewContainer.Draw(self)
 	self.__super.__super:Draw()
 	local child = self:_GetChild()
@@ -135,17 +156,31 @@ function ViewContainer.Draw(self)
 	xOffset = xOffset + paddingXOffset - self:_GetContentPadding("LEFT")
 	yOffset = yOffset + paddingYOffset - self:_GetContentPadding("BOTTOM")
 	childFrame:SetPoint("BOTTOMLEFT", xOffset, yOffset)
-	local xOffset, yOffset = child:_GetMarginAnchorOffsets("TOPRIGHT")
-	local paddingXOffset, paddingYOffset = self:_GetPaddingAnchorOffsets("TOPRIGHT")
+	xOffset, yOffset = child:_GetMarginAnchorOffsets("TOPRIGHT")
+	paddingXOffset, paddingYOffset = self:_GetPaddingAnchorOffsets("TOPRIGHT")
 	xOffset = xOffset + paddingXOffset - self:_GetContentPadding("RIGHT")
 	yOffset = yOffset + paddingYOffset - self:_GetContentPadding("TOP")
 	childFrame:SetPoint("TOPRIGHT", xOffset, yOffset)
 	child:Draw()
 
 	-- draw the no-layout children
-	for _, child in ipairs(self._noLayoutChildren) do
-		child:Draw()
+	for _, noLayoutChild in ipairs(self._noLayoutChildren) do
+		noLayoutChild:Draw()
 	end
+end
+
+--- Sets the context table.
+-- This table can be used to save which tab is active, refrenced by the path index
+-- @tparam ViewContainer self The view container object
+-- @tparam table tbl The context table
+-- @tparam table defaultTbl Default values
+-- @treturn ViewContainer The view container object
+function ViewContainer.SetContextTable(self, tbl, defaultTbl)
+	tbl.pathIndex = tbl.pathIndex or defaultTbl.pathIndex
+	assert(tbl.pathIndex ~= nil, "Path index for ViewContainer ContextTable is not set")
+	self._contextTable = tbl
+	self._defaultContextTable = defaultTbl
+	return self
 end
 
 

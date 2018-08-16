@@ -6,175 +6,79 @@ local L = WeakAuras.L
 
 -- WeakAuras/Templates
 	--[[Translation missing --]]
-	--[[ L[" (Channeling)"] = ""--]] 
+	L["Ability Charges"] = "Ability Charges"
 	--[[Translation missing --]]
-	--[[ L[" (Healing received increase)"] = ""--]] 
+	L["Add Triggers"] = "Add Triggers"
 	--[[Translation missing --]]
-	--[[ L["- Any"] = ""--]] 
+	L["Always Active"] = "Always Active"
 	--[[Translation missing --]]
-	--[[ L["- Holy Word: Chastise"] = ""--]] 
+	L["Back"] = "Back"
 	--[[Translation missing --]]
-	--[[ L["- Holy Word: Sanctify"] = ""--]] 
+	L["Bloodlust/Heroism"] = "Bloodlust/Heroism"
 	--[[Translation missing --]]
-	--[[ L["- Holy Word: Serenity"] = ""--]] 
+	L["buff"] = "buff"
 	--[[Translation missing --]]
-	--[[ L["(Pet)"] = ""--]] 
+	L["Buff"] = "Buff"
 	--[[Translation missing --]]
-	--[[ L["(Water Elemental)"] = ""--]] 
+	L["Buffs"] = "Buffs"
 	--[[Translation missing --]]
-	--[[ L["Ability Charges"] = ""--]] 
+	L["Cancel"] = "Cancel"
 	--[[Translation missing --]]
-	--[[ L["Absorb Shield"] = ""--]] 
+	L["Cast"] = "Cast"
 	--[[Translation missing --]]
-	--[[ L["Add Triggers"] = ""--]] 
+	L["cooldown"] = "cooldown"
 	--[[Translation missing --]]
-	--[[ L["Always Active"] = ""--]] 
+	L["Cooldowns"] = "Cooldowns"
 	--[[Translation missing --]]
-	--[[ L["Back"] = ""--]] 
+	L["Debuffs"] = "Debuffs"
 	--[[Translation missing --]]
-	--[[ L["Bleed"] = ""--]] 
+	L["Enchants"] = "Enchants"
 	--[[Translation missing --]]
-	--[[ L["Bloodlust/Heroism"] = ""--]] 
+	L["General"] = "General"
 	--[[Translation missing --]]
-	--[[ L["Buff"] = ""--]] 
+	L["General Azerite Traits"] = "General Azerite Traits"
 	--[[Translation missing --]]
-	--[[ L["buff"] = ""--]] 
+	L["Health"] = "Health"
 	--[[Translation missing --]]
-	--[[ L["Buffs"] = ""--]] 
+	L["Keeps existing triggers intact"] = "Keeps existing triggers intact"
 	--[[Translation missing --]]
-	--[[ L["Cancel"] = ""--]] 
+	L["On Procc Trinkets (Buff)"] = "On Procc Trinkets (Buff)"
 	--[[Translation missing --]]
-	--[[ L["Cast"] = ""--]] 
+	L["On Use Trinkets (Buff)"] = "On Use Trinkets (Buff)"
 	--[[Translation missing --]]
-	--[[ L["Concordance of the Legionfall"] = ""--]] 
+	L["On Use Trinkets (CD)"] = "On Use Trinkets (CD)"
 	--[[Translation missing --]]
-	--[[ L["cooldown"] = ""--]] 
+	L["Pet alive"] = "Pet alive"
 	--[[Translation missing --]]
-	--[[ L["Cooldowns"] = ""--]] 
+	L["Pet Behavior"] = "Pet Behavior"
 	--[[Translation missing --]]
-	--[[ L["Crimson Vial Item Count"] = ""--]] 
+	L["PvP Azerite Traits"] = "PvP Azerite Traits"
 	--[[Translation missing --]]
-	--[[ L["Damage Trinkets"] = ""--]] 
+	L["PvP Talents"] = "PvP Talents"
 	--[[Translation missing --]]
-	--[[ L["Death Knight 2P Bonus - "] = ""--]] 
+	L["PVP Trinkets (Buff)"] = "PVP Trinkets (Buff)"
 	--[[Translation missing --]]
-	--[[ L["Death Knight Unholy 4P Bonus - "] = ""--]] 
+	L["PVP Trinkets (CD)"] = "PVP Trinkets (CD)"
 	--[[Translation missing --]]
-	--[[ L["debuff"] = ""--]] 
+	L["Replace all existing triggers"] = "Replace all existing triggers"
 	--[[Translation missing --]]
-	--[[ L["Debuffs"] = ""--]] 
+	L["Replace Triggers"] = "Replace Triggers"
 	--[[Translation missing --]]
-	--[[ L["Discipline Priest"] = ""--]] 
+	L["Resources"] = "Resources"
 	--[[Translation missing --]]
-	--[[ L["Druid"] = ""--]] 
+	L["Resources and Shapeshift Form"] = "Resources and Shapeshift Form"
 	--[[Translation missing --]]
-	--[[ L["Effuse"] = ""--]] 
+	L["Runes"] = "Runes"
 	--[[Translation missing --]]
-	--[[ L["Enchants"] = ""--]] 
+	L["Shapeshift Form"] = "Shapeshift Form"
 	--[[Translation missing --]]
-	--[[ L["Enveloping Mist"] = ""--]] 
+	L["Specific Azerite Traits"] = "Specific Azerite Traits"
 	--[[Translation missing --]]
-	--[[ L["Essence Font"] = ""--]] 
+	L["Stagger"] = "Stagger"
 	--[[Translation missing --]]
-	--[[ L["General"] = ""--]] 
+	L["Totems"] = "Totems"
 	--[[Translation missing --]]
-	--[[ L["Healer Trinkets"] = ""--]] 
+	L["Unknown Item"] = "Unknown Item"
 	--[[Translation missing --]]
-	--[[ L["Health"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Holy Priest"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Keeps existing triggers intact"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Legendaries"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Monk"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Monk Windwalker 4P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Netherlight Crucible"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Nimble Brew Item Count"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Paladin"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Paladin Protection 2P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Paladin Retribution 2P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Pantheon Trinkets"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Pet alive"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Pet Behavior"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["PVP Set"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["PvP Talents"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["PVP Trinkets"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Renewing Mist"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Replace all existing triggers"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Replace Triggers"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Resources"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Resources and Shapeshift Form"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Rogue Assassination/Outlaw 4P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Rogue Subtlety 4P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Rooted"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Runes"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Secondary Effect"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Set Bonus"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Shaman"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Shaman Elemental 4P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Shaman Enhancement 2P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Shapeshift Form"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Slowed"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Stagger"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Stun"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["T19 2P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["T19 4P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["T20 2P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["T20 4P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["T21 2P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["T21 4P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Tank Trinkets"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Totem"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Totems"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Unknown Item"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Unknown Spell"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Vivify"] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Warlock Affliction 4P/Demonology 2P Bonus - "] = ""--]] 
-	--[[Translation missing --]]
-	--[[ L["Warrior 2P Bonus - "] = ""--]] 
+	L["Unknown Spell"] = "Unknown Spell"
 

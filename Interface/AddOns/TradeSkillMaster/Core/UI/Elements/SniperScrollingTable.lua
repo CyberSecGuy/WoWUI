@@ -12,7 +12,6 @@
 -- @classmod SniperScrollingTable
 
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 local SniperScrollingTable = TSMAPI_FOUR.Class.DefineClass("SniperScrollingTable", TSM.UI.AuctionScrollingTable)
 TSM.UI.SniperScrollingTable = SniperScrollingTable
 local private = { rowFrameLookup = {} }
@@ -118,7 +117,7 @@ end
 -- Private Helper Functions
 -- ============================================================================
 
-function private.IconSortFunction(self, record)
+function private.IconSortFunction(_, record)
 	return -record:GetField("filterId")
 end
 
@@ -130,7 +129,6 @@ end
 
 function private.RemoveRowBtnOnEnter(button)
 	local self = private.rowFrameLookup[button:GetParent()]
-	local scrollingTable = self._scrollingTable
 	TSM.UI.TexturePacks.SetTexture(self._icons.remove, "iconPack.14x14/Close/Default")
 end
 

@@ -9,7 +9,7 @@
 -- This file contains all the code for TSM's standalone features
 
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local Features = TSM:NewPackage("Features", "AceHook-3.0")
 Features.blackMarket = nil
 Features.blackMarketTime = nil
@@ -97,7 +97,7 @@ function private.OnAuctionOwnedListUpdate()
 		:Equal("saleStatus", 0)
 		:GreaterThan("buyout", 0)
 		:OrderBy("index", true)
-	for _, link, stackSize, buyout in query:IteratorAndRelease(true) do
+	for _, link, stackSize, buyout in query:IteratorAndRelease() do
 		auctionPrices[link] = auctionPrices[link] or tremove(freeTables) or {}
 		if stackSize ~= auctionStackSizes[link] then
 			auctionStackSizes[link] = INVALID_STACK_SIZE
@@ -149,8 +149,8 @@ function private.CreateTwitterHooks()
 	hooksecurefunc("SocialPrefillItemText", function(itemID, earned, context, name, quality)
 		if not TSM.db.global.coreOptions.tsmItemTweetEnabled then return end
 		if name == nil or quality == nil then
-			local ignored
-			name, ignored, quality = GetItemInfo(itemID)
+			local _
+			name, _, quality = GetItemInfo(itemID)
 		end
 		local tsmType, tsmItemId, tsmStackSize, tsmBuyout = strmatch(context or "", "^TSM_([A-Z]+)_(%d+)_(%d+)_(%d+)$")
 		tsmItemId = tonumber(tsmItemId)
@@ -170,7 +170,7 @@ function private.CreateTwitterHooks()
 			SocialPostFrame:SetAttribute("settext", text)
 		else
 			local prefillText = earned and SOCIAL_ITEM_PREFILL_TEXT_EARNED or SOCIAL_ITEM_PREFILL_TEXT_GENERIC
-			local r, g, b, colorString = GetItemQualityColor(quality)
+			local _, _, _, colorString = GetItemQualityColor(quality)
 			local text = format(SOCIAL_ITEM_PREFILL_TEXT_ALL, prefillText, format("|c%s[%s]|r", colorString, name), format(TSM_ITEM_URL_FORMAT, itemID))
 			SocialPostFrame:SetAttribute("settext", text)
 		end
@@ -192,8 +192,6 @@ function private.ChatFrame_OnEvent(self, event, msg, ...)
 end
 
 function private.ScanBMAH()
-	-- nothing to do if they aren't running the app
-	if TSM:GetAppVersion() < 300 then return end
 	local numItems = C_BlackMarket.GetNumItems()
 	if not numItems then return end
 	local items = TSMAPI_FOUR.Util.AcquireTempTable()

@@ -9,10 +9,10 @@
 -- TSM's error handler
 
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster")
-local AceGUI = LibStub("AceGUI-3.0")
+local L = TSM.L
 local private = { errorFrame = nil, isSilent = nil, errorSuppressed = nil, errorReports = {}, num = 0 }
-local IS_DEV_VERSION = GetAddOnMetadata("TradeSkillMaster", "Version") == "@project-version@"
+-- use strmatch does this string doesn't itself get replaced when we deploy
+local IS_DEV_VERSION = strmatch(GetAddOnMetadata("TradeSkillMaster", "version"), "^@tsm%-project%-version@$") and true or false
 local MAX_ERROR_REPORT_AGE = 7 * 24 * 60 * 60 -- 1 week
 local MAX_STACK_DEPTH = 50
 local ADDON_SUITES = {
@@ -65,7 +65,6 @@ function TSM:ShowManualError()
 end
 
 function TSM:ShowError(err, thread)
-	local stackLine
 	if thread then
 		local stackLine = debugstack(thread, 0, 1, 0)
 		local oldModule = strmatch(stackLine, "(lMaster_[A-Za-z]+)")
@@ -80,13 +79,13 @@ function TSM:ShowError(err, thread)
 end
 
 function TSM.SaveErrorReports(appDB)
+	private.errorFrame:Hide()
 	appDB.errorReports = appDB.errorReports or { updateTime = 0, data = {} }
 	if #private.errorReports > 0 then
 		appDB.errorReports.updateTime = private.errorReports[#private.errorReports].timestamp
 	end
 	-- remove any events which are too old
 	for i = #appDB.errorReports.data, 1, -1 do
-		local event = appDB.errorReports.data
 		local timestamp = strmatch(appDB.errorReports.data[i], "([0-9]+)%]$") or ""
 		if (tonumber(timestamp) or 0) < time() - MAX_ERROR_REPORT_AGE then
 			tremove(appDB.errorReports.data, i)
@@ -114,10 +113,6 @@ function private.ErrorHandler(msg, thread, errorTime)
 
 	if type(thread) ~= "thread" then
 		thread = nil
-	end
-
-	if thread then
-		msg = gsub(msg, ".+TradeSkillMaster\\Core\\Threading%.lua:%d+:", "")
 	end
 
 	local color = "|cff99ffff"
@@ -169,7 +164,7 @@ function private.ErrorHandler(msg, thread, errorTime)
 					end
 				end
 			end
-			if strfind(stackLine, "Class%.lua:192") then
+			if strfind(stackLine, "Class%.lua:190") then
 				-- ignore stack frames from the class code's wrapper function
 				stackLine = ""
 				if functionName and not strmatch(functionName, "^.+:[0-9]+$") and #stackInfo > 0 then
@@ -188,23 +183,62 @@ function private.ErrorHandler(msg, thread, errorTime)
 				-- add locals for addon functions (debuglocals() doesn't always work - or ever for threads)
 				local locals = debuglocals(i)
 				if locals and not strmatch(stackLine, "^%[") then
-					locals = gsub(locals, "<table> {[\n\t ]+}", "<table> {}")
-					for _, localLine in ipairs({strsplit("\n", locals)}) do
-						if localLine ~= "" and not strmatch(localLine, "^ *%(") then
-							localLine = strrep("  ", #strmatch(localLine, "^ *"))..strtrim(localLine)
-							localLine = gsub(localLine, "@Interface\\[aA]dd[Oo]ns\\TradeSkillMaster", "@TSM")
+					locals = gsub(locals, "<([a-z]+)> {[\n\t ]+}", "<%1> {}")
+					locals = gsub(locals, " = <function> defined @", "@")
+					locals = gsub(locals, "<table> {", "{")
+					local fileName = strmatch(stackLine, "([A-Za-z]+)%.lua")
+					local isPrivateTable, isLocaleTable, isPackageTable = false, false, false
+					for localLine in gmatch(locals, "[^\n]+") do
+						local shouldIgnoreLine = false
+						if strmatch(localLine, "^ *%(") then
+							shouldIgnoreLine = true
+						elseif strmatch(localLine, "Class%.lua:179") then
+							-- ignore class methods
+							shouldIgnoreLine = true
+						elseif strmatch(localLine, "<unnamed> {}$") then
+							-- ignore internal WoW frame members
+							shouldIgnoreLine = true
+						end
+						if not shouldIgnoreLine then
+							local level = #strmatch(localLine, "^ *")
+							localLine = strrep("  ", level + 4)..strtrim(localLine)
+							localLine = gsub(localLine, "Interface\\[aA]dd[Oo]ns\\TradeSkillMaster", "TSM")
 							localLine = gsub(localLine, "\124", "\\124")
-							localLine = "        |cffaaaaaa"..localLine.."|r"
-							tinsert(localsInfo, localLine)
+							if level > 0 then
+								if strmatch(stackLine, "Interface\\FrameXML\\") then
+									-- for Blizzard stack frames, only include level 0 locals
+									shouldIgnoreLine = true
+								elseif isPrivateTable and strmatch(localLine, "^ *[A-Z].+@TSM") then
+									-- ignore functions within the private table
+									shouldIgnoreLine = true
+								elseif isLocaleTable then
+									-- ignore everything within the locale table
+									shouldIgnoreLine = true
+								elseif isPackageTable then
+									-- ignore the package table completely
+									shouldIgnoreLine = true
+								end
+							end
+							if not shouldIgnoreLine then
+								tinsert(localsInfo, localLine)
+							end
+							if level == 0 then
+								isPackageTable = strmatch(localLine, "%s*"..fileName.." = {") and true or false
+								isPrivateTable = strmatch(localLine, "%s*private = {") and true or false
+								isLocaleTable = strmatch(localLine, "%s*L = {") and true or false
+							end
 						end
 					end
 				end
 				if #localsInfo > 0 then
-					stackLine = stackLine.."\n"..table.concat(localsInfo, "\n")
+					stackLine = stackLine.."\n|cffaaaaaa"..table.concat(localsInfo, "\n").."|r"
 				end
 				tinsert(stackInfo, stackLine)
 			end
 		end
+	end
+	if addonName ~= "TradeSkillMaster" then
+		return false
 	end
 
 	-- add error message
@@ -232,21 +266,35 @@ function private.ErrorHandler(msg, thread, errorTime)
 	-- add temp table info
 	local status, tempTableInfo = pcall(TSMAPI_FOUR.Util.GetTempTableDebugInfo)
 	if status then
-		tinsert(errMsgParts, color.."Temp Table Info:|r\n    "..table.concat(tempTableInfo, "\n    "))
+		tinsert(errMsgParts, color.."Temp Table Info:|r")
+		for _, info in ipairs(tempTableInfo) do
+			tinsert(errMsgParts, "  "..info)
+		end
+	end
+
+	-- add object pool info
+	local objectPoolInfo = nil
+	status, objectPoolInfo = pcall(TSMAPI_FOUR.ObjectPool.GetDebugInfo)
+	if status then
+		tinsert(errMsgParts, color.."Object Pool Info:|r")
+		for name, objectInfo in pairs(objectPoolInfo) do
+			tinsert(errMsgParts, format("  %s (%d created, %d in use)", name, objectInfo.numCreated, objectInfo.numInUse))
+			for _, info in ipairs(objectInfo.info) do
+				tinsert(errMsgParts, "    "..info)
+			end
+		end
 	end
 
 	-- add TSM thread info
-	local status, threadInfo = pcall(TSMAPI_FOUR.Thread.GetDebugInfo)
-	if status then
-		tinsert(errMsgParts, color.."New TSM Thread Info:|r\n    "..table.concat(threadInfo, "\n    "))
-	end
-	local status, threadInfo = pcall(function() return TSMAPI_FOUR.Threading.GetThreadInfo() end)
+	local threadInfo = nil
+	status, threadInfo = pcall(TSMAPI_FOUR.Thread.GetDebugInfo)
 	if status then
 		tinsert(errMsgParts, color.."TSM Thread Info:|r\n    "..table.concat(threadInfo, "\n    "))
 	end
 
 	-- add recent TSM debug log entries
-	local status, logEntries = pcall(function() return TSMAPI_FOUR.Logger.GetRecentLogEntries(200, 150) end)
+	local logEntries = nil
+	status, logEntries = pcall(function() return TSMAPI_FOUR.Logger.GetRecentLogEntries(200, 150) end)
 	if status then
 		tinsert(errMsgParts, color.."TSM Debug Log:|r\n    "..table.concat(logEntries, "\n    "))
 	end
@@ -284,14 +332,10 @@ function private.ErrorHandler(msg, thread, errorTime)
 
 	-- show the error message if applicable
 	msg = gsub(msg, "%%", "%%%%")
-	local isOfficial = not TSM.Modules or TSM.Modules.IsOfficial(addonName)
-	if not isOfficial then
-		return false
-	end
 	if not private.errorFrame:IsVisible() then
 		if TSM.LOG_ERR and TSM.AnalyticsEvent and not IS_DEV_VERSION and not isManual then
 			TSM:LOG_ERR(msg)
-			TSM:AnalyticsEvent("ERROR", msg)
+			TSM.AnalyticsEvent("ERROR", msg)
 		end
 		print("|cffff0000TradeSkillMaster:|r "..L["Looks like TradeSkillMaster has encountered an error. Please help the author fix this error by following the instructions shown."])
 		private.errorFrame.error = table.concat(errMsgParts, "\n")
@@ -319,6 +363,9 @@ function private.IsTSMAddon(str)
 	elseif strfind(str, "Master\\Libs\\") then
 		-- ignore errors from libraries
 		return nil
+	elseif strfind(str, "Master\\Core\\API.lua") then
+		-- ignore errors from public APIs
+		return nil
 	elseif strfind(str, "Master_AppHelper\\") then
 		return "TradeSkillMaster_AppHelper"
 	elseif strfind(str, "lMaster\\") then
@@ -344,14 +391,6 @@ function private.SantizeErrorReportString(str)
 	return str
 end
 
-function private.SubmitErrorReport(errMsg, details)
-	tinsert(private.errorReports, {
-		errMsg = private.SantizeErrorReportString(errMsg),
-		details = private.SantizeErrorReportString(details),
-		timestamp = time()
-	})
-end
-
 
 
 -- ============================================================================
@@ -359,50 +398,7 @@ end
 -- ============================================================================
 
 do
-	local STEPS_LINES = {
-		"Steps leading up to the error:",
-		"1) List",
-		"2) Steps",
-		"3) Here",
-	}
-	local STEPS_TEXT = table.concat(STEPS_LINES, "\n")
-	local function HasValidSteps(text)
-		if text == STEPS_TEXT then
-			return false
-		end
-		text = gsub(text, "\n *\n", "\n")
-		text = strtrim(text)
-		local textLines = { strsplit("\n", text) }
-		for i = 1, #textLines do
-			textLines[i] = strtrim(textLines[i])
-		end
-		if #textLines > 150 then
-			-- they probably copied in the error
-			return false
-		end
-		if textLines[1] == STEPS_LINES[1] then
-			if #textLines == 1 then
-				-- they just deleted all the other lines
-				return false
-			end
-			-- they kept the first line the same - make sure they significantly changed at least one other
-			for i = 2, #textLines do
-				if select("#", strsplit(" ", textLines[i])) >= 3 and #textLines[i] >= 15 then
-					return true
-				end
-			end
-			return false
-		end
-
-		-- make sure at least one line has significant text
-		for _, line in ipairs(textLines) do
-			if select("#", strsplit(" ", line)) >= 2 and #line >= 12 then
-				return true
-			end
-		end
-		return false
-	end
-
+	local STEPS_TEXT = "Steps leading up to the error:\n1) List\n2) Steps\n3) Here"
 	local frame = CreateFrame("Frame", nil, UIParent)
 	private.errorFrame = frame
 	frame:Hide()
@@ -423,27 +419,24 @@ do
 		if self.showingError then
 			-- this is a dev version so show the error (only)
 			self.text:SetText("Looks like TradeSkillMaster has encountered an error.")
-			self.switchBtn:Hide()
+			self.switchBtn:SetText("Hide Error")
 			self.editBox:SetText(self.error)
 		else
 			self.text:SetText("Looks like TradeSkillMaster has encountered an error. Please provide the steps which lead to this error to help the TSM team fix it, then click either button at the bottom of the window to automatically report this error.")
 			self.switchBtn:SetText("Show Error")
-			self.switchBtn:Show()
 			self.editBox:SetText(self.details)
-		end
-		self.requireSteps = not self.showingError and private.num == 1
-		if self.requireSteps then
-			-- require steps to be entered before enabling the reload / close buttons
-			self.stepsText:Show()
-			self.reloadBtn:Disable()
-			self.closeBtn:Disable()
-		else
-			self.stepsText:Hide()
-			self.reloadBtn:Enable()
-			self.closeBtn:Enable()
 		end
 	end)
 	frame:SetScript("OnHide", function()
+		local details = private.errorFrame.showingError and private.errorFrame.details or private.errorFrame.editBox:GetText()
+		local changedDetails = details ~= STEPS_TEXT
+		if (not IS_DEV_VERSION and not private.errorFrame.isManual and (changedDetails or private.num == 1)) or IsShiftKeyDown() then
+			tinsert(private.errorReports, {
+				errMsg = private.SantizeErrorReportString(private.errorFrame.error),
+				details = private.SantizeErrorReportString(details),
+				timestamp = time()
+			})
+		end
 		private.errorSuppressed = nil
 	end)
 
@@ -519,20 +512,6 @@ do
 	editBox:SetScript("OnEditFocusGained", function(self)
 		self:HighlightText()
 	end)
-	editBox:SetScript("OnTextChanged", function(self)
-		if not self:HasFocus() or not private.errorFrame.requireSteps then
-			return
-		end
-		if HasValidSteps(self:GetText()) then
-			frame.stepsText:Hide()
-			frame.reloadBtn:Enable()
-			frame.closeBtn:Enable()
-		else
-			frame.stepsText:Show()
-			frame.reloadBtn:Disable()
-			frame.closeBtn:Disable()
-		end
-	end)
 	editBox:SetScript("OnCursorChanged", function(self)
 		if private.errorFrame.showingError and self:HasFocus() then
 			self:HighlightText()
@@ -559,12 +538,7 @@ do
 	reloadBtn:SetHeight(30)
 	reloadBtn:SetText(RELOADUI)
 	reloadBtn:SetScript("OnClick", function()
-		if not private.errorFrame.showingError then
-			private.errorFrame.details = private.errorFrame.editBox:GetText()
-		end
-		if (not IS_DEV_VERSION and not private.errorFrame.isManual) or IsShiftKeyDown() then
-			private.SubmitErrorReport(private.errorFrame.error, private.errorFrame.details)
-		end
+		frame:Hide()
 		ReloadUI()
 	end)
 
@@ -575,12 +549,6 @@ do
 	closeBtn:SetHeight(30)
 	closeBtn:SetText(DONE)
 	closeBtn:SetScript("OnClick", function()
-		if not private.errorFrame.showingError then
-			private.errorFrame.details = private.errorFrame.editBox:GetText()
-		end
-		if not IS_DEV_VERSION or IsShiftKeyDown() then
-			private.SubmitErrorReport(private.errorFrame.error, private.errorFrame.details)
-		end
 		frame:Hide()
 	end)
 
@@ -593,7 +561,7 @@ do
 	stepsText:SetTextColor(1, 0, 0, 1)
 	stepsText:SetJustifyH("CENTER")
 	stepsText:SetJustifyV("MIDDLE")
-	stepsText:SetText("Steps required before submitting")
+	stepsText:SetText("Please enter steps before submitting")
 end
 
 
@@ -623,7 +591,7 @@ do
 					-- ignore errors from old modules
 					return
 				end
-				if not strmatch(stackLine, "^%[C%]:") and not strmatch(stackLine, "^%(tail call%):") then
+				if not strmatch(stackLine, "^%[C%]:") and not strmatch(stackLine, "^%(tail call%):") and not strmatch(stackLine, "^%[string \"") then
 					if not private.IsTSMAddon(stackLine) then
 						tsmErrMsg = nil
 					end

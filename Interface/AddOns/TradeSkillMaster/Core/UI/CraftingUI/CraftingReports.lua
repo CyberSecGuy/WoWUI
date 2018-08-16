@@ -8,8 +8,8 @@
 
 local _, TSM = ...
 local CraftingReports = TSM.UI.CraftingUI:NewPackage("CraftingReports")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
-local private = { craftsQuery = nil, matsQuery = nil, craftProfessions = {}, matProfessions = {}, MatPriceSources = {L["All"], L["Default Price"], L["Custom Price"]} }
+local L = TSM.L
+local private = { craftsQuery = nil, matsQuery = nil, filterText = "", craftProfessions = {}, matProfessions = {}, MatPriceSources = {ALL, L["Default Price"], L["Custom Price"]} }
 
 
 
@@ -29,10 +29,13 @@ end
 
 function private.GetCraftingReportsFrame()
 	private.craftsQuery = private.craftsQuery or TSM.Crafting.CreateCraftsQuery()
-	private.craftsQuery:Reset()
-	private.matsQuery = private.matsQuery or TSM.Crafting.CreateMatsQuery()
-	private.matsQuery:Reset()
-	private.matsQuery:Distinct("itemString")
+	private.craftsQuery:ResetFilters()
+	private.craftsQuery:ResetOrderBy()
+	private.craftsQuery:OrderBy("itemName", true)
+	private.matsQuery = private.matsQuery or TSM.Crafting.CreateMatItemQuery()
+	private.matsQuery:ResetFilters()
+	private.matsQuery:ResetOrderBy()
+	private.matsQuery:OrderBy("name", true)
 	return TSMAPI_FOUR.UI.NewElement("Frame", "craftingReportsContent")
 		:SetLayout("VERTICAL")
 		:SetStyle("padding", { top = 37 })
@@ -41,21 +44,15 @@ function private.GetCraftingReportsFrame()
 			:SetNavCallback(private.GetTabElements)
 			:AddPath(L["Crafts"], true)
 			:AddPath(L["Materials"])
-			-- :AddPath(L["Cooldowns"])
 		)
 end
 
 function private.GetTabElements(self, path)
 	if path == L["Crafts"] then
-		local dropdownSelection = nil
+		private.filterText = ""
 		wipe(private.craftProfessions)
 		tinsert(private.craftProfessions, L["All Professions"])
-		local query = TSM.Crafting.PlayerProfessions.GetQuery()
-			:Select("profession", "player")
-			:OrderBy("isSecondary", true)
-			:OrderBy("level", false)
-			:OrderBy("profession", true)
-		for _, profession, player in query:Iterator(true) do
+		for _, player, profession in TSM.Crafting.PlayerProfessions.Iterator() do
 			tinsert(private.craftProfessions, format("%s - %s", profession, player))
 		end
 
@@ -77,7 +74,7 @@ function private.GetTabElements(self, path)
 					:AddChild(TSMAPI_FOUR.UI.NewElement("Input", "input")
 						:SetStyle("height", 26)
 						:SetHintText(L["Filter by Keyword"])
-						:SetScript("OnEnterPressed", private.CraftsInputOnEnterPressed)
+						:SetScript("OnTextChanged", private.CraftsInputOnTextChanged)
 					)
 				)
 				:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "profession")
@@ -116,44 +113,47 @@ function private.GetTabElements(self, path)
 				:SetStyle("height", 2)
 				:SetStyle("color", "#9d9d9d")
 			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("FastScrollingTable", "crafts")
+			:AddChild(TSMAPI_FOUR.UI.NewElement("QueryScrollingTable", "crafts")
+				:SetStyle("headerFont", TSM.UI.Fonts.MontserratMedium)
 				:SetStyle("headerFontHeight", 12)
 				:GetScrollingTableInfo()
 					:NewColumn("queued")
 						:SetTitleIcon("iconPack.18x18/Queue")
 						:SetWidth(16)
-						:SetFont(TSM.UI.Fonts.FRIZQT)
+						:SetFont(TSM.UI.Fonts.RobotoMedium)
 						:SetFontHeight(12)
 						:SetJustifyH("CENTER")
-						:SetTextFunction(private.CraftsGetQueuedText)
-						:SetSortValueFunction(private.CraftsQueuedSortFunction)
+						:SetTextInfo("num")
+						:SetSortInfo("num")
 						:Commit()
 					:NewColumn("craftName")
 						:SetTitles(L["Craft Name"])
-						:SetFont(TSM.UI.Fonts.MontserratRegular)
+						:SetIconSize(12)
+						:SetFont(TSM.UI.Fonts.FRIZQT)
 						:SetFontHeight(12)
 						:SetJustifyH("LEFT")
-						:SetTextFunction(private.CraftsGetCraftNameText)
-						:SetSortValueFunction(private.CraftsCraftNameSortFunction)
-						:SetTooltipFunction(private.CraftsGetCraftNameTooltip)
+						:SetTextInfo(nil, private.CraftsGetCraftNameText)
+						:SetIconInfo("itemString", TSMAPI_FOUR.Item.GetTexture)
+						:SetTooltipInfo("itemString")
+						:SetSortInfo("itemName")
 						:Commit()
 					:NewColumn("operation")
 						:SetTitles(L["Operation"])
-						:SetWidth(100)
+						:SetWidth(80)
 						:SetFont(TSM.UI.Fonts.MontserratRegular)
 						:SetFontHeight(12)
 						:SetJustifyH("LEFT")
-						:SetTextFunction(private.CraftsGetOperationText)
-						:SetSortValueFunction(private.CraftsOperationSortFunction)
+						:SetTextInfo("firstOperation")
+						:SetSortInfo("firstOperation")
 						:Commit()
 					:NewColumn("bags")
 						:SetTitles(L["Bag"])
-						:SetWidth(24)
+						:SetWidth(26)
 						:SetFont(TSM.UI.Fonts.RobotoMedium)
 						:SetFontHeight(12)
 						:SetJustifyH("RIGHT")
-						:SetTextFunction(private.CraftsGetBagsText)
-						:SetSortValueFunction(private.CraftsBagsSortFunction)
+						:SetTextInfo("bagQuantity", private.CraftsGetBagsText)
+						:SetSortInfo("bagQuantity")
 						:Commit()
 					:NewColumn("ah")
 						:SetTitles(L["AH"])
@@ -161,8 +161,8 @@ function private.GetTabElements(self, path)
 						:SetFont(TSM.UI.Fonts.RobotoMedium)
 						:SetFontHeight(12)
 						:SetJustifyH("RIGHT")
-						:SetTextFunction(private.CraftsGetAHText)
-						:SetSortValueFunction(private.CraftsAHSortFunction)
+						:SetTextInfo("auctionQuantity", private.CraftsGetAHText)
+						:SetSortInfo("auctionQuantity")
 						:Commit()
 					:NewColumn("craftingCost")
 						:SetTitles(L["Crafting Cost"])
@@ -170,8 +170,8 @@ function private.GetTabElements(self, path)
 						:SetFont(TSM.UI.Fonts.RobotoMedium)
 						:SetFontHeight(12)
 						:SetJustifyH("RIGHT")
-						:SetTextFunction(private.CraftsGetCraftingCostText)
-						:SetSortValueFunction(private.CraftsCraftingCostSortFunction)
+						:SetTextInfo("craftingCost", private.CraftsGetCostItemValueText)
+						:SetSortInfo("craftingCost")
 						:Commit()
 					:NewColumn("itemValue")
 						:SetTitles(L["Item Value"])
@@ -179,8 +179,8 @@ function private.GetTabElements(self, path)
 						:SetFont(TSM.UI.Fonts.RobotoMedium)
 						:SetFontHeight(12)
 						:SetJustifyH("RIGHT")
-						:SetTextFunction(private.CraftsGetItemValueText)
-						:SetSortValueFunction(private.CraftsItemValueSortFunction)
+						:SetTextInfo("itemValue", private.CraftsGetCostItemValueText)
+						:SetSortInfo("itemValue")
 						:Commit()
 					:NewColumn("profit")
 						:SetTitles(L["Profit"])
@@ -188,8 +188,8 @@ function private.GetTabElements(self, path)
 						:SetFont(TSM.UI.Fonts.RobotoMedium)
 						:SetFontHeight(12)
 						:SetJustifyH("RIGHT")
-						:SetTextFunction(private.CraftsGetProfitText)
-						:SetSortValueFunction(private.CraftsProfitSortFunction)
+						:SetTextInfo("profit", private.CraftsGetProfitText)
+						:SetSortInfo("profit")
 						:Commit()
 					:NewColumn("saleRate")
 						:SetTitleIcon("iconPack.18x18/SaleRate")
@@ -197,25 +197,18 @@ function private.GetTabElements(self, path)
 						:SetFont(TSM.UI.Fonts.RobotoMedium)
 						:SetFontHeight(12)
 						:SetJustifyH("CENTER")
-						:SetTextFunction(private.CraftsGetSaleRateText)
-						:SetSortValueFunction(private.CraftsSaleRateSortFunction)
+						:SetTextInfo("saleRate", private.CraftsGetSaleRateText)
+						:SetSortInfo("saleRate")
 						:Commit()
-					:SetDefaultSort("craftName", true)
 					:Commit()
 				:SetQuery(private.craftsQuery)
 				:SetSelectionDisabled(true)
 				:SetScript("OnRowClick", private.CraftsOnRowClick)
 			)
 	elseif path == L["Materials"] then
-		local dropdownSelection = nil
 		wipe(private.matProfessions)
 		tinsert(private.matProfessions, L["All Professions"])
-		local query = TSM.Crafting.PlayerProfessions.GetQuery()
-			:Select("profession")
-			:OrderBy("isSecondary", true)
-			:OrderBy("level", false)
-			:OrderBy("profession", true)
-		for _, profession in query:Iterator(true) do
+		for _, _, profession in TSM.Crafting.PlayerProfessions.Iterator() do
 			if not private.matProfessions[profession] then
 				tinsert(private.matProfessions, profession)
 				private.matProfessions[profession] = true
@@ -280,16 +273,17 @@ function private.GetTabElements(self, path)
 				:SetStyle("height", 2)
 				:SetStyle("color", "#9d9d9d")
 			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("FastScrollingTable", "mats")
+			:AddChild(TSMAPI_FOUR.UI.NewElement("QueryScrollingTable", "mats")
+				:SetStyle("headerFontHeight", 12)
 				:GetScrollingTableInfo()
 					:NewColumn("name")
 						:SetTitles(L["Material Name"])
 						:SetFont(TSM.UI.Fonts.FRIZQT)
 						:SetFontHeight(12)
 						:SetJustifyH("LEFT")
-						:SetTextFunction(private.MatsGetNameText)
-						:SetSortValueFunction(private.MatsGetNameSortFunction)
-						:SetTooltipFunction(private.MatsGetNameTooltip)
+						:SetTextInfo("itemString", TSM.UI.GetColoredItemName)
+						:SetTooltipInfo("itemString")
+						:SetSortInfo("name")
 						:Commit()
 					:NewColumn("price")
 						:SetTitles(L["Mat Price"])
@@ -297,8 +291,8 @@ function private.GetTabElements(self, path)
 						:SetFont(TSM.UI.Fonts.RobotoMedium)
 						:SetFontHeight(12)
 						:SetJustifyH("RIGHT")
-						:SetTextFunction(private.MatsGetPriceText)
-						:SetSortValueFunction(private.MatsGetPriceSortFunction)
+						:SetTextInfo("matCost", private.MatsGetPriceText)
+						:SetSortInfo("matCost")
 						:Commit()
 					:NewColumn("professions")
 						:SetTitles(L["Professions Used In"])
@@ -306,8 +300,8 @@ function private.GetTabElements(self, path)
 						:SetFont(TSM.UI.Fonts.FRIZQT)
 						:SetFontHeight(12)
 						:SetJustifyH("LEFT")
-						:SetTextFunction(private.MatsGetProfessionsText)
-						:SetSortValueFunction(private.MatsGetProfessionsSortFunction)
+						:SetTextInfo("professions")
+						:SetSortInfo("professions")
 						:Commit()
 					:NewColumn("num")
 						:SetTitles(L["Number Owned"])
@@ -315,18 +309,14 @@ function private.GetTabElements(self, path)
 						:SetFont(TSM.UI.Fonts.RobotoMedium)
 						:SetFontHeight(12)
 						:SetJustifyH("RIGHT")
-						:SetTextFunction(private.MatsGetNumText)
-						:SetSortValueFunction(private.MatsGetNumSortFunction)
+						:SetTextInfo("totalQuantity", private.MatsGetNumText)
+						:SetSortInfo("totalQuantity")
 						:Commit()
-					:SetDefaultSort("name", true)
 					:Commit()
 				:SetQuery(private.matsQuery)
 				:SetSelectionDisabled(true)
 				:SetScript("OnRowClick", private.MatsOnRowClick)
 			)
-	elseif path == L["Cooldowns"] then
-		return TSMAPI_FOUR.UI.NewElement("Frame", "cooldowns")
-			:SetLayout("VERTICAL")
 	else
 		error("Unknown path: "..tostring(path))
 	end
@@ -335,146 +325,55 @@ end
 
 
 -- ============================================================================
--- Crafts ScrollingTable Functions
+-- ScrollingTable Functions
 -- ============================================================================
 
-function private.CraftsGetQueuedText(_, record)
-	return TSM.Crafting.Queue.GetNum(record:GetField("spellId"))
+function private.CraftsGetCraftNameText(row)
+	return TSM.UI.GetColoredItemName(row:GetField("itemString")) or row:GetField("name")
 end
 
-function private.CraftsQueuedSortFunction(_, record)
-	return TSM.Crafting.Queue.GetNum(record:GetField("spellId"))
+function private.CraftsGetBagsText(bagQuantity)
+	return bagQuantity or "0"
 end
 
-function private.CraftsGetCraftNameText(_, record)
-	return TSM.UI.GetColoredItemName(record:GetField("itemString")) or record:GetField("name")
+function private.CraftsGetAHText(bagQuantity)
+	return bagQuantity or "0"
 end
 
-function private.CraftsGetCraftNameTooltip(_, record)
-	local itemString = record:GetField("itemString")
-	return itemString ~= "" and itemString or nil
+function private.CraftsGetCraftingCostText(spellId)
+	return TSMAPI_FOUR.Money.ToString(TSM.Crafting.Cost.GetCraftingCostBySpellId(spellId), "OPT_PAD")
 end
 
-function private.CraftsCraftNameSortFunction(_, record)
-	return record:GetField("itemName") or ""
-end
-
-function private.CraftsGetOperationText(_, record)
-	return TSMAPI.Operations:GetFirstByItem(record:GetField("itemString"), "Crafting") or ""
-end
-
-function private.CraftsOperationSortFunction(_, record)
-	return TSMAPI.Operations:GetFirstByItem(record:GetField("itemString"), "Crafting") or ""
-end
-
-function private.CraftsGetBagsText(_, record)
-	return 0 -- TODO
-end
-
-function private.CraftsBagsSortFunction(_, record)
-	return 0 -- TODO
-end
-
-function private.CraftsGetAHText(_, record)
-	return 0 -- TODO
-end
-
-function private.CraftsAHSortFunction(_, record)
-	return 0 -- TODO
-end
-
-function private.CraftsGetCraftingCostText(_, record)
-	return TSMAPI_FOUR.Money.ToString(TSM.Crafting.Cost.GetCraftingCostBySpellId(record:GetField("spellId")), "OPT_PAD")
-end
-
-function private.CraftsCraftingCostSortFunction(_, record)
-	return TSM.Crafting.Cost.GetCraftingCostBySpellId(record:GetField("spellId"))
-end
-
-function private.CraftsGetItemValueText(_, record)
-	local craftedItemValue = TSM.Crafting.Cost.GetCraftedItemValue(record:GetField("itemString")) or nil
-	return craftedItemValue and TSMAPI_FOUR.Money.ToString(craftedItemValue, "OPT_PAD") or ""
-end
-
-function private.CraftsItemValueSortFunction(_, record)
-	return TSM.Crafting.Cost.GetCraftedItemValue(record:GetField("itemString")) or -math.huge
-end
-
-function private.CraftsGetProfitText(_, record)
-	local profit = TSM.Crafting.Cost.GetProfitBySpellId(record:GetField("spellId")) or nil
-	if not profit then
+function private.CraftsGetCostItemValueText(costItemValue)
+	if tostring(costItemValue) == tostring(math.huge * 0) then
 		return ""
 	end
-	return TSMAPI_FOUR.Money.ToString(profit, "OPT_PAD", profit >= 0 and "|cff2cec0d" or "|cffd50000") or ""
+	return TSMAPI_FOUR.Money.ToString(costItemValue, "OPT_PAD", "OPT_SEP")
 end
 
-function private.CraftsProfitSortFunction(_, record)
-	return TSM.Crafting.Cost.GetProfitBySpellId(record:GetField("spellId")) or -math.huge
-end
-
-function private.CraftsGetSaleRateText(_, record)
-	local itemString = record:GetField("itemString")
-	local saleRate = itemString and TSM.old.AuctionDB.GetRegionItemData(itemString, "regionSalePercent")
-	return saleRate and format("%0.2f", saleRate / 100) or ""
-end
-
-function private.CraftsSaleRateSortFunction(_, record)
-	local itemString = record:GetField("itemString")
-	local saleRate = itemString and TSM.old.AuctionDB.GetRegionItemData(itemString, "regionSalePercent")
-	saleRate = saleRate and (saleRate / 100)
-	return saleRate or 0
-end
-
-
-
--- ============================================================================
--- Mats ScrollingTable Functions
--- ============================================================================
-
-function private.MatsGetNameText(_, record)
-	return TSM.UI.GetColoredItemName(record:GetField("itemString"))
-end
-
-function private.MatsGetNameSortFunction(_, record)
-	return TSMAPI_FOUR.Item.GetName(record:GetField("itemString")) or ""
-end
-
-function private.MatsGetNameTooltip(_, record)
-	return record:GetField("itemString")
-end
-
-function private.MatsGetPriceText(_, record)
-	return TSMAPI_FOUR.Money.ToString(TSM.Crafting.Cost.GetMatCost(record:GetField("itemString")), "OPT_PAD")
-end
-
-function private.MatsGetPriceSortFunction(_, record)
-	return TSM.Crafting.Cost.GetMatCost(record:GetField("itemString"))
-end
-
-function private.MatsGetProfessionsText(_, record)
-	local professions = TSMAPI_FOUR.Util.AcquireTempTable()
-	for _, profession in TSM.Crafting.MatProfessionIterator(record:GetField("itemString")) do
-		tinsert(professions, profession)
+function private.CraftsGetProfitText(profit)
+	if tostring(profit) == tostring(math.huge * 0) then
+		return ""
 	end
-	sort(professions)
-	return strjoin(",", TSMAPI_FOUR.Util.UnpackAndReleaseTempTable(professions))
+	return TSMAPI_FOUR.Money.ToString(profit, "OPT_PAD", "OPT_SEP", profit >= 0 and "|cff2cec0d" or "|cffd50000")
 end
 
-function private.MatsGetProfessionsSortFunction(_, record)
-	local professions = TSMAPI_FOUR.Util.AcquireTempTable()
-	for _, profession in TSM.Crafting.MatProfessionIterator(record:GetField("itemString")) do
-		tinsert(professions, profession)
+function private.CraftsGetSaleRateText(saleRate)
+	if tostring(saleRate) == tostring(math.huge * 0) then
+		return ""
 	end
-	sort(professions)
-	return strjoin(",", TSMAPI_FOUR.Util.UnpackAndReleaseTempTable(professions))
+	return format("%0.2f", saleRate)
 end
 
-function private.MatsGetNumText(_, record)
-	return 0 -- TODO
+function private.MatsGetPriceText(matCost)
+	if tostring(matCost) == tostring(math.huge * 0) then
+		return ""
+	end
+	return TSMAPI_FOUR.Money.ToString(matCost, "OPT_PAD", "OPT_SEP")
 end
 
-function private.MatsGetNumSortFunction(_, record)
-	return 0 -- TODO
+function private.MatsGetNumText(totalQuantity)
+	return totalQuantity or "0"
 end
 
 
@@ -483,7 +382,14 @@ end
 -- Local Script Handlers
 -- ============================================================================
 
-function private.CraftsInputOnEnterPressed(input)
+function private.CraftsInputOnTextChanged(input)
+	local text = strtrim(input:GetText())
+	if text == private.filterText then
+		return
+	end
+	private.filterText = text
+	input:SetText(private.filterText)
+
 	private.UpdateCraftsQueryWithFilters(input:GetParentElement():GetParentElement())
 end
 
@@ -512,8 +418,8 @@ function private.MatsDropdownOnSelectionChanged(dropdown, selection)
 	private.UpdateMatsQueryWithFilters(dropdown:GetParentElement():GetParentElement())
 end
 
-function private.MatsOnRowClick(scrollingTable, record)
-	local itemString = record:GetField("itemString")
+function private.MatsOnRowClick(scrollingTable, row)
+	local itemString = row:GetField("itemString")
 	local priceStr = TSM.db.factionrealm.internalData.mats[itemString].customValue or TSM.db.global.craftingOptions.defaultMatCostMethod
 	local frame = TSMAPI_FOUR.UI.NewElement("Frame", "frame")
 		:SetLayout("VERTICAL")
@@ -567,7 +473,7 @@ function private.MatPriceInputOnEnterPressed(input)
 	local value = strtrim(input:GetText())
 	if value ~= "" and TSMAPI_FOUR.CustomPrice.Validate(value) then
 		local itemString = input:GetParentElement():GetContext()
-		TSM.db.factionrealm.internalData.mats[itemString].customValue = value
+		TSM.Crafting.SetMatCustomValue(itemString, value)
 	else
 		-- TODO: better error message
 		TSM:Print(L["Invalid custom price entered."])
@@ -581,7 +487,7 @@ end
 -- ============================================================================
 
 function private.UpdateCraftsQueryWithFilters(frame)
-	private.craftsQuery:Reset()
+	private.craftsQuery:ResetFilters()
 	-- apply search filter
 	local filter = strtrim(frame:GetElement("search.input"):GetText())
 	if filter ~= "" then
@@ -613,8 +519,7 @@ function private.IsCraftableQueryFilter(record)
 end
 
 function private.UpdateMatsQueryWithFilters(frame)
-	private.matsQuery:Reset()
-	private.matsQuery:Distinct("itemString")
+	private.matsQuery:ResetFilters()
 	-- apply search filter
 	local filter = strtrim(frame:GetElement("search.input"):GetText())
 	if filter ~= "" then
@@ -623,18 +528,25 @@ function private.UpdateMatsQueryWithFilters(frame)
 	-- apply dropdown filters
 	local profession = frame:GetElement("profession.dropdown"):GetSelection()
 	if profession ~= private.matProfessions[1] then
-		private.matsQuery:Equal("profession", profession)
+		private.matsQuery
+			:Or()
+				:Equal("professions", profession)
+				:Matches("professions", "^"..profession..",")
+				:Matches("professions", ","..profession..",")
+				:Matches("professions", ","..profession.."$")
+			:End()
 	end
 	local priceSource = frame:GetElement("priceSource.dropdown"):GetSelection()
 	if priceSource == private.MatPriceSources[2] then
-		private.matsQuery:Equal("customValue", false)
+		private.matsQuery:Equal("hasCustomValue", false)
 	elseif priceSource == private.MatPriceSources[3] then
-		private.matsQuery:Equal("customValue", true)
+		private.matsQuery:Equal("hasCustomValue", true)
 	end
 	frame:GetElement("__parent.mats"):SetQuery(private.matsQuery, true)
 end
 
-function private.MatItemNameQueryFilter(record, filter)
-	local name = TSMAPI_FOUR.Item.GetName(record:GetField("itemString"))
+function private.MatItemNameQueryFilter(row, filter)
+	local name = TSMAPI_FOUR.Item.GetName(row:GetField("itemString"))
+	if not name then return end
 	return strmatch(strlower(name), filter)
 end

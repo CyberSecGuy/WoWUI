@@ -6,21 +6,25 @@ local _G = _G
 local unpack = unpack
 local GameTooltip = _G["GameTooltip"]
 local CreateFrame = CreateFrame
-local UnitOnTaxi, GetCurrentMapAreaID = UnitOnTaxi, GetCurrentMapAreaID
+local UnitOnTaxi = UnitOnTaxi
+local C_Map_GetBestMapForUnit = C_Map.GetBestMapForUnit
 local TaxiRequestEarlyLanding = TaxiRequestEarlyLanding
 local TAXI_CANCEL, TAXI_CANCEL_DESCRIPTION = TAXI_CANCEL, TAXI_CANCEL_DESCRIPTION
 
 -- GLOBALS: selectioncolor, GameTooltip_Hide, CreateAnimationGroup, BuiTaxiButton, LeaveVehicleButton
 
 local noFlightMapIDs = {
-	1171,
-	1170,
-	1135,
+	-- Antoran Wastes (Legion)
+	830, -- Krokuun
+	831,
+	882, -- Mac'Aree
+	885, -- Antoran Wastes
+	887, -- The Vindicaar
 }
 
 function BUI:CheckFlightMapID()
 	for _, id in pairs (noFlightMapIDs) do
-		local noFlightMapIDs = GetCurrentMapAreaID()
+		local noFlightMapIDs = C_Map_GetBestMapForUnit("player")
 		if id == noFlightMapIDs then return true end
 	end
 end

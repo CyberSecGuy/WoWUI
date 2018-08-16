@@ -14,7 +14,6 @@
 local _, TSM = ...
 local SecureMacroActionButton = TSMAPI_FOUR.Class.DefineClass("SecureMacroActionButton", TSM.UI.ActionButton)
 TSM.UI.SecureMacroActionButton = SecureMacroActionButton
-local private = { frameButtonLookup = {} }
 
 
 
@@ -42,7 +41,7 @@ end
 -- @treturn SecureMacroActionButton The secure macro action button object
 function SecureMacroActionButton.SetScript(self, script, handler)
 	if script == "PreClick" then
-		self:_GetBaseFrame():SetScript(script, handler)
+		self.__super.__super:SetScript(script, handler)
 	else
 		error("Unknown SecureActionButton script: "..tostring(script))
 	end

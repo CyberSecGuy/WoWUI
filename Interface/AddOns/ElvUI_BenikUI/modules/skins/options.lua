@@ -25,6 +25,8 @@ local DecorAddons = {
 	{'Clique', L['Clique'], 'clique'},
 	{'oRA3', L['oRA3'], 'ora'},
 	{'Pawn', L['Pawn'], 'pawn'},
+	{'DBM-Core', L['Deadly Boss Mods'], 'dbm'},
+	{'BigWigs', L['BigWigs'], 'bigwigs'},
 }
 
 local SupportedProfiles = {
@@ -42,12 +44,15 @@ local SupportedProfiles = {
 	{'Skada', 'Skada'},
 }
 
-local profileString = format('|cfffff400%s |r', L['BenikUI successfully created and applied profile(s) for:'])
+BUI.profileStrings = {
+	[1] = format('|cfffff400%s |r', L['BenikUI successfully created and applied profile(s) for:']),
+	[2] = format('|cfffff400%s |r', L[': Profile for this character already exists. Aborting.']),
+}
+
 local smb = L['Square Minimap Buttons']
 local stAM = L['stAddOnManager']
 
 local function SkinTable()
-	if E.db.benikui.general.benikuiStyle ~= true then return end
 	E.Options.args.benikui.args.skins = {
 		order = 40,
 		type = 'group',
@@ -85,7 +90,7 @@ local function SkinTable()
 			type = 'toggle',
 			name = addonString,
 			desc = format('%s '..addonString..' %s', L['Enable/Disable'], L['decor.']),
-			disabled = function() return not IsAddOnLoaded(addonName) end,
+			disabled = function() return not IsAddOnLoaded(addonName) or not E.db.benikui.general.benikuiStyle end,
 		}
 	end
 
@@ -95,7 +100,7 @@ local function SkinTable()
 		type = 'toggle',
 		name = smb,
 		desc = format('%s '..smb..' %s', L['Enable/Disable'], L['decor.']),
-		disabled = function() return not (BUI.PA and _G.ProjectAzilroka.db['SMB']) end,
+		disabled = function() return not (BUI.PA and _G.ProjectAzilroka.db['SMB']) or not E.db.benikui.general.benikuiStyle end,
 	}
 	
 	-- stAddonManager
@@ -104,7 +109,7 @@ local function SkinTable()
 		type = 'toggle',
 		name = stAM,
 		desc = format('%s '..stAM..' %s', L['Enable/Disable'], L['decor.']),
-		disabled = function() return not (BUI.PA and _G.ProjectAzilroka.db['stAM']) end,
+		disabled = function() return not (BUI.PA and _G.ProjectAzilroka.db['stAM']) or not E.db.benikui.general.benikuiStyle end,
 	}
 
 	E.Options.args.benikui.args.skins.args.addonskins = {
@@ -126,7 +131,7 @@ local function SkinTable()
 			type = 'toggle',
 			name = addonString,
 			desc = format('%s '..addonString..' %s', L['Enable/Disable'], L['decor.']),
-			disabled = function() return not (BUI.AS and IsAddOnLoaded(addonName)) end,
+			disabled = function() return not (BUI.AS and IsAddOnLoaded(addonName)) or not E.db.benikui.general.benikuiStyle end,
 		}
 	end
 
@@ -181,18 +186,14 @@ local function SkinTable()
 					BUI:LoadDBMProfile()
 				elseif addon == 'BigWigs' then
 					BUI:LoadBigWigsProfile()
-					E:StaticPopup_Show('PRIVATE_RL')
 				elseif addon == 'Details' then
 					BUI:LoadDetailsProfile()
 				elseif addon == 'InFlight_Load'then
 					BUI:LoadInFlightProfile()
-					E:StaticPopup_Show('PRIVATE_RL')
 				elseif addon == 'ElvUI_LocLite' then
 					BUI:LoadLocationLiteProfile()
-					E:StaticPopup_Show('PRIVATE_RL')
 				elseif addon == 'ElvUI_LocPlus' then
 					BUI:LoadLocationPlusProfile()
-					E:StaticPopup_Show('PRIVATE_RL')
 				elseif addon == 'MikScrollingBattleText' then
 					BUI:LoadMSBTProfile()
 				elseif addon == 'Pawn' then
@@ -203,12 +204,10 @@ local function SkinTable()
 					BUI:LoadSkadaProfile()
 				elseif addon == 'ElvUI_VisualAuraTimers' then
 					BUI:LoadVATProfile()
-					E:StaticPopup_Show('PRIVATE_RL')
 				elseif addon == 'AddOnSkins' then
 					BUI:LoadAddOnSkinsProfile()
-					E:StaticPopup_Show('PRIVATE_RL')
 				end
-				print(profileString..addonName)
+				E:StaticPopup_Show('PRIVATE_RL')
 			end,
 			disabled = function() return not IsAddOnLoaded(addon) end,
 		}
@@ -224,9 +223,9 @@ local function SkinTable()
 		func = function()
 			BUI:LoadSMBProfile()
 			E:StaticPopup_Show('PRIVATE_RL')
-			print(profileString..smb)
+			print(BUI.profileStrings[1]..smb)
 		end,
-		disabled = function() return not (BUI.PA and _G.ProjectAzilroka.db['SMB']) end,
+		disabled = function() return (BUI.SLE or not (BUI.PA and _G.ProjectAzilroka.db['SMB'])) end,
 	}
 
 	-- New stAddOnManager from ProjectAzilroka
@@ -239,7 +238,7 @@ local function SkinTable()
 		func = function()
 			BUI:LoadStamProfile()
 			E:StaticPopup_Show('PRIVATE_RL')
-			print(profileString..stAM)
+			print(BUI.profileStrings[1]..stAM)
 		end,
 		disabled = function() return not (BUI.PA and _G.ProjectAzilroka.db['stAM']) end,
 	}

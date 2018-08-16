@@ -9,7 +9,7 @@
 local _, TSM = ...
 
 TSM.UI.Fonts = {
-	FRIZQT = "Fonts\\FRIZQT__.TTF",
+	FRIZQT = TSM.UI.GetFont(TSM4FrizQT),
 	MontserratRegular = "Interface\\Addons\\TradeSkillMaster\\Media\\Montserrat-Regular.ttf",
 	MontserratMedium = "Interface\\Addons\\TradeSkillMaster\\Media\\Montserrat-Medium.ttf",
 	MontserratBold = "Interface\\Addons\\TradeSkillMaster\\Media\\Montserrat-Bold.ttf",
@@ -24,12 +24,12 @@ do
 	f:SetAllPoints()
 	local texts = {}
 	f:SetScript("OnUpdate", function()
-		local done = true
 		for _, text in ipairs(texts) do
 			assert(text:GetStringWidth() > 0, "Text not loaded: "..tostring(text:GetFont()))
 			text:Hide()
 		end
 		f:Hide()
+		f = nil
 	end)
 	for _, font in pairs(TSM.UI.Fonts) do
 		local t = f:CreateFontString()

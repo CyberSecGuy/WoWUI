@@ -561,12 +561,6 @@ TSM.CONST.CONVERSIONS = {
 	["i:22447"] = {{"i:22446", 3, "transform"}}, -- Planar Essence
 	["i:16203"] = {{"i:16202", 1/3, "transform"}}, -- Eternal Essence
 	["i:16202"] = {{"i:16203", 3, "transform"}}, -- Eternal Essence
-	["i:11175"] = {{"i:11174", 1/3, "transform"}}, -- Nether Essence
-	["i:11174"] = {{"i:11175", 3, "transform"}}, -- Nether Essence
-	["i:11135"] = {{"i:11134", 1/3, "transform"}}, -- Mystic Essence
-	["i:11134"] = {{"i:11135", 3, "transform"}}, -- Mystic Essence
-	["i:11082"] = {{"i:10998", 1/3, "transform"}}, -- Astral Essence
-	["i:10998"] = {{"i:11082", 3, "transform"}}, -- Astral Essence
 	["i:10939"] = {{"i:10938", 1/3, "transform"}}, -- Magic Essence
 	["i:10938"] = {{"i:10939", 3, "transform"}}, -- Magic Essence
 	-- ============================================ Shards =========================================

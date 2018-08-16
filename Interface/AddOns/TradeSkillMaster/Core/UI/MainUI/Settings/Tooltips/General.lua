@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local General = TSM.MainUI.Settings.Tooltip:NewPackage("General")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { operationModules = {} }
 
 
@@ -29,7 +29,7 @@ end
 
 function private.GetTooltipSettingsFrame()
 	wipe(private.operationModules)
-	for _, moduleName in ipairs(TSM.Operations:GetModulesWithOperations()) do
+	for _, moduleName in TSM.Operations.ModuleIterator() do
 		tinsert(private.operationModules, moduleName)
 	end
 	return TSMAPI_FOUR.UI.NewElement("ScrollFrame", "tooltipSettings")
@@ -103,7 +103,7 @@ function private.GetTooltipSettingsFrame()
 				:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
 				:SetStyle("fontHeight", 14)
 				:SetStyle("textColor", "#ffffff")
-				:SetText(L["Tooltip Price Format"])
+				:SetText(L["Inventory Tooltip Format"])
 			)
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "operationLabel")
 				:SetStyle("font", TSM.UI.Fonts.MontserratMedium)

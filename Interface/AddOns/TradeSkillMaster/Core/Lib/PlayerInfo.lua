@@ -12,6 +12,7 @@
 TSMAPI_FOUR.PlayerInfo = {}
 local _, TSM = ...
 local private = {}
+local PLAYER_NAME = UnitName("player")
 local PLAYER_LOWER = strlower(UnitName("player"))
 local FACTION_LOWER = strlower(UnitFactionGroup("player"))
 local REALM_LOWER = strlower(GetRealmName())
@@ -32,6 +33,19 @@ function TSMAPI_FOUR.PlayerInfo.CharacterIterator(currentAccountOnly)
 	else
 		return TSM.db:FactionrealmCharacterIterator()
 	end
+end
+
+--- Get all alts on this factionrealm.
+-- @tparam[opt=false] boolean currentAccountOnly If true, will only include the current account
+-- @treturn table A table containing all character names as keys
+function TSMAPI_FOUR.PlayerInfo.GetAlts(currentAccountOnly)
+	local characters = {}
+	for _, name in TSMAPI_FOUR.PlayerInfo.CharacterIterator(currentAccountOnly) do
+		if name ~= PLAYER_NAME then
+			characters[name] = true
+		end
+	end
+	return characters
 end
 
 --- Get all characters on this factionrealm.

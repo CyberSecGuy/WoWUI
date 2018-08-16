@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Settings = TSM.MainUI:NewPackage("Settings")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = {
 	settingPages = {
 		top = {},
@@ -19,13 +19,12 @@ local private = {
 	childSettingsPages = {},
 	frame = nil
 }
-local SECTIONS = { "top", "middle", "bottom" }
+local SECTIONS = { "top", "middle" }
 local SETTING_PATH_SEP = "`"
 local HEADER_LINE_TEXT_MARGIN = { right = 8 }
 local HEADER_LINE_MARGIN = { top = 16, bottom = 16 }
 local SETTING_LINE_MARGIN = { bottom = 16 }
 local SETTING_LABEL_WIDTH = 400
-local SHOW_TSM3_UI = true
 
 
 
@@ -147,43 +146,6 @@ end
 -- ============================================================================
 
 function private.GetSettingsFrame()
-	if SHOW_TSM3_UI then
-		-- temporarily show the TSM3 UI since the TSM4 one isn't ready yet
-		local frame = TSMAPI_FOUR.UI.NewElement("Frame", "settings")
-			:SetLayout("VERTICAL")
-			:SetStyle("padding", { top = 30 })
-			:SetStyle("background", "#171717")
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "text")
-				:SetStyle("height", 20)
-				:SetStyle("textColor", "#ff2222")
-				:SetStyle("justifyH", "CENTER")
-				:SetText("This is a temporary view of the TSM3 UI until this one is updated for TSM4.")
-			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")
-				:SetStyle("height", 2)
-				:SetStyle("color", "#9d9d9d")
-				:SetStyle("margin", { top = 16, bottom = 16 })
-			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "content"))
-
-		if not private.tsm3SimpleFrame then
-			private.tsm3SimpleFrame = LibStub("AceGUI-3.0"):Create("TSMSimpleFrame")
-			private.tsm3SimpleFrame:SetLayout("Fill")
-		else
-			private.tsm3SimpleFrame:Show()
-		end
-		if #private.tsm3SimpleFrame.children > 0 then
-			private.tsm3SimpleFrame:ReleaseChildren()
-		end
-		private.tsm3SimpleFrame.frame:SetParent(frame:GetElement("content"):_GetBaseFrame())
-		private.tsm3SimpleFrame.frame:SetAllPoints()
-		TSM.Options.Load(private.tsm3SimpleFrame)
-		frame:SetScript("OnHide", function()
-			private.tsm3SimpleFrame:Hide()
-		end)
-		return frame
-	end
-
 	local defaultPage = private.settingPages.top[1]
 	local frame = TSMAPI_FOUR.UI.NewElement("Frame", "settings")
 		:SetLayout("HORIZONTAL")
@@ -206,18 +168,14 @@ function private.GetSettingsFrame()
 			)
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "middle")
 				:SetLayout("VERTICAL")
-				:SetStyle("margin.bottom", 16)
-			)
-			:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "bottom")
-				:SetLayout("VERTICAL")
 			)
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Spacer", "spacer")
 				-- make all the navigation align to the top
 			)
 		)
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "shadow")
-			:SetStyle("width", TSM.UI.TexturePacks.GetWidth("uiFrames.LargeApplicationFrameInnerFrameLeftEdge"))
-			:SetStyle("texturePack", "uiFrames.LargeApplicationFrameInnerFrameLeftEdge")
+			:SetStyle("width", TSM.UI.TexturePacks.GetWidth("uiFrames.SettingsNavShadow"))
+			:SetStyle("texturePack", "uiFrames.SettingsNavShadow")
 		)
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "contentFrame")
 			:SetLayout("VERTICAL")

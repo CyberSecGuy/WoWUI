@@ -1,4 +1,5 @@
 local E, L, V, P, G = unpack(ElvUI);
+local BUI = E:GetModule('BenikUI');
 local UFB = E:GetModule('BuiUnits');
 local UF = E:GetModule('UnitFrames');
 
@@ -11,7 +12,7 @@ function UFB:Construct_PlayerFrame()
 	local frame = _G["ElvUF_Player"]
 
 	if not frame.Portrait.backdrop.shadow then
-		frame.Portrait.backdrop:CreateShadow('Default')
+		frame.Portrait.backdrop:CreateSoftShadow()
 		frame.Portrait.backdrop.shadow:Hide()
 	end
 
@@ -20,8 +21,8 @@ function UFB:Construct_PlayerFrame()
 		frame.Portrait.backdrop.style:Hide()
 	end
 
-	if E.db.benikui.general.shadows then
-		frame.Power.backdrop:CreateShadow('Default')
+	if BUI.ShadowMode then
+		frame.Power.backdrop:CreateSoftShadow()
 		frame.Power.backdrop.shadow:Hide()
 	end
 
@@ -62,6 +63,12 @@ function UFB:ArrangePlayer()
 	-- Rest Icon
 	UFB:Configure_RestingIndicator(frame)
 
+	-- AuraBars shadows
+	UFB:Configure_AuraBars(frame)
+
+	-- ClassBar shadows
+	UFB:Configure_ClassBar(frame)
+
 	frame:UpdateAllElements("BenikUI_UpdateAllElements")
 end
 
@@ -76,6 +83,14 @@ function UFB:InitPlayer()
 
 		if unitframeType == "player" then
 			UFB:Configure_Portrait(frame, true)
+		end
+	end)
+
+	hooksecurefunc(UF, "Configure_InfoPanel", function(self, frame) -- fix Player infoPanel glitch #26
+		local unitframeType = frame.unitframeType
+
+		if unitframeType == "player" then
+			UFB:Configure_Infopanel(frame)
 		end
 	end)
 end

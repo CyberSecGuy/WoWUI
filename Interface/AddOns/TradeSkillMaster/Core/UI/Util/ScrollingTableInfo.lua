@@ -20,37 +20,39 @@ local private = { recycledColInfo = {} }
 local ScrollingTableColumnInfo = TSMAPI_FOUR.Class.DefineClass("ScrollingTableColumnInfo")
 
 function ScrollingTableColumnInfo.__init(self)
+	-- general
 	self._tableInfo = nil
 	self._id = nil
 	self._element = nil
-	self._title = nil
-	self._titleIcon = nil
-	self._altTitle = nil
+	self._tooltipLinkingDisabled = false
+	-- style
 	self._width = nil
 	self._justifyH = nil
 	self._iconSize = nil
 	self._font = nil
 	self._fontHeight = nil
 	self._headerIndent = nil
+	-- header
+	self._titles = {}
+	self._titleIcon = nil
+	-- content functions
 	self._textFunc = nil
 	self._iconFunc = nil
-	self._sortValueFunc = nil
 	self._tooltipFunc = nil
+	self._sortValueFunc = nil
 end
 
-function ScrollingTableColumnInfo._Acquire(self, tableInfo, id, scrollList)
+function ScrollingTableColumnInfo._Acquire(self, tableInfo, id, element)
 	self._tableInfo = tableInfo
 	self._id = id
-	self._element = scrollList
+	self._element = element
 end
 
 function ScrollingTableColumnInfo._Release(self)
 	self._tableInfo = nil
 	self._id = nil
 	self._element = nil
-	self._title = nil
 	self._titleIcon = nil
-	self._altTitle = nil
 	self._width = nil
 	self._justifyH = nil
 	self._iconSize = nil
@@ -61,11 +63,12 @@ function ScrollingTableColumnInfo._Release(self)
 	self._iconFunc = nil
 	self._sortValueFunc = nil
 	self._tooltipFunc = nil
+	self._tooltipLinkingDisabled = false
+	wipe(self._titles)
 end
 
-function ScrollingTableColumnInfo.SetTitles(self, title, altTitle)
-	self._title = title
-	self._altTitle = altTitle
+function ScrollingTableColumnInfo.SetTitles(self, ...)
+	TSMAPI_FOUR.Util.VarargIntoTable(self._titles, ...)
 	return self
 end
 
@@ -124,6 +127,11 @@ function ScrollingTableColumnInfo.SetTooltipFunction(self, func)
 	return self
 end
 
+function ScrollingTableColumnInfo.SetTooltipLinkingDisabled(self, disabled)
+	self._tooltipLinkingDisabled = disabled
+	return self
+end
+
 function ScrollingTableColumnInfo.Commit(self)
 	return self._tableInfo
 end
@@ -132,12 +140,8 @@ function ScrollingTableColumnInfo._GetId(self)
 	return self._id
 end
 
-function ScrollingTableColumnInfo._GetTitle(self, isAlt)
-	if isAlt then
-		return self._altTitle
-	else
-		return self._title
-	end
+function ScrollingTableColumnInfo._GetTitle(self)
+	return self._titles[min(#self._titles, self._tableInfo._currentTitleIndex)]
 end
 
 function ScrollingTableColumnInfo._GetTitleIcon(self)
@@ -173,7 +177,7 @@ function ScrollingTableColumnInfo._HasText(self, context)
 end
 
 function ScrollingTableColumnInfo._GetText(self, context)
-	return self:_HasText() and self._textFunc(self._element, context) or ""
+	return self._textFunc and self._textFunc(self._element, context, min(#self._titles, self._tableInfo._currentTitleIndex)) or ""
 end
 
 function ScrollingTableColumnInfo._GetIcon(self, context)
@@ -181,7 +185,7 @@ function ScrollingTableColumnInfo._GetIcon(self, context)
 end
 
 function ScrollingTableColumnInfo._GetSortValue(self, context)
-	return self._sortValueFunc(self._element, context)
+	return self._sortValueFunc(self._element, context, min(#self._titles, self._tableInfo._currentTitleIndex))
 end
 
 function ScrollingTableColumnInfo._HasTooltip(self, context)
@@ -190,6 +194,10 @@ end
 
 function ScrollingTableColumnInfo._GetTooltip(self, context)
 	return self._tooltipFunc and self._tooltipFunc(self._element, context) or nil
+end
+
+function ScrollingTableColumnInfo._GetTooltipLinkingDisabled(self)
+	return self._tooltipLinkingDisabled
 end
 
 
@@ -203,7 +211,9 @@ function ScrollingTableInfo.__init(self)
 	self._element = nil
 	self._sortDefaultKey = nil
 	self._sortDefaultAscending = nil
-	self._sortSecondaryComparator = nil
+	self._currentTitleIndex = 1
+	self._maxTitleIndex = nil
+	self._cursor = nil
 end
 
 function ScrollingTableInfo._Acquire(self, element)
@@ -219,7 +229,9 @@ function ScrollingTableInfo._Release(self)
 	self._element = nil
 	self._sortDefaultKey = nil
 	self._sortDefaultAscending = nil
-	self._sortSecondaryComparator = nil
+	self._currentTitleIndex = 1
+	self._maxTitleIndex = nil
+	self._cursor = nil
 end
 
 function ScrollingTableInfo.NewColumn(self, id, prepend)
@@ -259,12 +271,20 @@ function ScrollingTableInfo.SetDefaultSort(self, key, ascending)
 	return self
 end
 
-function ScrollingTableInfo.SetSecondarySortComparator(self, comparator)
-	self._sortSecondaryComparator = comparator
+function ScrollingTableInfo.SetCursor(self, cursor)
+	self._cursor = cursor
 	return self
 end
 
 function ScrollingTableInfo.Commit(self)
+	for _, col in ipairs(self._cols) do
+		local numTitles = #col._titles
+		if numTitles > 1 then
+			assert(not self._maxTitleIndex or numTitles == self._maxTitleIndex)
+			self._maxTitleIndex = numTitles
+		end
+	end
+	self._maxTitleIndex = self._maxTitleIndex or 1
 	return self._element:CommitTableInfo()
 end
 
@@ -273,5 +293,29 @@ function ScrollingTableInfo._GetCols(self)
 end
 
 function ScrollingTableInfo._GetSortInfo(self)
-	return self._sortDefaultKey, self._sortDefaultAscending, self._sortSecondaryComparator
+	return self._sortDefaultKey, self._sortDefaultAscending
+end
+
+function ScrollingTableInfo._GetSortColById(self, id)
+	for _, col in ipairs(self._cols) do
+		if col:_GetId() == id then
+			return col
+		end
+	end
+	error("Unknown id: "..tostring(id))
+end
+
+function ScrollingTableInfo._UpdateTitleIndex(self)
+	self._currentTitleIndex = self._currentTitleIndex + 1
+	if self._currentTitleIndex > self._maxTitleIndex then
+		self._currentTitleIndex = 1
+	end
+end
+
+function ScrollingTableInfo._GetTitleIndex(self)
+	return self._currentTitleIndex
+end
+
+function ScrollingTableInfo._GetCursor(self)
+	return self._cursor
 end

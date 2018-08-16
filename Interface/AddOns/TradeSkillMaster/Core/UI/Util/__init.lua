@@ -7,4 +7,4 @@
 -- ------------------------------------------------------------------------------ --
 
 local _, TSM = ...
-local Util = TSM.UI:NewPackage("Util")
+TSM.UI:NewPackage("Util")

@@ -11,8 +11,8 @@
 
 TSMAPI_FOUR.CustomPrice = {}
 local _, TSM = ...
-local CustomPrice = TSM:NewPackage("CustomPrice")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+TSM:NewPackage("CustomPrice")
+local L = TSM.L
 local private = { context = {}, priceSourceKeys = {}, priceSourceInfo = {}, customPriceCache = {}, priceCache = {}, priceCacheActive = nil, proxyData = {} }
 local ITEM_STRING_PATTERN = "[ip]:[0-9:%-]+"
 local MONEY_PATTERNS = {
@@ -63,15 +63,18 @@ local CUSTOM_PRICE_FUNC_TEMPLATE = [[
 		if isTop then
 			context.num = nil
 		end
-		if not result or self.isNAN(result) or result <= 0 then return end
+		if not result or self.IsInvalid(result) or result <= 0 then return end
 		return result
 	end
 ]]
 local NAN = math.huge * 0
 local NAN_STR = tostring(NAN)
-local function isNAN(num)
+local function IsInvalid(num)
+	-- We want to treat math.huge/-math.huge/NAN as invalid.
 	return num == math.huge or num == -math.huge or tostring(num) == NAN_STR
 end
+-- Make sure our IsInvalid function continues to work as expected
+assert(IsInvalid(NAN) and IsInvalid(math.huge) and IsInvalid(math.huge) and not IsInvalid(0) and not IsInvalid(1000))
 local COMPARISONS = {
 	["gt"] = 1,
 	["gte"] = 2,
@@ -103,19 +106,6 @@ function TSM.CustomPrice.RegisterSource(moduleName, key, label, callback, fullLi
 		takeItemString = not fullLink,
 		arg = arg,
 	}
-end
-
---- Register a built-in price sources in bulk.
--- @tparam string moduleName The name of the module which provides this source
--- @tparam table sources A list of source info table (with the following keys: `key`, `label`, `callback`,
--- `takeItemString`, `arg`)
-function TSM.CustomPrice.RegisterPriceSources(moduleName, sources)
-	if not sources then return end
-	for _, info in ipairs(sources) do
-		info.moduleName = moduleName
-		tinsert(private.priceSourceKeys, strlower(info.key))
-		private.priceSourceInfo[strlower(info.key)] = info
-	end
 end
 
 --- Create a new custom price source.
@@ -150,7 +140,7 @@ end
 
 --- Print built-in price sources to chat.
 function TSM.CustomPrice.PrintSources()
-	TSM:Printf(L["Below are your currently available price sources organized by module. The %skey|r is what you would type into a custom price box."], TSMAPI.Design:GetInlineColor("link"))
+	TSM:Printf(L["Below are your currently available price sources organized by module. The %skey|r is what you would type into a custom price box."], "|cff99ffff")
 	local moduleList = TSMAPI_FOUR.Util.AcquireTempTable()
 
 	for _, info in pairs(private.priceSourceInfo) do
@@ -165,7 +155,7 @@ function TSM.CustomPrice.PrintSources()
 		local lines = TSMAPI_FOUR.Util.AcquireTempTable()
 		for _, info in pairs(private.priceSourceInfo) do
 			if info.moduleName == module then
-				tinsert(lines, format("  %s%s|r (%s)", TSMAPI.Design:GetInlineColor("link"), info.key, info.label))
+				tinsert(lines, format("  %s%s|r (%s)", "|cff99ffff", info.key, info.label))
 			end
 		end
 		sort(lines)
@@ -266,15 +256,6 @@ function TSMAPI_FOUR.CustomPrice.GetItemPrice(itemString, key)
 	return type(value) == "number" and value or nil
 end
 
-function TSMAPI_FOUR.CustomPrice.GetSources()
-	local sources, modules = {}, {}
-	for _, info in pairs(private.priceSourceInfo) do
-		sources[info.key] = info.label
-		modules[info.key] = info.moduleName
-	end
-	return sources, modules
-end
-
 local function CustomPriceIteratorHelper(_, key)
 	local info = private.priceSourceInfo[key]
 	return info.key, info.moduleName, info.label
@@ -285,6 +266,28 @@ function TSMAPI_FOUR.CustomPrice.Iterator()
 	return TSMAPI_FOUR.Util.TableIterator(private.priceSourceKeys, CustomPriceIteratorHelper)
 end
 
+--- Iterate over the custom price sources needed to make this custom price string calculable.
+-- @param string customPriceStr The custom price string
+-- @return An iterator of custom price names
+function TSMAPI_FOUR.CustomPrice.DependentCustomPriceSourceIterator(customPriceStr)
+	local queue = TSMAPI_FOUR.Util.AcquireTempTable()
+	local results = TSMAPI_FOUR.Util.AcquireTempTable()
+
+	private.AddToCustomPriceDependencyQueue(queue, customPriceStr)
+	local name, value = next(queue)
+	while value do
+		queue[name] = nil
+		if TSM.db.global.userData.customPriceSources[name] and not results[name] then
+			results[name] = true
+			private.AddToCustomPriceDependencyQueue(queue, TSM.db.global.userData.customPriceSources[name])
+			tinsert(results, name)
+		end
+		name, value = next(queue)
+	end
+	TSMAPI_FOUR.Util.ReleaseTempTable(queue)
+	return TSMAPI_FOUR.Util.TempTableIterator(results)
+end
+
 
 
 -- ============================================================================
@@ -292,9 +295,7 @@ end
 -- ============================================================================
 
 private.customPriceFunctions = {
-	NAN = NAN,
-	NAN_STR = NAN_STR,
-	isNAN = isNAN,
+	IsInvalid = IsInvalid,
 	loopError = function(str)
 		TSM:Printf("%s |cff99ffff%s|r", L["Loop detected in the following custom price:"], str)
 	end,
@@ -302,7 +303,7 @@ private.customPriceFunctions = {
 		local total, count = 0, 0
 		for i = 1, select('#', ...) do
 			local num = select(i, ...)
-			if type(num) == "number" and not isNAN(num) then
+			if type(num) == "number" and not IsInvalid(num) then
 				total = total + num
 				count = count + 1
 			end
@@ -313,7 +314,7 @@ private.customPriceFunctions = {
 		local minVal
 		for i = 1, select('#', ...) do
 			local num = select(i, ...)
-			if type(num) == "number" and not isNAN(num) and (not minVal or num < minVal) then
+			if type(num) == "number" and not IsInvalid(num) and (not minVal or num < minVal) then
 				minVal = num
 			end
 		end
@@ -323,7 +324,7 @@ private.customPriceFunctions = {
 		local maxVal
 		for i = 1, select('#', ...) do
 			local num = select(i, ...)
-			if type(num) == "number" and not isNAN(num) and (not maxVal or num > maxVal) then
+			if type(num) == "number" and not IsInvalid(num) and (not maxVal or num > maxVal) then
 				maxVal = num
 			end
 		end
@@ -332,7 +333,7 @@ private.customPriceFunctions = {
 	_first = function(...)
 		for i = 1, select('#', ...) do
 			local num = select(i, ...)
-			if type(num) == "number" and not isNAN(num) then
+			if type(num) == "number" and not IsInvalid(num) then
 				return num
 			end
 		end
@@ -422,7 +423,7 @@ function private.RunComparison(comparison, ...)
 	ifValue = ifValue or NAN
 	elseValue = elseValue or NAN
 
-	if isNAN(leftCheck) or isNAN(rightCheck) then
+	if IsInvalid(leftCheck) or IsInvalid(rightCheck) then
 		return NAN
 	elseif comparison == COMPARISONS.gt then
 		return leftCheck > rightCheck and ifValue or elseValue
@@ -603,6 +604,10 @@ function private.ParsePriceString(str, badPriceSource)
 			if not parts[i+1] or parts[i+1] == ")" then
 				return nil, L["Empty parentheses are not allowed"]
 			end
+			-- should never have ") ("
+			if i > 1 and parts[i-1] == ")" then
+				return nil, L["Missing operator between sets of parenthesis"]
+			end
 		elseif word == ")" then
 			-- valid parenthesis
 		elseif word == "," then
@@ -632,7 +637,7 @@ function private.ParsePriceString(str, badPriceSource)
 		i = i + 1
 	end
 
-	for key, info in pairs(private.priceSourceInfo) do
+	for key in pairs(private.priceSourceInfo) do
 		-- replace all "<priceSource> itemString" occurances with the proper parameters (with the itemString)
 		str = gsub(str, format(" %s (%s)", key, ITEM_STRING_PATTERN), format(" self._priceHelper(\"%%1\", \"%s\")", key))
 		-- replace all "<priceSource>" occurances with the proper parameters (with _item for the item)
@@ -673,9 +678,10 @@ function private.ParsePriceString(str, badPriceSource)
 	local func, loadErr = loadstring(format(CUSTOM_PRICE_FUNC_TEMPLATE, str), "TSMCustomPrice: "..origStr)
 	if loadErr then
 		loadErr = gsub(strtrim(loadErr), "([^:]+):.", "")
-		return nil, L["Invalid function."]..L[" Details: "]..loadErr
+		return nil, L["Invalid function."].." "..L["Details"]..": "..loadErr
 	end
-	local success, func = pcall(func)
+	local success = nil
+	success, func = pcall(func)
 	if not success then
 		return nil, L["Invalid function."]
 	end
@@ -701,5 +707,12 @@ function private.ModuleSortFunc(a, b)
 		return false
 	else
 		return a < b
+	end
+end
+
+function private.AddToCustomPriceDependencyQueue(queue, value)
+	value = strlower(value)
+	for piece in gmatch(value, "[a-z]+") do
+		queue[piece] = true
 	end
 end

@@ -12,8 +12,8 @@ BINDING_NAME_AngryAssign_LOCK = "Toggle Lock"
 BINDING_NAME_AngryAssign_DISPLAY = "Toggle Display"
 BINDING_NAME_AngryAssign_OUTPUT = "Output Assignment to Chat"
 
-local AngryAssign_Version = 'v1.9.1'
-local AngryAssign_Timestamp = '20180222010222'
+local AngryAssign_Version = 'v1.10.0'
+local AngryAssign_Timestamp = '20180719165138'
 
 local protocolVersion = 1
 local comPrefix = "AnAss"..protocolVersion
@@ -2581,7 +2581,7 @@ function AngryAssign:AfterEnable()
 		self:ClearDisplayed()
 	end
 	
-	self:RegisterEvent("PARTY_CONVERTED_TO_RAID")
+	--self:RegisterEvent("PARTY_CONVERTED_TO_RAID")
 	self:RegisterEvent("PARTY_LEADER_CHANGED")
 	self:RegisterEvent("GROUP_JOINED")
 	self:RegisterEvent("GROUP_ROSTER_UPDATE")

@@ -32,6 +32,7 @@ end
 function Text.Acquire(self)
 	self._textStr = ""
 	self:_GetBaseFrame():EnableMouse(false)
+	self:_GetBaseFrame().text:SetSpacing(0)
 	self.__super:Acquire()
 end
 

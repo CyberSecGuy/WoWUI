@@ -82,10 +82,11 @@ function Comm.SendData(dataType, targetPlayer, data)
 	TSMAPI_FOUR.Util.ReleaseTempTable(encodedData)
 	assert(minData, "Could not compress packet")
 
-	-- give heartbeats a higher priority
-	local priority = dataType == TSM.Sync.DATA_TYPES.HEARTBEAT and "ALERT" or nil
+	-- give heartbeats and rpc preambles a higher priority
+	local priority = (dataType == TSM.Sync.DATA_TYPES.HEARTBEAT or dataType == TSM.Sync.DATA_TYPES.RPC_PREAMBLE) and "ALERT" or nil
 	-- send the message
 	Comm:SendCommMessage("TSMSyncData", minData, "WHISPER", targetPlayer, priority)
+	return #minData
 end
 
 

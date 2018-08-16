@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local Shopping = TSM.MainUI.Settings:NewPackage("Shopping")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { sounds = {}, soundkeys = {} }
 
 

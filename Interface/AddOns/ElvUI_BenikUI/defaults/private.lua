@@ -5,16 +5,16 @@ V['benikui'] = {
 	['expressway'] = false,
 	['session'] = {
 		['day'] = 1,
-	}
+	},
 }
 
 -- Dashboards
 V['dashboards'] = {
 	['tokens'] = {
 		['chooseTokens'] = {
-			[1220] = true, -- Order Resources
-			[1273] = true, -- Seal of Broken Fate
-			[1508] = true, -- Veiled Argunite
+			[1560] = true, -- War Resources
+			[1565] = true, -- Rich Azerite Fragment
+			[1580] = true, -- Seal of Wartorn Fate
 		},
 	},
 	

@@ -22,12 +22,12 @@ local function SetupLayout(layout)
 	E.db["bags"]["sortInverted"] = false
 	E.db["chat"]["panelBackdrop"] = 'SHOWBOTH'
 	E.db["chat"]["timeStampFormat"] = "%H:%M "
-	E.db["databars"]["artifact"]["enable"] = true
-	E.db["databars"]["artifact"]["height"] = 150
-	E.db["databars"]["artifact"]["orientation"] = 'VERTICAL'
-	E.db["databars"]["artifact"]["textFormat"] = 'NONE'
-	E.db["databars"]["artifact"]["textSize"] = 9
-	E.db["databars"]["artifact"]["width"] = 8
+	E.db["databars"]["azerite"]["enable"] = true
+	E.db["databars"]["azerite"]["height"] = 150
+	E.db["databars"]["azerite"]["orientation"] = 'VERTICAL'
+	E.db["databars"]["azerite"]["textFormat"] = 'NONE'
+	E.db["databars"]["azerite"]["textSize"] = 9
+	E.db["databars"]["azerite"]["width"] = 8
 	E.db["databars"]["experience"]["font"] = "Expressway"
 	E.db["databars"]["experience"]["textYoffset"] = 10
 	E.db["databars"]["experience"]["textFormat"] = "CURPERC"
@@ -38,7 +38,7 @@ local function SetupLayout(layout)
 	E.db["databars"]["honor"]["height"] = 152
 	E.db["databars"]["honor"]["textFormat"] = 'NONE'
 	E.db["databars"]["honor"]["textSize"] = 9
-	E.db["databars"]["honor"]["width"] = 8	
+	E.db["databars"]["honor"]["width"] = 8
 	E.db["databars"]["reputation"]["enable"] = true
 	E.db["databars"]["reputation"]["height"] = 150
 	E.db["databars"]["reputation"]["orientation"] = 'VERTICAL'
@@ -67,12 +67,12 @@ local function SetupLayout(layout)
 	E.db["general"]["valuecolor"]["b"] = 0
 	E.db["general"]["valuecolor"]["g"] = 0.5
 	E.db["general"]["valuecolor"]["r"] = 1
-	E.db["hideTutorial"] = true	
+	E.db["hideTutorial"] = true
 	E.private["skins"]["blizzard"]["alertframes"] = true
 	E.private["skins"]["blizzard"]["questChoice"] = true
 
-	E.db["benikuiDatabars"]["artifact"]["buttonStyle"] = "DEFAULT"
-	E.db["benikuiDatabars"]["artifact"]["notifiers"]["position"] = "RIGHT"
+	E.db["benikuiDatabars"]["azerite"]["buttonStyle"] = "DEFAULT"
+	E.db["benikuiDatabars"]["azerite"]["notifiers"]["position"] = "RIGHT"
 	E.db["benikuiDatabars"]["reputation"]["buttonStyle"] = "DEFAULT"
 	E.db["benikuiDatabars"]["reputation"]["notifiers"]["position"] = "LEFT"
 	E.db["benikuiDatabars"]["honor"]["buttonStyle"] = "TRANSPARENT"
@@ -128,6 +128,8 @@ local function SetupLayout(layout)
 		E.db["benikui"]["misc"]["ilevel"]["font"] = "Bui Prototype"
 		E.db["benikui"]["misc"]["ilevel"]["fontsize"] = 9
 
+		E.db["benikui"]["general"]["shadows"] = false
+
 		-- Movers
 		E.db["movers"]["AlertFrameMover"] = "TOP,ElvUIParent,TOP,0,-140"
 		E.db["movers"]["BNETMover"] = "TOPRIGHT,ElvUIParent,TOPRIGHT,-181,-182"
@@ -143,7 +145,7 @@ local function SetupLayout(layout)
 		E.db["movers"]["VehicleSeatMover"] = "TOPLEFT,ElvUIParent,TOPLEFT,155,-81"
 		E.db["movers"]["WatchFrameMover"] = "TOPRIGHT,ElvUIParent,TOPRIGHT,-122,-292"
 		E.db["movers"]["tokenHolderMover"] = "TOPLEFT,ElvUIParent,TOPLEFT,4,-123"
-		E.db["movers"]["ArtifactBarMover"] = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,415,22"
+		E.db["movers"]["AzeriteBarMover"] = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,415,22"
 		E.db["movers"]["HonorBarMover"] = "TOPRIGHT,ElvUIParent,TOPRIGHT,-157,-6"
 		E.db["movers"]["ObjectiveFrameMover"] = "TOPRIGHT,ElvUIParent,TOPRIGHT,-207,-260"
 
@@ -197,9 +199,11 @@ local function SetupLayout(layout)
 		E.db["benikui"]["datatexts"]["middle"]["width"] = 414
 		E:GetModule('BuiLayout'):MiddleDatatextDimensions()
 
+		E.db["benikui"]["general"]["shadows"] = true
+
 		-- movers
 		E.db["movers"]["AlertFrameMover"] = "TOP,ElvUIParent,TOP,0,-140"
-		E.db["movers"]["ArtifactBarMover"] = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,415,22"
+		E.db["movers"]["AzeriteBarMover"] = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,415,22"
 		E.db["movers"]["BNETMover"] = "TOPRIGHT,ElvUIParent,TOPRIGHT,-156,-200"
 		E.db["movers"]["BuiDashboardMover"] = "TOPLEFT,ElvUIParent,TOPLEFT,4,-8"
 		E.db["movers"]["ExperienceBarMover"] = "BOTTOM,ElvUIParent,BOTTOM,0,61"
@@ -285,8 +289,10 @@ local function SetupChat()
 			FCF_SetLocked(frame, 1)
 			frame:Show()
 		end
-		FCF_SavePositionAndDimensions(frame)
-		FCF_StopDragging(frame)
+		if frame:GetLeft() then
+			FCF_SavePositionAndDimensions(frame)
+			FCF_StopDragging(frame)
+		end
 	end
 
 	PluginInstallStepComplete.message = BUI.Title..L['Chat Set']
@@ -613,7 +619,7 @@ local function SetupUnitframes(layout)
 		E.db["unitframe"]["units"]["target"]["castbar"]["icon"] = false
 		E.db["unitframe"]["units"]["target"]["castbar"]["width"] = 300
 		E.db["unitframe"]["units"]["target"]["castbar"]["insideInfoPanel"] = true
-		E.db["unitframe"]["units"]["target"]["orientation"] = "LEFT"		
+		E.db["unitframe"]["units"]["target"]["orientation"] = "LEFT"
 		E.db["unitframe"]["units"]["target"]["debuffs"]["anchorPoint"] = 'TOPRIGHT'
 		E.db["unitframe"]["units"]["target"]["debuffs"]["fontSize"] = 10
 		E.db["unitframe"]["units"]["target"]["debuffs"]["sizeOverride"] = 32
@@ -685,7 +691,7 @@ local function SetupUnitframes(layout)
 		E.db["unitframe"]["units"]["focus"]["infoPanel"]["height"] = 12
 		E.db["unitframe"]["units"]["focus"]["infoPanel"]["enable"] = false
 
-		-- targettarget	
+		-- targettarget
 		E.db["unitframe"]["units"]["targettarget"]["debuffs"]["enable"] = false
 		E.db["unitframe"]["units"]["targettarget"]["portrait"]["enable"] = true
 		E.db["unitframe"]["units"]["targettarget"]["portrait"]["camDistanceScale"] = 1
@@ -1134,7 +1140,7 @@ local function SetupUnitframes(layout)
 		E.db["unitframe"]["units"]["party"]["health"]["position"] = "RIGHT"
 		E.db["unitframe"]["units"]["party"]["health"]["text_format"] = "[health:current-percent]"
 		E.db["unitframe"]["units"]["party"]["health"]["yOffset"] = -2
-		E.db["unitframe"]["units"]["party"]["health"]["xOffset"] = 0		
+		E.db["unitframe"]["units"]["party"]["health"]["xOffset"] = 0
 		E.db["unitframe"]["units"]["party"]["height"] = 40
 		E.db["unitframe"]["units"]["party"]["infoPanel"]["enable"] = false
 		E.db["unitframe"]["units"]["party"]["infoPanel"]["transparent"] = true
@@ -1157,7 +1163,7 @@ local function SetupUnitframes(layout)
 		E.db["unitframe"]["units"]["party"]["power"]["height"] = 8
 		E.db["unitframe"]["units"]["party"]["power"]["position"] = "LEFT"
 		E.db["unitframe"]["units"]["party"]["power"]["yOffset"] = -2
-		E.db["unitframe"]["units"]["party"]["power"]["xOffset"] = 2	
+		E.db["unitframe"]["units"]["party"]["power"]["xOffset"] = 2
 		E.db["unitframe"]["units"]["party"]["roleIcon"]["attachTextTo"] = "Health"
 		E.db["unitframe"]["units"]["party"]["roleIcon"]["position"] = "TOPRIGHT"
 		E.db["unitframe"]["units"]["party"]["roleIcon"]["size"] = 12
@@ -1363,7 +1369,7 @@ local function SetupUnitframes(layout)
 			E.db["unitframe"]["units"]["player"]["customTexts"]["BenikuiPlayerHealth"] = {}
 		end
 		-- convert the old custom text name
-		if E.db["unitframe"]["units"]["player"]["customTexts"]["PlayerName"] ~= nil then 
+		if E.db["unitframe"]["units"]["player"]["customTexts"]["PlayerName"] ~= nil then
 			E.db["unitframe"]["units"]["player"]["customTexts"]["PlayerName"] = E.db["unitframe"]["units"]["player"]["customTexts"]["BenikuiPlayerName"]
 		end
 		if E.db["unitframe"]["units"]["player"]["customTexts"]["PlayerBigHealth"] ~= nil then
@@ -1683,7 +1689,7 @@ local function SetupUnitframes(layout)
 		E.db["movers"]["ElvUF_TargetTargetMover"] = "BOTTOM,ElvUIParent,BOTTOM,0,206"
 		E.db["movers"]["ClassBarMover"] = "BOTTOM,ElvUIParent,BOTTOM,0,360"
 		E.db["movers"]["AltPowerBarMover"] = "TOP,ElvUIParent,TOP,0,-66"
-		E.db["movers"]["PlayerPowerBarMover"] = "BOTTOM,ElvUIParent,BOTTOM,0,345"
+		E.db["movers"]["PlayerPowerBarMover"] = "BOTTOM,ElvUIParent,BOTTOM,0,347"
 		E.db["movers"]["TargetPowerBarMover"] = "BOTTOM,ElvUIParent,BOTTOM,231,215"
 		E.db["movers"]["ZoneAbility"] = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,552,368"
 	end
@@ -1708,7 +1714,11 @@ end
 local addonNames = {}
 local profilesFailed = format('|cff00c0fa%s |r', L["BenikUI didn't find any supported addons for profile creation"])
 
+BUI.isInstallerRunning = false
+
 local function SetupAddons()
+	BUI.isInstallerRunning = true -- don't print when applying profile that doesn't exist
+
 	-- BigWigs
 	if BUI:IsAddOnEnabled('BigWigs') then
 		BUI:LoadBigWigsProfile()

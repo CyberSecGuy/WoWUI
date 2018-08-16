@@ -11,7 +11,6 @@
 -- @classmod MultiselectionDropdown
 
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 local MultiselectionDropdown = TSMAPI_FOUR.Class.DefineClass("MultiselectionDropdown", TSM.UI.BaseDropdown)
 TSM.UI.MultiselectionDropdown = MultiselectionDropdown
 
@@ -47,10 +46,7 @@ end
 -- @tparam boolean selected Whether or not the item should be selected
 -- @treturn MultiselectionDropdown The dropdown object
 function MultiselectionDropdown.SetItemSelected(self, item, selected)
-	self._itemIsSelected[item] = selected and true or nil
-	if self._settingTable then
-		self._settingTable[self._settingKey][self._itemKeyLookup[item]] = self._itemIsSelected[item]
-	end
+	self:_SetItemSelectedHelper(item, selected)
 	if self._onSelectionChangedHandler then
 		self:_onSelectionChangedHandler()
 	end
@@ -72,8 +68,15 @@ end
 -- @tparam table selected A table where the keys are the items to be selected
 -- @treturn MultiselectionDropdown The dropdown object
 function MultiselectionDropdown.SetSelectedItems(self, selected)
+	wipe(self._itemIsSelected)
+	if self._settingTable then
+		wipe(self._settingTable[self._settingKey])
+	end
 	for _, item in ipairs(self._items) do
-		self:SetItemSelected(item, selected[item])
+		self:_SetItemSelectedHelper(item, selected[item])
+	end
+	if self._onSelectionChangedHandler then
+		self:_onSelectionChangedHandler()
 	end
 	return self
 end
@@ -102,9 +105,10 @@ end
 -- @tparam string key The key into the table to be set based on the dropdown state
 -- @treturn MultiselectionDropdown The dropdown object
 function MultiselectionDropdown.SetSettingInfo(self, tbl, key)
+	-- this function wipes our settingTable, so set the selected items first
+	self:SetSelectedItems(tbl[key])
 	self._settingTable = tbl
 	self._settingKey = key
-	self:SetSelectedItems(tbl[key])
 	return self
 end
 
@@ -136,4 +140,11 @@ function MultiselectionDropdown._OnListSelectionChanged(self, dropdownList, sele
 	dropdownList:GetElement("__parent.topRow.current")
 		:SetText(self:_GetCurrentSelectionString())
 		:Draw()
+end
+
+function MultiselectionDropdown._SetItemSelectedHelper(self, item, selected)
+	self._itemIsSelected[item] = selected and true or nil
+	if self._settingTable then
+		self._settingTable[self._settingKey][self._itemKeyLookup[item]] = self._itemIsSelected[item]
+	end
 end

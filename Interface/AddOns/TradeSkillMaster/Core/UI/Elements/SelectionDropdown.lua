@@ -11,7 +11,6 @@
 -- @classmod SelectionDropdown
 
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 local SelectionDropdown = TSMAPI_FOUR.Class.DefineClass("SelectionDropdown", TSM.UI.BaseDropdown)
 TSM.UI.SelectionDropdown = SelectionDropdown
 
@@ -44,13 +43,14 @@ end
 --- Set the currently selected item.
 -- @tparam SelectionDropdown self The dropdown object
 -- @tparam ?string item The selected item or nil if nothing should be selected
+-- @tparam[opt=false] boolean silent Don't call the OnSelectionChanged callback
 -- @treturn SelectionDropdown The dropdown object
-function SelectionDropdown.SetSelectedItem(self, item)
+function SelectionDropdown.SetSelectedItem(self, item, silent)
 	self._selectedItem = item
 	if self._settingTable then
 		self._settingTable[self._settingKey] = self._itemKeyLookup[item]
 	end
-	if self._onSelectionChangedHandler then
+	if not silent and self._onSelectionChangedHandler then
 		self:_onSelectionChangedHandler()
 	end
 	return self
@@ -59,10 +59,11 @@ end
 --- Set the currently selected item by key.
 -- @tparam SelectionDropdown self The dropdown object
 -- @tparam ?string item The key for the selected item or nil if nothing should be selected
+-- @tparam[opt=false] boolean silent Don't call the OnSelectionChanged callback
 -- @treturn SelectionDropdown The dropdown object
-function SelectionDropdown.SetSelectedItemByKey(self, itemKey)
+function SelectionDropdown.SetSelectedItemByKey(self, itemKey, silent)
 	local item = itemKey and TSMAPI_FOUR.Util.GetDistinctTableKey(self._itemKeyLookup, itemKey) or nil
-	self:SetSelectedItem(item)
+	self:SetSelectedItem(item, silent)
 	return self
 end
 

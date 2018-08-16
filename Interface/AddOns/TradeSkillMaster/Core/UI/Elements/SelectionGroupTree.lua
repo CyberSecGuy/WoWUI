@@ -11,10 +11,8 @@
 -- @classmod SelectionGroupTree
 
 local _, TSM = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 local SelectionGroupTree = TSMAPI_FOUR.Class.DefineClass("SelectionGroupTree", TSM.UI.GroupTree)
 TSM.UI.SelectionGroupTree = SelectionGroupTree
-local private = {}
 
 
 

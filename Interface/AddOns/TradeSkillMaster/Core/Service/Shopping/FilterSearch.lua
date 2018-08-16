@@ -8,8 +8,7 @@
 
 local _, TSM = ...
 local FilterSearch = TSM.Shopping:NewPackage("FilterSearch")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
-local private = { scanThreadId = nil, filterInfo = {}, source = nil, isSpecial = false }
+local private = { scanThreadId = nil, isSpecial = false }
 
 
 
@@ -22,8 +21,7 @@ function FilterSearch.OnInitialize()
 	private.scanThreadId = TSMAPI_FOUR.Thread.New("FILTER_SEARCH", private.ScanThread)
 end
 
-function FilterSearch.GetScanContext(source, isSpecial)
-	private.source = source
+function FilterSearch.GetScanContext(isSpecial)
 	private.isSpecial = isSpecial
 	return private.scanThreadId, private.MarketValueFunction
 end
@@ -58,5 +56,5 @@ function private.ScanThread(auctionScan, filterStr)
 end
 
 function private.MarketValueFunction(row)
-	return TSMAPI_FOUR.CustomPrice.GetValue(private.source or TSM.db.global.shoppingOptions.pctSource, row:GetField("itemString"))
+	return TSMAPI_FOUR.CustomPrice.GetValue(TSM.db.global.shoppingOptions.pctSource, row:GetField("itemString"))
 end

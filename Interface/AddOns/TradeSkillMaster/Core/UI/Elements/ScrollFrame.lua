@@ -36,12 +36,14 @@ function ScrollFrame.__init(self)
 	frame.backgroundTexture = frame:CreateTexture(nil, "BACKGROUND")
 	frame.backgroundTexture:SetAllPoints()
 
-	self._scrollbar = TSM.UI.CreateScrollbar(frame, 0)
+	self._scrollbar = TSM.UI.CreateScrollbar(frame)
 
 	self._content = CreateFrame("Frame", nil, frame)
 	self._content:SetPoint("TOPLEFT")
 	self._content:SetPoint("TOPRIGHT")
 	frame:SetScrollChild(self._content)
+
+	self._onUpdateHandler = nil
 end
 
 function ScrollFrame.Acquire(self)
@@ -51,6 +53,20 @@ function ScrollFrame.Acquire(self)
 	self._scrollbar:SetValue(0)
 	self._scrollbar:SetScript("OnValueChanged", private.OnScrollbarValueChanged)
 	self.__super:Acquire()
+end
+
+function ScrollFrame.Release(self)
+	self._onUpdateHandler = nil
+	self.__super:Release()
+end
+
+function ScrollFrame.SetScript(self, script, handler)
+	if script == "OnUpdate" then
+		self._onUpdateHandler = handler
+	else
+		self.__super:SetScript(script, handler)
+	end
+	return self
 end
 
 function ScrollFrame.Draw(self)
@@ -167,10 +183,13 @@ end
 
 function private.FrameOnUpdate(frame)
 	local self = private.frameScrollFrameLookup[frame]
-	if frame:IsMouseOver() and self:_GetMaxScroll() > 0 then
+	if (frame:IsMouseOver() and self:_GetMaxScroll() > 0) or self._scrollbar.dragging then
 		self._scrollbar:Show()
 	else
 		self._scrollbar:Hide()
+	end
+	if self._onUpdateHandler then
+		self:_onUpdateHandler()
 	end
 end
 

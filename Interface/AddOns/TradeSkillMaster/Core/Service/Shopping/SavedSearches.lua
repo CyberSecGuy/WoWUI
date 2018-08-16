@@ -8,7 +8,6 @@
 
 local _, TSM = ...
 local SavedSearches = TSM.Shopping:NewPackage("SavedSearches")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
 local private = { db = nil }
 local SAVED_SEARCHES_SCHEMA = {
 	fields = {
@@ -18,6 +17,19 @@ local SAVED_SEARCHES_SCHEMA = {
 		isFavorite = "boolean",
 		mode = "string",
 		filter = "string",
+	},
+	fieldAttributes = {
+		index = { "unique", "index" },
+		lastSearch = { "index" },
+		name = { "index" },
+	},
+	fieldOrder = {
+		"index",
+		"name",
+		"lastSearch",
+		"isFavorite",
+		"mode",
+		"filter",
 	}
 }
 
@@ -30,7 +42,7 @@ local SAVED_SEARCHES_SCHEMA = {
 function SavedSearches.OnInitialize()
 	-- remove duplicates
 	local keepSearch = TSMAPI_FOUR.Util.AcquireTempTable()
-	for i, data in ipairs(TSM.db.global.userData.savedShoppingSearches) do
+	for _, data in ipairs(TSM.db.global.userData.savedShoppingSearches) do
 		local filter = strlower(data.filter)
 		if not keepSearch[filter] then
 			keepSearch[filter] = data
@@ -51,18 +63,13 @@ function SavedSearches.OnInitialize()
 	end
 	TSMAPI_FOUR.Util.ReleaseTempTable(keepSearch)
 
-	private.db = TSMAPI_FOUR.Database.New(SAVED_SEARCHES_SCHEMA)
-	for i, data in ipairs(TSM.db.global.userData.savedShoppingSearches) do
+	private.db = TSMAPI_FOUR.Database.New(SAVED_SEARCHES_SCHEMA, "SHOPPING_SAVED_SEARCHES")
+	private.db:BulkInsertStart()
+	for index, data in pairs(TSM.db.global.userData.savedShoppingSearches) do
 		assert(data.searchMode == "normal" or data.searchMode == "crafting")
-		private.db:NewRow()
-			:SetField("index", i)
-			:SetField("name", data.name)
-			:SetField("lastSearch", data.lastSearch)
-			:SetField("isFavorite", data.isFavorite and true or false)
-			:SetField("mode", data.searchMode)
-			:SetField("filter", data.filter)
-			:Save()
+		private.db:BulkInsertNewRow(index, data.name, data.lastSearch, data.isFavorite and true or false, data.searchMode, data.filter)
 	end
+	private.db:BulkInsertEnd()
 end
 
 function SavedSearches.CreateRecentSearchesQuery()
@@ -77,17 +84,15 @@ function SavedSearches.CreateFavoriteSearchesQuery()
 end
 
 function SavedSearches.SetSearchIsFavorite(dbRow, isFavorite)
-	local data = TSM.db.global.userData.savedShoppingSearches[dbRow:GetField("index")]
-	data.isFavorite = isFavorite or nil
+	TSM.db.global.userData.savedShoppingSearches[dbRow:GetField("index")].isFavorite = isFavorite or nil
 	dbRow:SetField("isFavorite",  isFavorite)
-		:Save()
+		:Update()
 end
 
 function SavedSearches.RenameSearch(dbRow, newName)
-	local data = TSM.db.global.userData.savedShoppingSearches[dbRow:GetField("index")]
-	data.name = newName
-	dbRow:SetField("name", data.name)
-		:Save()
+	TSM.db.global.userData.savedShoppingSearches[dbRow:GetField("index")].name = newName
+	dbRow:SetField("name", newName)
+		:Update()
 end
 
 function SavedSearches.DeleteSearch(dbRow)
@@ -97,10 +102,11 @@ function SavedSearches.DeleteSearch(dbRow)
 	private.db:DeleteRow(dbRow)
 	-- need to decrement the index fields of all the rows which got shifted up
 	local query = private.db:NewQuery()
-		:GreaterThanOrEqual("index", index)
+		:GreaterThan("index", index)
+		:OrderBy("index", true)
 	for _, row in query:Iterator() do
-		row:DecrementField("index")
-			:Save()
+		row:SetField("index", row:GetField("index") - 1)
+			:Update()
 	end
 	query:Release()
 	private.db:SetQueryUpdatesPaused(false)
@@ -111,12 +117,10 @@ function SavedSearches.RecordFilterSearch(filter)
 	for i, data in ipairs(TSM.db.global.userData.savedShoppingSearches) do
 		if strlower(data.filter) == strlower(filter) then
 			data.lastSearch = time()
-			local query = private.db:NewQuery()
-				:Equal("index", i)
-			local dbRow = query:GetSingleResult()
-			query:Release()
-			dbRow:SetField("lastSearch", data.lastSearch)
-			dbRow:Save()
+			local row = private.db:GetUniqueRow("index", i)
+			row:SetField("lastSearch", data.lastSearch)
+				:Update()
+			row:Release()
 			found = true
 			break
 		end
@@ -137,6 +141,6 @@ function SavedSearches.RecordFilterSearch(filter)
 			:SetField("isFavorite", data.isFavorite and true or false)
 			:SetField("mode", data.searchMode)
 			:SetField("filter", data.filter)
-			:Save()
+			:Create()
 	end
 end

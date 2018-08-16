@@ -8,7 +8,7 @@
 
 local _, TSM = ...
 local VendorSearch = TSM.Shopping:NewPackage("VendorSearch")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = { itemList = {}, scanThreadId = nil }
 
 
@@ -33,7 +33,7 @@ end
 -- ============================================================================
 
 function private.ScanThread(auctionScan)
-	if TSMAPI_FOUR.Modules.API("AuctionDB", "lastCompleteScanTime") < time() - 60 * 60 * 12 then
+	if (TSM.AuctionDB.GetLastCompleteScanTime() or 0) < time() - 60 * 60 * 12 then
 		TSM:Print(L["No recent AuctionDB scan data found."])
 		return false
 	end
@@ -41,7 +41,7 @@ function private.ScanThread(auctionScan)
 
 	-- create the list of items, and add filters for them
 	wipe(private.itemList)
-	for _, itemString, _, minBuyout in TSM.old.AuctionDB.LastScanIteratorThreaded() do
+	for _, itemString, _, minBuyout in TSM.AuctionDB.LastScanIteratorThreaded() do
 		local vendorSell = TSMAPI_FOUR.Item.GetVendorSell(itemString) or 0
 		if vendorSell and minBuyout and minBuyout < vendorSell then
 			tinsert(private.itemList, itemString)

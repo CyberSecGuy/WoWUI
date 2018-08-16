@@ -8,17 +8,17 @@
 
 local _, TSM = ...
 local Groups = TSM.MainUI:NewPackage("Groups")
-local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
+local L = TSM.L
 local private = {
 	currentGroupPath = TSM.CONST.ROOT_GROUP_PATH,
 	itemFilter = TSMAPI_FOUR.ItemFilter.New(),
 	groupedItemList = {},
 	ungroupedItemList = { {}, {} },
-	ignoreRandom = false,
 	moduleOperationList = {},
 	descriptionShown = {},
 	moduleCollapsed = {},
 	groupSearch = "",
+	itemSearch = "",
 }
 local DEFAULT_DIVIDED_CONTAINER_CONTEXT = {
 	leftWidth = 300,
@@ -72,7 +72,6 @@ function private.GetGroupsFrame()
 				:SetSelectedGroup(private.currentGroupPath)
 				:SetContextTable(TSM.db.profile.internalData.managementGroupTreeContext)
 				:SetSearchString(private.groupSearch)
-				:SetScript("OnGroupModified", private.GroupTreeOnGroupModified)
 				:SetScript("OnGroupSelected", private.GroupTreeOnGroupSelected)
 			)
 		)
@@ -133,7 +132,7 @@ function private.GetGroupsPage(self, button)
 		return TSMAPI_FOUR.UI.NewElement("Frame", "items")
 			:SetLayout("VERTICAL")
 			:SetStyle("background", "#171717")
-			:SetStyle("padding", { left = 16, right = 16, top = 8, bottom = 16 })
+			:SetStyle("padding", { left = 8, right = 8, top = 8, bottom = 8 })
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "filter")
 				:SetLayout("HORIZONTAL")
 				:SetStyle("height", 24)
@@ -144,13 +143,13 @@ function private.GetGroupsPage(self, button)
 					:SetHintText(L["Filter Items"])
 					:SetScript("OnTextChanged", private.ItemFilterOnTextChanged)
 				)
-				:AddChild(TSMAPI_FOUR.UI.NewElement("Checkbox", "ignoreRandom")
+				:AddChild(TSMAPI_FOUR.UI.NewElement("Checkbox", "ignoreItemVariations")
 					:SetStyle("width", 220)
 					:SetStyle("height", 24)
 					:SetStyle("margin", { right = -4 })
 					:SetCheckboxPosition("RIGHT")
-					:SetText(L["Ignore random enchants?"])
-					:SetChecked(private.ignoreRandom)
+					:SetText(L["Ignore item variations?"])
+					:SetSettingInfo(TSM.db.profile.userData.groups[private.currentGroupPath], "ignoreItemVariations")
 					:SetScript("OnValueChanged", private.IgnoreRandomOnValueChanged)
 				)
 			)
@@ -161,12 +160,13 @@ function private.GetGroupsPage(self, button)
 					:SetStyle("margin", { right = 8 })
 					:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "content")
 						:SetLayout("VERTICAL")
-						:SetStyle("border", "#636363")
-						:SetStyle("borderSize", 1)
+						:SetStyle("borderTexture", "Interface\\Addons\\TradeSkillMaster\\Media\\ItemPreviewEdgeFrame.blp")
+						:SetStyle("borderSize", 8)
+						:SetStyle("borderInset", 1)
 						:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "header")
 							:SetLayout("VERTICAL")
 							:SetStyle("background", "#1e1e1e")
-							:SetStyle("borderInsets", { left = 1, right = 1, top = 1 })
+							:SetStyle("borderInsets", { left = 2, right = 2, top = 3 })
 							:SetStyle("height", 33)
 							:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "title")
 								:SetLayout("HORIZONTAL")
@@ -188,12 +188,12 @@ function private.GetGroupsPage(self, button)
 							)
 							:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")
 								:SetStyle("height", 1)
-								:SetStyle("color", "#9d9d9d")
-								:SetStyle("margin", { left = 1, right = 1 })
+								:SetStyle("color", "#585858")
+								:SetStyle("margin", { left = 2, right = 2 })
 							)
 						)
 						:AddChild(TSMAPI_FOUR.UI.NewElement("ItemList", "itemList")
-							:SetStyle("margin", { left = 1, right = 1, bottom = 1, top = 1 })
+							:SetStyle("margin", { left = 2, right = 2, bottom = 3, top = 1 })
 							:SetItems(private.GetUngroupedItemList())
 							:SetFilterFunction(private.ItemListItemIsFiltered)
 							:SetScript("OnSelectionChanged", private.UngroupedItemsOnSelectionChanged)
@@ -201,7 +201,7 @@ function private.GetGroupsPage(self, button)
 					)
 					:AddChild(TSMAPI_FOUR.UI.NewElement("ActionButton", "btn")
 						:SetStyle("height", 26)
-						:SetStyle("margin", { top = 16 })
+						:SetStyle("margin", { top = 10 })
 						:SetText(L["Select Items to Add"])
 						:SetDisabled(true)
 						:SetScript("OnClick", private.AddItemsOnClick)
@@ -211,12 +211,13 @@ function private.GetGroupsPage(self, button)
 					:SetLayout("VERTICAL")
 					:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "content")
 						:SetLayout("VERTICAL")
-						:SetStyle("border", "#636363")
-						:SetStyle("borderSize", 1)
+						:SetStyle("borderTexture", "Interface\\Addons\\TradeSkillMaster\\Media\\ItemPreviewEdgeFrame.blp")
+						:SetStyle("borderSize", 8)
+						:SetStyle("borderInset", 1)
 						:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "header")
 							:SetLayout("VERTICAL")
 							:SetStyle("background", "#1e1e1e")
-							:SetStyle("borderInsets", { left = 1, right = 1, top = 1 })
+							:SetStyle("borderInsets", { left = 2, right = 2, top = 3 })
 							:SetStyle("height", 33)
 							:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "title")
 								:SetLayout("HORIZONTAL")
@@ -238,12 +239,12 @@ function private.GetGroupsPage(self, button)
 							)
 							:AddChild(TSMAPI_FOUR.UI.NewElement("Texture", "line")
 								:SetStyle("height", 1)
-								:SetStyle("color", "#9d9d9d")
+								:SetStyle("color", "#585858")
 								:SetStyle("margin", { left = 2, right = 2 })
 							)
 						)
 						:AddChild(TSMAPI_FOUR.UI.NewElement("ItemList", "itemList")
-							:SetStyle("margin", { left = 1, right = 1, bottom = 1, top = 1 })
+							:SetStyle("margin", { left = 2, right = 2, bottom = 3, top = 1 })
 							:SetItems(private.GetGroupedItemList())
 							:SetFilterFunction(private.ItemListItemIsFiltered)
 							:SetScript("OnSelectionChanged", private.GroupedItemsOnSelectionChanged)
@@ -251,7 +252,7 @@ function private.GetGroupsPage(self, button)
 					)
 					:AddChild(TSMAPI_FOUR.UI.NewElement("ActionButton", "btn")
 						:SetStyle("height", 26)
-						:SetStyle("margin", { top = 16 })
+						:SetStyle("margin", { top = 10 })
 						:SetText(L["Select Items to Remove"])
 						:SetDisabled(true)
 						:SetScript("OnClick", private.RemoveItemsOnClick)
@@ -275,31 +276,22 @@ function private.GetGroupsPage(self, button)
 end
 
 function private.GetModuleOperationFrame(moduleName)
-	-- create a table of operations for this module if it doesn't already exist
-	TSM.db.profile.userData.groups[private.currentGroupPath][moduleName] = TSM.db.profile.userData.groups[private.currentGroupPath][moduleName] or {}
-	local operations = TSM.db.profile.userData.groups[private.currentGroupPath][moduleName]
-	operations[1] = operations[1] or ""
+	local override = TSM.Groups.HasOperationOverride(private.currentGroupPath, moduleName)
 
 	-- populate our list of operations for this module
 	if not private.moduleOperationList[moduleName] then
 		private.moduleOperationList[moduleName] = {}
 	end
 	wipe(private.moduleOperationList[moduleName])
-	for operationName in pairs(TSM.operations[moduleName]) do
+	tinsert(private.moduleOperationList[moduleName], "|cffffd839"..L["Create New Operation"].."|r")
+	for _, operationName in TSM.Operations.OperationIterator(moduleName) do
 		tinsert(private.moduleOperationList[moduleName], operationName)
 	end
-	sort(private.moduleOperationList[moduleName])
-	tinsert(private.moduleOperationList[moduleName], 1, "|cffffd839"..L["Create New Operation"].."|r")
 
-	local numOperations = 0
-	for i, operation in ipairs(operations) do
-		if operation ~= "" then
-			numOperations = i
-		end
+	local numGroupOperations = 0
+	for _ in TSM.Groups.OperationIterator(private.currentGroupPath, moduleName) do
+		numGroupOperations = numGroupOperations + 1
 	end
-
-	-- get the operation info
-	local info = TSM.Operations:GetModuleOperationInfo(moduleName)
 
 	local frame = TSMAPI_FOUR.UI.NewElement("Frame", "operationInfo"..moduleName)
 		:SetContext(moduleName)
@@ -323,19 +315,19 @@ function private.GetModuleOperationFrame(moduleName)
 			:SetStyle("autoWidth", true)
 			:SetText(moduleName)
 		)
-		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "numOperations")
+		:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "numGroupOperations")
 			:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
 			:SetStyle("fontHeight", 14)
 			:SetStyle("textColor", "#ffffff")
 			:SetStyle("margin", { left = 2 })
-			:SetFormattedText("("..L["%d Operations"]..")", numOperations)
+			:SetFormattedText("("..L["%d Operations"]..")", numGroupOperations)
 		)
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Checkbox", "overrideCheckbox")
 			:SetStyle("height", 24)
-			:SetStyle("margin", { right = 12 })
+			:SetStyle("margin", { right = 4 })
 			:SetCheckboxPosition("RIGHT")
 			:SetText(L["Override parent operations"])
-			:SetChecked(operations.override)
+			:SetChecked(override)
 			:SetScript("OnValueChanged", private.OverrideToggleOnValueChanged)
 		)
 	)
@@ -344,11 +336,14 @@ function private.GetModuleOperationFrame(moduleName)
 	if private.currentGroupPath == TSM.CONST.ROOT_GROUP_PATH then
 		moduleTitle:GetElement("overrideCheckbox"):Hide()
 	else
-		moduleTitle:GetElement("numOperations"):SetStyle("autoWidth", true)
+		moduleTitle:GetElement("numGroupOperations"):SetStyle("autoWidth", true)
 	end
 
-	for i = 1, private.moduleCollapsed[moduleName] and 0 or numOperations do
-		local operationName = operations[i]
+	if private.moduleCollapsed[moduleName] then
+		return frame
+	end
+
+	for i, operationName in TSM.Groups.OperationIterator(private.currentGroupPath, moduleName) do
 		frame:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "operation"..i)
 			:SetLayout("VERTICAL")
 			:SetStyle("margin", { left = 20, right = 8, top = 8 })
@@ -373,9 +368,7 @@ function private.GetModuleOperationFrame(moduleName)
 					:SetText(private.descriptionShown[operationName] and L["Hide Description"] or L["Show Description"])
 					:SetScript("OnClick", private.DescriptionButtonOnClick)
 				)
-				:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "spacer")
-					-- spacer
-				)
+				:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "spacer"))
 				:AddChild(TSMAPI_FOUR.UI.NewElement("Button", "configBtn")
 					:SetStyle("width", TSM.UI.TexturePacks.GetWidth("iconPack.18x18/Configure"))
 					:SetStyle("backgroundTexturePack", "iconPack.18x18/Configure")
@@ -384,12 +377,12 @@ function private.GetModuleOperationFrame(moduleName)
 				)
 			)
 		)
-		if operations.override or private.currentGroupPath == TSM.CONST.ROOT_GROUP_PATH then
+		if override or private.currentGroupPath == TSM.CONST.ROOT_GROUP_PATH then
 			frame:GetElement("operation"..i..".title"):AddChild(TSMAPI_FOUR.UI.NewElement("Button", "removeBtn")
 				:SetStyle("margin", { left = 4 })
 				:SetStyle("width", TSM.UI.TexturePacks.GetWidth("iconPack.18x18/Close/Circle"))
 				:SetStyle("backgroundTexturePack", "iconPack.18x18/Close/Circle")
-				:SetContext(operationName)
+				:SetContext(i)
 				:SetScript("OnClick", private.RemoveOperationOnClick)
 			)
 		end
@@ -401,22 +394,22 @@ function private.GetModuleOperationFrame(moduleName)
 				:SetStyle("fontSpacing", 4)
 				:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
 				:SetStyle("textColor", "#ffffff")
-				:SetText(info.callbackInfo(operationName))
+				:SetText(TSM.Operations.GetDescription(moduleName, operationName))
 			)
 		end
 	end
 
-	if not private.moduleCollapsed[moduleName] and numOperations < TSM.Operations.GetMaxOperations(moduleName) then
+	if numGroupOperations < TSM.Operations.GetMaxNumber(moduleName) then
 		frame:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "moduleTitle")
 			:SetLayout("HORIZONTAL")
 			:SetStyle("height", 29)
 			:SetStyle("margin", { top = 6, bottom = 10 })
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "dropdownDesc")
 				:SetStyle("height", 14)
-				:SetStyle("width", 100)
+				:SetStyle("width", 120)
 				:SetStyle("margin", { left = 24, top = 5, bottom = 4 })
-				:SetStyle("font", TSM.UI.Fonts.MontserratBold2)
-				:SetStyle("fontHeight", 10)
+				:SetStyle("font", TSM.UI.Fonts.MontserratMedium)
+				:SetStyle("fontHeight", 12)
 				:SetStyle("textColor", "#e2e2e2")
 				:SetText(L["ADD OPERATION"])
 			)
@@ -426,12 +419,12 @@ function private.GetModuleOperationFrame(moduleName)
 				:SetStyle("margin", { right = 8, left = -4 })
 				:SetHintText(L["Select Operation"])
 				:SetItems(private.moduleOperationList[moduleName])
-				:SetDisabled(private.currentGroupPath ~= TSM.CONST.ROOT_GROUP_PATH and not operations.override)
+				:SetDisabled(private.currentGroupPath ~= TSM.CONST.ROOT_GROUP_PATH and not override)
 				:SetScript("OnSelectionChanged", private.NewOperationSelectionChanged)
 			)
 		)
-	elseif not private.moduleCollapsed[moduleName] then
-		frame:SetStyle("margin", { bottom = 10})
+	else
+		frame:SetStyle("margin.bottom", 10)
 	end
 
 	return frame
@@ -446,7 +439,13 @@ end
 function private.GroupSearchOnTextChanged(input)
 	local groupsContentFrame = input:GetElement("__parent.__parent.content")
 	-- Copy search filter
-	private.groupSearch = strlower(strtrim(input:GetText()))
+	local text = strlower(strtrim(input:GetText()))
+
+	if private.groupSearch == text then
+		return
+	end
+
+	private.groupSearch = text
 	local searchStr = TSMAPI_FOUR.Util.StrEscape(private.groupSearch)
 	-- Check selection is being filtered out
 	if not strmatch(strlower(private.currentGroupPath), searchStr) then
@@ -468,25 +467,11 @@ function private.GroupSearchOnTextChanged(input)
 end
 
 function private.GroupTreeGetList(groups, headerNameLookup)
-	TSM.Groups:GetSortedGroupPathList(groups)
+	for _, groupPath in TSM.Groups.GroupIterator() do
+		tinsert(groups, groupPath)
+	end
 	tinsert(groups, 1, TSM.CONST.ROOT_GROUP_PATH)
 	headerNameLookup[TSM.CONST.ROOT_GROUP_PATH] = L["Base Group"]
-end
-
-function private.GroupTreeOnGroupModified(self, sourcePath, targetPath)
-	if sourcePath and targetPath then
-		if strmatch(targetPath, "^"..TSMAPI_FOUR.Util.StrEscape(sourcePath)) then
-			TSM:Print(L["You cannot move a group to be a child of itself."])
-			return
-		end
-		TSM.Groups:Move(sourcePath, targetPath)
-	elseif sourcePath then
-		TSM.Groups:Delete(sourcePath)
-	elseif targetPath then
-		TSMAPI_FOUR.Groups.Create(targetPath)
-	else
-		error("Unexpected OnGroupModified call!")
-	end
 end
 
 function private.GroupTreeOnGroupSelected(self, path)
@@ -502,9 +487,8 @@ function private.GroupTreeOnGroupSelected(self, path)
 		titleFrame:GetElement("editBtn"):Hide()
 		buttonsFrame:RenamePath(L["Information"], 1)
 	else
-		local _, groupPath = TSMAPI_FOUR.Groups.SplitPath(path)
 		titleFrame:GetElement("text")
-			:SetText(groupPath)
+			:SetText(TSM.Groups.Path.GetName(path))
 			:SetEditing(false)
 		titleFrame:GetElement("editBtn"):Show()
 		buttonsFrame:RenamePath(L["Add / Remove Items"], 1)
@@ -518,7 +502,7 @@ end
 
 function private.TitleOnValueChanged(text, newValue)
 	newValue = strtrim(newValue)
-	local parent = TSMAPI_FOUR.Groups.SplitPath(private.currentGroupPath)
+	local parent = TSM.Groups.Path.GetParent(private.currentGroupPath)
 	local newPath = parent and parent ~= TSM.CONST.ROOT_GROUP_PATH and (parent..TSM.CONST.GROUP_SEP..newValue) or newValue
 	if newPath == private.currentGroupPath then
 		-- didn't change
@@ -526,11 +510,11 @@ function private.TitleOnValueChanged(text, newValue)
 	elseif strfind(newValue, TSM.CONST.GROUP_SEP) or newValue == "" then
 		TSM:Print(L["Invalid group name."])
 		text:Draw()
-	elseif TSM.db.profile.userData.groups[newPath] then
+	elseif TSM.Groups.Exists(newPath) then
 		TSM:Print(L["Group already exists."])
 		text:Draw()
 	else
-		TSM.Groups:Move(private.currentGroupPath, newPath)
+		TSM.Groups.Move(private.currentGroupPath, newPath)
 		text:GetElement("__parent.__parent.__parent.__parent.groupSelection.groupTree"):SetSelectedGroup(newPath, true)
 	end
 end
@@ -549,6 +533,14 @@ function private.EditBtnOnClick(button)
 end
 
 function private.ItemFilterOnTextChanged(self)
+	local text = strtrim(self:GetText())
+
+	if private.itemSearch == text then
+		return
+	end
+
+	private.itemSearch = text
+
 	private.itemFilter:ParseStr(self:GetText())
 	self:GetElement("__parent.__parent.content.ungrouped.content.itemList")
 		:SetFilterFunction(private.ItemListItemIsFiltered)
@@ -559,20 +551,17 @@ function private.ItemFilterOnTextChanged(self)
 end
 
 function private.IgnoreRandomOnValueChanged(self, checked)
-	private.ignoreRandom = checked
 	-- update the ungrouped item list
 	self:GetElement("__parent.__parent.content.ungrouped.content.itemList"):SetItems(private.GetUngroupedItemList(), true)
 end
 
 function private.AddItemsOnClick(self)
-	self:SetPressed(false)
-	assert(private.currentGroupPath ~= TSM.CONST.ROOT_GROUP_PATH) -- FIXME: shouldn't even be possible
 	local itemList = self:GetElement("__parent.content.itemList")
 	for _, items in ipairs(private.GetUngroupedItemList()) do
 		for _, itemLink in ipairs(items) do
 			if itemList:IsItemSelected(itemLink) then
 				local itemString = TSMAPI_FOUR.Item.ToItemString(itemLink)
-				TSM.db.profile.userData.items[itemString] = private.currentGroupPath
+				TSM.Groups.SetItemGroup(itemString, private.currentGroupPath)
 			end
 		end
 	end
@@ -646,14 +635,11 @@ function private.GroupedItemsOnSelectionChanged(self, numSelected)
 end
 
 function private.RemoveItemsOnClick(self)
-	self:SetPressed(false)
 	assert(private.currentGroupPath ~= TSM.CONST.ROOT_GROUP_PATH) -- FIXME: shouldn't even be possible
 	local itemList = self:GetElement("__parent.content.itemList")
 	for _, itemLink in ipairs(private.GetGroupedItemList()) do
 		if itemList:IsItemSelected(itemLink) then
-			local itemString = TSMAPI_FOUR.Item.ToItemString(itemLink)
-			assert(TSM.db.profile.userData.items[itemString])
-			TSM.db.profile.userData.items[itemString] = nil
+			TSM.Groups.SetItemGroup(TSMAPI_FOUR.Item.ToItemString(itemLink), nil)
 		end
 	end
 
@@ -674,7 +660,7 @@ function private.OverrideToggleOnValueChanged(self, value)
 	assert(private.currentGroupPath ~= TSM.CONST.ROOT_GROUP_PATH)
 	local moduleOperationFrame = self:GetParentElement():GetParentElement()
 	local moduleName = moduleOperationFrame:GetContext()
-	TSM.Groups:SetOperationOverride(private.currentGroupPath, moduleName, value)
+	TSM.Groups.SetOperationOverride(private.currentGroupPath, moduleName, value)
 	moduleOperationFrame:GetParentElement():GetParentElement():ReloadContent()
 end
 
@@ -685,16 +671,16 @@ function private.NewOperationSelectionChanged(self, operationName)
 		operationName = L["New Operation"]
 		local extra = ""
 		local num = 0
-		while TSM.operations[moduleName][operationName..extra] do
+		while TSM.Operations.Exists(moduleName, operationName..extra) do
 			num = num + 1
 			extra = " "..num
 		end
 		operationName = operationName..extra
-		TSM.operations[moduleName][operationName] = CopyTable(TSM.Operations.GetDefaults(moduleName))
-		TSMAPI_FOUR.Groups.AppendOperation(private.currentGroupPath, moduleName, operationName)
+		TSM.Operations.Create(moduleName, operationName)
+		TSM.Groups.AppendOperation(private.currentGroupPath, moduleName, operationName)
 		TSM.MainUI.Operations.ShowOperationSettings(self:GetBaseElement(), moduleName, operationName)
 	else
-		TSMAPI_FOUR.Groups.AppendOperation(private.currentGroupPath, moduleName, operationName)
+		TSM.Groups.AppendOperation(private.currentGroupPath, moduleName, operationName)
 		moduleOperationFrame:GetParentElement():GetParentElement():ReloadContent()
 	end
 end
@@ -708,7 +694,7 @@ end
 
 function private.RemoveOperationOnClick(button)
 	local moduleOperationFrame = button:GetParentElement():GetParentElement():GetParentElement()
-	TSMAPI_FOUR.Groups.RemoveOperationByName(private.currentGroupPath, moduleOperationFrame:GetContext(), button:GetContext())
+	TSM.Groups.RemoveOperation(private.currentGroupPath, moduleOperationFrame:GetContext(), button:GetContext())
 	moduleOperationFrame:GetParentElement():GetParentElement():ReloadContent()
 end
 
@@ -735,10 +721,10 @@ function private.GetUngroupedItemList()
 	-- items in bags
 	local addedItems = TSMAPI_FOUR.Util.AcquireTempTable()
 	for _, _, _, itemString in TSMAPI_FOUR.Inventory.BagIterator(false, false, true) do
-		if private.ignoreRandom then
-			itemString = TSMAPI.Item:ToBaseItemString(itemString)
+		if TSM.db.profile.userData.groups[private.currentGroupPath].ignoreItemVariations then
+			itemString = TSMAPI_FOUR.Item.ToBaseItemString(itemString)
 		end
-		if not TSM.db.profile.userData.items[itemString] and not addedItems[itemString] then
+		if not TSM.Groups.IsItemInGroup(itemString) and not addedItems[itemString] then
 			local itemLink = TSMAPI_FOUR.Item.GetLink(itemString)
 			tinsert(private.ungroupedItemList[1], itemLink)
 			addedItems[itemString] = true
@@ -748,8 +734,8 @@ function private.GetUngroupedItemList()
 	private.ungroupedItemList[1].header = "|cff79a2ff" .. L["Ungrouped Items"] .. "|r"
 
 	-- items in the parent group
-	local parentGroupPath = TSMAPI_FOUR.Groups.SplitPath(private.currentGroupPath)
-	for itemString, path in pairs(TSM.db.profile.userData.items) do
+	local parentGroupPath = TSM.Groups.Path.GetParent(private.currentGroupPath)
+	for _, itemString, path in TSM.Groups.ItemIterator() do
 		if path == parentGroupPath and parentGroupPath ~= TSM.CONST.ROOT_GROUP_PATH then
 			local itemLink = TSMAPI_FOUR.Item.GetLink(itemString)
 			tinsert(private.ungroupedItemList[2], itemLink)
@@ -766,7 +752,7 @@ function private.GetGroupedItemList()
 	wipe(private.groupedItemList)
 
 	-- items in this group or a subgroup
-	for itemString, path in pairs(TSM.db.profile.userData.items) do
+	for _, itemString, path in TSM.Groups.ItemIterator() do
 		if path == private.currentGroupPath or strfind(path, "^"..TSMAPI_FOUR.Util.StrEscape(private.currentGroupPath)..TSM.CONST.GROUP_SEP) then
 			tinsert(private.groupedItemList, TSMAPI_FOUR.Item.GetLink(itemString))
 		end
@@ -777,7 +763,6 @@ function private.GetGroupedItemList()
 end
 
 function private.ItemListItemIsFiltered(itemLink)
-	-- TODO: make this configurable
-	local basePrice = TSMAPI_FOUR.CustomPrice.GetValue("dbmarket", itemLink)
+	local basePrice = TSMAPI_FOUR.CustomPrice.GetValue(TSM.db.global.coreOptions.groupPriceSource, itemLink)
 	return not private.itemFilter:Matches(itemLink, basePrice)
 end
