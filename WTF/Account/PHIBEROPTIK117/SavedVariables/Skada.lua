@@ -36,14 +36,14 @@ SkadaDB = {
 					["barheight"] = 14,
 					["classicons"] = false,
 					["barslocked"] = true,
-					["y"] = 0,
+					["y"] = 4.5,
 					["barfont"] = "Expressway",
 					["title"] = {
 						["font"] = "Expressway",
 						["fontsize"] = 11,
 						["height"] = 18,
 					},
-					["x"] = 0,
+					["x"] = 1719.83367919922,
 					["point"] = "TOPRIGHT",
 					["barcolor"] = {
 						["r"] = 1,
@@ -72,7 +72,7 @@ SkadaDB = {
 					["wipemode"] = "",
 					["set"] = "current",
 					["hidden"] = false,
-					["y"] = 0,
+					["y"] = 4.5,
 					["barfont"] = "Expressway",
 					["name"] = "Skada 2",
 					["display"] = "bar",
@@ -145,7 +145,7 @@ SkadaDB = {
 					},
 					["point"] = "TOPRIGHT",
 					["mode"] = "Healing",
-					["x"] = 0,
+					["x"] = 1920.83360290527,
 				}, -- [2]
 			},
 			["versions"] = {

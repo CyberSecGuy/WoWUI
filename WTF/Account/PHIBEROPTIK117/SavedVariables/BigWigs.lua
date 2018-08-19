@@ -1,5 +1,6 @@
 
 BigWigs3DB = {
+	["discord"] = 12,
 	["namespaces"] = {
 		["BigWigs_Plugins_Victory"] = {
 		},
@@ -70,7 +71,7 @@ BigWigs3DB = {
 				},
 			},
 		},
-		["BigWigs_Plugins_AutoReply"] = {
+		["BigWigs_Plugins_Statistics"] = {
 		},
 		["BigWigs_Plugins_Proximity"] = {
 			["profiles"] = {
@@ -88,14 +89,14 @@ BigWigs3DB = {
 				},
 			},
 		},
-		["BigWigs_Plugins_Statistics"] = {
+		["BigWigs_Plugins_AutoReply"] = {
 		},
 		["BigWigs_Plugins_Pull"] = {
 		},
 		["BigWigs_Plugins_Wipe"] = {
 		},
 	},
-	["discord"] = 6,
+	["wipe80"] = true,
 	["profileKeys"] = {
 		["Fiberoptic - Aggramar"] = "BenikUI",
 		["Phiber - Stormrage"] = "Default",
@@ -109,7 +110,6 @@ BigWigs3DB = {
 }
 BigWigsIconDB = {
 }
-BigWigs3IconDB = nil
 BigWigsStatsDB = {
 	[1712] = {
 		[1992] = {
@@ -132,4 +132,3 @@ BigWigsStatsDB = {
 		},
 	},
 }
-BigWigsStatisticsDB = nil

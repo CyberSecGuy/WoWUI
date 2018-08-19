@@ -1,6 +1,6 @@
 
 BugGrabberDB = {
-	["session"] = 24,
+	["session"] = 30,
 	["lastSanitation"] = 3,
 	["errors"] = {
 		{
@@ -207,20 +207,13 @@ BugGrabberDB = {
 			["counter"] = 1,
 		}, -- [27]
 		{
-			["message"] = "Interface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: Usage: NewModule(name, [prototype, [lib, lib, lib, ...]): 'name' - Module 'Friendly Fire' already exists.",
-			["time"] = "2018/04/08 20:30:37",
-			["stack"] = "[C]: ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:270: in function `NewModule'\nInterface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: in function `?'\nInterface\\AddOns\\Skada\\Skada-1.7.2.lua:2907: in function <Interface\\AddOns\\Skada\\Skada.lua:2884>\n(tail call): ?\n[C]: ?\n[string \"safecall Dispatcher[1]\"]:9: in function <[string \"safecall Dispatcher[1]\"]:5>\n(tail call): ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:558: in function `EnableAddon'\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:651: in function <...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0.lua:636>\n[C]: in function `LoadAddOn'\nInterface\\FrameXML\\UIParent.lua:429: in function `UIParentLoadAddOn'\nInterface\\FrameXML\\UIParent.lua:528: in function `TimeManager_LoadUI'\nInterface\\FrameXML\\UIParent.lua:1114: in function <Interface\\FrameXML\\UIParent.lua:1011>",
-			["session"] = 24,
-			["counter"] = 24,
-		}, -- [28]
-		{
 			["message"] = "...erface\\AddOns\\TradeSkillMaster\\Core\\Lib\\Settings-Settings.lua:255: cannot change a protected metatable",
 			["time"] = "2018/08/16 13:39:13",
 			["locals"] = "(*temporary) = <table> {\n g@ @destroyingOptions@deAbovePrice = \"0c\"\n s@Voidbro - Alliance - Stormrage@internalData@reagentBankQuantity = <table> {\n }\n s@Fiberoptic - Alliance - Aggramar@internalData@bankQuantity = <table> {\n }\n p@Default@coreOptions@cleanReagentBank = false\n f@Alliance - Aggramar@internalData@characterGuilds = <table> {\n }\n r@Stormrage@internalData@csvBuys = \"itemString,stackSize,quantity,price,seller,player,time,source\"\n g@ @craftingOptions@defaultMatCostMethod = \"min(dbmarket, crafting, vendorbuy, convert(dbmarket))\"\n g@ @craftingOptions@profitPercent = 5\n r@Stormrage@internalData@csvIncome = \"type,amount,source,player,time\nGarrison,1303900,Mission,Phiber,1523405229\"\n s@Phiber - Alliance - Stormrage@internalData@auctionQuantity = <table> {\n }\n g@ @mailingOptions@deMaxQuality = 2\n g@ @sniperOptions@sniperSound = \"TSM_NO_SOUND\"\n g@ @auctioningOptions@roundNormalPrice = false\n g@ @tooltipOptions@deTooltip = true\n g@ @tooltipOptions@detailedDestroyTooltip = false\n s@Voidbro - Alliance - Stormrage@internalData@bagQuantity = <table> {\n }\n r@Stormrage@internalData@lastAuctionDBCompleteScan = 1518664332\n g@ @shoppingOptions@maxDeSearchPercent = 100\n f@Alliance - Sargeras@internalData@pendingMail = <table> {\n }\n r@Sargeras@internalData@csvCancelled = \"itemString,stackSize,quantity,player,time\"\n r@Sargeras@internalData@lastAuctionDBSaveTime = 0\n g@ @shoppingOptions@pctSource = \"dbmarket\"\n g@ @shoppingOptions@maxDeSearchLvl = 735\n r@Sargeras@internalData@saveTimeBuys = \"\"\n g@ @vendoringOptions@qsDestroyValue = \"destroy\"\n g@ @destroyingOptions@logDays = 14\n g@ @vendoringOptions@qsMaxDestroyValue = \"100g\"\n g@ @coreOptions@auctionSaleEnabled = true\n r@Stormrage@internalData@csvExpense = \"type,amount,destination,player,time\nRepair Bill,290242,Merchant,Phiber,1523322040\nRepair Bill,158816,Merchant,Phiber,1523325024\nRepair Bill,94243,Merchant,Phiber,1523656188\nRepair Bill,31456,Merchant,Phiber,1523665831\nRepair Bill,545542,Merchant,Phiber,1523666604\nRepair Bill,35232,Merchant,Phiber,1523669458\nRepair Bill,118852,Merchant,Phiber,1523670204\"\n r@Sargeras@internalData@goldLog = <table> {\n }\n g@ @auctioningOptions@disableInvalidMsg = false\n s@Fiber - Alliance - Stormrage@internalData@bagQuantity = <table> {\n }\n g@ @internalData@auctionUIFrameContext = <table> {\n }\n g@ @internalData@destroyingHistory = <table> {\n }\n s@Fiberboi - Alliance - Sargeras@internalData@reagentBankQuantity = <table> {\n }\n g@ @destroyingOptions@includeSoulbound = false\n f@Alliance - Stormrage@internalData@playerProfessions = <table> {\n }\n s@Fiberboi - Alliance - Sargeras@internalData@bagQuantity = <table> {\n }\n g@ @vendoringOptions@defaultMerchantTab = false\n g@ @userData@savedShoppingSearches = <table> {\n }\n r@Sargeras@internalData@saveTimeExpires = \"\"\n s@Fiberboi - Alliance - Sargeras@internalData@bankQuantity = <table> {\n }\n g@ @tooltipOptions@enabled = true\n g@ @internalData@vendorItems = <table> {\n }\n c@Fiberoptic - Aggramar@internalData@auctionPrices = <table> {\n }\n g@ @vendoringOptions@qsHideGrouped = true\n r@Aggramar@internalData@saveTimeExpires = \"\"\n s@Fiberoptic - Alliance - Aggramar@internalData@classKey = \"WARLOCK\"\n g@ @mailingOptions@displayMoneyCollected = true\n s@Fiberoptic - Alliance - Aggramar@internalData@auctionQuantity = <table> {\n }\n r@Stormrage@internalData@accountingTrimmed = <table> {\n }\n g@ @coreOptions@chatFrame = \"\"\n r@Stormrage@internalData@saveTimeSales = \"\"\n f@Alliance - Aggramar@internalData@crafts = <table> {\n }\n s@Fiberboi - Alliance - Sargeras@internalData@mailQuantity = <table> {\n }\n g@ @coreOptions@auctionSaleSound = \"TSM_NO_SOUND\"\n f@Alliance - Aggramar@internalData@guildVaults = <table> {\n }\n r@Aggramar@internalData@csvIncome = \"type,amount,source,player,time\"\n g@ @mailingOptions@autoCheck = true\n c@Phiber - Stormrage@internalData@auctionMessages = <table> {\n }\n r@Stormrage@internalData@saveTimeCancels = \"\"\n f@Alliance - Sargeras@internalData@guildVaults = <table> {\n }\n r@Aggramar@internalData@saveTimeBuys = \"\"\n g@ @auctioningOptions@scanCompleteSound = \"TSM_NO_SOUND\"\n c@Fiberoptic - Aggramar@internalData@auction",
 			["stack"] = "[C]: in function `setmetatable'\n...erface\\AddOns\\TradeSkillMaster\\Core\\Lib\\Settings-Settings.lua:255: in function <...erface\\AddOns\\TradeSkillMaster\\Core\\Lib\\Settings.lua:100>\n(tail call): ?\nInterface\\AddOns\\TradeSkillMaster\\Core\\Lib\\Addon.lua:171: in function <Interface\\AddOns\\TradeSkillMaster\\Core\\Lib\\Addon.lua:170>\n...nterface\\AddOns\\TradeSkillMaster\\Core\\Util\\Class-Class.lua:192: in function `LoadSettings'\n...terface\\AddOns\\TradeSkillMaster\\TradeSkillMaster-94aa79b.lua:292: in function `OnInitialize'\nInterface\\AddOns\\TradeSkillMaster\\Core\\Lib\\Addon.lua:34: in function `callback'\n...nterface\\AddOns\\TradeSkillMaster\\Core\\Util\\Event.lua:36: in function <...nterface\\AddOns\\TradeSkillMaster\\Core\\Util\\Event.lua:28>\n[C]: in function `LoadAddOn'\nInterface\\FrameXML\\UIParent.lua:445: in function `UIParentLoadAddOn'\nInterface\\FrameXML\\UIParent.lua:564: in function `TimeManager_LoadUI'\nInterface\\FrameXML\\UIParent.lua:1191: in function <Interface\\FrameXML\\UIParent.lua:1089>",
 			["session"] = 24,
 			["counter"] = 2,
-		}, -- [29]
+		}, -- [28]
 		{
 			["message"] = "Interface\\AddOns\\ElvUI\\init.lua:140: attempt to call method 'Initialize' (a nil value)",
 			["time"] = "2018/08/16 13:39:13",
@@ -228,14 +221,14 @@ BugGrabberDB = {
 			["stack"] = "Interface\\AddOns\\ElvUI\\init.lua:140: in function <Interface\\AddOns\\ElvUI\\init.lua:139>",
 			["session"] = 24,
 			["counter"] = 1,
-		}, -- [30]
+		}, -- [29]
 		{
 			["message"] = "Interface\\AddOns\\AddOnSkins\\Core\\ElvUI-10.73.lua:79: attempt to index field 'private' (a nil value)",
 			["time"] = "2018/08/16 13:39:13",
 			["stack"] = "Interface\\AddOns\\AddOnSkins\\Core\\ElvUI-10.73.lua:79: in function `UpdateMedia'\nInterface\\AddOns\\AddOnSkins\\Core\\Core.lua:297: in function `?'\n...ibraries\\CallbackHandler-1.0\\CallbackHandler-1.0-6.lua:145: in function <...ibraries\\CallbackHandler-1.0\\CallbackHandler-1.0.lua:145>\n[string \"safecall Dispatcher[2]\"]:4: in function <[string \"safecall Dispatcher[2]\"]:4>\n[C]: ?\n[string \"safecall Dispatcher[2]\"]:13: in function `?'\n...ibraries\\CallbackHandler-1.0\\CallbackHandler-1.0-6.lua:90: in function `Fire'\n...AddOns\\ElvUI\\Libraries\\AceEvent-3.0\\AceEvent-3.0-4.lua:120: in function <...AddOns\\ElvUI\\Libraries\\AceEvent-3.0\\AceEvent-3.0.lua:119>\n[C]: in function `LoadAddOn'\nInterface\\FrameXML\\UIParent.lua:445: in function `UIParentLoadAddOn'\nInterface\\FrameXML\\UIParent.lua:564: in function `TimeManager_LoadUI'\nInterface\\FrameXML\\UIParent.lua:1191: in function <Interface\\FrameXML\\UIParent.lua:1089>",
 			["session"] = 24,
 			["counter"] = 3,
-		}, -- [31]
+		}, -- [30]
 		{
 			["message"] = "...RA3\\libs\\LibGroupInSpecT-1.1\\LibGroupInSpecT-1.1-89.lua:257: attempt to call global 'RegisterAddonMessagePrefix' (a nil value)",
 			["time"] = "2018/08/16 13:39:13",
@@ -243,7 +236,7 @@ BugGrabberDB = {
 			["stack"] = "...RA3\\libs\\LibGroupInSpecT-1.1\\LibGroupInSpecT-1.1-89.lua:257: in function `eventhandler'\n...RA3\\libs\\LibGroupInSpecT-1.1\\LibGroupInSpecT-1.1-89.lua:120: in function <...RA3\\libs\\LibGroupInSpecT-1.1\\LibGroupInSpecT-1.1.lua:118>",
 			["session"] = 24,
 			["counter"] = 1,
-		}, -- [32]
+		}, -- [31]
 		{
 			["message"] = "Interface\\AddOns\\ElvUI\\core\\toolkit.lua:35: bad argument #1 to 'unpack' (table expected, got nil)",
 			["time"] = "2018/08/16 13:39:13",
@@ -251,7 +244,7 @@ BugGrabberDB = {
 			["stack"] = "[C]: ?\nInterface\\AddOns\\ElvUI\\core\\toolkit.lua:35: in function <Interface\\AddOns\\ElvUI\\core\\toolkit.lua:17>\nInterface\\AddOns\\ElvUI\\core\\toolkit.lua:112: in function `SetTemplate'\n...AddOns\\SquareMinimapButtons\\SquareMinimapButtons-3.43.lua:453: in function <...AddOns\\SquareMinimapButtons\\SquareMinimapButtons.lua:447>",
 			["session"] = 24,
 			["counter"] = 1,
-		}, -- [33]
+		}, -- [32]
 		{
 			["message"] = "Interface\\AddOns\\WeakAuras\\WeakAuras-2.5.10.lua:1315: attempt to call method 'GetPlayerZone' (a nil value)",
 			["time"] = "2018/08/16 13:39:13",
@@ -259,14 +252,14 @@ BugGrabberDB = {
 			["stack"] = "Interface\\AddOns\\WeakAuras\\WeakAuras-2.5.10.lua:1315: in function <Interface\\AddOns\\WeakAuras\\WeakAuras.lua:1288>",
 			["session"] = 24,
 			["counter"] = 2,
-		}, -- [34]
+		}, -- [33]
 		{
 			["message"] = "Interface\\AddOns\\DeathNote\\Output.lua:168: attempt to concatenate field 'id' (a boolean value)",
 			["time"] = "2018/08/16 13:39:13",
 			["stack"] = "Interface\\AddOns\\DeathNote\\Output.lua:168: in function `O_UpdateOutputs'\nInterface\\AddOns\\DeathNote\\Output.lua:182: in function `?'\n...ibraries\\CallbackHandler-1.0\\CallbackHandler-1.0-6.lua:145: in function <...ibraries\\CallbackHandler-1.0\\CallbackHandler-1.0.lua:145>\n[string \"safecall Dispatcher[1]\"]:4: in function <[string \"safecall Dispatcher[1]\"]:4>\n[C]: ?\n[string \"safecall Dispatcher[1]\"]:13: in function `?'\n...ibraries\\CallbackHandler-1.0\\CallbackHandler-1.0-6.lua:90: in function `Fire'\n...AddOns\\ElvUI\\Libraries\\AceEvent-3.0\\AceEvent-3.0-4.lua:120: in function <...AddOns\\ElvUI\\Libraries\\AceEvent-3.0\\AceEvent-3.0.lua:119>",
 			["session"] = 24,
 			["counter"] = 3,
-		}, -- [35]
+		}, -- [34]
 		{
 			["message"] = "...e\\AddOns\\ElvUI\\Libraries\\AceComm-3.0\\AceComm-3.0-10.lua:68: attempt to call global 'RegisterAddonMessagePrefix' (a nil value)",
 			["time"] = "2018/08/16 13:39:16",
@@ -274,7 +267,7 @@ BugGrabberDB = {
 			["stack"] = "...e\\AddOns\\ElvUI\\Libraries\\AceComm-3.0\\AceComm-3.0-10.lua:68: in function `RegisterComm'\nInterface\\AddOns\\AngryAssignments\\Core.lua:2577: in function `?'\n...AddOns\\ElvUI\\Libraries\\AceTimer-3.0\\AceTimer-3.0-17.lua:53: in function <...AddOns\\ElvUI\\Libraries\\AceTimer-3.0\\AceTimer-3.0.lua:48>",
 			["session"] = 24,
 			["counter"] = 1,
-		}, -- [36]
+		}, -- [35]
 		{
 			["message"] = "Interface\\AddOns\\DeathNote\\DeathNote-r95.lua:122: attempt to index field 'ldb' (a nil value)",
 			["time"] = "2018/08/16 13:39:17",
@@ -282,7 +275,7 @@ BugGrabberDB = {
 			["stack"] = "Interface\\AddOns\\DeathNote\\DeathNote-r95.lua:122: in function `?'\n...AddOns\\ElvUI\\Libraries\\AceTimer-3.0\\AceTimer-3.0-17.lua:53: in function <...AddOns\\ElvUI\\Libraries\\AceTimer-3.0\\AceTimer-3.0.lua:48>",
 			["session"] = 24,
 			["counter"] = 1,
-		}, -- [37]
+		}, -- [36]
 		{
 			["message"] = "Interface\\AddOns\\ElvUI\\core\\toolkit.lua:42: bad argument #1 to 'unpack' (table expected, got nil)",
 			["time"] = "2018/08/16 13:39:17",
@@ -290,6 +283,79 @@ BugGrabberDB = {
 			["stack"] = "[C]: ?\nInterface\\AddOns\\ElvUI\\core\\toolkit.lua:42: in function <Interface\\AddOns\\ElvUI\\core\\toolkit.lua:17>\nInterface\\AddOns\\ElvUI\\core\\toolkit.lua:112: in function `SetTemplate'\n...AddOns\\SquareMinimapButtons\\SquareMinimapButtons-3.43.lua:218: in function `SkinMinimapButton'\n...AddOns\\SquareMinimapButtons\\SquareMinimapButtons-3.43.lua:343: in function `GrabMinimapButtons'\n...AddOns\\SquareMinimapButtons\\SquareMinimapButtons-3.43.lua:479: in function <...AddOns\\SquareMinimapButtons\\SquareMinimapButtons.lua:476>",
 			["session"] = 24,
 			["counter"] = 410,
+		}, -- [37]
+		{
+			["message"] = "...rface\\AddOns\\SuperGuildInvite\\SGI_System_Message.lua:120: attempt to index field 'L' (a nil value)",
+			["time"] = "2018/08/18 20:12:01",
+			["locals"] = "self = <table> {\n FormatTime2 = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:19\n LoadLocale = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:4\n FormatWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:211\n SystemMessage = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_System_Message.lua:77\n debug = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Constants.lua:72\n ShareLocks = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:67\n ShowTroubleShooter = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1263\n GetPercentageDone = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:324\n ResetFix = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:110\n VERSION_ALERT_COOLDOWN = false\n StopMassShare = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:37\n versionChanges = <table> {\n }\n ForceStop = <table> {\n }\n RemoveQueued = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:540\n ShowChanges = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1204\n RemoveShielded = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:621\n RemoveOutdatedLocks = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:90\n FORCE_CHANGELOG = true\n libWho = <table> {\n }\n DebugState = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Constants.lua:78\n TestCharacters = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Filter.lua:102\n VERSION_MINOR = \".0\"\n UnregisterForWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:553\n RegisterForWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:563\n ShowOptions = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1665\n ShowMinimapButton = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1761\n GetSuperScanETR = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:646\n GetNumQueued = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:637\n GetSuperScanTimeLeft = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:334\n print = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Constants.lua:66\n divideString = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:117\n GetTotalScanTime = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:658\n CreateSmallSuperScanFrame = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:249\n ReceivedNewLocks = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:81\n CountTable = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:76\n CompareVersions = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:91\n IsScanning = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:662\n CommonIssues = <table> {\n }\n HideInviteList = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:232\n SendGuildInvite = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:573\n StopSuperScan = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:531\n ShowFilterHandle = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1138\n FilterPlayer = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Filter.lua:178\n PickRandomWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:198\n VERSION_MAJOR = \"7.6\"\n ShowSuperScanFrame = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:342\n HideMinimapButton = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1768\n CreateFilter = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Filter.lua:25\n GetSuperScanStats = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:670\n GetSuperScanProgress = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:654\n HideOptions = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:",
+			["stack"] = "...rface\\AddOns\\SuperGuildInvite\\SGI_System_Message.lua:120: in function `SystemMessage'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:128: in function `?'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:138: in function <Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:137>",
+			["session"] = 29,
+			["counter"] = 2,
 		}, -- [38]
+		{
+			["message"] = "...ns\\SuperGuildInvite\\libs\\GuildShield\\GuildShield.lua:26: attempt to call global 'RegisterAddonMessagePrefix' (a nil value)",
+			["time"] = "2018/08/16 13:50:44",
+			["locals"] = "(*temporary) = nil\n(*temporary) = \"GUILD_SHIELD\"\n(*temporary) = \"attempt to call global 'RegisterAddonMessagePrefix' (a nil value)\"\n",
+			["stack"] = "...ns\\SuperGuildInvite\\libs\\GuildShield\\GuildShield.lua:26: in main chunk",
+			["session"] = 30,
+			["counter"] = 6,
+		}, -- [39]
+		{
+			["message"] = "...erface\\AddOns\\SuperGuildInvite\\SGI_AddOn_Message.lua:10: attempt to call global 'RegisterAddonMessagePrefix' (a nil value)",
+			["time"] = "2018/08/16 13:50:44",
+			["locals"] = "ID_REQUEST = \"SGI_REQ\"\nID_LOCK = \"SGI_LOCK\"\nID_SHIELD = \"I_HAVE_SHIELD\"\nID_VERSION = \"SGI_VERSION\"\nID_LIVE_SYNC = \"SGI_LIVE_SYNC\"\nID_PING = \"SGI_PING\"\nID_PONG = \"SGI_PONG\"\nID_STOP = \"SGI_STOP\"\n(*temporary) = nil\n(*temporary) = \"SGI_REQ\"\n(*temporary) = \"attempt to call global 'RegisterAddonMessagePrefix' (a nil value)\"\n",
+			["stack"] = "...erface\\AddOns\\SuperGuildInvite\\SGI_AddOn_Message.lua:10: in main chunk",
+			["session"] = 30,
+			["counter"] = 6,
+		}, -- [40]
+		{
+			["message"] = "hopFramebuttonHop: Couldn't find relative frame: $parentDetails",
+			["session"] = 30,
+			["time"] = "2018/08/16 13:50:49",
+			["counter"] = 6,
+		}, -- [41]
+		{
+			["message"] = "Couldn't open Interface\\AddOns\\SquareMinimapButtons\\",
+			["session"] = 30,
+			["time"] = "2018/08/16 13:50:49",
+			["counter"] = 24,
+		}, -- [42]
+		{
+			["message"] = "(null)",
+			["session"] = 30,
+			["time"] = "2018/08/16 13:50:49",
+			["counter"] = 18,
+		}, -- [43]
+		{
+			["message"] = "Interface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: Usage: NewModule(name, [prototype, [lib, lib, lib, ...]): 'name' - Module 'Friendly Fire' already exists.",
+			["time"] = "2018/04/08 20:30:37",
+			["stack"] = "[C]: ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:270: in function `NewModule'\nInterface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: in function `?'\nInterface\\AddOns\\Skada\\Skada-1.7.2.lua:2907: in function <Interface\\AddOns\\Skada\\Skada.lua:2884>\n(tail call): ?\n[C]: ?\n[string \"safecall Dispatcher[1]\"]:9: in function <[string \"safecall Dispatcher[1]\"]:5>\n(tail call): ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:558: in function `EnableAddon'\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:651: in function <...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0.lua:636>\n[C]: in function `LoadAddOn'\nInterface\\FrameXML\\UIParent.lua:429: in function `UIParentLoadAddOn'\nInterface\\FrameXML\\UIParent.lua:528: in function `TimeManager_LoadUI'\nInterface\\FrameXML\\UIParent.lua:1114: in function <Interface\\FrameXML\\UIParent.lua:1011>",
+			["session"] = 30,
+			["counter"] = 30,
+		}, -- [44]
+		{
+			["message"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:61: attempt to index global 'GuildShield' (a nil value)",
+			["time"] = "2018/08/16 13:50:56",
+			["locals"] = "self = SGI_EVENT_HANDLER {\n 0 = <userdata>\n}\n(*temporary) = nil\n(*temporary) = nil\n(*temporary) = \"table\"\n(*temporary) = \"Stormrage\"\n(*temporary) = \"attempt to index global 'GuildShield' (a nil value)\"\n",
+			["stack"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:61: in function `?'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:138: in function <Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:137>",
+			["session"] = 30,
+			["counter"] = 6,
+		}, -- [45]
+		{
+			["message"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:124: attempt to call method 'AddonMessage' (a nil value)",
+			["time"] = "2018/08/16 13:57:36",
+			["locals"] = "self = SGI_EVENT_HANDLER {\n 0 = <userdata>\n}\nevent = \"CHAT_MSG_ADDON\"\n(*temporary) = nil\n(*temporary) = <table> {\n FormatTime2 = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:19\n LoadLocale = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:4\n FormatWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:211\n SystemMessage = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_System_Message.lua:77\n debug = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Constants.lua:72\n ShareLocks = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:67\n ShowTroubleShooter = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1263\n GetPercentageDone = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:324\n ResetFix = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:110\n VERSION_ALERT_COOLDOWN = false\n StopMassShare = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:37\n versionChanges = <table> {\n }\n ForceStop = <table> {\n }\n RemoveQueued = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:540\n ShowChanges = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1204\n RemoveShielded = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:621\n RemoveOutdatedLocks = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:90\n FORCE_CHANGELOG = true\n libWho = <table> {\n }\n DebugState = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Constants.lua:78\n TestCharacters = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Filter.lua:102\n VERSION_MINOR = \".0\"\n UnregisterForWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:553\n RegisterForWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:563\n ShowOptions = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1665\n ShowMinimapButton = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1761\n GetSuperScanETR = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:646\n GetNumQueued = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:637\n GetSuperScanTimeLeft = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:334\n print = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Constants.lua:66\n divideString = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:117\n GetTotalScanTime = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:658\n CreateSmallSuperScanFrame = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:249\n ReceivedNewLocks = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:81\n CountTable = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:76\n CompareVersions = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:91\n IsScanning = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:662\n CommonIssues = <table> {\n }\n HideInviteList = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:232\n SendGuildInvite = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:573\n StopSuperScan = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:531\n ShowFilterHandle = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1138\n FilterPlayer = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Filter.lua:178\n PickRandomWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:198\n VERSION_MAJOR = \"7.6\"\n ShowSuperScanFrame = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:342\n HideMinimapButton = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1768\n CreateFilter = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Filter.lua:25\n GetSuperScanStats = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:670\n GetSuperScanProgress = <function> defined @Interface\\AddOns\\SuperGuildInvite\\Su",
+			["stack"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:124: in function `?'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:138: in function <Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:137>",
+			["session"] = 30,
+			["counter"] = 472,
+		}, -- [46]
+		{
+			["message"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:120: attempt to call global 'SendAddonMessage' (a nil value)",
+			["time"] = "2018/08/16 14:41:08",
+			["locals"] = "self = SGI_EVENT_HANDLER {\n 0 = <userdata>\n}\n(*temporary) = nil\n(*temporary) = \"SGI_STOP\"\n(*temporary) = \"\"\n(*temporary) = \"GUILD\"\n(*temporary) = \"attempt to call global 'SendAddonMessage' (a nil value)\"\n",
+			["stack"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:120: in function `?'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:138: in function <Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:137>",
+			["session"] = 30,
+			["counter"] = 6,
+		}, -- [47]
 	},
 }

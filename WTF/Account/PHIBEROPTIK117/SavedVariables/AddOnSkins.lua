@@ -15,9 +15,6 @@ AddOnSkinsDB = {
 		["BenikUI"] = {
 			["SkadaBackdrop"] = false,
 			["TransparentEmbed"] = true,
-			["EmbedRight"] = "Skada",
-			["EmbedLeft"] = "Skada",
-			["EmbedMain"] = "Skada",
 			["DBMSkinHalf"] = true,
 			["EmbedSystemDual"] = true,
 			["EmbedFrameStrata"] = "2-LOW",
@@ -29,4 +26,6 @@ AddOnSkinsDB = {
 		["Fiberboi - Sargeras"] = {
 		},
 	},
+}
+AddOnSkinsDS = {
 }

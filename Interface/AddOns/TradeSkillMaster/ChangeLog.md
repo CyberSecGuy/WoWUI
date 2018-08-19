@@ -1,11 +1,9 @@
 [Welcome to TradeSkillMaster 4!](https://blog.tradeskillmaster.com/tradeskillmaster-4-released/)
 
 
-## v4.0.17 Changes
+## v4.0.18 Changes
 
-* Fixed error from the Scrapper
-* Fixed various issues with Enchanting
-* Updated the bonus IDs which TSM tracks to resolve various issues with weapons / armor
-* Fixed issue with false-positive alerts about phasing
+* Fixed issue with not being able to buy certain items via Shopping
+* With this update, TSM will rebuild its item cache, which may cause FPS drops the first time you log in
 
 [Known Issues](http://support.tradeskillmaster.com/display/KB/TSM4+Currently+Known+Issues)

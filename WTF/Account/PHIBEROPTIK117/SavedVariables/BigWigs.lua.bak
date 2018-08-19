@@ -1,5 +1,6 @@
 
 BigWigs3DB = {
+	["discord"] = 11,
 	["namespaces"] = {
 		["BigWigs_Plugins_Victory"] = {
 		},
@@ -20,13 +21,13 @@ BigWigs3DB = {
 					["texture"] = "BuiFlat",
 				},
 				["Default"] = {
-					["BigWigsAnchor_width"] = 220.000015258789,
-					["tempMonoUIReset"] = true,
 					["tempSpacingReset"] = true,
 					["BigWigsEmphasizeAnchor_height"] = 21.9999752044678,
+					["tempMonoUIReset"] = true,
+					["BigWigsAnchor_width"] = 220.000015258789,
 					["BigWigsEmphasizeAnchor_width"] = 320.000061035156,
-					["BigWigsAnchor_height"] = 15.9999876022339,
 					["font"] = "Friz Quadrata TT",
+					["BigWigsAnchor_height"] = 15.9999876022339,
 				},
 			},
 		},
@@ -44,7 +45,7 @@ BigWigs3DB = {
 		},
 		["BigWigs_Plugins_Sounds"] = {
 		},
-		["BigWigs_Plugins_AutoReply"] = {
+		["BigWigs_Plugins_Statistics"] = {
 		},
 		["BigWigs_Plugins_Proximity"] = {
 			["profiles"] = {
@@ -62,7 +63,7 @@ BigWigs3DB = {
 				},
 			},
 		},
-		["BigWigs_Plugins_Statistics"] = {
+		["BigWigs_Plugins_AutoReply"] = {
 		},
 		["BigWigs_Plugins_Messages"] = {
 			["profiles"] = {
@@ -89,17 +90,17 @@ BigWigs3DB = {
 				},
 				["Default"] = {
 					["font"] = "Friz Quadrata TT",
-					["fontOutline"] = "",
 					["fontSize"] = 11.0000009536743,
+					["fontOutline"] = "",
 				},
 			},
 		},
 	},
+	["wipe80"] = true,
 	["profileKeys"] = {
 		["Phiber - Stormrage"] = "Default",
 		["Fiberoptic - Aggramar"] = "BenikUI",
 	},
-	["discord"] = 6,
 	["profiles"] = {
 		["BenikUI"] = {
 		},
@@ -109,7 +110,6 @@ BigWigs3DB = {
 }
 BigWigsIconDB = {
 }
-BigWigs3IconDB = nil
 BigWigsStatsDB = {
 	[1712] = {
 		[1992] = {
@@ -132,4 +132,3 @@ BigWigsStatsDB = {
 		},
 	},
 }
-BigWigsStatisticsDB = nil
