@@ -1,9 +1,9 @@
 
 SquareMinimapButtonOptions = {
-	["IconSize"] = 27,
 	["MoveBlizzard"] = false,
+	["BarEnabled"] = false,
 	["BarMouseOver"] = false,
 	["ButtonsPerRow"] = 12,
 	["ButtonSpacing"] = 2,
-	["BarEnabled"] = false,
+	["IconSize"] = 27,
 }

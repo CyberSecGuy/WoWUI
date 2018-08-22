@@ -12,8 +12,8 @@ BINDING_NAME_AngryAssign_LOCK = "Toggle Lock"
 BINDING_NAME_AngryAssign_DISPLAY = "Toggle Display"
 BINDING_NAME_AngryAssign_OUTPUT = "Output Assignment to Chat"
 
-local AngryAssign_Version = 'v1.10.0'
-local AngryAssign_Timestamp = '20180719165138'
+local AngryAssign_Version = 'v1.10.1'
+local AngryAssign_Timestamp = '20180820044053'
 
 local protocolVersion = 1
 local comPrefix = "AnAss"..protocolVersion
@@ -1884,13 +1884,13 @@ function AngryAssign:UpdateDisplayed()
 			:gsub(ci_pattern('|cdeathknight'), "|cffc41f3b")
 			:gsub(ci_pattern('|cdruid'), "|cffff7d0a")
 			:gsub(ci_pattern('|chunter'), "|cffabd473")
-			:gsub(ci_pattern('|cmage'), "|cff69ccf0")
+			:gsub(ci_pattern('|cmage'), "|cff40C7eb")
 			:gsub(ci_pattern('|cmonk'), "|cff00ff96")
 			:gsub(ci_pattern('|cpaladin'), "|cfff58cba")
 			:gsub(ci_pattern('|cpriest'), "|cffffffff")
 			:gsub(ci_pattern('|crogue'), "|cfffff569")
 			:gsub(ci_pattern('|cshaman'), "|cff0070de")
-			:gsub(ci_pattern('|cwarlock'), "|cff9482c9")
+			:gsub(ci_pattern('|cwarlock'), "|cff8787ed")
 			:gsub(ci_pattern('|cwarrior'), "|cffc79c6e")
 			:gsub(ci_pattern('|cdemonhunter'), "|cffa330c9")
 			:gsub("([^%s%p]+)", function(word)

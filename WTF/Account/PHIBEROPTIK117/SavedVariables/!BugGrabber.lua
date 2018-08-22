@@ -1,7 +1,7 @@
 
 BugGrabberDB = {
-	["session"] = 30,
 	["lastSanitation"] = 3,
+	["session"] = 33,
 	["errors"] = {
 		{
 			["message"] = "...illMaster_Accounting\\TradeSkillMaster_Accounting-be60832.lua:68: TradeSkillMaster_Accounting",
@@ -309,30 +309,11 @@ BugGrabberDB = {
 			["counter"] = 6,
 		}, -- [40]
 		{
-			["message"] = "hopFramebuttonHop: Couldn't find relative frame: $parentDetails",
-			["session"] = 30,
-			["time"] = "2018/08/16 13:50:49",
-			["counter"] = 6,
-		}, -- [41]
-		{
-			["message"] = "Couldn't open Interface\\AddOns\\SquareMinimapButtons\\",
-			["session"] = 30,
-			["time"] = "2018/08/16 13:50:49",
-			["counter"] = 24,
-		}, -- [42]
-		{
 			["message"] = "(null)",
-			["session"] = 30,
 			["time"] = "2018/08/16 13:50:49",
-			["counter"] = 18,
-		}, -- [43]
-		{
-			["message"] = "Interface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: Usage: NewModule(name, [prototype, [lib, lib, lib, ...]): 'name' - Module 'Friendly Fire' already exists.",
-			["time"] = "2018/04/08 20:30:37",
-			["stack"] = "[C]: ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:270: in function `NewModule'\nInterface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: in function `?'\nInterface\\AddOns\\Skada\\Skada-1.7.2.lua:2907: in function <Interface\\AddOns\\Skada\\Skada.lua:2884>\n(tail call): ?\n[C]: ?\n[string \"safecall Dispatcher[1]\"]:9: in function <[string \"safecall Dispatcher[1]\"]:5>\n(tail call): ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:558: in function `EnableAddon'\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:651: in function <...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0.lua:636>\n[C]: in function `LoadAddOn'\nInterface\\FrameXML\\UIParent.lua:429: in function `UIParentLoadAddOn'\nInterface\\FrameXML\\UIParent.lua:528: in function `TimeManager_LoadUI'\nInterface\\FrameXML\\UIParent.lua:1114: in function <Interface\\FrameXML\\UIParent.lua:1011>",
 			["session"] = 30,
-			["counter"] = 30,
-		}, -- [44]
+			["counter"] = 18,
+		}, -- [41]
 		{
 			["message"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:61: attempt to index global 'GuildShield' (a nil value)",
 			["time"] = "2018/08/16 13:50:56",
@@ -340,7 +321,7 @@ BugGrabberDB = {
 			["stack"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:61: in function `?'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:138: in function <Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:137>",
 			["session"] = 30,
 			["counter"] = 6,
-		}, -- [45]
+		}, -- [42]
 		{
 			["message"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:124: attempt to call method 'AddonMessage' (a nil value)",
 			["time"] = "2018/08/16 13:57:36",
@@ -348,7 +329,7 @@ BugGrabberDB = {
 			["stack"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:124: in function `?'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:138: in function <Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:137>",
 			["session"] = 30,
 			["counter"] = 472,
-		}, -- [46]
+		}, -- [43]
 		{
 			["message"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:120: attempt to call global 'SendAddonMessage' (a nil value)",
 			["time"] = "2018/08/16 14:41:08",
@@ -356,6 +337,33 @@ BugGrabberDB = {
 			["stack"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:120: in function `?'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:138: in function <Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:137>",
 			["session"] = 30,
 			["counter"] = 6,
+		}, -- [44]
+		{
+			["message"] = "[ADDON_ACTION_BLOCKED] AddOn 'TradeSkillMaster' tried to call the protected function 'CreateMacro()'.",
+			["time"] = "2018/08/19 14:31:01",
+			["locals"] = "InCombatSkipped",
+			["stack"] = "Interface\\AddOns\\!BugGrabber\\BugGrabber.lua:519: in function <Interface\\AddOns\\!BugGrabber\\BugGrabber.lua:519>\n[C]: in function `CreateMacro'\n...terface\\AddOns\\Blizzard_MacroUI\\Blizzard_MacroUI.lua:492: in function `MacroPopupOkayButton_OnClick'\n[string \"*:OnEnterPressed\"]:2: in function <[string \"*:OnEnterPressed\"]:1>",
+			["session"] = 31,
+			["counter"] = 1,
+		}, -- [45]
+		{
+			["message"] = "hopFramebuttonHop: Couldn't find relative frame: $parentDetails",
+			["time"] = "2018/08/16 13:50:49",
+			["session"] = 33,
+			["counter"] = 9,
+		}, -- [46]
+		{
+			["message"] = "Couldn't open Interface\\AddOns\\SquareMinimapButtons\\",
+			["time"] = "2018/08/16 13:50:49",
+			["session"] = 33,
+			["counter"] = 42,
 		}, -- [47]
+		{
+			["message"] = "Interface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: Usage: NewModule(name, [prototype, [lib, lib, lib, ...]): 'name' - Module 'Friendly Fire' already exists.",
+			["time"] = "2018/04/08 20:30:37",
+			["stack"] = "[C]: ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:270: in function `NewModule'\nInterface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: in function `?'\nInterface\\AddOns\\Skada\\Skada-1.7.2.lua:2907: in function <Interface\\AddOns\\Skada\\Skada.lua:2884>\n(tail call): ?\n[C]: ?\n[string \"safecall Dispatcher[1]\"]:9: in function <[string \"safecall Dispatcher[1]\"]:5>\n(tail call): ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:558: in function `EnableAddon'\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:651: in function <...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0.lua:636>\n[C]: in function `LoadAddOn'\nInterface\\FrameXML\\UIParent.lua:429: in function `UIParentLoadAddOn'\nInterface\\FrameXML\\UIParent.lua:528: in function `TimeManager_LoadUI'\nInterface\\FrameXML\\UIParent.lua:1114: in function <Interface\\FrameXML\\UIParent.lua:1011>",
+			["session"] = 33,
+			["counter"] = 33,
+		}, -- [48]
 	},
 }

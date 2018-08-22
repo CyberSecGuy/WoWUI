@@ -1,7 +1,7 @@
 
 BugGrabberDB = {
+	["session"] = 32,
 	["lastSanitation"] = 3,
-	["session"] = 29,
 	["errors"] = {
 		{
 			["message"] = "...illMaster_Accounting\\TradeSkillMaster_Accounting-be60832.lua:68: TradeSkillMaster_Accounting",
@@ -285,77 +285,85 @@ BugGrabberDB = {
 			["counter"] = 410,
 		}, -- [37]
 		{
-			["message"] = "...ns\\SuperGuildInvite\\libs\\GuildShield\\GuildShield.lua:26: attempt to call global 'RegisterAddonMessagePrefix' (a nil value)",
-			["time"] = "2018/08/16 13:50:44",
-			["locals"] = "(*temporary) = nil\n(*temporary) = \"GUILD_SHIELD\"\n(*temporary) = \"attempt to call global 'RegisterAddonMessagePrefix' (a nil value)\"\n",
-			["stack"] = "...ns\\SuperGuildInvite\\libs\\GuildShield\\GuildShield.lua:26: in main chunk",
-			["session"] = 29,
-			["counter"] = 5,
-		}, -- [38]
-		{
-			["message"] = "...erface\\AddOns\\SuperGuildInvite\\SGI_AddOn_Message.lua:10: attempt to call global 'RegisterAddonMessagePrefix' (a nil value)",
-			["time"] = "2018/08/16 13:50:44",
-			["locals"] = "ID_REQUEST = \"SGI_REQ\"\nID_LOCK = \"SGI_LOCK\"\nID_SHIELD = \"I_HAVE_SHIELD\"\nID_VERSION = \"SGI_VERSION\"\nID_LIVE_SYNC = \"SGI_LIVE_SYNC\"\nID_PING = \"SGI_PING\"\nID_PONG = \"SGI_PONG\"\nID_STOP = \"SGI_STOP\"\n(*temporary) = nil\n(*temporary) = \"SGI_REQ\"\n(*temporary) = \"attempt to call global 'RegisterAddonMessagePrefix' (a nil value)\"\n",
-			["stack"] = "...erface\\AddOns\\SuperGuildInvite\\SGI_AddOn_Message.lua:10: in main chunk",
-			["session"] = 29,
-			["counter"] = 5,
-		}, -- [39]
-		{
-			["message"] = "hopFramebuttonHop: Couldn't find relative frame: $parentDetails",
-			["time"] = "2018/08/16 13:50:49",
-			["session"] = 29,
-			["counter"] = 5,
-		}, -- [40]
-		{
-			["message"] = "Couldn't open Interface\\AddOns\\SquareMinimapButtons\\",
-			["time"] = "2018/08/16 13:50:49",
-			["session"] = 29,
-			["counter"] = 20,
-		}, -- [41]
-		{
-			["message"] = "(null)",
-			["time"] = "2018/08/16 13:50:49",
-			["session"] = 29,
-			["counter"] = 15,
-		}, -- [42]
-		{
-			["message"] = "Interface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: Usage: NewModule(name, [prototype, [lib, lib, lib, ...]): 'name' - Module 'Friendly Fire' already exists.",
-			["time"] = "2018/04/08 20:30:37",
-			["stack"] = "[C]: ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:270: in function `NewModule'\nInterface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: in function `?'\nInterface\\AddOns\\Skada\\Skada-1.7.2.lua:2907: in function <Interface\\AddOns\\Skada\\Skada.lua:2884>\n(tail call): ?\n[C]: ?\n[string \"safecall Dispatcher[1]\"]:9: in function <[string \"safecall Dispatcher[1]\"]:5>\n(tail call): ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:558: in function `EnableAddon'\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:651: in function <...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0.lua:636>\n[C]: in function `LoadAddOn'\nInterface\\FrameXML\\UIParent.lua:429: in function `UIParentLoadAddOn'\nInterface\\FrameXML\\UIParent.lua:528: in function `TimeManager_LoadUI'\nInterface\\FrameXML\\UIParent.lua:1114: in function <Interface\\FrameXML\\UIParent.lua:1011>",
-			["session"] = 29,
-			["counter"] = 29,
-		}, -- [43]
-		{
-			["message"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:61: attempt to index global 'GuildShield' (a nil value)",
-			["time"] = "2018/08/16 13:50:56",
-			["locals"] = "self = SGI_EVENT_HANDLER {\n 0 = <userdata>\n}\n(*temporary) = nil\n(*temporary) = nil\n(*temporary) = \"table\"\n(*temporary) = \"Stormrage\"\n(*temporary) = \"attempt to index global 'GuildShield' (a nil value)\"\n",
-			["stack"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:61: in function `?'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:138: in function <Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:137>",
-			["session"] = 29,
-			["counter"] = 5,
-		}, -- [44]
-		{
 			["message"] = "...rface\\AddOns\\SuperGuildInvite\\SGI_System_Message.lua:120: attempt to index field 'L' (a nil value)",
 			["time"] = "2018/08/18 20:12:01",
 			["locals"] = "self = <table> {\n FormatTime2 = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:19\n LoadLocale = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:4\n FormatWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:211\n SystemMessage = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_System_Message.lua:77\n debug = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Constants.lua:72\n ShareLocks = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:67\n ShowTroubleShooter = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1263\n GetPercentageDone = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:324\n ResetFix = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:110\n VERSION_ALERT_COOLDOWN = false\n StopMassShare = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:37\n versionChanges = <table> {\n }\n ForceStop = <table> {\n }\n RemoveQueued = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:540\n ShowChanges = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1204\n RemoveShielded = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:621\n RemoveOutdatedLocks = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:90\n FORCE_CHANGELOG = true\n libWho = <table> {\n }\n DebugState = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Constants.lua:78\n TestCharacters = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Filter.lua:102\n VERSION_MINOR = \".0\"\n UnregisterForWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:553\n RegisterForWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:563\n ShowOptions = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1665\n ShowMinimapButton = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1761\n GetSuperScanETR = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:646\n GetNumQueued = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:637\n GetSuperScanTimeLeft = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:334\n print = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Constants.lua:66\n divideString = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:117\n GetTotalScanTime = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:658\n CreateSmallSuperScanFrame = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:249\n ReceivedNewLocks = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:81\n CountTable = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:76\n CompareVersions = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:91\n IsScanning = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:662\n CommonIssues = <table> {\n }\n HideInviteList = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:232\n SendGuildInvite = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:573\n StopSuperScan = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:531\n ShowFilterHandle = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1138\n FilterPlayer = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Filter.lua:178\n PickRandomWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:198\n VERSION_MAJOR = \"7.6\"\n ShowSuperScanFrame = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:342\n HideMinimapButton = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1768\n CreateFilter = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Filter.lua:25\n GetSuperScanStats = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:670\n GetSuperScanProgress = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:654\n HideOptions = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:",
 			["stack"] = "...rface\\AddOns\\SuperGuildInvite\\SGI_System_Message.lua:120: in function `SystemMessage'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:128: in function `?'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:138: in function <Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:137>",
 			["session"] = 29,
 			["counter"] = 2,
-		}, -- [45]
+		}, -- [38]
+		{
+			["message"] = "...ns\\SuperGuildInvite\\libs\\GuildShield\\GuildShield.lua:26: attempt to call global 'RegisterAddonMessagePrefix' (a nil value)",
+			["time"] = "2018/08/16 13:50:44",
+			["locals"] = "(*temporary) = nil\n(*temporary) = \"GUILD_SHIELD\"\n(*temporary) = \"attempt to call global 'RegisterAddonMessagePrefix' (a nil value)\"\n",
+			["stack"] = "...ns\\SuperGuildInvite\\libs\\GuildShield\\GuildShield.lua:26: in main chunk",
+			["session"] = 30,
+			["counter"] = 6,
+		}, -- [39]
+		{
+			["message"] = "...erface\\AddOns\\SuperGuildInvite\\SGI_AddOn_Message.lua:10: attempt to call global 'RegisterAddonMessagePrefix' (a nil value)",
+			["time"] = "2018/08/16 13:50:44",
+			["locals"] = "ID_REQUEST = \"SGI_REQ\"\nID_LOCK = \"SGI_LOCK\"\nID_SHIELD = \"I_HAVE_SHIELD\"\nID_VERSION = \"SGI_VERSION\"\nID_LIVE_SYNC = \"SGI_LIVE_SYNC\"\nID_PING = \"SGI_PING\"\nID_PONG = \"SGI_PONG\"\nID_STOP = \"SGI_STOP\"\n(*temporary) = nil\n(*temporary) = \"SGI_REQ\"\n(*temporary) = \"attempt to call global 'RegisterAddonMessagePrefix' (a nil value)\"\n",
+			["stack"] = "...erface\\AddOns\\SuperGuildInvite\\SGI_AddOn_Message.lua:10: in main chunk",
+			["session"] = 30,
+			["counter"] = 6,
+		}, -- [40]
+		{
+			["message"] = "(null)",
+			["session"] = 30,
+			["time"] = "2018/08/16 13:50:49",
+			["counter"] = 18,
+		}, -- [41]
+		{
+			["message"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:61: attempt to index global 'GuildShield' (a nil value)",
+			["time"] = "2018/08/16 13:50:56",
+			["locals"] = "self = SGI_EVENT_HANDLER {\n 0 = <userdata>\n}\n(*temporary) = nil\n(*temporary) = nil\n(*temporary) = \"table\"\n(*temporary) = \"Stormrage\"\n(*temporary) = \"attempt to index global 'GuildShield' (a nil value)\"\n",
+			["stack"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:61: in function `?'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:138: in function <Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:137>",
+			["session"] = 30,
+			["counter"] = 6,
+		}, -- [42]
 		{
 			["message"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:124: attempt to call method 'AddonMessage' (a nil value)",
 			["time"] = "2018/08/16 13:57:36",
 			["locals"] = "self = SGI_EVENT_HANDLER {\n 0 = <userdata>\n}\nevent = \"CHAT_MSG_ADDON\"\n(*temporary) = nil\n(*temporary) = <table> {\n FormatTime2 = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:19\n LoadLocale = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:4\n FormatWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:211\n SystemMessage = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_System_Message.lua:77\n debug = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Constants.lua:72\n ShareLocks = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:67\n ShowTroubleShooter = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1263\n GetPercentageDone = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:324\n ResetFix = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:110\n VERSION_ALERT_COOLDOWN = false\n StopMassShare = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:37\n versionChanges = <table> {\n }\n ForceStop = <table> {\n }\n RemoveQueued = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:540\n ShowChanges = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1204\n RemoveShielded = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:621\n RemoveOutdatedLocks = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:90\n FORCE_CHANGELOG = true\n libWho = <table> {\n }\n DebugState = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Constants.lua:78\n TestCharacters = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Filter.lua:102\n VERSION_MINOR = \".0\"\n UnregisterForWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:553\n RegisterForWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:563\n ShowOptions = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1665\n ShowMinimapButton = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1761\n GetSuperScanETR = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:646\n GetNumQueued = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:637\n GetSuperScanTimeLeft = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:334\n print = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Constants.lua:66\n divideString = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:117\n GetTotalScanTime = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:658\n CreateSmallSuperScanFrame = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:249\n ReceivedNewLocks = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Blacklist.lua:81\n CountTable = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:76\n CompareVersions = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Core.lua:91\n IsScanning = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:662\n CommonIssues = <table> {\n }\n HideInviteList = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:232\n SendGuildInvite = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:573\n StopSuperScan = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:531\n ShowFilterHandle = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1138\n FilterPlayer = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Filter.lua:178\n PickRandomWhisper = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:198\n VERSION_MAJOR = \"7.6\"\n ShowSuperScanFrame = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:342\n HideMinimapButton = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_GUI.lua:1768\n CreateFilter = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SGI_Filter.lua:25\n GetSuperScanStats = <function> defined @Interface\\AddOns\\SuperGuildInvite\\SuperScan.lua:670\n GetSuperScanProgress = <function> defined @Interface\\AddOns\\SuperGuildInvite\\Su",
 			["stack"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:124: in function `?'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:138: in function <Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:137>",
-			["session"] = 29,
-			["counter"] = 423,
-		}, -- [46]
+			["session"] = 30,
+			["counter"] = 472,
+		}, -- [43]
 		{
 			["message"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:120: attempt to call global 'SendAddonMessage' (a nil value)",
 			["time"] = "2018/08/16 14:41:08",
 			["locals"] = "self = SGI_EVENT_HANDLER {\n 0 = <userdata>\n}\n(*temporary) = nil\n(*temporary) = \"SGI_STOP\"\n(*temporary) = \"\"\n(*temporary) = \"GUILD\"\n(*temporary) = \"attempt to call global 'SendAddonMessage' (a nil value)\"\n",
 			["stack"] = "Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:120: in function `?'\nInterface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:138: in function <Interface\\AddOns\\SuperGuildInvite\\SGI_Events.lua:137>",
-			["session"] = 29,
-			["counter"] = 5,
+			["session"] = 30,
+			["counter"] = 6,
+		}, -- [44]
+		{
+			["message"] = "[ADDON_ACTION_BLOCKED] AddOn 'TradeSkillMaster' tried to call the protected function 'CreateMacro()'.",
+			["time"] = "2018/08/19 14:31:01",
+			["locals"] = "InCombatSkipped",
+			["stack"] = "Interface\\AddOns\\!BugGrabber\\BugGrabber.lua:519: in function <Interface\\AddOns\\!BugGrabber\\BugGrabber.lua:519>\n[C]: in function `CreateMacro'\n...terface\\AddOns\\Blizzard_MacroUI\\Blizzard_MacroUI.lua:492: in function `MacroPopupOkayButton_OnClick'\n[string \"*:OnEnterPressed\"]:2: in function <[string \"*:OnEnterPressed\"]:1>",
+			["session"] = 31,
+			["counter"] = 1,
+		}, -- [45]
+		{
+			["message"] = "hopFramebuttonHop: Couldn't find relative frame: $parentDetails",
+			["session"] = 32,
+			["time"] = "2018/08/16 13:50:49",
+			["counter"] = 8,
+		}, -- [46]
+		{
+			["message"] = "Couldn't open Interface\\AddOns\\SquareMinimapButtons\\",
+			["session"] = 32,
+			["time"] = "2018/08/16 13:50:49",
+			["counter"] = 36,
 		}, -- [47]
+		{
+			["message"] = "Interface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: Usage: NewModule(name, [prototype, [lib, lib, lib, ...]): 'name' - Module 'Friendly Fire' already exists.",
+			["time"] = "2018/04/08 20:30:37",
+			["stack"] = "[C]: ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:270: in function `NewModule'\nInterface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: in function `?'\nInterface\\AddOns\\Skada\\Skada-1.7.2.lua:2907: in function <Interface\\AddOns\\Skada\\Skada.lua:2884>\n(tail call): ?\n[C]: ?\n[string \"safecall Dispatcher[1]\"]:9: in function <[string \"safecall Dispatcher[1]\"]:5>\n(tail call): ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:558: in function `EnableAddon'\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:651: in function <...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0.lua:636>\n[C]: in function `LoadAddOn'\nInterface\\FrameXML\\UIParent.lua:429: in function `UIParentLoadAddOn'\nInterface\\FrameXML\\UIParent.lua:528: in function `TimeManager_LoadUI'\nInterface\\FrameXML\\UIParent.lua:1114: in function <Interface\\FrameXML\\UIParent.lua:1011>",
+			["session"] = 32,
+			["counter"] = 32,
+		}, -- [48]
 	},
 }

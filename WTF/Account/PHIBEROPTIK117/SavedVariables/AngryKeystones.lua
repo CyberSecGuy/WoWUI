@@ -9,8 +9,8 @@ AngryKeystones_Data = {
 	},
 	["rumors"] = {
 	},
-	["progress"] = {
-	},
 	["splits"] = {
+	},
+	["progress"] = {
 	},
 }

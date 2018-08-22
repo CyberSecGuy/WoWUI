@@ -5,21 +5,13 @@ VExRT = {
 	["ProfileKeys"] = {
 		["Fiberboi-Sargeras"] = "default",
 		["Voidbro-Stormrage"] = "default",
-		["Phiber-Stormrage"] = "default",
-		["Fiber-Stormrage"] = "default",
 		["Fiberoptic-Aggramar"] = "default",
+		["Fiber-Stormrage"] = "default",
+		["Phiber-Stormrage"] = "default",
 	},
 	["Arrow"] = {
 	},
 	["Encounter"] = {
-		["names"] = {
-			[1436] = "The Spirit Kings",
-			[1395] = "The Stone Guard",
-			[1434] = "Gara'jal the Spiritbinder",
-			[1407] = "Will of the Emperor",
-			[1390] = "Feng the Accursed",
-			[1500] = "Elegon",
-		},
 		["list"] = {
 			["Voidbro"] = {
 			},
@@ -37,6 +29,14 @@ VExRT = {
 			},
 			["Fiberboi"] = {
 			},
+		},
+		["names"] = {
+			[1436] = "The Spirit Kings",
+			[1395] = "The Stone Guard",
+			[1434] = "Gara'jal the Spiritbinder",
+			[1407] = "Will of the Emperor",
+			[1390] = "Feng the Accursed",
+			[1500] = "Elegon",
 		},
 	},
 	["Marks"] = {
@@ -94,9 +94,10 @@ VExRT = {
 			["Baeron-Garona"] = 263,
 			["Lapeste-MoonGuard"] = 250,
 			["Geemjoo-Zul'jin"] = 70,
+			["Bishwhippzz-Sargeras"] = 261,
 			["Elproducto-KulTiras"] = 64,
 			["Asharty-Dalaran"] = 263,
-			["Phiber"] = 262,
+			["Phiber"] = 263,
 			["Cryoce-Sargeras"] = 251,
 			["Bossdruid-Madoran"] = 102,
 			["Blackieechan"] = 269,
@@ -104,39 +105,39 @@ VExRT = {
 			["Rek-Darkspear"] = 252,
 			["Oldmanpa"] = 71,
 			["Fayedon-Sargeras"] = 72,
-			["Sneakyace-Eredar"] = 103,
-			["Natherion-Durotan"] = 250,
+			["Rayneger-Sargeras"] = 253,
+			["Piadavelha-Nemesis"] = 270,
 			["Daladrin-Korgath"] = 577,
-			["Ravenwulv-ScarletCrusade"] = 253,
-			["Failage"] = 64,
-			["Stormx-Vek'nilash"] = 252,
+			["Blongntrash-Sargeras"] = 65,
+			["Velaurix-Sargeras"] = 265,
+			["Maiyazaki-Thunderlord"] = 256,
 			["Foxy-Sargeras"] = 65,
-			["Dalanotra"] = 581,
-			["Phoqueiou-Eredar"] = 265,
-			["Arkkor-Nemesis"] = 71,
+			["Jaecarr-Proudmoore"] = 254,
+			["Nales-Lightbringer"] = 250,
+			["Augustinë-Dalaran"] = 577,
 			["Hankerchief-Malfurion"] = 270,
 			["Daftmonk-Dentarg"] = 268,
-			["Nales-Lightbringer"] = 250,
+			["Fiberboi"] = 102,
 			["Sadist-Fenris"] = 581,
-			["Augustinë-Dalaran"] = 577,
-			["Itheroa-Whisperwind"] = 269,
-			["Blueboy-Ravencrest"] = 259,
-			["Jasna-Cenarius"] = 256,
 			["Vixsin-Tichondrius"] = 267,
+			["Crazybagel-SteamwheedleCartel"] = 265,
+			["Blueboy-Ravencrest"] = 259,
+			["Kimik-EmeraldDream"] = 266,
+			["Olog-WyrmrestAccord"] = 72,
 			["Livias-Kel'Thuzad"] = 270,
 			["Fiber"] = 261,
 			["Oziris-Ysera"] = 66,
-			["Olog-WyrmrestAccord"] = 72,
 			["Zombiewhipp-Sargeras"] = 71,
+			["Stevncolbear-Korialstrasz"] = 104,
 			["Datfear-Shu'halo"] = 265,
-			["Melìndrã-Aman'Thul"] = 256,
-			["Triblit-SilverHand"] = 257,
-			["Ghalema"] = 63,
+			["Valon-Gnomeregan"] = 72,
+			["Bonereaper-ScarletCrusade"] = 65,
+			["Jasna-Cenarius"] = 256,
 			["Deamonhunter-Kel'Thuzad"] = 581,
-			["Aberodorold"] = 71,
-			["Luxmaximas-TolBarad"] = 256,
+			["Lagerbeard-Fizzcrank"] = 254,
+			["Kandane-Boulderfist"] = 251,
 			["Fiberoptic"] = 265,
-			["Kitsumii-Dath'Remar"] = 254,
+			["Sláughter-Ursin"] = 259,
 			["Ranira-EarthenRing"] = 253,
 			["Roxylablonde-MoonGuard"] = 62,
 			["Phyromar-Dalaran"] = 253,
@@ -144,51 +145,51 @@ VExRT = {
 			["Valentia-SteamwheedleCartel"] = 70,
 			["Nidaro-Eitrigg"] = 253,
 			["Midiaen-WyrmrestAccord"] = 577,
-			["Kandane-Boulderfist"] = 251,
+			["Aberodorold"] = 71,
 			["Giratina-Azuremyst"] = 257,
 			["Pinkbits-Llane"] = 72,
-			["Ninjhax-Staghelm"] = 261,
+			["Zepelin-Goldrinn"] = 250,
 			["Fireballin-EmeraldDream"] = 64,
 			["Riobi-Whisperwind"] = 104,
 			["Noether-Frostmourne"] = 270,
 			["Wireddru-EchoIsles"] = 104,
-			["Dancar-BoreanTundra"] = 253,
+			["Ilbus-BleedingHollow"] = 251,
 			["Torvi-Blackrock"] = 577,
 			["Proetus-Blade'sEdge"] = 70,
-			["Ilbus-BleedingHollow"] = 251,
+			["Dancar-BoreanTundra"] = 253,
 			["Whindie-Feathermoon"] = 64,
 			["Ooph-Kel'Thuzad"] = 251,
-			["Zepelin-Goldrinn"] = 250,
+			["Ninjhax-Staghelm"] = 261,
 			["Shisarrus-Sargeras"] = 581,
 			["Athaliahh-Darkspear"] = 105,
 			["Hokeo"] = 258,
-			["Sláughter-Ursin"] = 259,
+			["Kitsumii-Dath'Remar"] = 254,
 			["Xoti"] = 265,
-			["Lagerbeard-Fizzcrank"] = 254,
+			["Luxmaximas-TolBarad"] = 256,
 			["Cokawn-Goldrinn"] = 103,
 			["Antihero-Greymane"] = 102,
-			["Bonereaper-ScarletCrusade"] = 65,
-			["Valon-Gnomeregan"] = 72,
-			["Kimik-EmeraldDream"] = 266,
-			["Stevncolbear-Korialstrasz"] = 104,
-			["Crazybagel-SteamwheedleCartel"] = 265,
+			["Triblit-SilverHand"] = 257,
+			["Melìndrã-Aman'Thul"] = 256,
+			["Arkkor-Nemesis"] = 71,
+			["Ghalema"] = 63,
+			["Itheroa-Whisperwind"] = 269,
 			["Gezuss-DarkIron"] = 66,
 			["Noragi-Frostmourne"] = 64,
-			["Fiberboi"] = 102,
+			["Phoqueiou-Eredar"] = 265,
 			["Regeis-Kilrogg"] = 261,
-			["Jaecarr-Proudmoore"] = 254,
-			["Maiyazaki-Thunderlord"] = 256,
-			["Velaurix-Sargeras"] = 265,
-			["Blongntrash-Sargeras"] = 65,
-			["Piadavelha-Nemesis"] = 270,
-			["Rayneger-Sargeras"] = 253,
+			["Dalanotra"] = 581,
+			["Failage"] = 64,
+			["Stormx-Vek'nilash"] = 252,
+			["Ravenwulv-ScarletCrusade"] = 253,
+			["Natherion-Durotan"] = 250,
+			["Sneakyace-Eredar"] = 103,
 		},
 		["NoRaid"] = true,
 		["CDECol"] = {
 		},
 		["default_userCD"] = {
 		},
-		["Save"] = {
+		["userDB"] = {
 		},
 		["colSet"] = {
 			{
@@ -198,13 +199,13 @@ VExRT = {
 				["textGeneral"] = true,
 				["methodsGeneral"] = true,
 				["blacklistGeneral"] = true,
-				["textureGeneral"] = true,
+				["fontShadow"] = false,
 				["iconGeneral"] = true,
 				["fontOutline"] = true,
 				["visibilityGeneral"] = true,
 				["fontGeneral"] = true,
 				["textureAnimation"] = true,
-				["fontShadow"] = false,
+				["textureGeneral"] = true,
 			}, -- [1]
 			{
 				["enabled"] = true,
@@ -213,13 +214,13 @@ VExRT = {
 				["textGeneral"] = true,
 				["methodsGeneral"] = true,
 				["blacklistGeneral"] = true,
-				["textureGeneral"] = true,
+				["fontShadow"] = false,
 				["iconGeneral"] = true,
 				["fontOutline"] = true,
 				["visibilityGeneral"] = true,
 				["fontGeneral"] = true,
 				["textureAnimation"] = true,
-				["fontShadow"] = false,
+				["textureGeneral"] = true,
 			}, -- [2]
 			{
 				["enabled"] = true,
@@ -228,13 +229,13 @@ VExRT = {
 				["textGeneral"] = true,
 				["methodsGeneral"] = true,
 				["blacklistGeneral"] = true,
-				["textureGeneral"] = true,
+				["fontShadow"] = false,
 				["iconGeneral"] = true,
 				["fontOutline"] = true,
 				["visibilityGeneral"] = true,
 				["fontGeneral"] = true,
 				["textureAnimation"] = true,
-				["fontShadow"] = false,
+				["textureGeneral"] = true,
 			}, -- [3]
 			{
 				["frameGeneral"] = true,
@@ -242,13 +243,13 @@ VExRT = {
 				["textGeneral"] = true,
 				["methodsGeneral"] = true,
 				["blacklistGeneral"] = true,
-				["textureGeneral"] = true,
+				["fontShadow"] = false,
 				["iconGeneral"] = true,
 				["fontOutline"] = true,
 				["visibilityGeneral"] = true,
 				["fontGeneral"] = true,
 				["textureAnimation"] = true,
-				["fontShadow"] = false,
+				["textureGeneral"] = true,
 			}, -- [4]
 			{
 				["frameGeneral"] = true,
@@ -256,13 +257,13 @@ VExRT = {
 				["textGeneral"] = true,
 				["methodsGeneral"] = true,
 				["blacklistGeneral"] = true,
-				["textureGeneral"] = true,
+				["fontShadow"] = false,
 				["iconGeneral"] = true,
 				["fontOutline"] = true,
 				["visibilityGeneral"] = true,
 				["fontGeneral"] = true,
 				["textureAnimation"] = true,
-				["fontShadow"] = false,
+				["textureGeneral"] = true,
 			}, -- [5]
 			{
 				["frameGeneral"] = true,
@@ -270,13 +271,13 @@ VExRT = {
 				["textGeneral"] = true,
 				["methodsGeneral"] = true,
 				["blacklistGeneral"] = true,
-				["textureGeneral"] = true,
+				["fontShadow"] = false,
 				["iconGeneral"] = true,
 				["fontOutline"] = true,
 				["visibilityGeneral"] = true,
 				["fontGeneral"] = true,
 				["textureAnimation"] = true,
-				["fontShadow"] = false,
+				["textureGeneral"] = true,
 			}, -- [6]
 			{
 				["frameGeneral"] = true,
@@ -284,13 +285,13 @@ VExRT = {
 				["textGeneral"] = true,
 				["methodsGeneral"] = true,
 				["blacklistGeneral"] = true,
-				["textureGeneral"] = true,
+				["fontShadow"] = false,
 				["iconGeneral"] = true,
 				["fontOutline"] = true,
 				["visibilityGeneral"] = true,
 				["fontGeneral"] = true,
 				["textureAnimation"] = true,
-				["fontShadow"] = false,
+				["textureGeneral"] = true,
 			}, -- [7]
 			{
 				["frameGeneral"] = true,
@@ -298,13 +299,13 @@ VExRT = {
 				["textGeneral"] = true,
 				["methodsGeneral"] = true,
 				["blacklistGeneral"] = true,
-				["textureGeneral"] = true,
+				["fontShadow"] = false,
 				["iconGeneral"] = true,
 				["fontOutline"] = true,
 				["visibilityGeneral"] = true,
 				["fontGeneral"] = true,
 				["textureAnimation"] = true,
-				["fontShadow"] = false,
+				["textureGeneral"] = true,
 			}, -- [8]
 			{
 				["frameGeneral"] = true,
@@ -312,13 +313,13 @@ VExRT = {
 				["textGeneral"] = true,
 				["methodsGeneral"] = true,
 				["blacklistGeneral"] = true,
-				["textureGeneral"] = true,
+				["fontShadow"] = false,
 				["iconGeneral"] = true,
 				["fontOutline"] = true,
 				["visibilityGeneral"] = true,
 				["fontGeneral"] = true,
 				["textureAnimation"] = true,
-				["fontShadow"] = false,
+				["textureGeneral"] = true,
 			}, -- [9]
 			{
 				["frameGeneral"] = true,
@@ -326,13 +327,13 @@ VExRT = {
 				["textGeneral"] = true,
 				["methodsGeneral"] = true,
 				["blacklistGeneral"] = true,
-				["textureGeneral"] = true,
+				["fontShadow"] = false,
 				["iconGeneral"] = true,
 				["fontOutline"] = true,
 				["visibilityGeneral"] = true,
 				["fontGeneral"] = true,
 				["textureAnimation"] = true,
-				["fontShadow"] = false,
+				["textureGeneral"] = true,
 			}, -- [10]
 			{
 				["frameGeneral"] = true,
@@ -340,20 +341,20 @@ VExRT = {
 				["textGeneral"] = true,
 				["methodsGeneral"] = true,
 				["blacklistGeneral"] = true,
-				["textureGeneral"] = true,
+				["fontShadow"] = false,
 				["iconGeneral"] = true,
 				["fontOutline"] = true,
 				["visibilityGeneral"] = true,
 				["fontGeneral"] = true,
 				["textureAnimation"] = true,
-				["fontShadow"] = false,
+				["textureGeneral"] = true,
 			}, -- [11]
 		},
 		["Priority"] = {
 		},
 		["CDE"] = {
 		},
-		["userDB"] = {
+		["Save"] = {
 		},
 	},
 	["Attendance"] = {
@@ -367,90 +368,9 @@ VExRT = {
 		["ColorizeLowIlvl685"] = false,
 		["ColorizeNoEnch"] = true,
 		["ColorizeNoGems"] = true,
-		["ColorizeNoTopEnchGems"] = false,
 		["ColorizeLowIlvl"] = true,
+		["ColorizeNoTopEnchGems"] = false,
 		["ColorizeNoValorUpgrade"] = false,
-	},
-	["WhoPulled"] = {
-	},
-	["Note"] = {
-		["BlackNames"] = {
-		},
-		["FontSize"] = 12,
-		["Black"] = {
-			"", -- [1]
-			"", -- [2]
-			"", -- [3]
-		},
-		["Strata"] = "HIGH",
-		["AutoLoad"] = {
-		},
-		["OnlyPromoted"] = true,
-		["Height"] = 100.000022888184,
-		["Width"] = 199.999877929688,
-	},
-	["Addon"] = {
-		["Version"] = 3940,
-		["PreVersion"] = 3940,
-		["IconMiniMapLeft"] = -80,
-		["Timer"] = 0.1,
-		["IconMiniMapTop"] = 4.4885381255433,
-	},
-	["InspectArtifact"] = {
-		["players"] = {
-		},
-	},
-	["Profiles"] = {
-	},
-	["BossWatcher"] = {
-		["optionsDamageGraph"] = true,
-		["fightsNum"] = 2,
-		["optionsPositionsDist"] = true,
-		["optionsHealingGraph"] = true,
-		["trackingDamageSpells"] = {
-		},
-	},
-	["Profile"] = "default",
-	["LootLink"] = {
-	},
-	["Bossmods"] = {
-		["Mannoroth"] = {
-		},
-		["Ilgynoth"] = {
-		},
-		["Kormrok"] = {
-		},
-		["Kromog"] = {
-		},
-	},
-	["RaidCheck"] = {
-		["ReadyCheckFrameTimerFade"] = 4,
-		["BuffsCheck"] = true,
-		["FlaskExp"] = 1,
-	},
-	["Logging"] = {
-	},
-	["MarksBar"] = {
-		["pulltimer"] = 10,
-		["Strata"] = "HIGH",
-		["Show"] = {
-			true, -- [1]
-			true, -- [2]
-			true, -- [3]
-			true, -- [4]
-		},
-	},
-	["InviteTool"] = {
-		["Words"] = "инв inv byd штм 123",
-		["InvByChat"] = true,
-		["RaidDiff"] = 16,
-		["PromoteRank"] = 3,
-		["LootThreshold"] = 2,
-		["MasterLooters"] = "",
-		["LootMethod"] = "group",
-		["PromoteNames"] = "",
-		["OnlyGuild"] = true,
-		["Rank"] = 1,
 	},
 	["Timers"] = {
 		["specTimes"] = {
@@ -484,14 +404,95 @@ VExRT = {
 			[72] = 10,
 			[104] = 10,
 			[73] = 10,
-			[252] = 10,
-			[105] = 10,
-			[254] = 10,
-			[256] = 10,
-			[577] = 10,
 			[581] = 10,
+			[105] = 10,
+			[577] = 10,
+			[256] = 10,
+			[254] = 10,
+			[252] = 10,
 		},
 		["Strata"] = "HIGH",
 		["timeToKillAnalyze"] = 15,
+	},
+	["InviteTool"] = {
+		["Words"] = "инв inv byd штм 123",
+		["InvByChat"] = true,
+		["RaidDiff"] = 16,
+		["PromoteRank"] = 3,
+		["LootThreshold"] = 2,
+		["MasterLooters"] = "",
+		["LootMethod"] = "group",
+		["PromoteNames"] = "",
+		["OnlyGuild"] = true,
+		["Rank"] = 1,
+	},
+	["Addon"] = {
+		["Version"] = 3940,
+		["PreVersion"] = 3940,
+		["IconMiniMapTop"] = 4.4885381255433,
+		["Timer"] = 0.1,
+		["IconMiniMapLeft"] = -80,
+	},
+	["MarksBar"] = {
+		["pulltimer"] = 10,
+		["Strata"] = "HIGH",
+		["Show"] = {
+			true, -- [1]
+			true, -- [2]
+			true, -- [3]
+			true, -- [4]
+		},
+	},
+	["BossWatcher"] = {
+		["optionsDamageGraph"] = true,
+		["fightsNum"] = 2,
+		["optionsPositionsDist"] = true,
+		["optionsHealingGraph"] = true,
+		["trackingDamageSpells"] = {
+		},
+	},
+	["Profiles"] = {
+	},
+	["Profile"] = "default",
+	["LootLink"] = {
+	},
+	["RaidCheck"] = {
+		["ReadyCheckFrameTimerFade"] = 4,
+		["BuffsCheck"] = true,
+		["FlaskExp"] = 1,
+	},
+	["Bossmods"] = {
+		["Mannoroth"] = {
+		},
+		["Ilgynoth"] = {
+		},
+		["Kormrok"] = {
+		},
+		["Kromog"] = {
+		},
+	},
+	["Logging"] = {
+	},
+	["InspectArtifact"] = {
+		["players"] = {
+		},
+	},
+	["Note"] = {
+		["BlackNames"] = {
+		},
+		["FontSize"] = 12,
+		["Black"] = {
+			"", -- [1]
+			"", -- [2]
+			"", -- [3]
+		},
+		["Strata"] = "HIGH",
+		["AutoLoad"] = {
+		},
+		["Height"] = 100.000022888184,
+		["OnlyPromoted"] = true,
+		["Width"] = 199.999877929688,
+	},
+	["WhoPulled"] = {
 	},
 }
