@@ -238,7 +238,6 @@ P['benikuiSkins'] = {
 	},
 	
 	['addonSkins'] = {
-		['rc'] = true,
 		['skada'] = true,
 		['recount'] = true,
 		['tinydps'] = true,
@@ -255,6 +254,7 @@ P['benikuiSkins'] = {
 		['talkingHead'] = true,
 		['decursive'] = true,
 		['storyline'] = true,
+		['inflight'] = true,
 	},
 }
 

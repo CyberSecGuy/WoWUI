@@ -1,9 +1,8 @@
 # oRA3
 
-## [v8.0.2](https://github.com/BigWigsMods/oRA3/tree/v8.0.2) (2018-08-06)
-[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v8.0.1...v8.0.2)
+## [v8.0.4](https://github.com/BigWigsMods/oRA3/tree/v8.0.4) (2018-09-02)
+[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v8.0.3...v8.0.4)
 
-- Remove "Guild Repairs" module.  
-- Remove "Loot" module.  
-- Update CallbackHandler embed.  
-- Remove a debug print  
+- Import font 'Noto Sans Regular'  
+- Update ruRU.lua (#50)  
+- Update ruRU.lua (#49)  

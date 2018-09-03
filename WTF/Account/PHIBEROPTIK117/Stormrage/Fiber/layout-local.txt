@@ -1,6 +1,13 @@
 Version: 1
-Frame: ColorPickerFrame
+Frame: ItemRefTooltip
 FrameLevel: 1
+Anchor: CENTER
+X: -451
+Y: 81
+W: 128
+H: 64
+Frame: ColorPickerFrame
+FrameLevel: 21
 Anchor: CENTER
 X: 0
 Y: 0

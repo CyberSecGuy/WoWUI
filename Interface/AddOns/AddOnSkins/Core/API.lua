@@ -56,6 +56,10 @@ function AS:SetTemplate(Frame, Template, UseTexture, TextureFile)
 		ElvUI[1]["frames"][Frame] = true
 	end
 
+	if AS:CheckAddOn('ElvUI_MerathilisUI') and AS:CheckOption("MerathilisUIStyling") then
+		Frame:Styling();
+	end
+
 	Frame:SetBackdropBorderColor(unpack(AS.BorderColor))
 	Frame:SetBackdropColor(R, G, B, Alpha)
 end
@@ -177,8 +181,28 @@ function AS:CreateShadow(Frame)
 	Shadow:SetOutside(Frame, AS:Scale(3), AS:Scale(3))
 
 	Shadow:SetBackdrop({ edgeFile = [[Interface\AddOns\AddOnSkins\Media\Textures\Shadows]], edgeSize = AS:Scale(3) })
-	Shadow:SetBackdropColor(0, 0, 0, 0)
 	Shadow:SetBackdropBorderColor(0, 0, 0, 0.8)
+
+	if AS.ES then
+		AS.ES:RegisterShadow(Shadow)
+	end
+
+	Frame.Shadow = Shadow
+end
+
+function AS:CreateInvertedShadow(Frame)
+	if Frame.Shadow then return end
+
+	local Shadow = CreateFrame("Frame", nil, Frame)
+	Shadow:SetFrameLevel(Frame:GetFrameLevel() + 2)
+	Shadow:SetFrameStrata(Frame:GetFrameStrata())
+	Shadow:SetInside(Frame)
+	Shadow:SetBackdrop({
+		bgFile = [[Interface\AddOns\AddOnSkins\Media\Textures\InvertedShadow]],
+	})
+	Shadow:SetBackdropColor(0, 0, 0, .8)
+
+	Shadow.Inverted = true
 
 	if AS.ES then
 		AS.ES:RegisterShadow(Shadow)
@@ -513,7 +537,9 @@ function AS:SkinNextPrevButton(Button, Vertical, Inverse)
 	local ButtonName = Button:GetName() and Button:GetName():lower()
 	Inverse = Inverse or ButtonName and (strfind(ButtonName, 'left') or strfind(ButtonName, 'prev') or strfind(ButtonName, 'decrement') or strfind(ButtonName, 'back'))
 
+	AS:StripTextures(Button)
 	AS:SkinButton(Button)
+
 	Button:SetSize(Button:GetWidth() - 7, Button:GetHeight() - 7)
 
 	if not Button.icon then

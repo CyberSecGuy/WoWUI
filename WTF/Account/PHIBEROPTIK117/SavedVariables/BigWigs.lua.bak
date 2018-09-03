@@ -1,6 +1,6 @@
 
 BigWigs3DB = {
-	["discord"] = 14,
+	["discord"] = 15,
 	["namespaces"] = {
 		["BigWigs_Plugins_Victory"] = {
 		},
@@ -45,20 +45,6 @@ BigWigs3DB = {
 		},
 		["BigWigs_Plugins_Sounds"] = {
 		},
-		["LibDualSpec-1.0"] = {
-		},
-		["BigWigs_Plugins_Messages"] = {
-			["profiles"] = {
-				["BenikUI"] = {
-					["fontSize"] = 20,
-					["font"] = "Expressway",
-				},
-				["Default"] = {
-					["font"] = "Friz Quadrata TT",
-					["fontSize"] = 20,
-				},
-			},
-		},
 		["BigWigs_Plugins_AutoReply"] = {
 		},
 		["BigWigs_Plugins_Proximity"] = {
@@ -72,12 +58,26 @@ BigWigs3DB = {
 					["width"] = 139.999984741211,
 				},
 				["Default"] = {
-					["font"] = "Friz Quadrata TT",
 					["fontSize"] = 20,
+					["font"] = "Friz Quadrata TT",
 				},
 			},
 		},
 		["BigWigs_Plugins_Statistics"] = {
+		},
+		["BigWigs_Plugins_Messages"] = {
+			["profiles"] = {
+				["BenikUI"] = {
+					["font"] = "Expressway",
+					["fontSize"] = 20,
+				},
+				["Default"] = {
+					["fontSize"] = 20,
+					["font"] = "Friz Quadrata TT",
+				},
+			},
+		},
+		["LibDualSpec-1.0"] = {
 		},
 		["BigWigs_Plugins_Pull"] = {
 		},
@@ -98,8 +98,8 @@ BigWigs3DB = {
 	},
 	["wipe80"] = true,
 	["profileKeys"] = {
-		["Fiberoptic - Aggramar"] = "BenikUI",
 		["Phiber - Stormrage"] = "Default",
+		["Fiberoptic - Aggramar"] = "BenikUI",
 	},
 	["profiles"] = {
 		["BenikUI"] = {

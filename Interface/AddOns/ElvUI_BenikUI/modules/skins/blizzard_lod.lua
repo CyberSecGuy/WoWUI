@@ -57,6 +57,14 @@ local function style_AuctionUI()
 end
 S:AddCallbackForAddon("Blizzard_AuctionUI", "BenikUI_AuctionUI", style_AuctionUI)
 
+-- AzeriteUI
+local function style_AzeriteUI()
+	if E.private.skins.blizzard.AzeriteUI ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
+
+	_G["AzeriteEmpoweredItemUI"].backdrop:Style('Outside')
+end
+S:AddCallbackForAddon("Blizzard_AzeriteUI", "BenikUI_AzeriteUI", style_AzeriteUI)
+
 -- BarbershopUI
 local function style_BarbershopUI()
 	if E.private.skins.blizzard.barber ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
@@ -326,12 +334,16 @@ S:AddCallbackForAddon("Blizzard_ObliterumUI", "BenikUI_ObliterumUI", style_Oblit
 
 -- GarrisonUI
 local function style_GarrisonUI()
-	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.orderhall ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
+	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.garrison ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
 
 	_G["OrderHallMissionFrame"]:Style('Small')
 	if _G["AdventureMapQuestChoiceDialog"].backdrop then
 		_G["AdventureMapQuestChoiceDialog"].backdrop:Style('Outside')
 	end
+
+	local MissionFrame = _G["BFAMissionFrame"]
+	MissionFrame.Topper:Hide()
+	MissionFrame.backdrop:Style('Outside')
 
 	if E.private.skins.blizzard.tooltip then
 		_G["GarrisonFollowerAbilityWithoutCountersTooltip"]:Style('Outside')
@@ -368,6 +380,14 @@ local function style_QuestChoice()
 end
 S:AddCallbackForAddon("Blizzard_QuestChoice", "BenikUI_QuestChoice", style_QuestChoice)
 
+-- ScrappingMachine
+local function style_ScrappingMachineUI()
+	if E.private.skins.blizzard.Scrapping ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
+
+	_G["ScrappingMachineFrame"].backdrop:Style('Outside')
+end
+S:AddCallbackForAddon("Blizzard_ScrappingMachineUI", "BenikUI_ScrappingMachineUI", style_ScrappingMachineUI)
+
 -- TalentUI
 local function style_TalentUI()
 	if E.private.skins.blizzard.talent ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
@@ -396,8 +416,23 @@ local function style_TalkingHeadUI()
 		frame.BackgroundFrame:CreateBackdrop('Transparent')
 		frame.BackgroundFrame.backdrop:SetAllPoints()
 		frame.BackgroundFrame.backdrop:CreateWideShadow() -- to hide the borders not showing due to scaling
-		frame.MainFrame.Model:SetTemplate('Transparent')
-		frame.MainFrame.Model:CreateSoftShadow()
+
+		-- Credit Azilroka
+		frame.MainFrame.Model.ModelShadow = frame.MainFrame.Model:CreateTexture(nil, "OVERLAY", nil, 2)
+		frame.MainFrame.Model.ModelShadow:SetAtlas("Artifacts-BG-Shadow")
+		frame.MainFrame.Model.ModelShadow:SetOutside()
+		frame.MainFrame.Model.PortraitBg:Hide()
+
+		frame.BackgroundFrame.TextBackground:Hide()
+
+		-- Sometimes the text is not coloring. Credit Azilroka
+		frame.NameFrame.Name:SetTextColor(1, 0.82, 0.02)
+		frame.NameFrame.Name.SetTextColor = function() end
+		frame.NameFrame.Name:SetShadowColor(0.0, 0.0, 0.0, 1.0);
+
+		frame.TextFrame.Text:SetTextColor(1, 1, 1)
+		frame.TextFrame.Text.SetTextColor = function() end
+		frame.TextFrame.Text:SetShadowColor(0.0, 0.0, 0.0, 1.0);
 
 		local button = frame.MainFrame.CloseButton
 		S:HandleCloseButton(button)

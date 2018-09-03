@@ -120,7 +120,7 @@ function private.GetFrame()
 					:SetFont(TSM.UI.Fonts.RobotoMedium)
 					:SetFontHeight(12)
 					:SetJustifyH("RIGHT")
-					:SetTextInfo("potentialValue", private.GetPotentialText)
+					:SetTextInfo("potentialValue", TSM.Money.ToString)
 					:SetSortInfo("potentialValue")
 					:Commit()
 				:SetCursor("BUY_CURSOR")
@@ -159,11 +159,7 @@ function private.GetItemText(itemString)
 end
 
 function private.GetVendorSellText(vendorSell)
-	return vendorSell > 0 and TSMAPI_FOUR.Money.ToString(vendorSell, "OPT_PAD", "OPT_SEP") or ""
-end
-
-function private.GetPotentialText(potentialValue)
-	return TSMAPI_FOUR.Money.ToString(potentialValue, "OPT_PAD", "OPT_SEP") or ""
+	return vendorSell > 0 and TSM.Money.ToString(vendorSell) or ""
 end
 
 
@@ -222,12 +218,17 @@ function private.SellTrashBtnOnClick(button)
 end
 
 function private.SellBOEBtnOnClick(button)
+	-- checking if an item is disenchantable might cause our query to change since it depends on the ItemInfo DB, so cache the list of items first
+	local items = TSMAPI_FOUR.Util.AcquireTempTable()
 	for _, row in private.query:Iterator() do
-		local itemString = row:GetField("itemString")
+		tinsert(items, row:GetField("itemString"))
+	end
+	for _, itemString in ipairs(items) do
 		if TSMAPI_FOUR.Item.IsDisenchantable(itemString) then
 			TSM.Vendoring.Sell.SellItem(itemString)
 		end
 	end
+	TSMAPI_FOUR.Util.ReleaseTempTable(items)
 end
 
 function private.SellAllBtnOnClick(button)

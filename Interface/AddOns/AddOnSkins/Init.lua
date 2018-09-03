@@ -1,4 +1,3 @@
--- Curseforge test 3: Curseforge bugaloo
 local AddOnName, Engine = ...
 
 if IsAddOnLoaded('Tukui') and not IsAddOnLoaded('ProjectAzilroka') then
@@ -49,7 +48,7 @@ AddOn.UIScale = UIParent:GetScale()
 AddOn.ScreenWidth, AddOn.ScreenHeight = GetPhysicalScreenSize()
 
 local Color = RAID_CLASS_COLORS[AddOn.MyClass]
-AddOn.ClassColor = {Color.r, Color.g, Color.b}
+AddOn.ClassColor = { Color.r, Color.g, Color.b }
 
 AddOn.Mult = 1
 AddOn.skins = {}
@@ -64,7 +63,7 @@ AddOn.AddOnVersion = {}
 
 for i = 1, GetNumAddOns() do
 	local Name = GetAddOnInfo(i)
-	AddOn.AddOns[strlower(Name)] = GetAddOnEnableState(AddOn.MyName, Name) == 2 or false
+	AddOn.AddOns[strlower(Name)] = GetAddOnEnableState(AddOn.MyName, Name) == 2
 	AddOn.AddOnVersion[strlower(Name)] = GetAddOnMetadata(Name, "Version")
 end
 

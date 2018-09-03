@@ -16,7 +16,6 @@ local DecorElvUIAddons = {
 }
 
 local DecorAddons = {
-	{'RareCoordinator', L['Rare Coordinator'], 'rc'},
 	{'Skada', L['Skada'], 'skada'},
 	{'Recount', L['Recount'], 'recount'},
 	{'TinyDPS', L['TinyDPS'], 'tinydps'},
@@ -160,6 +159,19 @@ local function SkinTable()
 				name = L['Storyline'],
 				disabled = function() return not IsAddOnLoaded('Storyline') end,
 			},
+			inflight = {
+				order = 4,
+				type = 'toggle',
+				name = L['InFlight'],
+				set = function(info, value) E.db.benikuiSkins.variousSkins[ info[#info] ] = value;
+					if E.db.benikuiSkins.variousSkins.inflight then
+						BUI:LoadInFlightProfile(true)
+					else
+						BUI:LoadInFlightProfile(false)
+					end
+					E:StaticPopup_Show('PRIVATE_RL') end,
+				disabled = function() return not IsAddOnLoaded('InFlight_Load') end,
+			},
 		},
 	}
 
@@ -189,7 +201,11 @@ local function SkinTable()
 				elseif addon == 'Details' then
 					BUI:LoadDetailsProfile()
 				elseif addon == 'InFlight_Load'then
-					BUI:LoadInFlightProfile()
+					if E.db.benikuiSkins.variousSkins.inflight then
+						BUI:LoadInFlightProfile(true)
+					else
+						BUI:LoadInFlightProfile(false)
+					end
 				elseif addon == 'ElvUI_LocLite' then
 					BUI:LoadLocationLiteProfile()
 				elseif addon == 'ElvUI_LocPlus' then

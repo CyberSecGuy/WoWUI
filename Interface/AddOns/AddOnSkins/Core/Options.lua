@@ -78,14 +78,13 @@ function AS:BuildProfile()
 			['EmbedBelowTop'] = false,
 			['TransparentEmbed'] = false,
 			['EmbedIsHidden'] = false,
-			['EmbedFrameStrata'] = '3-MEDIUM',
+			['EmbedFrameStrata'] = '2-LOW',
 			['EmbedFrameLevel'] = 10,
 		-- Misc
 			['RecountBackdrop'] = true,
 			['SkadaBackdrop'] = true,
 			['OmenBackdrop'] = true,
 			['DetailsBackdrop'] = true,
-			['MiscFixes'] = true,
 			['DBMSkinHalf'] = false,
 			['DBMFont'] = 'Arial Narrow',
 			['DBMFontSize'] = 12,
@@ -104,6 +103,10 @@ function AS:BuildProfile()
 		},
 	}
 
+	if AS:CheckAddOn('ElvUI_MerathilisUI') then
+		Defaults.profile['MerathilisUIStyling'] = false;
+	end
+
 	for skin in pairs(AS.register) do
 		if AS:CheckAddOn('ElvUI') and strfind(skin, 'Blizzard_') then
 			Defaults.profile[skin] = false
@@ -112,7 +115,15 @@ function AS:BuildProfile()
 		end
 	end
 
-	self.data = LibStub('AceDB-3.0'):New('AddOnSkinsDB', Defaults)
+	for skin in pairs(AS.preload) do
+		if AS:CheckAddOn('ElvUI') and strfind(skin, 'Blizzard_') then
+			Defaults.profile[skin] = false
+		else
+			Defaults.profile[skin] = true
+		end
+	end
+
+	self.data = LibStub('AceDB-3.0'):New('AddOnSkinsDB', Defaults, true)
 
 	self.data.RegisterCallback(AS, 'OnProfileChanged', 'SetupProfile')
 	self.data.RegisterCallback(AS, 'OnProfileCopied', 'SetupProfile')
@@ -222,7 +233,7 @@ function AS:BuildOptions()
 					},
 					desc = {
 						type = 'description',
-						name = ASL['Settings to control Embedded AddOns:\n\nAvailable Embeds: alDamageMeter | Details | Omen | Skada | Recount | TinyDPS'],
+						name = ASL['Settings to control Embedded AddOns:\n\nAvailable Embeds: Details | Omen | Skada | Recount | TinyDPS'],
 						order = 1
 					},
 					EmbedSystem = {
@@ -519,8 +530,28 @@ function AS:BuildOptions()
 		},
 	}
 
+	if AS:CheckAddOn("ElvUI_MerathilisUI") then
+		AS.Options.args.misc.args.MerathilisUIStyling = {
+			type = 'toggle',
+			name = ASL["|cffff7d0aMerathilisUI|r Styling"],
+			order = 6
+		}
+	end
+
 	local order, blizzorder = 1, 1
-	for skinName, _ in AS:OrderedPairs(AS.register) do
+	local skins = {}
+
+	for skinName in pairs(AS.register) do
+		tinsert(skins, skinName)
+	end
+
+	for skinName in pairs(AS.preload) do
+		tinsert(skins, skinName)
+	end
+
+	sort(skins)
+
+	for _, skinName in pairs(skins) do
 		if strfind(skinName, 'Blizzard_') then
 			AS.Options.args.blizzard.args[skinName] = GenerateOptionTable(skinName, blizzorder)
 			blizzorder = blizzorder + 1

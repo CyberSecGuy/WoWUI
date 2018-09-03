@@ -1,7 +1,7 @@
 
 BugGrabberDB = {
-	["session"] = 32,
 	["lastSanitation"] = 3,
+	["session"] = 35,
 	["errors"] = {
 		{
 			["message"] = "...illMaster_Accounting\\TradeSkillMaster_Accounting-be60832.lua:68: TradeSkillMaster_Accounting",
@@ -310,8 +310,8 @@ BugGrabberDB = {
 		}, -- [40]
 		{
 			["message"] = "(null)",
-			["session"] = 30,
 			["time"] = "2018/08/16 13:50:49",
+			["session"] = 30,
 			["counter"] = 18,
 		}, -- [41]
 		{
@@ -348,22 +348,22 @@ BugGrabberDB = {
 		}, -- [45]
 		{
 			["message"] = "hopFramebuttonHop: Couldn't find relative frame: $parentDetails",
-			["session"] = 32,
 			["time"] = "2018/08/16 13:50:49",
-			["counter"] = 8,
+			["session"] = 35,
+			["counter"] = 11,
 		}, -- [46]
 		{
 			["message"] = "Couldn't open Interface\\AddOns\\SquareMinimapButtons\\",
-			["session"] = 32,
 			["time"] = "2018/08/16 13:50:49",
-			["counter"] = 36,
+			["session"] = 35,
+			["counter"] = 54,
 		}, -- [47]
 		{
 			["message"] = "Interface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: Usage: NewModule(name, [prototype, [lib, lib, lib, ...]): 'name' - Module 'Friendly Fire' already exists.",
 			["time"] = "2018/04/08 20:30:37",
 			["stack"] = "[C]: ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:270: in function `NewModule'\nInterface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: in function `?'\nInterface\\AddOns\\Skada\\Skada-1.7.2.lua:2907: in function <Interface\\AddOns\\Skada\\Skada.lua:2884>\n(tail call): ?\n[C]: ?\n[string \"safecall Dispatcher[1]\"]:9: in function <[string \"safecall Dispatcher[1]\"]:5>\n(tail call): ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:558: in function `EnableAddon'\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:651: in function <...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0.lua:636>\n[C]: in function `LoadAddOn'\nInterface\\FrameXML\\UIParent.lua:429: in function `UIParentLoadAddOn'\nInterface\\FrameXML\\UIParent.lua:528: in function `TimeManager_LoadUI'\nInterface\\FrameXML\\UIParent.lua:1114: in function <Interface\\FrameXML\\UIParent.lua:1011>",
-			["session"] = 32,
-			["counter"] = 32,
+			["session"] = 35,
+			["counter"] = 35,
 		}, -- [48]
 	},
 }

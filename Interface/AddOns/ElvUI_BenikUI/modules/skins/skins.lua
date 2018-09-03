@@ -8,6 +8,8 @@ local pairs, unpack = pairs, unpack
 local CreateFrame = CreateFrame
 local IsAddOnLoaded = IsAddOnLoaded
 local LoadAddOn = LoadAddOn
+local InCombatLockdown = InCombatLockdown
+local GetQuestLogTitle = GetQuestLogTitle
 
 -- GLOBALS: hooksecurefunc
 
@@ -48,9 +50,6 @@ local function styleFreeBlizzardFrames()
 		PaperDollFrame:Style('Outside')
 		ReputationDetailFrame:Style('Outside')
 		ReputationFrame:Style('Outside')
-		if db.tooltip then
-			--ReputationParagonTooltip:Style('Outside')
-		end
 		TokenFrame:Style('Outside')
 		TokenFramePopup:Style('Outside')
 	end
@@ -65,7 +64,6 @@ local function styleFreeBlizzardFrames()
 
 	if db.friends then
 		AddFriendFrame:Style('Outside')
-		--ChannelFrameDaughterFrame.backdrop:Style('Outside')
 		FriendsFrame:Style('Outside')
 		FriendsFriendsFrame.backdrop:Style('Outside')
 		RecruitAFriendFrame:Style('Outside')
@@ -535,9 +533,67 @@ local function StyleDBM_Options()
 	end)
 end
 
+local function StyleAltPowerBar()
+	if E.db.general.altPowerBar.enable ~= true then return end
+	
+	local bar = _G["ElvUI_AltPowerBar"]
+	bar.backdrop:Style('Outside')
+end
+
+local function ObjectiveTrackerQuests()
+	local function QuestNumString()
+		local questNum, q, o
+		local block = _G["ObjectiveTrackerBlocksFrame"]
+		local frame = _G["ObjectiveTrackerFrame"]
+
+		if not InCombatLockdown() then
+			questNum = select(2, GetNumQuestLogEntries())
+			if questNum >= (MAX_QUESTS - 5) then -- go red
+				q = format("|cffff0000%d/%d|r %s", questNum, MAX_QUESTS, TRACKER_HEADER_QUESTS)
+				o = format("|cffff0000%d/%d|r %s", questNum, MAX_QUESTS, OBJECTIVES_TRACKER_LABEL)
+			else
+				q = format("%d/%d %s", questNum, MAX_QUESTS, TRACKER_HEADER_QUESTS)
+				o = format("%d/%d %s", questNum, MAX_QUESTS, OBJECTIVES_TRACKER_LABEL)
+			end
+			block.QuestHeader.Text:SetText(q)
+			frame.HeaderMenu.Title:SetText(o)
+		end
+	end
+	hooksecurefunc("ObjectiveTracker_Update", QuestNumString)
+end
+S:AddCallback("BenikUI_ObjectiveTracker", ObjectiveTrackerQuests)
+
+local function StyleInFlight()
+	if E.db.benikuiSkins.variousSkins.inflight ~= true or E.db.benikui.misc.flightMode == true then return end
+
+	local frame = _G["InFlightBar"]
+	if frame then
+		if not frame.isStyled then
+			frame:CreateBackdrop('Transparent')
+			frame.backdrop:Style('Outside')
+			frame.isStyled = true
+		end
+	end
+end
+
+local function LoadInFlight()
+	local f = CreateFrame("Frame")
+	f:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
+	f:RegisterEvent("UPDATE_MULTI_CAST_ACTIONBAR")
+	f:SetScript("OnEvent", function(self, event)
+		if event then
+			StyleInFlight()
+			f:UnregisterEvent(event)
+		end
+	end)
+end
+
 function BUIS:LoD_AddOns(_, addon)
 	if addon == "DBM-GUI" then
 		StyleDBM_Options()
+	end
+	if addon == "InFlight" then
+		LoadInFlight()
 	end
 end
 
@@ -556,6 +612,7 @@ function BUIS:Initialize()
 
 	skinDecursive()
 	skinStoryline()
+	StyleAltPowerBar()
 
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("ADDON_LOADED", "LoD_AddOns")

@@ -1,5 +1,275 @@
 
 SkadaPerCharDB = {
+	["total"] = {
+		["healingabsorbed"] = 0,
+		["dispells"] = 0,
+		["ccbreaks"] = 0,
+		["time"] = 7,
+		["interrupts"] = 0,
+		["damage"] = 230081,
+		["players"] = {
+			{
+				["healingabsorbed"] = 0,
+				["class"] = "ROGUE",
+				["damaged"] = {
+				},
+				["auras"] = {
+					["Stealth"] = {
+						["school"] = 1,
+						["name"] = "Stealth",
+						["active"] = 1,
+						["id"] = 1784,
+						["started"] = 1535234636,
+						["auratype"] = "BUFF",
+						["uptime"] = 0,
+					},
+					["Master Assassin's Initiative"] = {
+						["school"] = 1,
+						["name"] = "Master Assassin's Initiative",
+						["active"] = 1,
+						["id"] = 235027,
+						["started"] = 1535234636,
+						["auratype"] = "BUFF",
+						["uptime"] = 0,
+					},
+					["Shadow's Grasp"] = {
+						["school"] = 32,
+						["name"] = "Shadow's Grasp",
+						["active"] = 1,
+						["id"] = 206760,
+						["started"] = 1535234630,
+						["auratype"] = "DEBUFF",
+						["uptime"] = 0,
+					},
+				},
+				["role"] = "NONE",
+				["time"] = 6,
+				["interrupts"] = 0,
+				["power"] = {
+				},
+				["overhealing"] = 0,
+				["healingspells"] = {
+				},
+				["damage"] = 230081,
+				["damagespells"] = {
+					["Attack"] = {
+						["criticalamount"] = 49074,
+						["id"] = 6603,
+						["min"] = 49074,
+						["criticalmax"] = 49074,
+						["critical"] = 1,
+						["criticalmin"] = 49074,
+						["school"] = 1,
+						["max"] = 49074,
+						["totalhits"] = 1,
+						["damage"] = 49074,
+					},
+					["Shadowstrike"] = {
+						["criticalamount"] = 181007,
+						["id"] = 185438,
+						["min"] = 181007,
+						["criticalmax"] = 181007,
+						["critical"] = 1,
+						["criticalmin"] = 181007,
+						["school"] = 1,
+						["max"] = 181007,
+						["totalhits"] = 1,
+						["damage"] = 181007,
+					},
+				},
+				["shielding"] = 0,
+				["damagetaken"] = 0,
+				["deathlog"] = {
+				},
+				["id"] = "Player-60-0B50553F",
+				["healing"] = 0,
+				["damagetakenspells"] = {
+				},
+				["healed"] = {
+				},
+				["ffdamagedonetargets"] = {
+				},
+				["name"] = "Fiber",
+				["ffdamagedonespells"] = {
+				},
+				["ffdamagedone"] = 0,
+				["dispells"] = 0,
+				["ccbreaks"] = 0,
+				["maxhp"] = 23860,
+			}, -- [1]
+		},
+		["deaths"] = 0,
+		["mobs"] = {
+			["Training Dummy"] = {
+				["players"] = {
+					["Fiber"] = {
+						["taken"] = 230081,
+						["done"] = 0,
+						["role"] = "NONE",
+						["class"] = "ROGUE",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 230081,
+				["done"] = 0,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+		},
+		["mobtaken"] = 230081,
+		["power"] = {
+		},
+		["healing"] = 0,
+		["overhealing"] = 0,
+		["shielding"] = 0,
+		["ffdamagedone"] = 0,
+		["starttime"] = 1535234630,
+		["name"] = "Total",
+		["damagetaken"] = 0,
+		["auras"] = {
+		},
+		["mobhdone"] = 0,
+		["last_action"] = 1535234630,
+		["mobdone"] = 0,
+	},
 	["sets"] = {
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ccbreaks"] = 0,
+			["time"] = 7,
+			["interrupts"] = 0,
+			["endtime"] = 1535234637,
+			["damagetaken"] = 0,
+			["damage"] = 230081,
+			["players"] = {
+				{
+					["last"] = 1535234636,
+					["healingabsorbed"] = 0,
+					["class"] = "ROGUE",
+					["damaged"] = {
+						["Training Dummy"] = 230081,
+					},
+					["auras"] = {
+						["Stealth"] = {
+							["school"] = 1,
+							["name"] = "Stealth",
+							["active"] = 0,
+							["id"] = 1784,
+							["auratype"] = "BUFF",
+							["uptime"] = 1,
+						},
+						["Master Assassin's Initiative"] = {
+							["school"] = 1,
+							["name"] = "Master Assassin's Initiative",
+							["active"] = 0,
+							["id"] = 235027,
+							["auratype"] = "BUFF",
+							["uptime"] = 1,
+						},
+						["Shadow's Grasp"] = {
+							["school"] = 32,
+							["name"] = "Shadow's Grasp",
+							["active"] = 0,
+							["id"] = 206760,
+							["auratype"] = "DEBUFF",
+							["uptime"] = 7,
+						},
+					},
+					["role"] = "NONE",
+					["time"] = 6,
+					["interrupts"] = 0,
+					["power"] = {
+					},
+					["overhealing"] = 0,
+					["damage"] = 230081,
+					["damagespells"] = {
+						["Attack"] = {
+							["criticalamount"] = 49074,
+							["id"] = 6603,
+							["min"] = 49074,
+							["criticalmax"] = 49074,
+							["critical"] = 1,
+							["criticalmin"] = 49074,
+							["school"] = 1,
+							["max"] = 49074,
+							["totalhits"] = 1,
+							["damage"] = 49074,
+						},
+						["Shadowstrike"] = {
+							["criticalamount"] = 181007,
+							["id"] = 185438,
+							["min"] = 181007,
+							["criticalmax"] = 181007,
+							["critical"] = 1,
+							["criticalmin"] = 181007,
+							["school"] = 1,
+							["max"] = 181007,
+							["totalhits"] = 1,
+							["damage"] = 181007,
+						},
+					},
+					["healingspells"] = {
+					},
+					["damagetaken"] = 0,
+					["shielding"] = 0,
+					["id"] = "Player-60-0B50553F",
+					["first"] = 1535234630,
+					["healing"] = 0,
+					["damagetakenspells"] = {
+					},
+					["healed"] = {
+					},
+					["ffdamagedonetargets"] = {
+					},
+					["name"] = "Fiber",
+					["ffdamagedonespells"] = {
+					},
+					["ffdamagedone"] = 0,
+					["maxhp"] = 23860,
+					["dispells"] = 0,
+					["ccbreaks"] = 0,
+				}, -- [1]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["Training Dummy"] = {
+					["players"] = {
+						["Fiber"] = {
+							["taken"] = 230081,
+							["done"] = 0,
+							["role"] = "NONE",
+							["class"] = "ROGUE",
+						},
+					},
+					["hdone"] = 0,
+					["htakenspell"] = {
+					},
+					["taken"] = 230081,
+					["done"] = 0,
+					["htaken"] = 0,
+					["hdonespell"] = {
+					},
+				},
+			},
+			["mobtaken"] = 230081,
+			["power"] = {
+			},
+			["healing"] = 0,
+			["overhealing"] = 0,
+			["shielding"] = 0,
+			["ffdamagedone"] = 0,
+			["starttime"] = 1535234630,
+			["name"] = "Training Dummy",
+			["mobname"] = "Training Dummy",
+			["auras"] = {
+			},
+			["mobhdone"] = 0,
+			["last_action"] = 1535234630,
+			["mobdone"] = 0,
+		}, -- [1]
 	},
 }

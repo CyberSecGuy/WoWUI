@@ -133,6 +133,28 @@ function BFM:UpdateFps()
 	self.FlightMode.bottom.fps.txt:SetFormattedText(displayFormat, value)
 end
 
+local isInFlightLoaded = false
+
+function BFM:SkinInFlight()
+	if not isInFlightLoaded then
+		if not BUI.IF then
+			LoadAddOn("InFlight") -- LOD addon
+			isInFlightLoaded = true
+		end
+	end
+
+	local frame = _G["InFlightBar"]
+	if frame then
+		if not frame.isSkinned then
+			frame:CreateBackdrop('Transparent', true, true)
+			frame.backdrop:SetOutside(frame, 2, 2)
+			frame.backdrop:SetBackdropBorderColor(.3, .3, .3, 1)
+			frame.backdrop:CreateWideShadow()
+			frame.isSkinned = true
+		end
+	end
+end
+
 function BFM:SetFlightMode(status)
 	if(InCombatLockdown()) then return end
 
@@ -183,7 +205,7 @@ function BFM:SetFlightMode(status)
 			XIV_Databar:Hide()
 		end
 
-		if LeftChatPanel_Bui.styleShadow then
+		if LeftChatPanel_Bui and LeftChatPanel_Bui.styleShadow then
 			LeftChatPanel_Bui.styleShadow:Hide()
 		end
 
@@ -192,6 +214,8 @@ function BFM:SetFlightMode(status)
 		self.locationTimer = self:ScheduleRepeatingTimer('UpdateLocation', 0.2)
 		self.coordsTimer = self:ScheduleRepeatingTimer('UpdateCoords', 0.2)
 		self.fpsTimer = self:ScheduleRepeatingTimer('UpdateFps', 1)
+		
+		self:SkinInFlight()
 
 		self.inFlightMode = true
 	elseif(self.inFlightMode) then
@@ -261,7 +285,7 @@ function BFM:SetFlightMode(status)
 			XIV_Databar:Show()
 		end
 
-		if LeftChatPanel_Bui.styleShadow then
+		if LeftChatPanel_Bui and LeftChatPanel_Bui.styleShadow then
 			LeftChatPanel_Bui.styleShadow:Show()
 			LeftChatPanel_Bui.styleShadow:SetFrameStrata('BACKGROUND') -- it loses its framestrata somehow. Needs digging
 		end
@@ -302,11 +326,13 @@ function BFM:Toggle()
 		self:RegisterEvent("UPDATE_MULTI_CAST_ACTIONBAR", "OnEvent")
 		self:RegisterEvent("LFG_PROPOSAL_SHOW", "OnEvent")
 		self:RegisterEvent("UPDATE_BATTLEFIELD_STATUS", "OnEvent")
+		BUI:LoadInFlightProfile(true)
 	else
 		self:UnregisterEvent("UPDATE_BONUS_ACTIONBAR")
 		self:UnregisterEvent("UPDATE_MULTI_CAST_ACTIONBAR")
 		self:UnregisterEvent("LFG_PROPOSAL_SHOW")
 		self:UnregisterEvent("UPDATE_BATTLEFIELD_STATUS")
+		BUI:LoadInFlightProfile(false)
 	end
 end
 
