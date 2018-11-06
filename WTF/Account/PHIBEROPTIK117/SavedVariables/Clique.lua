@@ -4,8 +4,9 @@ CliqueDB3 = {
 	["profileKeys"] = {
 		["Fiber - Stormrage"] = "Fiber - Stormrage",
 		["Phiber - Stormrage"] = "Phiber - Stormrage",
-		["Fiberoptic - Aggramar"] = "Fiberoptic - Aggramar",
 		["Voidbro - Stormrage"] = "Voidbro - Stormrage",
+		["Fiberoptic - Aggramar"] = "Fiberoptic - Aggramar",
+		["Fibur - Stormrage"] = "Fibur - Stormrage",
 		["Fiberboi - Sargeras"] = "Fiberboi - Sargeras",
 	},
 	["profiles"] = {
@@ -47,6 +48,25 @@ CliqueDB3 = {
 				}, -- [2]
 			},
 		},
+		["Voidbro - Stormrage"] = {
+			["bindings"] = {
+				{
+					["type"] = "target",
+					["sets"] = {
+						["default"] = true,
+					},
+					["key"] = "BUTTON1",
+					["unit"] = "mouseover",
+				}, -- [1]
+				{
+					["type"] = "menu",
+					["key"] = "BUTTON2",
+					["sets"] = {
+						["default"] = true,
+					},
+				}, -- [2]
+			},
+		},
 		["Fiberoptic - Aggramar"] = {
 			["bindings"] = {
 				{
@@ -66,7 +86,7 @@ CliqueDB3 = {
 				}, -- [2]
 			},
 		},
-		["Voidbro - Stormrage"] = {
+		["Fibur - Stormrage"] = {
 			["bindings"] = {
 				{
 					["type"] = "target",

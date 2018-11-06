@@ -20,13 +20,15 @@ function AS:Blizzard_TalkingHeadUI(event, addon)
 
 	TalkingHeadFrame.NameFrame.Name:SetTextColor(1, 0.82, 0.02)
 	TalkingHeadFrame.NameFrame.Name.SetTextColor = function() end
-	TalkingHeadFrame.NameFrame.Name:SetShadowColor(0.0, 0.0, 0.0, 1.0);
+	TalkingHeadFrame.NameFrame.Name:SetShadowColor(0.0, 0.0, 0.0, 1.0)
 	TalkingHeadFrame.NameFrame.Name:SetShadowOffset(2, -2)
 
 	TalkingHeadFrame.TextFrame.Text:SetTextColor(1, 1, 1)
 	TalkingHeadFrame.TextFrame.Text.SetTextColor = function() end
-	TalkingHeadFrame.TextFrame.Text:SetShadowColor(0.0, 0.0, 0.0, 1.0);
+	TalkingHeadFrame.TextFrame.Text:SetShadowColor(0.0, 0.0, 0.0, 1.0)
 	TalkingHeadFrame.TextFrame.Text:SetShadowOffset(2, -2)
+
+	AS:UnregisterSkinEvent(addon, event)
 end
 
 AS:RegisterSkin("Blizzard_TalkingHeadUI", AS.Blizzard_TalkingHeadUI, 'ADDON_LOADED')

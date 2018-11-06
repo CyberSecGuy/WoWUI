@@ -16,11 +16,6 @@ oRA3DB = {
 		["Promote"] = {
 		},
 		["Cooldowns"] = {
-			["global"] = {
-				["spellsOnCooldown"] = {
-				},
-				["lastTime"] = 257266.986,
-			},
 			["profiles"] = {
 				["Default"] = {
 					["spells"] = {
@@ -46,6 +41,7 @@ oRA3DB = {
 	["profileKeys"] = {
 		["Fiber - Stormrage"] = "Default",
 		["Phiber - Stormrage"] = "Default",
+		["Fibur - Stormrage"] = "Default",
 		["Fiberoptic - Aggramar"] = "Default",
 		["Voidbro - Stormrage"] = "Default",
 		["Fiberboi - Sargeras"] = "Default",

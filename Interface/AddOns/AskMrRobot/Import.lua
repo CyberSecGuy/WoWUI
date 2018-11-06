@@ -14,7 +14,7 @@ local function onImportOkClick(widget)
 		_txtImport:SetFocus(true)
 	else
 		Amr:HideCover()
-		Amr:RefreshGearTab()
+		Amr:RefreshGearDisplay()
 	end
 end
 
@@ -42,18 +42,18 @@ local function renderImportWindow(container, fromOverwolf)
 	local panelImport = Amr:RenderCoverChrome(container, 700, 450)
 	
 	local lbl = AceGUI:Create("AmrUiLabel")
+	panelImport:AddChild(lbl)
 	lbl:SetWidth(600)
 	lbl:SetText(L.ImportHeader)
 	lbl:SetPoint("TOP", panelImport.content, "TOP", 0, -10)
-	panelImport:AddChild(lbl)
 
 	_txtImport = AceGUI:Create("AmrUiTextarea")
 	_txtImport:SetWidth(600)
 	_txtImport:SetHeight(300)
-	_txtImport:SetPoint("TOP", lbl.frame, "BOTTOM", 0, -10)
 	_txtImport:SetFont(Amr.CreateFont("Regular", 12, Amr.Colors.Text))
 	_txtImport:SetCallback("OnEnterPressed", onTextEnterPressed)
 	panelImport:AddChild(_txtImport)
+	_txtImport:SetPoint("TOP", lbl.frame, "BOTTOM", 0, -10)
 	
 	local btnImportOk = AceGUI:Create("AmrUiButton")
 	btnImportOk:SetText(L.ImportButtonOk)
@@ -61,9 +61,9 @@ local function renderImportWindow(container, fromOverwolf)
 	btnImportOk:SetFont(Amr.CreateFont("Bold", 16, Amr.Colors.White))
 	btnImportOk:SetWidth(120)
 	btnImportOk:SetHeight(28)
-	btnImportOk:SetPoint("TOPLEFT", _txtImport.frame, "BOTTOMLEFT", 0, -10)
 	btnImportOk:SetCallback("OnClick", onImportOkClick)
 	panelImport:AddChild(btnImportOk)
+	btnImportOk:SetPoint("TOPLEFT", _txtImport.frame, "BOTTOMLEFT", 0, -10)
 	
 	local btnImportCancel = AceGUI:Create("AmrUiButton")
 	btnImportCancel:SetText(L.ImportButtonCancel)
@@ -71,16 +71,16 @@ local function renderImportWindow(container, fromOverwolf)
 	btnImportCancel:SetFont(Amr.CreateFont("Bold", 16, Amr.Colors.White))
 	btnImportCancel:SetWidth(120)
 	btnImportCancel:SetHeight(28)
-	btnImportCancel:SetPoint("LEFT", btnImportOk.frame, "RIGHT", 20, 0)
 	btnImportCancel:SetCallback("OnClick", onImportCancelClick)
 	panelImport:AddChild(btnImportCancel)
+	btnImportCancel:SetPoint("LEFT", btnImportOk.frame, "RIGHT", 20, 0)
 	
 	_lblError = AceGUI:Create("AmrUiLabel")
+	panelImport:AddChild(_lblError)
 	_lblError:SetWidth(600)
 	_lblError:SetFont(Amr.CreateFont("Bold", 14, Amr.Colors.Red))
 	_lblError:SetText("")
 	_lblError:SetPoint("TOPLEFT", btnImportOk.frame, "BOTTOMLEFT", 0, -20)
-	panelImport:AddChild(_lblError)
 	
 	if fromOverwolf then
 		-- show a cover preventing interaction until we receive data from overwolf
@@ -88,18 +88,18 @@ local function renderImportWindow(container, fromOverwolf)
 		_panelCover:SetLayout("None")
 		_panelCover:EnableMouse(true)
 		_panelCover:SetBackgroundColor(Amr.Colors.Black, 0.75)
+		panelImport:AddChild(_panelCover)
 		_panelCover:SetPoint("TOPLEFT", panelImport.frame, "TOPLEFT")
 		_panelCover:SetPoint("BOTTOMRIGHT", panelImport.frame, "BOTTOMRIGHT")
-		panelImport:AddChild(_panelCover)
 
 		local coverMsg = AceGUI:Create("AmrUiLabel")
+		_panelCover:AddChild(coverMsg)
 		coverMsg:SetWidth(500)
 		coverMsg:SetFont(Amr.CreateFont("Regular", 16, Amr.Colors.TextTan))
 		coverMsg:SetJustifyH("MIDDLE")
 		coverMsg:SetJustifyV("MIDDLE")
 		coverMsg:SetText(L.ImportOverwolfWait)
 		coverMsg:SetPoint("CENTER", _panelCover.frame, "CENTER", 0, 20)
-		_panelCover:AddChild(coverMsg)
 		
 		-- after adding, set cover to sit on top of everything
 		_panelCover:SetStrata("FULLSCREEN_DIALOG")
@@ -124,7 +124,7 @@ end
 --
 -- Import a character, returning nil on success, otherwise an error message, import result stored in the db.
 --
-function Amr:ImportCharacter(data, isTest)
+function Amr:ImportCharacter(data, isTest, isChild)
 
     -- make sure all data is up to date before importing and get a local copy of player's current state
     local currentPlayerData = self:ExportCharacter()
@@ -133,16 +133,36 @@ function Amr:ImportCharacter(data, isTest)
         return L.ImportErrorEmpty
     end
 	
-	-- if multiple specs are included in the data, parse each individually, then quit
+	-- if multiple setups are included in the data, parse each individually, then quit
 	local specParts = { strsplit("\n", data) }
-	if #specParts > 1 then
+    if #specParts > 1 then
+        -- clear out any previously-imported BiB setups when importing new ones (non-BiB will always be imported one at a time)
+        for i = #Amr.db.char.GearSetups, 1, -1 do
+            if Amr.db.char.GearSetups[i].IsBib then
+                table.remove(Amr.db.char.GearSetups, i)
+            end
+        end
+
 		for i = 1, #specParts do
-			local err = self:ImportCharacter(specParts[i], isTest)
+			local err = self:ImportCharacter(specParts[i], isTest, true)
 			if err ~= nil then
 				return err
 			end
-		end
-		return	
+        end
+        
+        -- ensure that all BiB setups are sorted to the top
+        local nonBib = {}
+        for i = #Amr.db.char.GearSetups, 1, -1 do
+            if not Amr.db.char.GearSetups[i].IsBib then
+                table.insert(nonBib, Amr.db.char.GearSetups[i])
+                table.remove(Amr.db.char.GearSetups, i)
+            end
+        end
+        for i, setup in ipairs(nonBib) do
+            table.insert(Amr.db.char.GearSetups, setup)
+        end
+
+        return
 	end
     
     local data1 = { strsplit("$", data) }
@@ -189,12 +209,9 @@ function Amr:ImportCharacter(data, isTest)
     end
     
     -- if we make it this far, the data is valid, so read item information
-	local specSlot = tonumber(parts[10])
+	local specSlot = tonumber(parts[11])
 	
     local importData = {}
-
-    local itemInfo = {}
-    local gemInfo = {}
     local enchantInfo = {}
     
     local prevItemId = 0
@@ -202,7 +219,8 @@ function Amr:ImportCharacter(data, isTest)
     local prevEnchantId = 0
     local prevUpgradeId = 0
     local prevBonusId = 0
-	local prevLevel = 0
+    local prevLevel = 0
+    local prevAzeriteId = 0
     local digits = {
         ["-"] = true,
         ["0"] = true,
@@ -216,17 +234,14 @@ function Amr:ImportCharacter(data, isTest)
         ["8"] = true,
         ["9"] = true,
     }
-    for i = 18, #parts do
+    for i = 16, #parts do
         local itemString = parts[i]
         if itemString ~= "" and itemString ~= "_" then
             local tokens = {}
             local bonusIds = {}
-			local relicBonusIds = {}
-			table.insert(relicBonusIds, {})
-			table.insert(relicBonusIds, {})
-			table.insert(relicBonusIds, {})
-			local hasRelics = false
+            local azerite = {}
             local hasBonuses = false
+            local hasAzerites = false
             local token = ""
             local prop = "i"
             local tokenComplete = false
@@ -258,20 +273,17 @@ function Amr:ImportCharacter(data, isTest)
                     elseif prop == "e" then
                         val = val + prevEnchantId
                         prevEnchantId = val
+                    elseif prop == "a" then
+                        val = val + prevAzeriteId
+                        prevAzeriteId = val
                     end
                     
                     if prop == "b" then
                         table.insert(bonusIds, val)
                         hasBonuses = true
-					elseif prop == "m" then
-						table.insert(relicBonusIds[1], val)
-						hasRelics = true
-					elseif prop == "n" then
-						table.insert(relicBonusIds[2], val)
-						hasRelics = true
-					elseif prop == "o" then
-						table.insert(relicBonusIds[3], val)
-						hasRelics = true
+                    elseif prop == "a" then
+                        table.insert(azerite, val)
+                        hasAzerites = true
                     else
                         tokens[prop] = val
                     end
@@ -299,70 +311,27 @@ function Amr:ImportCharacter(data, isTest)
             table.insert(obj.gemIds, tokens["y"] or 0)
             table.insert(obj.gemIds, tokens["z"] or 0)
             table.insert(obj.gemIds, 0)
-			
-			if hasRelics then
-				obj.relicBonusIds = relicBonusIds
-			end
             
             if hasBonuses then
                 obj.bonusIds = bonusIds
             end
             
-            local itemObj = {}
-            itemObj.id = obj.id
-            itemInfo[obj.id] = itemObj
-            
-            -- look for any socket color information, add to our extra data
-            if tokens["c"] then
-                itemObj.socketColors = {}
-                for j = 1, string.len(tokens["c"]) do
-                    table.insert(itemObj.socketColors, tonumber(string.sub(tokens["c"], j, j)))
-                end                
+            if hasAzerites then
+                obj.azerite = azerite
             end
-            
-            -- look for item ID duplicate info, deals with old SoO items
-            if tokens["d"] then
-                itemObj.duplicateId = tonumber(tokens["d"])
-                itemInfo[itemObj.duplicateId] = itemObj
-            end
-            
         end
     end
     
-    -- now read any extra display information
+    -- extra information contains setup id, display label, then extra enchant info        
     parts = { strsplit("@", data1[3]) }
-    for i = 1, #parts do
+
+    local setupId = parts[2]
+    local setupName = parts[3]
+
+    for i = 4, #parts do
         local infoParts = { strsplit("\\", parts[i]) }
         
-        if infoParts[1] == "g" then
-        
-            local gemObj = {}            
-            gemObj.enchantId = tonumber(infoParts[2])
-            gemObj.id = tonumber(infoParts[3])
-            
-            local identicalGems = infoParts[4]
-            if string.len(identicalGems) > 0 then
-                gemObj.identicalGroup = {}
-                identicalGems = { strsplit(",", identicalGems) }
-                for j = 1, #identicalGems do
-                    gemObj.identicalGroup[tonumber(identicalGems[j])] = true
-                end
-            end
-            
-            gemObj.text = string.gsub(infoParts[5], "_(%a+)_", function(s) return L.StatsShort[s] end)
-            if infoParts[6] == nil or string.len(infoParts[6]) == 0 then
-            	gemObj.identicalItemGroup = {[gemObj.id]=true}
-            else
-            	local identicalIds = { strsplit(',', infoParts[6]) }
-            	gemObj.identicalItemGroup = {}
-            	for j = 1, #identicalIds do
-            		gemObj.identicalItemGroup[tonumber(identicalIds[j])] = true
-            	end            	
-            end            
-
-            gemInfo[gemObj.id] = gemObj
-            
-        elseif infoParts[1] == "e" then
+        if infoParts[1] == "e" then
         
             local enchObj = {}
             enchObj.id = tonumber(infoParts[2])
@@ -380,8 +349,7 @@ function Amr:ImportCharacter(data, isTest)
                 end
             end
             
-            enchantInfo[enchObj.id] = enchObj
-            
+            enchantInfo[enchObj.id] = enchObj            
         end
     end
     
@@ -397,15 +365,44 @@ function Amr:ImportCharacter(data, isTest)
                 print(blah)
                 print("bad item: " .. v.id)
             end
-        end
-        
-        
+        end              
     else
         -- we have succeeded, record the result
-		Amr.db.char.GearSets[specSlot] = importData
-		Amr.db.char.ExtraItemData[specSlot] = itemInfo
-		Amr.db.char.ExtraGemData[specSlot] = gemInfo
-		Amr.db.char.ExtraEnchantData[specSlot] = enchantInfo
+        local result = {
+            IsBib = string.sub(setupId, 1, 3) ~= "AMR",
+            SpecSlot = tonumber(specSlot),
+            Id = setupId,
+            Label = setupName,
+            Gear = importData
+        }
+
+        if not result.IsBib then
+            -- replace if this setup already exists
+            local key = -1
+            for i,setup in ipairs(Amr.db.char.GearSetups) do
+                if setup.Id == result.Id then
+                    key = i
+                    break
+                end
+            end
+
+            if key ~= -1 then
+                Amr.db.char.GearSetups[key] = result
+            else
+                table.insert(Amr.db.char.GearSetups, result)
+            end
+            
+            if not isChild then
+                -- if doing a single import of a setup, make it active
+                Amr:SetActiveSetupId(setupId)
+            end
+        else
+            table.insert(Amr.db.char.GearSetups, result)
+        end
+
+        for k,v in pairs(enchantInfo) do
+            Amr.db.char.ExtraEnchantData[k] = v    
+        end
 		
 		-- also update shopping list after import
 		Amr:UpdateShoppingData(currentPlayerData)

@@ -2,6 +2,10 @@
 AskMrRobotDb3 = {
 	["char"] = {
 		["Fiber - Stormrage"] = {
+			["Logging"] = {
+				["LastDiff"] = 0,
+				["LastZone"] = "Eastern Kingdoms",
+			},
 			["Talents"] = {
 				[3] = "0000000",
 			},
@@ -43,10 +47,6 @@ AskMrRobotDb3 = {
 						},
 					},
 				},
-			},
-			["Logging"] = {
-				["LastDiff"] = 0,
-				["LastZone"] = "Eastern Kingdoms",
 			},
 		},
 		["Phiber - Stormrage"] = {
@@ -226,41 +226,41 @@ AskMrRobotDb3 = {
 				[138127] = 1,
 				[132444] = 1,
 				[139842] = 1,
-				[138133] = 1,
-				[131746] = 3,
 				[130216] = 95,
-				[124440] = 3,
-				[139795] = 3,
+				[131746] = 3,
 				[138123] = 1,
-				[141605] = 1,
+				[124440] = 3,
+				[163036] = 5,
 				[33292] = 1,
+				[141605] = 1,
 				[141652] = 1,
-				[133940] = 78,
 				[124439] = 58,
 				[124120] = 82,
-				[71998] = 6,
+				[130176] = 4,
+				[130250] = 43,
+				[124437] = 14,
 				[123919] = 15,
 				[129100] = 43,
-				[130176] = 4,
-				[128935] = 1,
+				[124438] = 44,
+				[151722] = 2,
 				[152576] = 11,
 				[132466] = 1,
-				[130250] = 43,
+				[133940] = 78,
 				[138781] = 1,
-				[130172] = 3,
+				[139813] = 1,
 				[108996] = 6,
-				[151722] = 2,
-				[124438] = 44,
+				[138133] = 1,
+				[127847] = 80,
 				[45038] = 12,
 				[154879] = 10,
 				[124124] = 9,
 				[133575] = 8,
-				[128839] = 5,
-				[127847] = 80,
 				[139814] = 1,
+				[128935] = 1,
+				[127768] = 5,
 				[89112] = 1,
 				[123918] = 16,
-				[127768] = 5,
+				[128911] = 1,
 				[151721] = 9,
 				[152626] = 1,
 				[130173] = 5,
@@ -270,11 +270,11 @@ AskMrRobotDb3 = {
 				[137085] = 1,
 				[124117] = 42,
 				[154897] = 36,
-				[128911] = 1,
+				[128839] = 5,
 				[151720] = 1,
 				[152786] = 1,
-				[139813] = 1,
-				[124437] = 14,
+				[130172] = 3,
+				[71998] = 6,
 				[151564] = 45,
 				[151580] = 2,
 				[124119] = 34,
@@ -283,7 +283,7 @@ AskMrRobotDb3 = {
 				[141932] = 1,
 				[152930] = 1,
 				[124102] = 77,
-				[163036] = 5,
+				[139795] = 3,
 				[124121] = 26,
 			},
 			["Equipped"] = {
@@ -418,6 +418,35 @@ AskMrRobotDb3 = {
 						["Inventory"] = {
 						},
 					},
+				}, -- [1]
+			},
+		},
+		["Fibur - Stormrage"] = {
+			["Talents"] = {
+				"2232121", -- [1]
+			},
+			["Logging"] = {
+				["LastDiff"] = 0,
+				["LastZone"] = "Eastern Kingdoms",
+			},
+			["Equipped"] = {
+				{
+					"|cff0070dd|Hitem:163862::::::::120:62::11:1:4775:::|h[Bartered Vrykul Hood]|h|r", -- [1]
+					"|cffe6cc80|Hitem:158075::::::::120:62::11:4:4932:4933:4935:1490:::|h[Heart of Azeroth]|h|r", -- [2]
+					"|cff0070dd|Hitem:160877::::::::120:62::25:3:1452:4785:4775:::|h[Tidespeaker Amice]|h|r", -- [3]
+					nil, -- [4]
+					"|cff0070dd|Hitem:159268::::::::120:62::19:4:5115:1467:4785:4775:::|h[Inmate's Straight Robe]|h|r", -- [5]
+					"|cffa335ee|Hitem:161996::::::::120:62::13:2:1690:4928:::|h[Honorable Combatant's Satin Belt of the Fireflash]|h|r", -- [6]
+					"|cffa335ee|Hitem:161995::::::::120:62::13:2:1706:4928:::|h[Honorable Combatant's Satin Pants of the Aurora]|h|r", -- [7]
+					"|cffa335ee|Hitem:161993::::::::120:62::13:2:1681:4928:::|h[Honorable Combatant's Satin Boots of the Quickblade]|h|r", -- [8]
+					"|cffa335ee|Hitem:161997::::::::120:62::13:2:1690:4928:::|h[Honorable Combatant's Satin Bracers of the Fireflash]|h|r", -- [9]
+					"|cffa335ee|Hitem:161994::::::::120:62::13:2:1692:4928:::|h[Honorable Combatant's Satin Mittens of the Fireflash]|h|r", -- [10]
+					"|cffa335ee|Hitem:153685::::::::120:62::13:2:4928:3372:::|h[Owlseye Loop of the Fireflash]|h|r", -- [11]
+					"|cffa335ee|Hitem:153683::::::::120:62::13:2:4928:3362:::|h[Royal Quartz Loop of the Quickblade]|h|r", -- [12]
+					"|cffa335ee|Hitem:159126::::::::120:62::13::::|h[Darkmoon Deck: Squalls]|h|r", -- [13]
+					"|cffa335ee|Hitem:159127::::::::120:62::13::::|h[Darkmoon Deck: Tides]|h|r", -- [14]
+					"|cffa335ee|Hitem:161990::::::::120:62::13:2:1717:4928:::|h[Embroidered Deep Sea Cloak of the Harmonious]|h|r", -- [15]
+					"|cffa335ee|Hitem:163956::::::::120:62::54:3:4802:1472:4786:::|h[Treiya's Shining Pillar]|h|r", -- [16]
 				}, -- [1]
 			},
 		},
@@ -562,8 +591,8 @@ AskMrRobotDb3 = {
 					[3] = "|cff00ccff|Hitem:122358::::::::6:102:::1:583:::|h[Stained Shadowcraft Spaulders]|h|r",
 					[13] = "|cff00ccff|Hitem:128318::::::::6:102:::1:3592:::|h[Touch of the Void]|h|r",
 					[14] = "|cff00ccff|Hitem:122361::::::::6:102:::1:3592:::|h[Swift Hand of Justice]|h|r",
-					[5] = "|cff00ccff|Hitem:122383::::::::6:102:::1:583:::|h[Stained Shadowcraft Tunic]|h|r",
 					[16] = "|cff00ccff|Hitem:122353::::::::6:102:::1:583:::|h[Dignified Headmaster's Charge]|h|r",
+					[5] = "|cff00ccff|Hitem:122383::::::::6:102:::1:583:::|h[Stained Shadowcraft Tunic]|h|r",
 				}, -- [1]
 			},
 		},
@@ -574,6 +603,7 @@ AskMrRobotDb3 = {
 	["profileKeys"] = {
 		["Fiber - Stormrage"] = "Fiber - Stormrage",
 		["Phiber - Stormrage"] = "Phiber - Stormrage",
+		["Fibur - Stormrage"] = "Fibur - Stormrage",
 		["Fiberoptic - Aggramar"] = "Fiberoptic - Aggramar",
 		["Voidbro - Stormrage"] = "Voidbro - Stormrage",
 		["Fiberboi - Sargeras"] = "Fiberboi - Sargeras",
@@ -671,10 +701,24 @@ AskMrRobotDb3 = {
 				},
 			},
 		},
-		["Fiberoptic - Aggramar"] = {
+		["Fibur - Stormrage"] = {
 			["Logging"] = {
 				["Auto"] = {
 					[1520] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
+					},
+					[1676] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
+					},
+					[0] = {
+					},
+					[1530] = {
 						[14] = false,
 						[16] = false,
 						[17] = false,
@@ -686,9 +730,27 @@ AskMrRobotDb3 = {
 						[17] = false,
 						[15] = false,
 					},
-					[1220] = {
+				},
+			},
+		},
+		["Fiberoptic - Aggramar"] = {
+			["Logging"] = {
+				["Auto"] = {
+					[1520] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
 					},
 					[1676] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
+					},
+					[1220] = {
+					},
+					[1648] = {
 						[14] = false,
 						[16] = false,
 						[17] = false,

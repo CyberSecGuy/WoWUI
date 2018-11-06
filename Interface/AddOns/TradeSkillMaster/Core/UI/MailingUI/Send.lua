@@ -66,6 +66,7 @@ end
 -- ============================================================================
 
 function private.GetSendFrame()
+	TSM.Analytics.PageView("mailing/send")
 	local frame = TSMAPI_FOUR.UI.NewElement("Frame", "send")
 		:SetLayout("VERTICAL")
 		:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "container")
@@ -772,7 +773,7 @@ function private.MoneyOnTextChanged(input)
 	if tonumber(text) then
 		private.money = tonumber(text)
 	else
-		private.money = TSMAPI_FOUR.Money.FromString(text) or 0
+		private.money = TSM.Money.FromString(text) or 0
 	end
 
 	private.UpdateSendFrame()

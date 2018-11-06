@@ -49,6 +49,7 @@ end
 -- ============================================================================
 
 function private.GetInboxFrame()
+	TSM.Analytics.PageView("mailing/inbox")
 	local frame = TSMAPI_FOUR.UI.NewElement("Frame", "frame")
 		:SetLayout("VERTICAL")
 		:AddChild(TSMAPI_FOUR.UI.NewElement("ViewContainer", "view")
@@ -75,7 +76,7 @@ function private.GetViewContentFrame(viewContainer, path)
 end
 
 function private.GetInboxMailsFrame()
-	private.inboxQuery = private.inboxQuery or TSM.Inventory.MailTracking.CreateMailInboxQuery()
+	private.inboxQuery = private.inboxQuery or TSM.Mailing.Inbox.CreateQuery()
 	private.inboxQuery:ResetFilters()
 	private.inboxQuery:ResetOrderBy()
 	private.inboxQuery:OrderBy("index", true)
@@ -579,7 +580,18 @@ function private.UpdateInboxItemsFrame()
 		private.frameItems:GetElement("footer.return/send"):SetDisabled(false)
 	end
 
-	local bodyText = GetInboxText(private.selectedMail)
+	local bodyText, _, _, _, isInvoice = GetInboxText(private.selectedMail)
+	if isInvoice then
+		local invoiceType, itemName, playerName, bid, buyout, deposit, consignment, _, etaHour, etaMin = GetInboxInvoiceInfo(private.selectedMail)
+		local purchaseType = bid == buyout and BUYOUT or HIGH_BIDDER
+		if invoiceType == "buyer" then
+			bodyText = ITEM_PURCHASED_COLON.." "..itemName.."\n"..SOLD_BY_COLON.." "..playerName.." ("..purchaseType..")".."\n\n"..AMOUNT_RECEIVED_COLON.." "..TSM.Money.ToString(bid)
+		elseif invoiceType == "seller" then
+			bodyText = ITEM_SOLD_COLON.." "..itemName.."\n"..PURCHASED_BY_COLON.." "..playerName.." ("..purchaseType..")".."\n\n"..L["Sale Price"]..": "..TSM.Money.ToString(bid).."\n"..L["Deposit"]..": +"..TSM.Money.ToString(deposit).."\n"..L["Auction House Cut"]..": -"..TSM.Money.ToString(deposit, "|cffff0000").."\n\n"..AMOUNT_RECEIVED_COLON.." "..TSM.Money.ToString(bid + deposit - consignment)
+		elseif invoiceType == "seller_temp_invoice" then
+			bodyText = ITEM_SOLD_COLON.." "..itemName.."\n"..PURCHASED_BY_COLON.." "..playerName.." ("..purchaseType..")".."\n\n"..AUCTION_INVOICE_PENDING_FUNDS_COLON.." "..TSM.Money.ToString(bid + deposit - consignment).."\n"..L["Estimated deliver time"]..": "..GameTime_GetFormattedTime(etaHour, etaMin, true)
+		end
+	end
 	private.frameItems:GetElement("body.scroll.input"):SetText(bodyText or "")
 
 	if not bodyText then
@@ -660,8 +672,9 @@ function private.InboxOnDataUpdated()
 end
 
 function private.OpenBtnOnClick(button)
+	local context = button:GetContext()
 	button:SetPressed(true)
-	private.fsm:ProcessEvent("EV_BUTTON_CLICKED", IsShiftKeyDown(), private.filterText, button:GetContext())
+	private.fsm:ProcessEvent("EV_BUTTON_CLICKED", IsShiftKeyDown(), not context and IsControlKeyDown(), private.filterText, context)
 end
 
 function private.QueryOnRowClick(scrollingTable, row, button)
@@ -691,7 +704,10 @@ function private.SearchOnTextChanged(input)
 	input:SetText(private.filterText)
 
 	private.inboxQuery:ResetFilters()
-		:Matches("items", private.filterText)
+		:Or()
+			:Matches("itemList", private.filterText)
+			:Matches("subject", private.filterText)
+		:End()
 
 	input:GetElement("__parent.__parent.mails"):UpdateData(true)
 end
@@ -754,7 +770,13 @@ function private.FormatItem(row)
 	end
 
 	if not items or items == "" then
-		items = gsub(row:GetField("subject"), strtrim(AUCTION_SOLD_MAIL_SUBJECT, "%s.*"), "") or "--"
+		local subject = row:GetField("subject")
+		if subject ~= "" then
+			items = gsub(row:GetField("subject"), strtrim(AUCTION_SOLD_MAIL_SUBJECT, "%s.*"), "") or "--"
+		else
+			local _, _, sender = GetInboxHeaderInfo(row:GetField("index"))
+			items = sender
+		end
 	end
 
 	return items
@@ -958,10 +980,10 @@ function private.FSMCreate()
 			:AddEvent("EV_BUTTON_CLICKED", TSMAPI_FOUR.FSM.SimpleTransitionEventHandler("ST_OPENING_START"))
 		)
 		:AddState(TSMAPI_FOUR.FSM.NewState("ST_OPENING_START")
-			:SetOnEnter(function(context, autoRefresh, filterText, filterType)
+			:SetOnEnter(function(context, autoRefresh, keepMoney, filterText, filterType)
 				context.opening = true
 				UpdateButtons(context)
-				TSM.Mailing.Open.StartOpening(private.FSMOpenCallback, autoRefresh, filterText, filterType)
+				TSM.Mailing.Open.StartOpening(private.FSMOpenCallback, autoRefresh, keepMoney, filterText, filterType)
 			end)
 			:SetOnExit(function(context)
 				context.opening = false

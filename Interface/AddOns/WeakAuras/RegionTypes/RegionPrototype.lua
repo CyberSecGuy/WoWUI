@@ -269,6 +269,10 @@ local function SetRegionAlpha(self, alpha)
   self:SetAlpha(self.animAlpha or self.alpha or 1);
 end
 
+local function GetRegionAlpha(self)
+  return self.animAlpha or self.alpha or 1;
+end
+
 local function SetAnimAlpha(self, alpha)
   if (self.animAlpha == alpha) then
     return;
@@ -293,6 +297,7 @@ function WeakAuras.regionPrototype.create(region)
   region.GetYOffset = GetYOffset;
   region.ResetPosition = ResetPosition;
   region.SetRegionAlpha = SetRegionAlpha;
+  region.GetRegionAlpha = GetRegionAlpha;
   region.SetAnimAlpha = SetAnimAlpha;
 end
 
@@ -307,8 +312,16 @@ function WeakAuras.regionPrototype.modify(parent, region, data)
   local hasAdjustedMin = defaultsForRegion and defaultsForRegion.useAdjustededMin ~= nil and data.useAdjustededMin;
   local hasAdjustedMax = defaultsForRegion and defaultsForRegion.useAdjustededMax ~= nil and data.useAdjustededMax;
 
-  region.adjustedMin = hasAdjustedMin and data.adjustedMin and data.adjustedMin > 0 and data.adjustedMin;
-  region.adjustedMax = hasAdjustedMax and data.adjustedMax and data.adjustedMax > 0 and data.adjustedMax;
+  if (hasAdjustedMin) then
+    region.adjustedMin = data.adjustedMin and data.adjustedMin >= 0 and data.adjustedMin;
+  else
+    region.adjustedMin = nil;
+  end
+  if (hasAdjustedMax) then
+    region.adjustedMax = data.adjustedMax and data.adjustedMax >= 0 and data.adjustedMax;
+  else
+    region.adjustedMax = nil;
+  end
   region.inverse = false;
 
   region:SetOffset(data.xOffset or 0, data.yOffset or 0);
@@ -567,9 +580,13 @@ end
 
 -- WORKAROUND Texts don't get the right size by default in WoW 7.3
 function WeakAuras.regionPrototype.SetTextOnText(text, str)
+  if (text:GetText() == str) then
+    return
+  end
+
   text:SetWidth(0); -- This makes the text use its internal text size calculation
   text:SetText(str);
-  local w = text:GetWidth();
+  local w = text:GetStringWidth();
   w = w + max(15, w / 20);
   text:SetWidth(w); -- But that internal text size calculation is wrong, see ticket 1014
 end

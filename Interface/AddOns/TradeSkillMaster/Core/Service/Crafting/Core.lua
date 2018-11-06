@@ -96,7 +96,7 @@ local IGNORED_COOLDOWN_DB_SCHEMA = {
 -- Module Functions
 -- ============================================================================
 
-function Crafting.OnEnable()
+function Crafting.OnInitialize()
 	local used = TSMAPI_FOUR.Util.AcquireTempTable()
 	for _, craftInfo in pairs(TSM.db.factionrealm.internalData.crafts) do
 		for itemString in pairs(craftInfo.mats) do
@@ -540,7 +540,7 @@ function Crafting.RestockHelp(link)
 	-- check that there's a crafting operation applied
 	local _, opSettings = TSM.Operations.GetFirstOperationByItem("Crafting", itemString)
 	if not opSettings then
-		return print(format(L["There is no TSM_Crafting operation applied to this item's TSM group (%s)."], TSM.Groups.Path.Format(groupPath)))
+		return print(format(L["There is no Crafting operation applied to this item's TSM group (%s)."], TSM.Groups.Path.Format(groupPath)))
 	end
 
 	-- check if it's an invalid operation
@@ -562,7 +562,7 @@ function Crafting.RestockHelp(link)
 	end
 
 	-- check the prices on the item and the min profit
-	if opSettings.minProfit then
+	if opSettings.minProfit ~= "" then
 		local cost = TSM.Crafting.Cost.GetLowestCostByItem(itemString)
 		local craftedValue = TSM.Crafting.Cost.GetCraftedItemValue(itemString)
 		local profit = cost and craftedValue and (craftedValue - cost) or nil
@@ -580,7 +580,7 @@ function Crafting.RestockHelp(link)
 
 		-- check that there's a profit
 		if not profit then
-			return print(L["There is a crafting cost and crafted item value, but TSM_Crafting wasn't able to calculate a profit. This shouldn't happen!"])
+			return print(L["There is a crafting cost and crafted item value, but TSM wasn't able to calculate a profit. This shouldn't happen!"])
 		end
 
 		local minProfit = TSMAPI_FOUR.CustomPrice.GetValue(opSettings.minProfit, itemString)
@@ -593,7 +593,7 @@ function Crafting.RestockHelp(link)
 		end
 	end
 
-	print(L["This item will be added to the queue when you restock its group. If this isn't happening, make a post on the TSM forums with a screenshot of the item's tooltip, operation settings, and your general TSM_Crafting options."])
+	print(L["This item will be added to the queue when you restock its group. If this isn't happening, make a post on the TSM forums with a screenshot of the item's tooltip, operation settings, and your general Crafting options."])
 end
 
 function Crafting.IgnoreCooldown(spellId)
@@ -625,6 +625,15 @@ function Crafting.RemoveIgnoredCooldown(characterKey, spellId)
 	row:Release()
 end
 
+function Crafting.GetMatNames(spellId)
+	local query = private.matDB:NewQuery()
+		:Select("name")
+		:InnerJoin(TSM.ItemInfo.GetDBForJoin(), "itemString")
+		:Equal("spellId", spellId)
+	local result = query:JoinedString("name", "")
+	query:Release()
+	return result
+end
 
 
 

@@ -16,7 +16,10 @@ local GetQuestLogTitle = GetQuestLogTitle
 local MAX_STATIC_POPUPS = 4
 local SPACING = (E.PixelMode and 1 or 3)
 
+local WarCampaignTooltip = QuestScrollFrame.WarCampaignTooltip
+
 local tooltips = {
+	EmbeddedItemTooltip,
 	FriendsTooltip,
 	ItemRefTooltip,
 	ShoppingTooltip1,
@@ -24,8 +27,30 @@ local tooltips = {
 	ShoppingTooltip3,
 	FloatingBattlePetTooltip,
 	FloatingPetBattleAbilityTooltip,
-	FloatingGarrisonFollowerAbilityTooltip
+	FloatingGarrisonFollowerAbilityTooltip,
+	WarCampaignTooltip,
 }
+
+local overlayedTooltips = {
+	GameTooltip,
+	ShoppingTooltip1,
+	ShoppingTooltip2,
+	ShoppingTooltip3,
+}
+
+local function tooltipOverlay(tt) -- Create a blank frame to position the GameTooltip.TopOverlay texture
+	if not tt.style then return end
+
+	tt.style.blank = CreateFrame('Frame', nil, tt.style)
+	tt.style.blank:Size(6, 6)
+	tt.style.blank:Point('BOTTOM', tt.style, 'TOP')
+	
+	if tt.TopOverlay then
+		tt.TopOverlay:SetParent(tt.style.blank)
+		tt.TopOverlay:ClearAllPoints()
+		tt.TopOverlay:Point('CENTER', tt.style.blank, 'CENTER')
+	end
+end
 
 -- Blizzard Styles
 local function styleFreeBlizzardFrames()
@@ -206,6 +231,12 @@ local function styleFreeBlizzardFrames()
 				frame:Style('Outside')
 			end
 		end
+
+		for _, tooltip in pairs(overlayedTooltips) do
+			if tooltip then
+				tooltipOverlay(tooltip)
+			end
+		end
 	end
 
 	if db.trade then
@@ -372,15 +403,6 @@ local function styleWorldMap()
 end
 
 local function styleAddons()
-	-- LocationLite
-	if BUI.LL and E.db.benikuiSkins.elvuiAddons.loclite then
-		local framestoskin = {_G["LocationLitePanel"], _G["XCoordsLite"], _G["YCoordsLite"]}
-		for _, frame in pairs(framestoskin) do
-			if frame then
-				frame:Style('Outside')
-			end
-		end
-	end
 
 	-- LocationPlus
 	if BUI.LP and E.db.benikuiSkins.elvuiAddons.locplus then

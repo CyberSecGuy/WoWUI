@@ -122,6 +122,13 @@ function BUIL:ToggleTransparency()
 		Bui_rdtp:SetTemplate('NoBackdrop')
 		for i = 1, BUTTON_NUM do
 			bbuttons[i]:SetTemplate('NoBackdrop')
+			if BUI.ShadowMode then
+				bbuttons[i].shadow:Hide()
+			end
+		end
+		if BUI.ShadowMode then
+			Bui_ldtp.shadow:Hide()
+			Bui_rdtp.shadow:Hide()
 		end
 	else
 		if db.transparent then
@@ -135,6 +142,13 @@ function BUIL:ToggleTransparency()
 			Bui_rdtp:SetTemplate('Default', true)
 			for i = 1, BUTTON_NUM do
 				bbuttons[i]:SetTemplate('Default', true)
+			end
+		end
+		if BUI.ShadowMode then
+			Bui_ldtp.shadow:Show()
+			Bui_rdtp.shadow:Show()
+			for i = 1, BUTTON_NUM do
+				bbuttons[i].shadow:Show()
 			end
 		end
 	end
@@ -199,10 +213,6 @@ local function updateButtonFont()
 			bbuttons[i].text:SetTextColor(BUI:unpackColor(E.db.general.valuecolor))
 		end
 	end
-end
-
-local function Panel_OnShow(self)
-	self:SetFrameLevel(0)
 end
 
 function BUIL:ChangeLayout()
@@ -421,63 +431,8 @@ function BUIL:ChangeLayout()
 
 	if CopyChatFrame then CopyChatFrame:Style('Outside') end
 
-	ElvUI_BottomPanel:Style('Outside')
-	ElvUI_BottomPanel:SetScript('OnShow', Panel_OnShow)
-	if ElvUI_BottomPanel.style then
-		ElvUI_BottomPanel.style:Hide()
-	end
-	Panel_OnShow(ElvUI_BottomPanel)
-
-	ElvUI_TopPanel:Style('Under')
-	ElvUI_TopPanel:SetScript('OnShow', Panel_OnShow)
-	if ElvUI_TopPanel.style then
-		ElvUI_TopPanel.style:Hide()
-	end
-	Panel_OnShow(ElvUI_TopPanel)
-
 	self:ResizeMinimapPanels()
 	self:ToggleTransparency()
-end
-
-function BUIL:TopPanelLayout()
-	local db = E.db.benikui.misc.panels.top
-
-	if E.db.benikui.general.benikuiStyle then
-		if db.style then
-			ElvUI_TopPanel.style:Show()
-		else
-			ElvUI_TopPanel.style:Hide()
-		end
-	end
-
-	if db.transparency then
-		ElvUI_TopPanel:SetTemplate('Transparent')
-	else
-		ElvUI_TopPanel:SetTemplate('Default')
-	end
-
-	ElvUI_TopPanel:Height(db.height)
-
-end
-
-function BUIL:BottomPanelLayout()
-	local db = E.db.benikui.misc.panels.bottom
-
-	if E.db.benikui.general.benikuiStyle then
-		if db.style then
-			ElvUI_BottomPanel.style:Show()
-		else
-			ElvUI_BottomPanel.style:Hide()
-		end
-	end
-
-	if db.transparency then
-		ElvUI_BottomPanel:SetTemplate('Transparent')
-	else
-		ElvUI_BottomPanel:SetTemplate('Default')
-	end
-
-	ElvUI_BottomPanel:Height(db.height)
 end
 
 -- Add minimap styling option in ElvUI minimap options
@@ -518,8 +473,6 @@ function BUIL:Initialize()
 	RegBuiDataTexts()
 	self:ChangeLayout()
 	self:ChatStyles()
-	self:TopPanelLayout()
-	self:BottomPanelLayout()
 	self:ToggleMinimapStyle()
 	hooksecurefunc(LO, 'ToggleChatPanels', BUIL.ToggleBuiDts)
 	hooksecurefunc(LO, 'ToggleChatPanels', BUIL.ResizeMinimapPanels)

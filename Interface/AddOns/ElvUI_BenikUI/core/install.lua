@@ -95,13 +95,13 @@ local function SetupLayout(layout)
 	-- common movers
 	E.db["movers"]["AlertFrameMover"] = "TOP,ElvUIParent,TOP,0,-140"
 	E.db["movers"]["AzeriteBarMover"] = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,415,22"
+	E.db["movers"]["BelowMinimapContainerMover"] = "TOP,ElvUIParent,TOP,0,-192"
 	E.db["movers"]["BNETMover"] = "TOPRIGHT,ElvUIParent,TOPRIGHT,-156,-200"
 	E.db["movers"]["BuiDashboardMover"] = "TOPLEFT,ElvUIParent,TOPLEFT,4,-8"
 	E.db["movers"]["DigSiteProgressBarMover"] = "BOTTOM,ElvUIParent,BOTTOM,0,315"
 	E.db["movers"]["GMMover"] = "TOPLEFT,ElvUIParent,TOPLEFT,158,-38"
 	E.db["movers"]["HonorBarMover"] = "TOPRIGHT,ElvUIParent,TOPRIGHT,-157,-6"
 	E.db["movers"]["LeftChatMover"] = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,2,22"
-	E.db["movers"]["LocationLiteMover"] = "TOP,ElvUIParent,TOP,0,-7"
 	E.db["movers"]["LocationMover"] = "TOP,ElvUIParent,TOP,0,-7"
 	E.db["movers"]["MicrobarMover"] = "TOPLEFT,ElvUIParent,TOPLEFT,158,-5"
 	E.db["movers"]["MinimapMover"] = "TOPRIGHT,ElvUIParent,TOPRIGHT,-4,-6"
@@ -110,7 +110,7 @@ local function SetupLayout(layout)
 	E.db["movers"]["ProfessionsMover"] = "TOPRIGHT,ElvUIParent,TOPRIGHT,-5,-184"
 	E.db["movers"]["ReputationBarMover"] = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-415,22"
 	E.db["movers"]["RightChatMover"] = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-2,22"
-	E.db["movers"]["SquareMinimapButtonBarMover"] = "TOPRIGHT,ElvUIParent,TOPRIGHT,-4,-297"
+	E.db["movers"]["SquareMinimapButtonBarMover"] = "TOPRIGHT,ElvUIParent,TOPRIGHT,-5,-303"
 	E.db["movers"]["TopCenterContainerMover"] = "TOP,ElvUIParent,TOP,0,-34"
 	E.db["movers"]["VehicleSeatMover"] = "TOPLEFT,ElvUIParent,TOPLEFT,155,-81"
 	E.db["movers"]["WatchFrameMover"] = "TOPRIGHT,ElvUIParent,TOPRIGHT,-122,-292"
@@ -229,33 +229,46 @@ end
 
 function BUI:SetupColorThemes(color)
 	-- Colors
+	local ca, cr, cg, cb
 	if color == 'Diablo' then
-		E.db.general.backdropfadecolor.a = 0.75
-		E.db.general.backdropfadecolor.r = 0.125
-		E.db.general.backdropfadecolor.g = 0.054
-		E.db.general.backdropfadecolor.b = 0.050
+		ca = 0.75
+		cr = 0.125
+		cg = 0.054
+		cb = 0.050
 	elseif color == 'Hearthstone' then
-		E.db.general.backdropfadecolor.a = 0.75
-		E.db.general.backdropfadecolor.r = 0.086
-		E.db.general.backdropfadecolor.g = 0.109
-		E.db.general.backdropfadecolor.b = 0.149
+		ca = 0.75
+		cr = 0.086
+		cg = 0.109
+		cb = 0.149
 	elseif color == 'Mists' then
-		E.db.general.backdropfadecolor.a = 0.75
-		E.db.general.backdropfadecolor.r = 0.043
-		E.db.general.backdropfadecolor.g = 0.101
-		E.db.general.backdropfadecolor.b = 0.101
+		ca = 0.75
+		cr = 0.043
+		cg = 0.101
+		cb = 0.101
 	elseif color == 'Elv' then
-		E.db.general.backdropfadecolor.a = 0.75
-		E.db.general.backdropfadecolor.r = 0.054
-		E.db.general.backdropfadecolor.g = 0.054
-		E.db.general.backdropfadecolor.b = 0.054
+		ca = 0.75
+		cr = 0.054
+		cg = 0.054
+		cb = 0.054
 	end
+
+	E.db.general.backdropfadecolor.a = ca
+	E.db.general.backdropfadecolor.r = cr
+	E.db.general.backdropfadecolor.g = cg
+	E.db.general.backdropfadecolor.b = cb
+
+	E.db.chat.panelColor.a = ca
+	E.db.chat.panelColor.r = cr
+	E.db.chat.panelColor.g = cg
+	E.db.chat.panelColor.b = cb
+
 	E.db.benikui.colors.colorTheme = color
 
 	E.db.general.backdropcolor.r = 0.025
 	E.db.general.backdropcolor.g = 0.025
 	E.db.general.backdropcolor.b = 0.025
 
+	E:GetModule('Chat'):Panels_ColorUpdate()
 	E:UpdateMedia()
 	E:UpdateBackdropColors()
 end
@@ -1736,12 +1749,6 @@ local function SetupAddons()
 		tinsert(addonNames, 'InFlight')
 	end
 
-	-- Location Lite
-	if BUI.LL then
-		BUI:LoadLocationLiteProfile()
-		tinsert(addonNames, 'Location Lite')
-	end
-
 	-- Location Plus
 	if BUI.LP then
 		BUI:LoadLocationPlusProfile()
@@ -1983,8 +1990,11 @@ BUI.installTable = {
 			PluginInstallFrame.Desc1:SetText(L["You are now finished with the installation process. If you are in need of technical support please visit us at https://www.tukui.org."])
 			PluginInstallFrame.Desc2:SetText(L["Please click the button below so you can setup variables and ReloadUI."])
 			PluginInstallFrame.Option1:Show()
-			PluginInstallFrame.Option1:SetScript("OnClick", function() InstallComplete() end)
-			PluginInstallFrame.Option1:SetText(L["Finished"])
+			PluginInstallFrame.Option1:SetScript("OnClick", function() StaticPopup_Show("BENIKUI_CREDITS", nil, nil, "https://discord.gg/8ZDDUem") end)
+			PluginInstallFrame.Option1:SetText("Discord")
+			PluginInstallFrame.Option2:Show()
+			PluginInstallFrame.Option2:SetScript("OnClick", function() InstallComplete() end)
+			PluginInstallFrame.Option2:SetText(L["Finished"])
 			PluginInstallStepComplete.message = BUI.Title..L['Installed']
 			PluginInstallStepComplete:Show()
 		end,

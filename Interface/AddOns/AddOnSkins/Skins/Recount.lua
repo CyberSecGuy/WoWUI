@@ -16,7 +16,7 @@ function AS:Recount()
 		frame.CloseButton:SetPoint('TOPRIGHT', frame, 'TOPRIGHT', -1, -9)
 		frame:SetBackdrop(nil)
 		frame.TitleBackground = CreateFrame('Frame', nil, frame)
-		AS:SkinTitleBar(frame.TitleBackground, 'Default')
+		AS:SkinFrame(frame.TitleBackground, 'Default')
 		frame.TitleBackground:SetPoint('TOP', frame, 'TOP', 0, -8)
 		frame.TitleBackground:SetScript('OnUpdate', function(self) self:SetSize(frame:GetWidth() - 4, 22) end)
 		frame.TitleBackground:SetFrameLevel(frame:GetFrameLevel())
@@ -60,7 +60,7 @@ function AS:Recount()
 		end
 	end
 
-	AS:SkinScrollBar(Recount_MainWindow_ScrollBarScrollBar)
+	AS:SkinScrollBar(Recount.MainWindow.ScrollBar)
 
 	Recount.MainWindow:HookScript('OnShow', function(self) if AS:CheckEmbed('Recount') then EmbedSystem_MainWindow:Show() end end)
 	Recount.MainWindow.FileButton:HookScript('OnClick', function(self) if LibDropdownFrame0 then AS:SetTemplate(LibDropdownFrame0) end end)
@@ -77,7 +77,7 @@ function AS:Recount()
 		Recount_ReportWindow.isSkinned = true
 		AS:SkinBackdropFrame(Recount_ReportWindow.Whisper)
 		AS:SkinButton(Recount_ReportWindow.ReportButton)
-		AS:SkinSlideBar(Recount_ReportWindow_Slider, 8, true)
+		AS:SkinSlideBar(Recount_ReportWindow_Slider, true)
 	end)
 end
 

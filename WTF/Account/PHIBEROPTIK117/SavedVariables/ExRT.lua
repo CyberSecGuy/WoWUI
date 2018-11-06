@@ -6,14 +6,17 @@ VExRT = {
 		["Fiberboi-Sargeras"] = "default",
 		["Voidbro-Stormrage"] = "default",
 		["Fiberoptic-Aggramar"] = "default",
-		["Fiber-Stormrage"] = "default",
 		["Phiber-Stormrage"] = "default",
+		["Fiber-Stormrage"] = "default",
+		["Fibur-Stormrage"] = "default",
 	},
 	["Arrow"] = {
 	},
 	["Encounter"] = {
 		["list"] = {
 			["Voidbro"] = {
+			},
+			["Fibur"] = {
 			},
 			["Fiberoptic"] = {
 			},
@@ -43,10 +46,10 @@ VExRT = {
 			[2113] = "Heartsbane Triad",
 			[2116] = "Lord and Lady Waycrest",
 			[2114] = "Soulbound Goliath",
-			[1395] = "The Stone Guard",
+			[1500] = "Elegon",
 			[2115] = "Raal the Gluttonous",
 			[1436] = "The Spirit Kings",
-			[1500] = "Elegon",
+			[1395] = "The Stone Guard",
 		},
 	},
 	["Marks"] = {
@@ -106,93 +109,95 @@ VExRT = {
 			["Geemjoo-Zul'jin"] = 70,
 			["Bishwhippzz-Sargeras"] = 261,
 			["Elproducto-KulTiras"] = 64,
+			["Deamonhunter-Kel'Thuzad"] = 581,
 			["Asharty-Dalaran"] = 263,
-			["Bonereaper-ScarletCrusade"] = 65,
+			["Rayneger-Sargeras"] = 253,
+			["Piadavelha-Nemesis"] = 270,
 			["Phiber"] = 263,
 			["Cryoce-Sargeras"] = 251,
-			["Deamonhunter-Kel'Thuzad"] = 581,
+			["Fayedon-Sargeras"] = 72,
 			["Bossdruid-Madoran"] = 102,
 			["Blackieechan"] = 269,
 			["Phantomsoul-BlackwaterRaiders"] = 577,
 			["Rek-Darkspear"] = 252,
 			["Oldmanpa"] = 71,
-			["Rayneger-Sargeras"] = 253,
-			["Fayedon-Sargeras"] = 72,
-			["Piadavelha-Nemesis"] = 270,
-			["Blongntrash-Sargeras"] = 65,
-			["Daladrin-Korgath"] = 577,
-			["Velaurix-Sargeras"] = 265,
+			["Fandracey"] = 256,
+			["Fibur"] = 62,
 			["Maiyazaki-Thunderlord"] = 256,
+			["Daladrin-Korgath"] = 577,
+			["Blongntrash-Sargeras"] = 65,
+			["Jaecarr-Proudmoore"] = 254,
+			["Nales-Lightbringer"] = 250,
 			["Failage"] = 64,
 			["Foxy-Sargeras"] = 65,
-			["Nales-Lightbringer"] = 250,
+			["Kimik-EmeraldDream"] = 266,
+			["Crazybagel-SteamwheedleCartel"] = 265,
 			["Fiberboi"] = 102,
-			["Phoqueiou-Eredar"] = 265,
 			["Hankerchief-Malfurion"] = 270,
 			["Daftmonk-Dentarg"] = 268,
-			["Crazybagel-SteamwheedleCartel"] = 265,
-			["Sadist-Fenris"] = 581,
-			["Kimik-EmeraldDream"] = 266,
 			["Gezuss-DarkIron"] = 66,
-			["Blueboy-Ravencrest"] = 259,
+			["Sadist-Fenris"] = 581,
 			["Valon-Gnomeregan"] = 72,
+			["Bonereaper-ScarletCrusade"] = 65,
+			["Blueboy-Ravencrest"] = 259,
+			["Zombiewhipp-Sargeras"] = 71,
 			["Vixsin-Tichondrius"] = 267,
 			["Livias-Kel'Thuzad"] = 270,
 			["Fiber"] = 261,
 			["Oziris-Ysera"] = 66,
-			["Lagerbeard-Fizzcrank"] = 254,
-			["Zombiewhipp-Sargeras"] = 71,
-			["Datfear-Shu'halo"] = 265,
-			["Ghalema"] = 63,
-			["Kandane-Boulderfist"] = 251,
 			["Arkkor-Nemesis"] = 71,
+			["Stevncolbear-Korialstrasz"] = 104,
+			["Datfear-Shu'halo"] = 265,
+			["Roxylablonde-MoonGuard"] = 62,
+			["Ranira-EarthenRing"] = 253,
+			["Jasna-Cenarius"] = 256,
 			["Sévén-AeriePeak"] = 267,
-			["Pinkbits-Llane"] = 72,
 			["Sláughter-Ursin"] = 259,
 			["Ordinfury-Bloodhoof"] = 581,
-			["Fiberoptic"] = 265,
-			["Ranira-EarthenRing"] = 253,
-			["Shisarrus-Sargeras"] = 581,
-			["Phyromar-Dalaran"] = 253,
+			["Kandane-Boulderfist"] = 251,
+			["Pinkbits-Llane"] = 72,
+			["Luxmaximas-TolBarad"] = 256,
 			["Zepelin-Goldrinn"] = 250,
+			["Phyromar-Dalaran"] = 253,
+			["Aberodorold"] = 71,
 			["Valentia-SteamwheedleCartel"] = 70,
 			["Nidaro-Eitrigg"] = 253,
 			["Midiaen-WyrmrestAccord"] = 577,
-			["Aberodorold"] = 71,
+			["Fiberoptic"] = 265,
 			["Giratina-Azuremyst"] = 257,
-			["Proetus-Blade'sEdge"] = 70,
-			["Fireballin-EmeraldDream"] = 64,
+			["Riobi-Whisperwind"] = 104,
 			["Ilbus-BleedingHollow"] = 251,
+			["Fireballin-EmeraldDream"] = 64,
 			["Whindie-Feathermoon"] = 64,
 			["Viiofix-Kael'thas"] = 250,
-			["Riobi-Whisperwind"] = 104,
+			["Wireddru-EchoIsles"] = 104,
 			["Joric-Vek'nilash"] = 65,
 			["Torvi-Blackrock"] = 577,
-			["Wireddru-EchoIsles"] = 104,
-			["Dancar-BoreanTundra"] = 253,
 			["Noether-Frostmourne"] = 270,
+			["Dancar-BoreanTundra"] = 253,
+			["Proetus-Blade'sEdge"] = 70,
 			["Ooph-Kel'Thuzad"] = 251,
 			["Ninjhax-Staghelm"] = 261,
-			["Roxylablonde-MoonGuard"] = 62,
+			["Shisarrus-Sargeras"] = 581,
 			["Athaliahh-Darkspear"] = 105,
 			["Hokeo"] = 258,
 			["Kitsumii-Dath'Remar"] = 254,
 			["Xoti"] = 265,
-			["Luxmaximas-TolBarad"] = 256,
+			["Ghalema"] = 63,
 			["Cokawn-Goldrinn"] = 103,
 			["Antihero-Greymane"] = 102,
 			["Triblit-SilverHand"] = 257,
 			["Melìndrã-Aman'Thul"] = 256,
-			["Stevncolbear-Korialstrasz"] = 104,
 			["Olog-WyrmrestAccord"] = 72,
+			["Phoqueiou-Eredar"] = 265,
 			["Itheroa-Whisperwind"] = 269,
-			["Jasna-Cenarius"] = 256,
+			["Lagerbeard-Fizzcrank"] = 254,
 			["Noragi-Frostmourne"] = 64,
 			["Augustinë-Dalaran"] = 577,
 			["Regeis-Kilrogg"] = 261,
-			["Jaecarr-Proudmoore"] = 254,
 			["Dalanotra"] = 581,
 			["Stormx-Vek'nilash"] = 252,
+			["Velaurix-Sargeras"] = 265,
 			["Ravenwulv-ScarletCrusade"] = 253,
 			["Natherion-Durotan"] = 250,
 			["Sneakyace-Eredar"] = 103,
@@ -385,6 +390,27 @@ VExRT = {
 		["ColorizeNoTopEnchGems"] = false,
 		["ColorizeNoValorUpgrade"] = false,
 	},
+	["Note"] = {
+		["BlackNames"] = {
+		},
+		["Strata"] = "HIGH",
+		["AutoLoad"] = {
+		},
+		["Width"] = 199.999877929688,
+		["BlackLastUpdateName"] = {
+		},
+		["OnlyPromoted"] = true,
+		["BlackLastUpdateTime"] = {
+		},
+		["Height"] = 100.000022888184,
+		["Black"] = {
+			"", -- [1]
+			"", -- [2]
+			"", -- [3]
+		},
+		["FontSize"] = 12,
+		["OptionsFormatting"] = true,
+	},
 	["Timers"] = {
 		["specTimes"] = {
 			[62] = 10,
@@ -427,6 +453,23 @@ VExRT = {
 		["Strata"] = "HIGH",
 		["timeToKillAnalyze"] = 15,
 	},
+	["MarksBar"] = {
+		["pulltimer"] = 10,
+		["Strata"] = "HIGH",
+		["Show"] = {
+			true, -- [1]
+			true, -- [2]
+			true, -- [3]
+			true, -- [4]
+		},
+	},
+	["Addon"] = {
+		["Version"] = 3990,
+		["PreVersion"] = 3990,
+		["IconMiniMapTop"] = 4.4885381255433,
+		["Timer"] = 0.1,
+		["IconMiniMapLeft"] = -80,
+	},
 	["InviteTool"] = {
 		["Words"] = "инв inv byd штм 123",
 		["InvByChat"] = true,
@@ -439,22 +482,7 @@ VExRT = {
 		["OnlyGuild"] = true,
 		["Rank"] = 1,
 	},
-	["Addon"] = {
-		["Version"] = 3940,
-		["PreVersion"] = 3940,
-		["IconMiniMapTop"] = 4.4885381255433,
-		["Timer"] = 0.1,
-		["IconMiniMapLeft"] = -80,
-	},
-	["MarksBar"] = {
-		["pulltimer"] = 10,
-		["Strata"] = "HIGH",
-		["Show"] = {
-			true, -- [1]
-			true, -- [2]
-			true, -- [3]
-			true, -- [4]
-		},
+	["Profiles"] = {
 	},
 	["BossWatcher"] = {
 		["optionsDamageGraph"] = true,
@@ -463,8 +491,6 @@ VExRT = {
 		["optionsHealingGraph"] = true,
 		["trackingDamageSpells"] = {
 		},
-	},
-	["Profiles"] = {
 	},
 	["Profile"] = "default",
 	["LootLink"] = {
@@ -475,11 +501,11 @@ VExRT = {
 		["FlaskExp"] = 1,
 	},
 	["Bossmods"] = {
+		["Kormrok"] = {
+		},
 		["Mannoroth"] = {
 		},
 		["Ilgynoth"] = {
-		},
-		["Kormrok"] = {
 		},
 		["Kromog"] = {
 		},
@@ -490,21 +516,11 @@ VExRT = {
 		["players"] = {
 		},
 	},
-	["Note"] = {
-		["BlackNames"] = {
+	["VisNote"] = {
+		["data"] = {
 		},
-		["FontSize"] = 12,
-		["Black"] = {
-			"", -- [1]
-			"", -- [2]
-			"", -- [3]
+		["sync_data"] = {
 		},
-		["Strata"] = "HIGH",
-		["AutoLoad"] = {
-		},
-		["Height"] = 100.000022888184,
-		["OnlyPromoted"] = true,
-		["Width"] = 199.999877929688,
 	},
 	["WhoPulled"] = {
 	},

@@ -183,6 +183,25 @@ local function DbmDecor(event)
 	hooksecurefunc(DBM.InfoFrame, 'Show', StyleInfoFrame)
 end
 
+local function BugSackDecor()
+	if not E.db.benikui.general.benikuiStyle then return end
+
+	hooksecurefunc(BugSack, "OpenSack", function()
+		if BugSackFrame.IsStyled then return end
+		if not BugSackFrame.style then
+			BugSackFrame:Style('Outside')
+		end
+		BugSackFrame.IsStyled = true
+	end)
+end
+
+local function LibrariesDecor()
+	local DBIcon = LibStub("LibDBIcon-1.0", true)
+	if DBIcon then
+		LibDBIconTooltip:Style('Outside')
+	end
+end
+
 if AS:CheckAddOn('Skada') then AS:RegisterSkin('Skada', SkadaDecor, 2) end
 if AS:CheckAddOn('Recount') then AS:RegisterSkin('Recount', RecountDecor, 2) end
 if AS:CheckAddOn('TinyDPS') then AS:RegisterSkin('TinyDPS', TinyDPSDecor, 2) end
@@ -191,10 +210,18 @@ if AS:CheckAddOn('Altoholic') then AS:RegisterSkin('Altoholic', AltoholicDecor, 
 if AS:CheckAddOn('Clique') then AS:RegisterSkin('Clique', CliqueDecor, 2) end
 if AS:CheckAddOn('oRA3') then AS:RegisterSkin('oRA3', oRA3Decor, 2) end
 if AS:CheckAddOn('Pawn') then AS:RegisterSkin('Pawn', PawnDecor, 2) end
-if AS:CheckAddOn('DBM-Core') then AS:RegisterSkin('DBM', DbmDecor, 2) end
+if AS:CheckAddOn('DBM-Core') then AS:RegisterSkin('DBM', DbmDecor, 'ADDON_LOADED') end
+if AS:CheckAddOn('BugSack') then AS:RegisterSkin('BugSack', BugSackDecor, 2) end
+AS:RegisterSkin('Libraries', LibrariesDecor, 2)
 
 hooksecurefunc(AS, 'AcceptFrame', function(self)
 	if not _G["AcceptFrame"].style then
 		_G["AcceptFrame"]:Style('Outside')
+	end
+end)
+
+hooksecurefunc(AS, 'BugReportFrame', function(self)
+	if not _G["AddOnSkinsBugReportFrame"].style then
+		_G["AddOnSkinsBugReportFrame"]:Style('Outside')
 	end
 end)

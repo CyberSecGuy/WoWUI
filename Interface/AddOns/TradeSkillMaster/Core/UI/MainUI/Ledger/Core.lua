@@ -68,6 +68,7 @@ end
 -- ============================================================================
 
 function private.GetLedgerFrame()
+	TSM.Analytics.PageView("main/ledger")
 	local defaultPage = private.pages[1]
 	local frame = TSMAPI_FOUR.UI.NewElement("Frame", "ledger")
 		:SetLayout("HORIZONTAL")
@@ -510,6 +511,7 @@ function private.GetItemDetail()
 				:SetQuery(query)
 				:SetAutoReleaseQuery(true)
 				:SetSelectionDisabled(true)
+				:SetScript("OnRowClick", private.ItemDetailScrollingTableOnRowClick)
 			)
 		)
 end
@@ -544,6 +546,28 @@ end
 
 function private.ItemDetailBackButtonOnClick(button)
 	button:GetParentElement():GetParentElement():GetParentElement():SetPath(private.contextPath, true)
+end
+
+function private.ItemDetailScrollingTableOnRowClick(scrollingTable, row, button)
+	if button ~= "RightButton" then
+		return
+	end
+	local subtitle = nil
+	local recordType, itemString, quantity, otherPlayer, price = row:GetFields("type", "itemString", "quantity", "otherPlayer", "price")
+	local name = TSM.UI.GetColoredItemName(itemString) or "?"
+	local amount = TSM.Money.ToString(price * quantity)
+	if recordType == "sale" then
+		subtitle = format(L["Sold %d of %s to %s for %s"], quantity, name, otherPlayer, amount)
+	elseif recordType == "buy" then
+		subtitle = format(L["Bought %d of %s from %s for %s"], quantity, name, otherPlayer, amount)
+	else
+		error("Unexpected Type: "..tostring(recordType))
+	end
+	scrollingTable:GetBaseElement():ShowConfirmationDialog(L["Delete this record?"], subtitle, strupper(DELETE), private.DeleteRecordConfirmed, row:GetUUID())
+end
+
+function private.DeleteRecordConfirmed(uuid)
+	TSM.Accounting.Transactions.RemoveRowByUUID(uuid)
 end
 
 

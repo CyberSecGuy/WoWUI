@@ -41,8 +41,9 @@ oRA3DB = {
 	["profileKeys"] = {
 		["Fiber - Stormrage"] = "Default",
 		["Phiber - Stormrage"] = "Default",
-		["Fiberoptic - Aggramar"] = "Default",
 		["Voidbro - Stormrage"] = "Default",
+		["Fiberoptic - Aggramar"] = "Default",
+		["Fibur - Stormrage"] = "Default",
 		["Fiberboi - Sargeras"] = "Default",
 	},
 	["profiles"] = {

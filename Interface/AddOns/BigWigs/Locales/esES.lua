@@ -23,10 +23,8 @@ L.getNewRelease  = "Tu BigWigs está desfasado (/bwv) pero puedes actualizarlo f
 L.warnTwoReleases  = "Tu BigWigs está 2 versiones desfasado! Tu versión puede tener fallos, faltarle características, o temporizadores incorrectos. Es muy recomendable que lo actualices."
 L.warnSeveralReleases  = "|cffff0000Tu BigWigs está desfasado %d actualizaciones!! Te recomendamos MUCHÍSIMO que lo actualices cuanto antes para prevenir problemas de sincronización con otros jugadores!|r"
 
-L.tooltipHint  = "|cffeda55fClic|r para reiniciar todos los módulos.\n|cffeda55fAlt-Clic|r para desactivarlos.\n|cffeda55fRight-Clic|r para acceder a las opciones."
+L.tooltipHint  = "|cffeda55fRight-Clic|r para acceder a las opciones."
 L.activeBossModules  = "Módulos de jefes activos:"
-L.modulesReset  = "Todos los módulos han sido reiniciados."
-L.modulesDisabled  = "Todos los módulos han sido desactivados."
 
 L.oldVersionsInGroup  = "Hay gente en tu grupo con versiones antiguas o sin BigWigs. Más detalles con /bwv."
 L.upToDate  = "Al día:"
@@ -39,6 +37,12 @@ L.missingAddOn  = "Tenga en cuenta que esta zona requiere el plugin |cFF436EEE%s
 L.disabledAddOn  = "Tienes el addon |cFF436EEE%s|r deshabilitado, los contadores no se mostraran."
 
 L.removeAddon  = "Por favor elimina '|cFF436EEE%s|r' ya que está siendo reemplazado por '|cFF436EEE%s|r'."
+
+-- Media.lua
+L.Beware = "Cuidado (Algalon)"
+L.FlagTaken = "Bandera tomada (PvP)"
+L.Destruction = "Destrucción (Kil'jaeden)"
+L.RunAway = "Corre pequeña (El Lobo Feroz)"
 
 -- Options.lua
 L.options  = "Opciones"
@@ -119,6 +123,8 @@ L.CASTBAR = "Barras de lanzamiento"
 L.CASTBAR_desc = "Barras de lanzamiento se muestran a veces con ciertos jefes, normalmente para atraer la atención de que una habilidad crítica está en camino. Si esta habilidad está acompañada por una barra de lanzamiento que quieres ocultar, desactiva esta opción."
 L.SAY_COUNTDOWN = "Decir cuenta atrás"
 L.SAY_COUNTDOWN_desc = "Las burbujas de chat son fáciles de detectar. BigWigs usará múltiples mensajes de cuenta atrás para alertar a los que estén cerca que una habilidad en ti está a punto de expirar."
+--L.ME_ONLY_EMPHASIZE = "Emphasize (me only)"
+--L.ME_ONLY_EMPHASIZE_desc = "Enabling this will emphasize any messages associated with this ability ONLY if it is casted on you, making them larger and more visible."
 
 L.advanced  = "Opciones avanzadas"
 L.back  = "<< Volver"

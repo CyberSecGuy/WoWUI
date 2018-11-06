@@ -2,30 +2,12 @@
 AskMrRobotDb3 = {
 	["char"] = {
 		["Fiber - Stormrage"] = {
-			["Talents"] = {
-				[3] = "0000000",
-			},
-			["Artifacts"] = {
-				[3] = {
-					["Relics"] = {
-						"", -- [1]
-						"", -- [2]
-						"", -- [3]
-					},
-					["Powers"] = {
-						[851] = 1,
-					},
-					["Crucible"] = {
-						["Equipped"] = {
-						},
-						["Inventory"] = {
-						},
-					},
-				},
-			},
 			["Logging"] = {
 				["LastDiff"] = 0,
 				["LastZone"] = "Eastern Kingdoms",
+			},
+			["Talents"] = {
+				[3] = "0000000",
 			},
 			["Equipped"] = {
 				[3] = {
@@ -46,6 +28,24 @@ AskMrRobotDb3 = {
 					"|cffa335ee|Hitem:151937::::::::110:261::3:3:3610:1477:3336:::|h[Cloak of the Burning Vanguard]|h|r", -- [15]
 					"|cffe6cc80|Hitem:128476::::::::110:261:256:9:1:743:67:::|h[Fangs of the Devourer]|h|r", -- [16]
 					"|cffe6cc80|Hitem:128479::::::::110:261:256:::67:::|h[Fangs of the Devourer]|h|r", -- [17]
+				},
+			},
+			["Artifacts"] = {
+				[3] = {
+					["Relics"] = {
+						"", -- [1]
+						"", -- [2]
+						"", -- [3]
+					},
+					["Powers"] = {
+						[851] = 1,
+					},
+					["Crucible"] = {
+						["Equipped"] = {
+						},
+						["Inventory"] = {
+						},
+					},
 				},
 			},
 		},
@@ -362,9 +362,9 @@ AskMrRobotDb3 = {
 				[139842] = 1,
 				[124121] = 26,
 				[131746] = 3,
-				[163036] = 5,
-				[124440] = 3,
 				[139795] = 3,
+				[124440] = 3,
+				[163036] = 5,
 				[33292] = 1,
 				[141605] = 1,
 				[141652] = 1,
@@ -372,26 +372,26 @@ AskMrRobotDb3 = {
 				[124120] = 82,
 				[130176] = 4,
 				[124119] = 34,
-				[138781] = 1,
+				[124437] = 14,
 				[151564] = 45,
 				[129100] = 43,
-				[124437] = 14,
-				[139813] = 1,
+				[71998] = 6,
+				[130172] = 3,
 				[152576] = 11,
 				[152786] = 1,
 				[151720] = 1,
-				[71998] = 6,
-				[130172] = 3,
-				[128911] = 1,
+				[138781] = 1,
+				[139813] = 1,
+				[128839] = 5,
 				[154897] = 36,
-				[139814] = 1,
+				[89112] = 1,
 				[45038] = 12,
 				[154879] = 10,
 				[133940] = 78,
 				[133575] = 8,
-				[128839] = 5,
+				[139814] = 1,
 				[137085] = 1,
-				[89112] = 1,
+				[128911] = 1,
 				[127847] = 80,
 				[123918] = 16,
 				[142117] = 286,
@@ -401,14 +401,14 @@ AskMrRobotDb3 = {
 				[127768] = 5,
 				[152928] = 1,
 				[124101] = 61,
-				[128935] = 1,
-				[124117] = 42,
-				[138133] = 1,
-				[124124] = 9,
-				[124438] = 44,
-				[132466] = 1,
-				[151722] = 2,
 				[108996] = 6,
+				[124117] = 42,
+				[151722] = 2,
+				[128935] = 1,
+				[124124] = 9,
+				[132466] = 1,
+				[138133] = 1,
+				[124438] = 44,
 				[123919] = 15,
 				[151580] = 2,
 				[130250] = 43,
@@ -419,6 +419,55 @@ AskMrRobotDb3 = {
 				[124102] = 77,
 				[138123] = 1,
 				[130216] = 95,
+			},
+		},
+		["Voidbro - Stormrage"] = {
+			["Logging"] = {
+				["LastDiff"] = 0,
+				["LastZone"] = "Broken Isles",
+			},
+			["Talents"] = {
+				[2] = "2333232",
+			},
+			["Artifacts"] = {
+				[2] = {
+					["Relics"] = {
+						"|cffa335ee|Hitem:147089::::::::110:72::4:3:3564:1467:3528:::|h[Ferocity of the Devout]|h|r", -- [1]
+						"|cffa335ee|Hitem:152059::::::::110:72::4:3:3613:1457:3528:::|h[Whistling Ulna]|h|r", -- [2]
+						"|cffa335ee|Hitem:151011::::::::110:72::29:3:3396:3174:3336:::|h[Stygian Munition Casing]|h|r", -- [3]
+					},
+					["Powers"] = {
+						[988] = 4,
+						[989] = 4,
+						[990] = 4,
+						[991] = 4,
+						[992] = 4,
+						[993] = 4,
+						[994] = 4,
+						[995] = 4,
+						[980] = 1,
+						[1619] = 1,
+						[981] = 1,
+						[982] = 1,
+						[1620] = 21,
+						[996] = 4,
+						[984] = 1,
+						[1394] = 1,
+						[985] = 1,
+						[1617] = 4,
+						[986] = 1,
+						[1618] = 1,
+						[987] = 1,
+						[1357] = 1,
+						[1715] = 1,
+					},
+					["Crucible"] = {
+						["Equipped"] = {
+						},
+						["Inventory"] = {
+						},
+					},
+				},
 			},
 		},
 		["Fiberoptic - Aggramar"] = {
@@ -497,53 +546,91 @@ AskMrRobotDb3 = {
 				},
 			},
 		},
-		["Voidbro - Stormrage"] = {
+		["Fibur - Stormrage"] = {
+			["Talents"] = {
+				"2232121", -- [1]
+			},
+			["BagItems"] = {
+				"|cffffffff|Hitem:138111::::::::120:62::::::|h[Stormforged Grapple Launcher]|h|r", -- [1]
+				"|cffffffff|Hitem:6948::::::::120:62::::::|h[Hearthstone]|h|r", -- [2]
+				"|cffffffff|Hitem:110560::::::::120:62::11::::|h[Garrison Hearthstone]|h|r", -- [3]
+				"|cffffffff|Hitem:140192::::::::120:62::::::|h[Dalaran Hearthstone]|h|r", -- [4]
+				"|cffffffff|Hitem:156532::::::::120:62::11::::|h[Inquisitor's Regalia]|h|r", -- [5]
+				"|cffffffff|Hitem:161344::::::::120:62::::::|h[Abyssal Fragment]|h|r", -- [6]
+				"|cffffffff|Hitem:157849::::::::120:62::::::|h[Foul-Smelling Flask]|h|r", -- [7]
+				"|cffffffff|Hitem:152875::::::::120:62::::::|h[Gloom Dust]|h|r", -- [8]
+				"|cffffffff|Hitem:152548::::::::120:62::::::|h[Tiragarde Perch]|h|r", -- [9]
+				"|cffffffff|Hitem:154899::::::::120:62::::::|h[Thick Paleo Steak]|h|r", -- [10]
+				"|cffffffff|Hitem:154897::::::::120:62::::::|h[Stringy Loins]|h|r", -- [11]
+				"|cffffffff|Hitem:152549::::::::120:62::::::|h[Redtail Loach]|h|r", -- [12]
+				"|cffffffff|Hitem:154898::::::::120:62::::::|h[Meaty Haunch]|h|r", -- [13]
+				"|cffffffff|Hitem:152547::::::::120:62::::::|h[Great Sea Catfish]|h|r", -- [14]
+				"|cffffffff|Hitem:152631::::::::120:62::::::|h[Briny Flesh]|h|r", -- [15]
+				"|cffffffff|Hitem:152576::::::::120:62::::::|h[Tidespray Linen]|h|r", -- [16]
+				"|cffffffff|Hitem:113509::::::::120:62::::::|h[Conjured Mana Bun]|h|r", -- [17]
+				"|cffffffff|Hitem:113509::::::::120:62::::::|h[Conjured Mana Bun]|h|r", -- [18]
+				"|cffffffff|Hitem:113509::::::::120:62::::::|h[Conjured Mana Bun]|h|r", -- [19]
+				"|cffffffff|Hitem:113509::::::::120:62::::::|h[Conjured Mana Bun]|h|r", -- [20]
+				"|cffffffff|Hitem:156835::::::::120:62::::::|h[Delicious Honey]|h|r", -- [21]
+				"|cffffffff|Hitem:152698::::::::120:62::::::|h[Grimestone Stew]|h|r", -- [22]
+				"|cff1eff00|Hitem:143785::::::::120:62::::::|h[Tome of the Tranquil Mind]|h|r", -- [23]
+				"|cff1eff00|Hitem:152577::::::::120:62::::::|h[Deep Sea Satin]|h|r", -- [24]
+				"|cff0070dd|Hitem:141605::::::::120:62::::::|h[Flight Master's Whistle]|h|r", -- [25]
+				"|cff0070dd|Hitem:163607::::::::120:62::11::::|h[Lucille's Sewing Needle]|h|r", -- [26]
+				"|cff0070dd|Hitem:163742::::::::120:62::::::|h[Heartsbane Grimoire]|h|r", -- [27]
+				"|cffe6cc80|Hitem:128820::::::::120:62:256:9:1:730:124:::|h[Felo'melorn]|h|r", -- [28]
+			},
+			["BagItemsAndCounts"] = {
+				[152549] = 10,
+				[138111] = 1,
+				[140192] = 1,
+				[152875] = 4,
+				[152631] = 1,
+				[154898] = 25,
+				[152577] = 6,
+				[143785] = 10,
+				[6948] = 1,
+				[154899] = 5,
+				[152547] = 10,
+				[163742] = 1,
+				[128820] = 1,
+				[163607] = 1,
+				[161344] = 1,
+				[110560] = 1,
+				[157849] = 1,
+				[113509] = 79,
+				[141605] = 1,
+				[152698] = 1,
+				[156532] = 1,
+				[156835] = 7,
+				[154897] = 16,
+				[152576] = 69,
+				[152548] = 10,
+			},
 			["Logging"] = {
 				["LastDiff"] = 0,
-				["LastZone"] = "Broken Isles",
+				["LastZone"] = "Eastern Kingdoms",
 			},
-			["Talents"] = {
-				[2] = "2333232",
-			},
-			["Artifacts"] = {
-				[2] = {
-					["Relics"] = {
-						"|cffa335ee|Hitem:147089::::::::110:72::4:3:3564:1467:3528:::|h[Ferocity of the Devout]|h|r", -- [1]
-						"|cffa335ee|Hitem:152059::::::::110:72::4:3:3613:1457:3528:::|h[Whistling Ulna]|h|r", -- [2]
-						"|cffa335ee|Hitem:151011::::::::110:72::29:3:3396:3174:3336:::|h[Stygian Munition Casing]|h|r", -- [3]
-					},
-					["Powers"] = {
-						[988] = 4,
-						[989] = 4,
-						[990] = 4,
-						[991] = 4,
-						[992] = 4,
-						[993] = 4,
-						[994] = 4,
-						[995] = 4,
-						[980] = 1,
-						[1619] = 1,
-						[981] = 1,
-						[982] = 1,
-						[1620] = 21,
-						[996] = 4,
-						[984] = 1,
-						[1394] = 1,
-						[985] = 1,
-						[1617] = 4,
-						[986] = 1,
-						[1618] = 1,
-						[987] = 1,
-						[1357] = 1,
-						[1715] = 1,
-					},
-					["Crucible"] = {
-						["Equipped"] = {
-						},
-						["Inventory"] = {
-						},
-					},
-				},
+			["FirstUse"] = false,
+			["Equipped"] = {
+				{
+					"|cff0070dd|Hitem:163862::::::::120:62::11:1:4775:::|h[Bartered Vrykul Hood]|h|r", -- [1]
+					"|cffe6cc80|Hitem:158075::::::::120:62::11:4:4932:4933:4935:1490:::|h[Heart of Azeroth]|h|r", -- [2]
+					"|cff0070dd|Hitem:160877::::::::120:62::25:3:1452:4785:4775:::|h[Tidespeaker Amice]|h|r", -- [3]
+					nil, -- [4]
+					"|cff0070dd|Hitem:159268::::::::120:62::19:4:5115:1467:4785:4775:::|h[Inmate's Straight Robe]|h|r", -- [5]
+					"|cffa335ee|Hitem:161996::::::::120:62::13:2:1690:4928:::|h[Honorable Combatant's Satin Belt of the Fireflash]|h|r", -- [6]
+					"|cffa335ee|Hitem:161995::::::::120:62::13:2:1706:4928:::|h[Honorable Combatant's Satin Pants of the Aurora]|h|r", -- [7]
+					"|cffa335ee|Hitem:161993::::::::120:62::13:2:1681:4928:::|h[Honorable Combatant's Satin Boots of the Quickblade]|h|r", -- [8]
+					"|cffa335ee|Hitem:161997::::::::120:62::13:2:1690:4928:::|h[Honorable Combatant's Satin Bracers of the Fireflash]|h|r", -- [9]
+					"|cffa335ee|Hitem:161994::::::::120:62::13:2:1692:4928:::|h[Honorable Combatant's Satin Mittens of the Fireflash]|h|r", -- [10]
+					"|cffa335ee|Hitem:153685::::::::120:62::13:2:4928:3372:::|h[Owlseye Loop of the Fireflash]|h|r", -- [11]
+					"|cffa335ee|Hitem:153683::::::::120:62::13:2:4928:3362:::|h[Royal Quartz Loop of the Quickblade]|h|r", -- [12]
+					"|cffa335ee|Hitem:159126::::::::120:62::13::::|h[Darkmoon Deck: Squalls]|h|r", -- [13]
+					"|cffa335ee|Hitem:159127::::::::120:62::13::::|h[Darkmoon Deck: Tides]|h|r", -- [14]
+					"|cffa335ee|Hitem:161990::::::::120:62::13:2:1717:4928:::|h[Embroidered Deep Sea Cloak of the Harmonious]|h|r", -- [15]
+					"|cffa335ee|Hitem:163956::::::::120:62::54:3:4802:1472:4786:::|h[Treiya's Shining Pillar]|h|r", -- [16]
+				}, -- [1]
 			},
 		},
 		["Fiberboi - Sargeras"] = {
@@ -560,9 +647,9 @@ AskMrRobotDb3 = {
 					[7] = "|cff00ccff|Hitem:122254::::::::6:102:::1:583:::|h[Stained Shadowcraft Pants]|h|r",
 					[15] = "|cff00ccff|Hitem:122262::::::::6:102:::1:583:::|h[Ancient Bloodmoon Cloak]|h|r",
 					[3] = "|cff00ccff|Hitem:122358::::::::6:102:::1:583:::|h[Stained Shadowcraft Spaulders]|h|r",
-					[16] = "|cff00ccff|Hitem:122353::::::::6:102:::1:583:::|h[Dignified Headmaster's Charge]|h|r",
-					[14] = "|cff00ccff|Hitem:122361::::::::6:102:::1:3592:::|h[Swift Hand of Justice]|h|r",
 					[5] = "|cff00ccff|Hitem:122383::::::::6:102:::1:583:::|h[Stained Shadowcraft Tunic]|h|r",
+					[14] = "|cff00ccff|Hitem:122361::::::::6:102:::1:3592:::|h[Swift Hand of Justice]|h|r",
+					[16] = "|cff00ccff|Hitem:122353::::::::6:102:::1:583:::|h[Dignified Headmaster's Charge]|h|r",
 					[13] = "|cff00ccff|Hitem:128318::::::::6:102:::1:3592:::|h[Touch of the Void]|h|r",
 				}, -- [1]
 			},
@@ -571,11 +658,23 @@ AskMrRobotDb3 = {
 	["profileKeys"] = {
 		["Fiber - Stormrage"] = "Fiber - Stormrage",
 		["Phiber - Stormrage"] = "Phiber - Stormrage",
-		["Fiberoptic - Aggramar"] = "Fiberoptic - Aggramar",
 		["Voidbro - Stormrage"] = "Voidbro - Stormrage",
+		["Fiberoptic - Aggramar"] = "Fiberoptic - Aggramar",
+		["Fibur - Stormrage"] = "Fibur - Stormrage",
 		["Fiberboi - Sargeras"] = "Fiberboi - Sargeras",
 	},
 	["global"] = {
+		["Shopping"] = {
+			["Fibur-Stormrage"] = {
+				["stuff"] = {
+				},
+				["specs"] = {
+					13, -- [1]
+					14, -- [2]
+					15, -- [3]
+				},
+			},
+		},
 		["Region"] = "US",
 	},
 	["profiles"] = {
@@ -671,44 +770,6 @@ AskMrRobotDb3 = {
 				},
 			},
 		},
-		["Fiberoptic - Aggramar"] = {
-			["Logging"] = {
-				["Auto"] = {
-					[1520] = {
-						[14] = false,
-						[16] = false,
-						[17] = false,
-						[15] = false,
-					},
-					[0] = {
-					},
-					[1220] = {
-					},
-					[1669] = {
-					},
-					[1648] = {
-						[14] = false,
-						[16] = false,
-						[17] = false,
-						[15] = false,
-					},
-					[1750] = {
-					},
-					[1530] = {
-						[14] = false,
-						[16] = false,
-						[17] = false,
-						[15] = false,
-					},
-					[1676] = {
-						[14] = false,
-						[16] = false,
-						[17] = false,
-						[15] = false,
-					},
-				},
-			},
-		},
 		["Voidbro - Stormrage"] = {
 			["Logging"] = {
 				["Auto"] = {
@@ -737,6 +798,76 @@ AskMrRobotDb3 = {
 						[16] = false,
 						[17] = false,
 						[15] = false,
+					},
+				},
+			},
+		},
+		["Fiberoptic - Aggramar"] = {
+			["Logging"] = {
+				["Auto"] = {
+					[1520] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
+					},
+					[0] = {
+					},
+					[1220] = {
+					},
+					[1669] = {
+					},
+					[1676] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
+					},
+					[1750] = {
+					},
+					[1530] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
+					},
+					[1648] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
+					},
+				},
+			},
+		},
+		["Fibur - Stormrage"] = {
+			["Logging"] = {
+				["Auto"] = {
+					[1520] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
+					},
+					[1676] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
+					},
+					[1648] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
+					},
+					[1530] = {
+						[14] = false,
+						[16] = false,
+						[17] = false,
+						[15] = false,
+					},
+					[0] = {
 					},
 				},
 			},

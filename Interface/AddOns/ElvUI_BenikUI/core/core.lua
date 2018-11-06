@@ -20,7 +20,6 @@ BUI["softGlow"] = {}
 BUI.TexCoords = {.08, 0.92, -.04, 0.92}
 BUI.Title = format('|cff00c0fa%s |r', 'BenikUI')
 BUI.Version = GetAddOnMetadata('ElvUI_BenikUI', 'Version')
-BUI.NewSign = '|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:14:14|t'
 BUI.ShadowMode = false;
 BUI.AddonProfileKey = '';
 BINDING_HEADER_BENIKUI = BUI.Title
@@ -33,7 +32,7 @@ end
 BUI.SLE = BUI:IsAddOnEnabled('ElvUI_SLE')
 BUI.PA = BUI:IsAddOnEnabled('ProjectAzilroka')
 BUI.LP = BUI:IsAddOnEnabled('ElvUI_LocPlus')
-BUI.LL = BUI:IsAddOnEnabled('ElvUI_LocLite')
+BUI.NB = BUI:IsAddOnEnabled('ElvUI_NutsAndBolts')
 BUI.AS = BUI:IsAddOnEnabled('AddOnSkins')
 BUI.IF = BUI:IsAddOnEnabled('InFlight_Load')
 
@@ -160,6 +159,7 @@ function BUI:Initialize()
 	EP:RegisterPlugin(addon, self.AddOptions)
 
 	hooksecurefunc(E, "UpdateMedia", BUI.UpdateSoftGlowColor)
+	hooksecurefunc(BUI, "SetupColorThemes", BUI.UpdateStyleColors)
 end
 
 local function InitializeCallback()

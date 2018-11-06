@@ -168,6 +168,11 @@ function TSM.CustomPrice.PrintSources()
 	TSMAPI_FOUR.Util.ReleaseTempTable(moduleList)
 end
 
+function TSM.CustomPrice.GetDescription(key)
+	local info = private.priceSourceInfo[key]
+	return info and info.label or nil
+end
+
 
 
 -- ============================================================================
@@ -489,7 +494,10 @@ function private.ParsePriceString(str, badPriceSource)
 			end
 		end
 		if minFindStart then
-			local value = TSMAPI_FOUR.Money.FromString(minFindSub)
+			if strmatch(strsub(str, minFindStart-1, minFindStart-1), "[0-9a-zA-Z]") or strmatch(strsub(str, minFindEnd+1, minFindEnd+1), "[0-9a-zA-Z]") then
+				return nil, L["Invalid gold value."]
+			end
+			local value = TSM.Money.FromString(minFindSub)
 			if not value then
 				-- sanity check
 				return nil, L["Invalid function."]

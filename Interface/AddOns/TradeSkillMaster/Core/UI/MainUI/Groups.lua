@@ -49,6 +49,7 @@ end
 -- ============================================================================
 
 function private.GetGroupsFrame()
+	TSM.Analytics.PageView("main/groups")
 	private.currentGroupPath = TSM.CONST.ROOT_GROUP_PATH
 	local frame = TSMAPI_FOUR.UI.NewElement("DividedContainer", "groups")
 		:SetStyle("background", "#272727")
@@ -362,7 +363,7 @@ function private.GetModuleOperationFrame(moduleName)
 				)
 				:AddChild(TSMAPI_FOUR.UI.NewElement("Button", "descBtn")
 					:SetStyle("margin", { left = 8 })
-					:SetStyle("font", TSM.UI.Fonts.MontserratBold2)
+					:SetStyle("font", TSM.UI.Fonts.MontserratBold)
 					:SetStyle("fontHeight", 11)
 					:SetStyle("autoWidth", true)
 					:SetContext(operationName)
@@ -753,13 +754,17 @@ function private.GetGroupedItemList()
 	wipe(private.groupedItemList)
 
 	-- items in this group or a subgroup
+	local itemNames = TSMAPI_FOUR.Util.AcquireTempTable()
 	for _, itemString, path in TSM.Groups.ItemIterator() do
 		if path == private.currentGroupPath or strfind(path, "^"..TSMAPI_FOUR.Util.StrEscape(private.currentGroupPath)..TSM.CONST.GROUP_SEP) then
-			tinsert(private.groupedItemList, TSMAPI_FOUR.Item.GetLink(itemString))
+			local link = TSMAPI_FOUR.Item.GetLink(itemString)
+			tinsert(private.groupedItemList, link)
+			itemNames[link] = TSMAPI_FOUR.Item.GetName(itemString) or ""
 		end
 	end
 
-	sort(private.groupedItemList, private.ItemSortHelper)
+	TSMAPI_FOUR.Util.TableSortWithValueLookup(private.groupedItemList, itemNames)
+	TSMAPI_FOUR.Util.ReleaseTempTable(itemNames)
 	return private.groupedItemList
 end
 

@@ -1,5 +1,5 @@
 local E, L, V, P, G = unpack(ElvUI);
-local BDB = E:GetModule('BenikUI_databars');
+local mod = E:GetModule('BenikUI_databars');
 local BUI = E:GetModule('BenikUI');
 local M = E:GetModule('DataBars');
 local LSM = LibStub('LibSharedMedia-3.0');
@@ -7,58 +7,14 @@ local DT = E:GetModule('DataTexts');
 
 local _G = _G
 
-local CreateFrame = CreateFrame
-local GameTooltip = _G["GameTooltip"]
-local InCombatLockdown = InCombatLockdown
-local HONOR = HONOR
-local MAX_PLAYER_LEVEL = MAX_PLAYER_LEVEL
+-- GLOBALS: hooksecurefunc, selectioncolor, ElvUI_HonorBar
 
--- GLOBALS: hooksecurefunc, selectioncolor, ElvUI_ArtifactBar, ArtifactFrame
-
-local SPACING = (E.PixelMode and 1 or 3)
-
-local function onLeave(self)
-	self.sglow:Hide()
-	GameTooltip:Hide()
-end
-
-local function onEnter(self)
+local function OnClick(self)
 	if self.template == 'NoBackdrop' then return end
-	self.sglow:Show()
-	GameTooltip:SetOwner(self, 'ANCHOR_TOP', 0, 2)
-	GameTooltip:ClearLines()
-	GameTooltip:AddLine(HONOR, selectioncolor)
-	GameTooltip:Show()
-	if InCombatLockdown() then GameTooltip:Hide() end
+	TogglePVPUI()
 end
 
-local function StyleBar()
-	local bar = ElvUI_HonorBar
-
-	-- bottom decor/button
-	bar.fb = CreateFrame('Button', nil, bar)
-	bar.fb:CreateSoftGlow()
-	bar.fb.sglow:Hide()
-	if BUI.ShadowMode then
-		bar.fb:CreateSoftShadow()
-	end
-	bar.fb:Point('TOPLEFT', bar, 'BOTTOMLEFT', 0, -SPACING)
-	bar.fb:Point('BOTTOMRIGHT', bar, 'BOTTOMRIGHT', 0, (E.PixelMode and -20 or -22))
-
-	bar.fb:SetScript('OnEnter', onEnter)
-	bar.fb:SetScript('OnLeave', onLeave)
-
-	bar.fb:SetScript('OnClick', function(self)
-		TogglePVPUI()
-	end)
-
-	BDB:ToggleHonorBackdrop()
-
-	if E.db.benikui.general.benikuiStyle ~= true then return end
-	bar:Style('Outside', nil, false, true)
-end
-
-function BDB:ApplyHonorStyling()
+function mod:ApplyHonorStyling()
 	local bar = ElvUI_HonorBar
 	if E.db.databars.honor.enable then
 		if bar.fb then
@@ -81,18 +37,7 @@ function BDB:ApplyHonorStyling()
 	end
 end
 
-function BDB:ChangeHonorColor()
-	local bar = ElvUI_HonorBar
-	local db = E.db.benikuiDatabars.honor.color
-
-	if db.default then
-		bar.statusBar:SetStatusBarColor(0.941, 0.447, 0.254, 0.8)
-	else
-		bar.statusBar:SetStatusBarColor(BUI:unpackColor(db.hn))
-	end
-end
-
-function BDB:ToggleHonorBackdrop()
+function mod:ToggleHonorBackdrop()
 	if E.db.benikuiDatabars.honor.enable ~= true then return end
 	local bar = ElvUI_HonorBar
 	local db = E.db.benikuiDatabars.honor
@@ -117,7 +62,7 @@ function BDB:ToggleHonorBackdrop()
 	end
 end
 
-function BDB:UpdateHonorNotifierPositions()
+function mod:UpdateHonorNotifierPositions()
 	local bar = ElvUI_HonorBar.statusBar
 
 	local db = E.db.benikuiDatabars.honor.notifiers
@@ -157,12 +102,12 @@ function BDB:UpdateHonorNotifierPositions()
 	end
 end
 
-function BDB:UpdateHonorNotifier()
+function mod:UpdateHonorNotifier()
 	local bar = ElvUI_HonorBar.statusBar
-	local showHonor = UnitLevel("player") >= MAX_PLAYER_LEVEL
-	if not showHonor then
+
+	if E.db.databars.honor.orientation ~= 'VERTICAL' then
 		bar.f:Hide()
-	elseif showHonor and (not E.db.databars.honor.hideInCombat or not InCombatLockdown()) then
+	else
 		bar.f:Show()
 		local text = ''
 		local current = UnitHonor("player");
@@ -176,39 +121,34 @@ function BDB:UpdateHonorNotifier()
 	end
 end
 
-function BDB:HonorTextOffset()
-	local text = ElvUI_ExperienceBar.text
-	text:Point('CENTER', 0, E.db.databars.experience.textYoffset or 0)
+function mod:HonorTextOffset()
+	local text = ElvUI_HonorBar.text
+	text:Point('CENTER', 0, E.db.databars.honor.textYoffset or 0)
 end
 
-function BDB:LoadHonor()
+function mod:LoadHonor()
 	local bar = ElvUI_HonorBar
-	self:ChangeHonorColor()
+
 	self:HonorTextOffset()
-	hooksecurefunc(M, 'UpdateHonor', BDB.ChangeHonorColor)
-	hooksecurefunc(M, 'UpdateHonor', BDB.HonorTextOffset)
+	hooksecurefunc(M, 'UpdateHonor', mod.HonorTextOffset)
 
 	local db = E.db.benikuiDatabars.honor.notifiers
 
-	if db.enable and E.db.databars.honor.orientation == 'VERTICAL' then
+	if db.enable then
 		self:CreateNotifier(bar.statusBar)
 		self:UpdateHonorNotifierPositions()
 		self:UpdateHonorNotifier()
-		hooksecurefunc(M, 'UpdateHonor', BDB.UpdateHonorNotifier)
-		hooksecurefunc(DT, 'LoadDataTexts', BDB.UpdateHonorNotifierPositions)
-		hooksecurefunc(M, 'UpdateHonorDimensions', BDB.UpdateHonorNotifierPositions)
-	end
-
-	if BUI.ShadowMode then
-		if not bar.style then
-			bar:CreateSoftShadow()
-		end
+		hooksecurefunc(M, 'UpdateHonor', mod.UpdateHonorNotifier)
+		hooksecurefunc(DT, 'LoadDataTexts', mod.UpdateHonorNotifierPositions)
+		hooksecurefunc(M, 'UpdateHonorDimensions', mod.UpdateHonorNotifierPositions)
+		hooksecurefunc(M, 'UpdateHonorDimensions', mod.UpdateHonorNotifier)
 	end
 
 	if E.db.benikuiDatabars.honor.enable ~= true then return end
 
-	StyleBar()
+	self:StyleBar(bar, OnClick)
+	self:ToggleHonorBackdrop()
 	self:ApplyHonorStyling()
 
-	hooksecurefunc(M, 'UpdateHonorDimensions', BDB.ApplyHonorStyling)
+	hooksecurefunc(M, 'UpdateHonorDimensions', mod.ApplyHonorStyling)
 end

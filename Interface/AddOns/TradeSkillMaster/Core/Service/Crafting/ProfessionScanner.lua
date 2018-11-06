@@ -64,7 +64,7 @@ function ProfessionScanner.HasScanned()
 end
 
 function ProfessionScanner.HasSkills()
-	return private.db:GetNumRows() > 0
+	return private.hasScanned and private.db:GetNumRows() > 0
 end
 
 function ProfessionScanner.RegisterHasScannedCallback(callback)
@@ -80,22 +80,29 @@ function ProfessionScanner.CreateQuery()
 end
 
 function ProfessionScanner.GetNameBySpellId(spellId)
+	assert(private.hasScanned)
 	return private.db:GetUniqueRowField("spellId", spellId, "name")
 end
 
 function ProfessionScanner.GetRankBySpellId(spellId)
+	assert(private.hasScanned)
 	return private.db:GetUniqueRowField("spellId", spellId, "rank")
 end
 
 function ProfessionScanner.GetNumSkillupsBySpellId(spellId)
+	assert(private.hasScanned)
 	return private.db:GetUniqueRowField("spellId", spellId, "numSkillUps")
 end
 
 function ProfessionScanner.GetDifficultyBySpellId(spellId)
+	assert(private.hasScanned)
 	return private.db:GetUniqueRowField("spellId", spellId, "difficulty")
 end
 
 function ProfessionScanner.GetFirstSpellId()
+	if not private.hasScanned then
+		return
+	end
 	return private.db:NewQuery()
 		:Select("spellId")
 		:OrderBy("index", true)
@@ -103,7 +110,7 @@ function ProfessionScanner.GetFirstSpellId()
 end
 
 function ProfessionScanner.HasSpellId(spellId)
-	return private.db:GetUniqueRowField("spellId", spellId, "index") and true or false
+	return private.hasScanned and private.db:GetUniqueRowField("spellId", spellId, "index") and true or false
 end
 
 
@@ -312,7 +319,7 @@ function private.ScanRecipe(professionName, spellId)
 		craftName = GetSpellInfo(spellId)
 	elseif strfind(itemLink, "item:") then
 		-- result of craft is item
-		itemString = TSMAPI_FOUR.Item.ToItemString(itemLink)
+		itemString = TSMAPI_FOUR.Item.ToBaseItemString(itemLink)
 		craftName = TSMAPI_FOUR.Item.GetName(itemLink)
 	else
 		error("Invalid craft: "..tostring(spellId))
@@ -334,7 +341,15 @@ function private.ScanRecipe(professionName, spellId)
 		end
 		-- workaround for incorrect values returned for new mass milling recipes
 		if TSM.CONST.MASS_MILLING_RECIPES[spellId] then
-			lNum, hNum = 8, 8.8
+			if spellId == 210116 then -- Yseralline
+				lNum, hNum = 4, 4 -- always four
+			elseif spellId == 209664 then -- Felwort
+				lNum, hNum = 42, 42 -- amount is variable but the values are conservative
+			elseif spellId == 247861 then -- Astral Glory
+				lNum, hNum = 4, 4 -- amount is variable but the values are conservative
+			else
+				lNum, hNum = 8, 8.8
+			end
 		end
 		numResult = floor(((lNum or 1) + (hNum or 1)) / 2)
 	end
@@ -347,7 +362,7 @@ function private.ScanRecipe(professionName, spellId)
 	local matQuantities = TSMAPI_FOUR.Util.AcquireTempTable()
 	local haveInvalidMats = false
 	for i = 1, C_TradeSkillUI.GetRecipeNumReagents(spellId) do
-		local matItemString = TSMAPI_FOUR.Item.ToItemString(C_TradeSkillUI.GetRecipeReagentItemLink(spellId, i))
+		local matItemString = TSMAPI_FOUR.Item.ToBaseItemString(C_TradeSkillUI.GetRecipeReagentItemLink(spellId, i))
 		if not matItemString then
 			haveInvalidMats = true
 			break

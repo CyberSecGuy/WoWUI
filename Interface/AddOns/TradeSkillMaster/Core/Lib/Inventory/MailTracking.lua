@@ -22,7 +22,6 @@ local INBOX_INFO_DB_SCHEMA = {
 		icon = "string",
 		subject = "string",
 		itemString = "string",
-		items = "string",
 		itemCount = "number",
 		money = "number",
 		cod = "number",
@@ -36,7 +35,6 @@ local INBOX_INFO_DB_SCHEMA = {
 		"icon",
 		"subject",
 		"itemString",
-		"items",
 		"itemCount",
 		"money",
 		"cod",
@@ -115,7 +113,8 @@ function MailTracking.OnInitialize()
 	MailTracking:SecureHook("CancelAuction", function(index)
 		local itemString = TSMAPI_FOUR.Item.ToBaseItemString(GetAuctionItemLink("owner", index))
 		local _, _, stackSize = GetAuctionItemInfo("owner", index)
-		if not itemString or not stackSize then
+		-- for some reason, these APIs don't always work properly, so check the return values
+		if not itemString or not stackSize or stackSize == 0 then
 			return
 		end
 		TSM.Inventory.ChangePendingMailQuantity(itemString, stackSize)
@@ -231,7 +230,7 @@ function private.MailInboxUpdateDelayed()
 			end
 		end
 
-		private.mailDB:BulkInsertNewRow(i, mailType, subject or "--", firstItemString or "", private.GetInboxItemLink(i) or "", itemCount or 0, money or 0, cod or 0, daysLeft)
+		private.mailDB:BulkInsertNewRow(i, mailType, subject or "--", firstItemString or "", itemCount or 0, money or 0, cod or 0, daysLeft)
 	end
 
 	private.itemDB:BulkInsertEnd()

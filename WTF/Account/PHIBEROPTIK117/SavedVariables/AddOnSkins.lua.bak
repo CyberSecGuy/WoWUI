@@ -3,6 +3,7 @@ AddOnSkinsDB = {
 	["profileKeys"] = {
 		["Fiber - Stormrage"] = "BenikUI",
 		["Phiber - Stormrage"] = "BenikUI",
+		["Fibur - Stormrage"] = "BenikUI",
 		["Fiberoptic - Aggramar"] = "BenikUI",
 		["Voidbro - Stormrage"] = "BenikUI",
 		["Fiberboi - Sargeras"] = "BenikUI",
@@ -12,12 +13,14 @@ AddOnSkinsDB = {
 		},
 		["Phiber - Stormrage"] = {
 		},
+		["Default"] = {
+		},
 		["BenikUI"] = {
+			["WeakAuraAuraBar"] = true,
 			["SkadaBackdrop"] = false,
-			["TransparentEmbed"] = true,
 			["DBMSkinHalf"] = true,
 			["EmbedSystemDual"] = true,
-			["EmbedFrameStrata"] = "2-LOW",
+			["TransparentEmbed"] = true,
 		},
 		["Fiberoptic - Aggramar"] = {
 		},

@@ -18,7 +18,8 @@ local private = {
 	showDelayFrame = 0,
 	filterText = "",
 	haveSkillUp = false,
-	haveMaterials = false
+	haveMaterials = false,
+	professionFrame = nil,
 }
 local SHOW_DELAY_FRAMES = 2
 local KEY_SEP = "\001"
@@ -36,6 +37,7 @@ private.dividedContainerContext = {}
 -- ============================================================================
 
 function Crafting.OnInitialize()
+	TSMAPI_FOUR.Util.RegisterItemLinkedCallback(private.ItemLinkedCallback)
 	TSM.UI.CraftingUI.RegisterTopLevelPage("Crafting", "iconPack.24x24/Crafting", private.GetCraftingFrame)
 	private.FSMCreate()
 end
@@ -44,11 +46,14 @@ function Crafting.GatherCraftNext(spellId, quantity)
 	private.fsm:ProcessEvent("EV_CRAFT_NEXT_BUTTON_CLICKED", spellId, quantity)
 end
 
+
+
 -- ============================================================================
 -- Crafting UI
 -- ============================================================================
 
 function private.GetCraftingFrame()
+	TSM.Analytics.PageView("crafting/crafting")
 	return TSMAPI_FOUR.UI.NewElement("DividedContainer", "crafting")
 		:SetContextTable(private.dividedContainerContext, DEFAULT_DIVIDED_CONTAINER_CONTEXT)
 		:SetMinWidth(450, 250)
@@ -141,7 +146,7 @@ function private.GetCraftingFrame()
 						:SetStyle("fontHeight", 12)
 						:SetStyle("textColor", "#ffffff")
 						:SetText(L["Clear Queue"])
-						:SetScript("OnClick", TSM.Crafting.Queue.Clear)
+						:SetScript("OnClick", private.ClearOnClick)
 					)
 				)
 			)
@@ -316,7 +321,7 @@ function private.GetCraftingElements(self, button)
 				)
 				:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "details")
 					:SetLayout("HORIZONTAL")
-					:SetStyle("height", 118)
+					:SetStyle("height", 138)
 					:SetStyle("background", "#2e2e2e")
 					:SetStyle("padding", 8)
 					:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "left")
@@ -325,12 +330,13 @@ function private.GetCraftingElements(self, button)
 						:SetStyle("margin.right", 6)
 						:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "title")
 							:SetLayout("HORIZONTAL")
-							:SetStyle("height", 40)
+							:SetStyle("height", 50)
 							:AddChild(TSMAPI_FOUR.UI.NewElement("Button", "icon")
 								:SetStyle("width", 32)
 								:SetStyle("height", 32)
 								:SetStyle("margin.left", 2)
 								:SetStyle("margin.right", 8)
+								:SetScript("OnClick", private.ItemOnClick)
 							)
 							:AddChild(TSMAPI_FOUR.UI.NewElement("Button", "name")
 								:SetStyle("justifyH", "LEFT")
@@ -339,7 +345,7 @@ function private.GetCraftingElements(self, button)
 							)
 						)
 						:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "num")
-							:SetStyle("height", 13)
+							:SetStyle("height", 18)
 							:SetStyle("margin.left", 42)
 							:SetStyle("margin.bottom", 4)
 							:SetStyle("textColor", "#ffffff")
@@ -347,7 +353,7 @@ function private.GetCraftingElements(self, button)
 							:SetStyle("fontHeight", 10)
 						)
 						:AddChild(TSMAPI_FOUR.UI.NewElement("Text", "error")
-							:SetStyle("height", 13)
+							:SetStyle("height", 18)
 							:SetStyle("margin.bottom", 8)
 							:SetStyle("margin.left", 42)
 							:SetStyle("textColor", "#f72d20")
@@ -364,8 +370,9 @@ function private.GetCraftingElements(self, button)
 					:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "right")
 						:SetLayout("VERTICAL")
 						:AddChild(TSMAPI_FOUR.UI.NewElement("CraftingMatList", "matList")
-							:SetStyle("height", 70)
+							:SetStyle("height", 90)
 							:SetStyle("margin.bottom", 8)
+							:SetStyle("rowHeight", 18)
 							:SetStyle("borderTexture", "Interface\\Addons\\TradeSkillMaster\\Media\\matListEdgeFrame.blp")
 							:SetStyle("borderSize", 8)
 							:SetStyle("borderInset", 1)
@@ -428,10 +435,12 @@ function private.GetCraftingElements(self, button)
 				:SetStyle("justifyH", "CENTER")
 				:SetText(L["Profession loading..."])
 			)
+			:SetScript("OnUpdate", private.ProfessionFrameOnUpdate)
+			:SetScript("OnHide", private.ProfessionFrameOnHide)
 		frame:GetElement("recipeContent"):Hide()
 		return frame
 	elseif button == "group" then
-		return TSMAPI_FOUR.UI.NewElement("Frame", "group")
+		local frame = TSMAPI_FOUR.UI.NewElement("Frame", "group")
 			:SetLayout("VERTICAL")
 			:AddChild(TSMAPI_FOUR.UI.NewElement("Frame", "search")
 				:SetLayout("HORIZONTAL")
@@ -470,9 +479,10 @@ function private.GetCraftingElements(self, button)
 				:SetStyle("height", 26)
 				:SetStyle("margin", 8)
 				:SetText(L["RESTOCK SELECTED GROUPS"])
-				:SetDisabled(true)
 				:SetScript("OnClick", private.QueueAddBtnOnClick)
 			)
+		frame:GetElement("addBtn"):SetDisabled(frame:GetElement("groupTree"):IsSelectionCleared())
+		return frame
 	else
 		error("Unexpected button: "..tostring(button))
 	end
@@ -497,6 +507,16 @@ end
 function private.FrameOnHide()
 	private.showDelayFrame = 0
 	private.fsm:ProcessEvent("EV_FRAME_HIDE")
+end
+
+function private.ProfessionFrameOnUpdate(frame)
+	frame:SetScript("OnUpdate", nil)
+	private.professionFrame = frame
+end
+
+function private.ProfessionFrameOnHide(frame)
+	assert(private.professionFrame == frame)
+	private.professionFrame = nil
 end
 
 function private.GroupSearchOnTextChanged(input)
@@ -611,6 +631,10 @@ function private.QueueBtnOnClick(button)
 	private.fsm:ProcessEvent("EV_QUEUE_BUTTON_CLICKED", value)
 end
 
+function private.ItemOnClick(text)
+	TSMAPI_FOUR.Util.SafeItemRef(TSMAPI_FOUR.Item.GetLink(text:GetElement("__parent.name"):GetContext()))
+end
+
 function private.CraftBtnOnMouseDown(button)
 	local quantity = max(button:GetElement("__parent.number.input"):GetNumber() or 0, 1)
 	private.fsm:ProcessEvent("EV_CRAFT_BUTTON_MOUSE_DOWN", quantity)
@@ -637,7 +661,7 @@ function private.QueueOnRowClick(button, data, mouseButton)
 	local spellId = data:GetField("spellId")
 	if mouseButton == "RightButton" then
 		private.fsm:ProcessEvent("EV_QUEUE_RIGHT_CLICKED", spellId)
-	else
+	elseif TSM.Crafting.ProfessionScanner.HasSpellId(spellId) then
 		private.fsm:ProcessEvent("EV_CRAFT_NEXT_BUTTON_CLICKED", spellId, TSM.Crafting.Queue.GetNum(spellId))
 	end
 end
@@ -647,6 +671,16 @@ function private.CraftNextOnClick(button)
 	button:Draw()
 	local spellId = button:GetElement("__parent.__parent.queueList"):GetFirstData():GetField("spellId")
 	private.fsm:ProcessEvent("EV_CRAFT_NEXT_BUTTON_CLICKED", spellId, TSM.Crafting.Queue.GetNum(spellId))
+end
+
+function private.ClearOnClick(button)
+	TSM.Crafting.Queue.Clear()
+	button:GetElement("__parent.__parent.queueCost.text"):SetText("")
+		:Draw()
+	button:GetElement("__parent.__parent.queueProfit.text"):SetText("")
+		:Draw()
+	button:GetElement("__parent.craftNextBtn"):SetDisabled(true)
+		:Draw()
 end
 
 function private.QueueAddBtnOnClick(button)
@@ -701,6 +735,7 @@ function private.FSMCreate()
 	local fsmContext = {
 		frame = nil,
 		recipeQuery = nil,
+		professionQuery = nil,
 		page = "profession",
 		selectedRecipeSpellId = nil,
 		queueQuery = nil,
@@ -708,6 +743,10 @@ function private.FSMCreate()
 		craftingType = nil,
 		craftingQuantity = nil,
 	}
+
+	TSMAPI_FOUR.Event.Register("BAG_UPDATE_DELAYED", function()
+		private.fsm:ProcessEvent("EV_BAG_UPDATE_DELAYED")
+	end)
 
 	TSM.Crafting.ProfessionState.RegisterUpdateCallback(function()
 		private.fsm:ProcessEvent("EV_PROFESSION_STATE_UPDATE")
@@ -722,6 +761,61 @@ function private.FSMCreate()
 	end
 	function fsmPrivate.QueueUpdateCallback()
 		private.fsm:ProcessEvent("EV_QUEUE_UPDATE")
+	end
+	function fsmPrivate.SkillUpdateCallback()
+		private.fsm:ProcessEvent("EV_SKILL_UPDATE")
+	end
+	function fsmPrivate.UpdateMaterials(context)
+		if context.page == "profession" then
+			context.frame:GetElement("left.viewContainer.main.content.profession.recipeContent.recipeList"):UpdateData(true)
+			context.frame:GetElement("left.viewContainer.main.content.profession.recipeContent.details.right.matList"):UpdateData(true)
+		end
+		fsmPrivate.UpdateCraftButtons(context)
+	end
+	function fsmPrivate.UpdateSkills(context)
+		if context.page ~= "profession" then
+			return
+		end
+
+		-- update the professions dropdown info
+		local dropdownSelection = nil
+		local currentProfession = TSM.Crafting.ProfessionState.GetCurrentProfession()
+		local isCurrentProfessionPlayer = private.IsPlayerProfession()
+		wipe(private.professions)
+		wipe(private.professionsOrder)
+		if currentProfession and not isCurrentProfessionPlayer then
+			local playerName = nil
+			local linked, linkedName = C_TradeSkillUI.IsTradeSkillLinked()
+			if linked then
+				playerName = linkedName or "?"
+			elseif C_TradeSkillUI.IsNPCCrafting() then
+				playerName = L["NPC"]
+			elseif C_TradeSkillUI.IsTradeSkillGuild() then
+				playerName = L["Guild"]
+			end
+			assert(playerName)
+			local key = currentProfession
+			tinsert(private.professionsOrder, key)
+			private.professions[key] = format("%s - %s", currentProfession, playerName)
+			dropdownSelection = key
+		end
+
+		for _, player, profession, level, maxLevel in TSM.Crafting.PlayerProfessions.Iterator() do
+			-- TODO: support showing of other player's professions?
+			if player == UnitName("player") then
+				local key = player..KEY_SEP..profession
+				tinsert(private.professionsOrder, key)
+				private.professions[key] = format("%s %d/%d - %s", profession, level, maxLevel, player)
+				if isCurrentProfessionPlayer and profession == currentProfession then
+					assert(not dropdownSelection)
+					dropdownSelection = key
+				end
+			end
+		end
+
+		context.frame:GetElement("left.viewContainer.main.content.profession.dropdownFilterFrame.professionDropdown")
+			:SetDictionaryItems(private.professions, private.professions[dropdownSelection], private.professionsOrder, true)
+			:Draw()
 	end
 	function fsmPrivate.UpdateContentPage(context)
 		if context.page ~= "profession" and context.page ~= "filters" then
@@ -766,7 +860,7 @@ function private.FSMCreate()
 		end
 
 		context.frame:GetElement("left.viewContainer.main.content.profession.dropdownFilterFrame.professionDropdown")
-			:SetDictionaryItems(private.professions, private.professions[dropdownSelection], private.professionsOrder)
+			:SetDictionaryItems(private.professions, private.professions[dropdownSelection], private.professionsOrder, true)
 			:Draw()
 
 		local craftingContentFrame = context.frame:GetElement("left.viewContainer.main.content.profession")
@@ -850,6 +944,7 @@ function private.FSMCreate()
 			:SetPressed(context.craftingSpellId and context.craftingType == "all")
 		detailsFrame:GetElement("right.matList")
 			:SetRecipe(context.selectedRecipeSpellId)
+			:SetContext(context.selectedRecipeSpellId)
 		craftingContentFrame:Draw()
 	end
 	function fsmPrivate.UpdateQueueFrame(context)
@@ -861,12 +956,13 @@ function private.FSMCreate()
 		queueFrame:GetElement("queueProfit.text"):SetText(totalProfitText)
 		queueFrame:GetElement("queueList"):Draw()
 
+		local professionLoaded = private.IsProfessionLoaded()
 		local nextCraftRecord = queueFrame:GetElement("queueList"):GetFirstData()
 		local nextCraftSpellId = nextCraftRecord and nextCraftRecord:GetField("spellId")
-		if nextCraftRecord and (not TSM.Crafting.ProfessionScanner.HasSpellId(nextCraftSpellId) or TSM.Crafting.ProfessionUtil.GetNumCraftable(nextCraftSpellId) == 0) then
+		if nextCraftRecord and (not professionLoaded or not TSM.Crafting.ProfessionScanner.HasSpellId(nextCraftSpellId) or TSM.Crafting.ProfessionUtil.GetNumCraftable(nextCraftSpellId) == 0) then
 			nextCraftRecord = nil
 		end
-		local canCraftFromQueue = private.IsProfessionLoaded() and private.IsPlayerProfession()
+		local canCraftFromQueue = professionLoaded and private.IsPlayerProfession()
 		queueFrame:GetElement("craft.craftNextBtn")
 			:SetDisabled(not canCraftFromQueue or not nextCraftRecord or context.craftingSpellId)
 			:SetPressed(context.craftingSpellId and context.craftingType == "queue")
@@ -975,6 +1071,9 @@ function private.FSMCreate()
 				context.recipeQuery = TSM.Crafting.ProfessionScanner.CreateQuery()
 					:Select("spellId", "categoryId")
 					:OrderBy("index", true)
+					:VirtualField("matNames", "string", TSM.Crafting.GetMatNames, "spellId")
+				context.professionQuery = TSM.Crafting.PlayerProfessions.CreateQuery()
+				context.professionQuery:SetUpdateCallback(fsmPrivate.SkillUpdateCallback)
 				if context.page == "profession" then
 					private.filterText = ""
 				end
@@ -988,6 +1087,8 @@ function private.FSMCreate()
 				context.selectedRecipeSpellId = nil
 				context.recipeQuery:Release()
 				context.recipeQuery = nil
+				context.professionQuery:Release()
+				context.professionQuery = nil
 			end)
 			:AddTransition("ST_FRAME_OPEN_NO_PROFESSION")
 			:AddTransition("ST_FRAME_CLOSED")
@@ -1001,8 +1102,14 @@ function private.FSMCreate()
 				context.recipeQuery:Reset()
 					:Select("spellId", "categoryId")
 					:OrderBy("index", true)
+					:VirtualField("matNames", "string", TSM.Crafting.GetMatNames, "spellId")
 				if filter ~= "" then
-					context.recipeQuery:Matches("name", TSMAPI_FOUR.Util.StrEscape(filter))
+					filter = TSMAPI_FOUR.Util.StrEscape(filter)
+					context.recipeQuery
+						:Or()
+							:Matches("name", filter)
+							:Matches("matNames", filter)
+						:End()
 				end
 				if private.haveSkillUp then
 					context.recipeQuery:NotEqual("difficulty", "trivial")
@@ -1033,8 +1140,14 @@ function private.FSMCreate()
 				context.selectedRecipeSpellId = spellId
 				fsmPrivate.UpdateContentPage(context)
 			end)
+			:AddEvent("EV_BAG_UPDATE_DELAYED", function(context)
+				fsmPrivate.UpdateMaterials(context)
+			end)
 			:AddEvent("EV_QUEUE_UPDATE", function(context)
 				fsmPrivate.UpdateQueueFrame(context)
+			end)
+			:AddEvent("EV_SKILL_UPDATE", function(context)
+				fsmPrivate.UpdateSkills(context)
 			end)
 			:AddEvent("EV_CRAFT_BUTTON_MOUSE_DOWN", function(context, quantity)
 				context.craftingType = quantity == math.huge and "all" or "craft"
@@ -1045,11 +1158,6 @@ function private.FSMCreate()
 				fsmPrivate.StartCraft(context, context.selectedRecipeSpellId, quantity)
 			end)
 			:AddEvent("EV_CRAFT_NEXT_BUTTON_CLICKED", function(context, spellId, quantity)
-				if not TSM.Crafting.GetProfession(spellId) == TSM.Crafting.ProfessionState.GetCurrentProfession() then
-					-- wrong profession (can't assert since the old Gathering could hit this)
-					TSM:LOG_ERR("Crafting from the wrong profession (%d, %d)", spellId, quantity)
-					return
-				end
 				context.craftingType = "queue"
 				fsmPrivate.StartCraft(context, spellId, quantity)
 			end)
@@ -1102,4 +1210,14 @@ end
 
 function private.HaveMaterialsFilterHelper(row)
 	return TSM.Crafting.ProfessionUtil.GetNumCraftable(row:GetField("spellId")) > 0
+end
+
+function private.ItemLinkedCallback(name, itemLink)
+	if not private.professionFrame then
+		return
+	end
+	private.professionFrame:GetElement("filterInput")
+		:SetText(name)
+		:Draw()
+	return true
 end

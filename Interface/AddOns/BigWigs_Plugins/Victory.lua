@@ -14,10 +14,6 @@ local media = LibStub("LibSharedMedia-3.0")
 local SOUND = media.MediaType and media.MediaType.SOUND or "sound"
 local PlaySoundFile = PlaySoundFile
 
-media:Register(SOUND, "BigWigs: Victory", "Interface\\AddOns\\BigWigs\\Sounds\\Victory.ogg")
-media:Register(SOUND, "BigWigs: Victory Long", "Interface\\AddOns\\BigWigs\\Sounds\\VictoryLong.ogg")
-media:Register(SOUND, "BigWigs: Victory Classic", "Interface\\AddOns\\BigWigs\\Sounds\\VictoryClassic.ogg")
-
 -------------------------------------------------------------------------------
 -- Options
 --
@@ -104,6 +100,7 @@ function plugin:OnPluginEnable()
 		BossBanner:UnregisterEvent("BOSS_KILL")
 	end
 	self:RegisterMessage("BigWigs_OnBossWin")
+	self:RegisterMessage("BigWigs_VictorySound")
 end
 
 -------------------------------------------------------------------------------
@@ -114,6 +111,9 @@ function plugin:BigWigs_OnBossWin(event, module)
 	if self.db.profile.bigwigsMsg then
 		self:SendMessage("BigWigs_Message", self, nil, L.defeated:format(module.displayName), "green")
 	end
+end
+
+function plugin:BigWigs_VictorySound()
 	local soundName = self.db.profile.soundName
 	if soundName ~= "None" then
 		local sound = media:Fetch(SOUND, soundName, true)
@@ -122,4 +122,3 @@ function plugin:BigWigs_OnBossWin(event, module)
 		end
 	end
 end
-

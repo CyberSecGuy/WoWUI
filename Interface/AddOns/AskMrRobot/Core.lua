@@ -1,9 +1,3 @@
--- AskMrRobot
--- Does cool stuff associated with askmrrobot.com:
---   Import/Export gear and optimization solutions from/to the website
---   Improve the combat logging experience and augment it with extra data not available directly in the log file
---   Team Optimizer convenience functionality
-
 AskMrRobot = LibStub("AceAddon-3.0"):NewAddon("AskMrRobot", "AceEvent-3.0", "AceComm-3.0", "AceConsole-3.0", "AceSerializer-3.0")
 local Amr = AskMrRobot
 Amr.Serializer = LibStub("AskMrRobot-Serializer")
@@ -13,8 +7,7 @@ Amr.ADDON_NAME = "AskMrRobot"
 -- types of inter-addon messages that we receive, used to parcel them out to the proper handlers
 Amr.MessageTypes = {
 	Version = "_V",
-	VersionRequest = "_VR",
-	Team = "_T"
+	VersionRequest = "_VR"
 }
 
 local L = LibStub("AceLocale-3.0"):GetLocale("AskMrRobot", true)
@@ -27,11 +20,11 @@ local _amrLDB = LibStub("LibDataBroker-1.1"):NewDataObject(Amr.ADDON_NAME, {
 	icon = "Interface\\AddOns\\" .. Amr.ADDON_NAME .. "\\Media\\icon",
 	OnClick = function(self, button, down)
 		if button == "LeftButton" then
-			if IsControlKeyDown() then
-				Amr:Wipe()
-			else
+			--if IsControlKeyDown() then
+			--	Amr:Wipe()
+			--else
 				Amr:Toggle()
-			end
+			--end
 		elseif button == "RightButton" then
 			Amr:EquipGearSet()
 		end
@@ -50,33 +43,21 @@ local function initializeDb()
 
 	local defaults = {
 		char = {
+			LastVersion = 0,           -- used to clean out old stuff	
 			FirstUse = true,           -- true if this is first time use, gets cleared after seeing the export help splash window
 			Talents = {},              -- for each spec, selected talents
-			Artifacts = {},            -- for each spec, artifact info
-			Equipped = {},             -- for each spec, slot id to item link
-			BagItems = {},             -- list of item links for bag
-			BankItems = {},            -- list of item links for bank
-			VoidItems = {},            -- list of item links for void storage
+			Equipped = {},             -- for each spec, slot id to item info
+			BagItems = {},             -- list of item info for bags
+			BankItems = {},            -- list of item info for bank
 			BagItemsAndCounts = {},    -- used mainly for the shopping list
 			BankItemsAndCounts = {},   -- used mainly for the shopping list			
-			GearSets = {},             -- imported gear sets, key by spec group (1 or 2), slot id to item object
-			ExtraItemData = {},        -- for each spec group (1 or 2): mainly for legacy support, item id to object with socketColor and duplicateId information
-			ExtraGemData = {},         -- for each spec group (1 or 2): gem enchant id to gem display information, and data used to detect identical gems (mainly for legacy support)
-			ExtraEnchantData = {},     -- for each spec group (1 or 2): enchant id to enchant display information and material information
+			GearSetups = {},           -- imported gear sets
+			ExtraEnchantData = {},     -- enchant id to enchant display information and material information
 			Logging = {                -- character logging settings
 				Enabled = false,       -- whether logging is currently on or not
 				LastZone = nil,        -- last zone the player was in
 				LastDiff = nil,        -- last difficulty for the last zone the player was in
 				LastWipe = nil         -- last time a wipe was called by this player
-			},
-			TeamOpt = {
-				AllItems = {},         -- all equippable items no matter where it is, list of item unique ids, used to determine when a player gains a new equippable item
-				History = {},          -- history of drops since joining the current group
-				Rolls = {},            -- current loot choices for a loot distribution in progress
-				Role = nil,            -- Leader or Member, changes UI to the mode most appropriate for this user
-				Loot = {},             -- the last loot seen by the master looter
-				LootGuid = nil,        -- guid of the last unit looted by the master looter, will be "container" if there is no target
-				LootInProgress = false -- true if looting is currently in progress
 			}
 		},
 		profile = {
@@ -84,7 +65,6 @@ local function initializeDb()
 				hide = false
 			},
 			window = {},               -- main window position settings
-			lootWindow = {},           -- loot window position settings
 			shopWindow = {},           -- shopping list window position settings
 			options = {
 				autoGear = false,      -- auto-equip saved gear sets when changing specs
@@ -98,21 +78,16 @@ local function initializeDb()
 		},
 		global = {
 			Region = nil,              -- region that this user is in, all characters on the same account should be the same region
-			Shopping = {},             -- shopping list data stored globally for access on any character
+			Shopping2 = {},            -- shopping list data stored globally for access on any character
 			Logging = {                -- a lot of log data is stored globally for simplicity, can only be raiding with one character at a time
 				Wipes = {},            -- times that a wipe was called
 				PlayerData = {},       -- player data gathered at fight start
 				PlayerExtras = {}      -- player extra data like auras, gathered at fight start
-			},
-			TeamOpt = {                -- this stuff is stored globally in case a player e.g. switches to an alt in a raid group
-				LootGear = {},         -- gear info that needs to be transmitted with the next loot
-				Rankings = {},         -- last rankings imported by the loot ranker
-				RankingString = nil    -- last ranking string imported, kept around for efficient serialization
 			}
 		}
 	}
 	
-	Amr.db = LibStub("AceDB-3.0"):New("AskMrRobotDb3", defaults)
+	Amr.db = LibStub("AceDB-3.0"):New("AskMrRobotDb4", defaults)
 	
 	-- set defaults for auto logging; if a new zone is added and some other stuff was turned on, turn on the new zone too
 	local hasSomeLogging = false
@@ -132,6 +107,12 @@ local function initializeDb()
 				hasSomeLogging = true
 			end
 		end
+	end	
+
+	for k,v in pairs(Amr.db.profile.Logging.Auto) do
+		if not Amr.IsSupportedInstanceId(k) then
+			Amr.db.profile.Logging.Auto[k] = nil
+		end		
 	end
 	
 	if hasSomeLogging then		
@@ -142,6 +123,18 @@ local function initializeDb()
 		end
 	end
 	
+	-- upgrade old gear set info to new format
+	if Amr.db.char.GearSets then
+		Amr.db.char.GearSets = nil
+	end
+
+	if not Amr.db.char.GearSetups then
+		Amr.db.char.GearSetups = {}
+	end
+
+	if Amr.db.global.Shopping then
+		Amr.db.global.Shopping = nil
+	end
 	
 	Amr.db.RegisterCallback(Amr, "OnProfileChanged", "RefreshConfig")
 	Amr.db.RegisterCallback(Amr, "OnProfileCopied", "RefreshConfig")
@@ -157,13 +150,33 @@ function Amr:OnInitialize()
 	_icon:Register(Amr.ADDON_NAME, _amrLDB, self.db.profile.minimap)	
 
 	-- listen for inter-addon communication
-	self:RegisterComm(Amr.ChatPrefix, "OnCommReceived")	
+	self:RegisterComm(Amr.ChatPrefix, "OnCommReceived")
 end
 
 local _enteredWorld = false
 local _pendingInit = false
 
-function finishInitialize()
+-- upgrade some stuff from old to new formats
+local function upgradeFromOld()
+
+	local currentVersion = tonumber(GetAddOnMetadata(Amr.ADDON_NAME, "Version"))
+	if Amr.db.char.LastVersion < 65 then
+		for i = 1,GetNumSpecializations() do
+			local _, specName = GetSpecializationInfo(i)
+			if specName then
+				print("AMR " .. specName)
+				local setid = C_EquipmentSet.GetEquipmentSetID("AMR " .. specName)
+				if setid then
+					C_EquipmentSet.DeleteEquipmentSet(setid)
+				end
+			end
+		end
+	end
+	Amr.db.char.LastVersion = currentVersion
+
+end
+
+local function finishInitialize()
 
 	-- record region, the only thing that we still can't get from the log file
 	Amr.db.global.Region = Amr.RegionNames[GetCurrentRegion()]
@@ -175,11 +188,12 @@ function finishInitialize()
 		Amr:InitializeGear()
 		Amr:InitializeExport()
 		Amr:InitializeCombatLog()
-		Amr:InitializeTeamOpt()
+
+		upgradeFromOld()
 	end)
 end
 
-function onPlayerEnteringWorld()
+local function onPlayerEnteringWorld()
 
 	_enteredWorld = true
 	
@@ -226,10 +240,10 @@ local _slashMethods = {
 	hide      = "Hide",
 	show      = "Show",
 	toggle    = "Toggle",
-	equip     = "EquipGearSet",     -- parameter is "primary" or "secondary", or no parameter to toggle
+	equip     = "EquipGearSet",
 	version   = "PrintVersions",
-	wipe      = "Wipe",
-	undowipe  = "UndoWipe",
+	--wipe      = "Wipe",
+	--undowipe  = "UndoWipe",
 	reset     = "Reset",
 	test      = "Test"
 }
@@ -449,6 +463,20 @@ function Amr.StartsWith(str, prefix)
 	return string.sub(str, 1, string.len(prefix)) == prefix
 end
 
+function Amr.IsEmpty(table)
+	return next(table) == nil
+end
+
+function Amr.Contains(table, value)
+	if not table then return false end
+	for k,v in pairs(table) do
+		if v == value then
+			return true
+		end
+	end
+	return false
+end
+
 -- helper to get the unit identifiers (e.g. to pass to GetUnitName) for all members of the player's current group/raid
 function Amr:GetGroupUnitIdentifiers()
 
@@ -513,7 +541,7 @@ function Amr:GetUnitId(unitRealm, unitName)
 	return nil
 end
 
-
+--[[
 -- search the tooltip for txt, returns true if it is encountered on any line
 function Amr:IsTextInTooltip(tt, txt)
 	local regions = { tt:GetRegions() }
@@ -526,22 +554,34 @@ function Amr:IsTextInTooltip(tt, txt)
 	end
 	return false
 end
+]]
 
--- helper to determine if we can equip an item (it is already soulbound or account bound)
+-- helper to determine if we can equip an item (it is soulbound)
 function Amr:CanEquip(bagId, slotId)
-	local tt = Amr.GetItemTooltip(bagId, slotId)
-	if self:IsTextInTooltip(tt, ITEM_SOULBOUND) then return true end
-	if self:IsTextInTooltip(tt, ITEM_BNETACCOUNTBOUND) then return true end
-	if self:IsTextInTooltip(tt, ITEM_ACCOUNTBOUND) then return true end
+	local item = Item:CreateFromBagAndSlot(bagId, slotId)
+	if item then
+		local loc = item:GetItemLocation()
+		return C_Item.IsBound(loc)
+	else
+		-- for now just return true if we can't find the item... will get an error trying to equip if it isn't bound
+		return true
+	end
+
+	--local tt = Amr.GetItemTooltip(bagId, slotId)
+	--if self:IsTextInTooltip(tt, ITEM_SOULBOUND) then return true end
+	--if self:IsTextInTooltip(tt, ITEM_BNETACCOUNTBOUND) then return true end
+	--if self:IsTextInTooltip(tt, ITEM_ACCOUNTBOUND) then return true end
 end
 
 -- helper to determine if an item has a unique constraint
+--[[
 function Amr:IsUnique(bagId, slotId)
 	local tt = Amr.GetItemTooltip(bagId, slotId)
 	if self:IsTextInTooltip(tt, ITEM_UNIQUE_EQUIPPABLE)	then return true end
 	if self:IsTextInTooltip(tt, ITEM_UNIQUE) then return true end
 	return false
 end
+]]
 
 
 ----------------------------------------------------------------------------------------
@@ -584,6 +624,7 @@ function Amr:OnCommReceived(prefix, message, distribution, sender)
 	-- any other kind of message is ignored if the version is too old
 	if not ver or ver < Amr.MIN_ADDON_VERSION then return end
 	
+	--[[
 	if Amr.StartsWith(message, Amr.MessageTypes.Team) then	
 		-- if fully initialized, process team optimizer messages
 		if Amr["ProcessTeamMessage"] then
@@ -595,6 +636,7 @@ function Amr:OnCommReceived(prefix, message, distribution, sender)
 			self:ProcessPlayerSnapshot(message)
 		end
 	end
+	]]
 end
 
 
@@ -635,26 +677,19 @@ Amr:AddEventHandler("PLAYER_ENTERING_WORLD", onPlayerEnteringWorld)
 ----------------------------------------------------------------------------------------
 -- Debugging
 ----------------------------------------------------------------------------------------
-function Amr:Test()
-
-	local s = "|cff0070dd|Hitem:127224:5337:0:0:0:0:0:0:100:105:512:22:2:615:656:100|h[Staff of Polarities]|h|r"
-	Amr.GetItemInfo(s, function(obj, name, link, quality, iLevel)
-		print(iLevel)
-	end)
-end
-
---[[
-function Amr:Test(val1, val2, val3)
-
-	local link = GetLootSlotLink(tonumber(val1))
-	local index = Amr:TestLootIndex(link)
-	print("loot index: " .. index)
-	
-	if val2 then
-		local candidate = Amr:TestLootCandidate(link, val2, val3)
-		print("loot candidate: " .. candidate)
-		
-		GiveMasterLoot(index, candidate)
+function Amr:dump(o)
+	if type(o) == 'table' then
+	   local s = '{ '
+	   for k,v in pairs(o) do
+		  if type(k) ~= 'number' then k = '"'..k..'"' end
+		  s = s .. '['..k..'] = ' .. Amr:dump(v) .. ','
+	   end
+	   return s .. '} '
+	else
+	   return tostring(o)
 	end
 end
-]]
+
+function Amr:Test()
+	
+end

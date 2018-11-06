@@ -30,6 +30,7 @@ end
 -- ============================================================================
 
 function private.GetSniperFrame()
+	TSM.Analytics.PageView("auction/sniper")
 	if not private.hasLastScan then
 		private.contentPath = "selection"
 	end
@@ -454,6 +455,13 @@ function private.FSMCreate()
 				TSM:Print(L["You've been phased which has caused the AH to stop working due to a bug on Blizzard's end. Please close and reopen the AH and restart Sniper."])
 				return "ST_INIT"
 			end)
+			:AddEvent("EV_AUCTION_SELECTION_CHANGED", function(context)
+				assert(context.scanFrame)
+				if context.scanFrame:GetElement("auctions"):GetSelectedRecord() then
+					-- the user selected something, so cancel the current scan
+					context.auctionScan:Cancel()
+				end
+			end)
 		)
 		:AddState(TSMAPI_FOUR.FSM.NewState("ST_RESULTS")
 			:SetOnEnter(function(context)
@@ -603,7 +611,7 @@ function private.FSMCreate()
 			:SetOnEnter(function(context)
 				local index = tremove(context.findResult, #context.findResult)
 				assert(index)
-				if context.auctionScan:ValidateIndex(index, context.findAuction) then
+				if context.auctionScan:ValidateIndex(index, context.findAuction, true) then
 					if context.scanType == "buyout" then
 						-- buy the auction
 						PlaceAuctionBid("list", index, context.findAuction:GetField("buyout"))

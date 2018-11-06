@@ -9,7 +9,7 @@ local GetEncounterTime, UnitCombatlogname, GetUnitInfoByUnitFlag, ScheduleTimer,
 
 local VExRT, VExRT_CDE = nil
 
-local module = ExRT.mod:New("ExCD2",ExRT.L.cd2)
+local module = ExRT:New("ExCD2",ExRT.L.cd2)
 local ELib,L = ExRT.lib,ExRT.L
 
 module._C = {}
@@ -90,7 +90,7 @@ module.db.findspecspells = {
 	[202767] = 102, [190984] = 102, --[78674] = 102, 
 	[210722] = 103, [52610] = 103, --[1822] = 103, 
 	[200851] = 104, [33917] = 104, --[22842] = 104,
-	[208253] = 105, [188550] = 105, [8936] = 105, 
+	[208253] = 105, [188550] = 105, --[8936] = 105, 
 
 	[205223] = 250, [206930] = 250, [50842] = 250,
 	[190778] = 251, [49143] = 251, [49184] = 251,
@@ -118,7 +118,7 @@ module.db.findspecspells = {
 	
 	[214326] = 268, [205523] = 268, [121253] = 268, 
 	[205320] = 269, [113656] = 269, --[100780] = 269,
-	[205406] = 270, [115151] = 270, [116670] = 270,
+	[205406] = 270, [115151] = 270, --[116670] = 270,
 	
 	[201467] = 577, [162243] = 577, [198013] = 577,
 	[207407] = 581, [203782] = 581, [228477] = 581,
@@ -478,6 +478,8 @@ module.db.spell_afterCombatNotReset = {	--Запрещать сброс кд п�
 	
 	[199740]=true,
 	[160452]=true,
+
+	--[271466]=true,
 }
 module.db.spell_reduceCdByHaste = {	--Заклинания, кд которых уменьшается хастой
 	[12294]=true,
@@ -959,6 +961,11 @@ module.db.differentIcons = {	--Другие иконки заклинаниям
 	[90633] = "Interface\\Icons\\inv_guild_standard_horde_c",
 	[90632] = "Interface\\Icons\\inv_guild_standard_horde_b",
 	[90631] = "Interface\\Icons\\inv_guild_standard_horde_a",
+
+	--Prevent replacing icons for players with some talents
+	[31884] = "Interface\\Icons\\spell_holy_avenginewrath",	--Avenging Wrath
+	[1022] = "Interface\\Icons\\spell_holy_sealofprotection",	--Blessing of Protection
+	[62618] = "Interface\\Icons\\spell_holy_powerwordbarrier",	--Power Word: Barrier
 }
 
 module.db.playerName = nil
@@ -8555,6 +8562,7 @@ do
 		
 		local isArtifactEqipped = 0
 		local ArtifactIlvlSlot1,ArtifactIlvlSlot2 = 0,0
+		local mainHandSlot, offHandSlot = 0,0
 		for i=1,#moduleInspect.db.itemsSlotTable do
 			local itemSlotID = moduleInspect.db.itemsSlotTable[i]
 			--local itemLink = GetInventoryItemLink(inspectedName, itemSlotID)
@@ -8600,6 +8608,7 @@ do
 											itemLink = itemLink,
 											itemID = itemID,
 											spellID = powerData.spellID,
+											tier = j,
 										}
 									end
 									
@@ -8609,6 +8618,10 @@ do
 							end
 						end
 					end
+				end
+
+				if AzeritePowers then
+					inspectData.azerite["i"..itemSlotID] = AzeritePowers
 				end
 				
 				for j=2, inspectScantip:NumLines() do
@@ -8641,12 +8654,12 @@ do
 							
 							inspectData['items_ilvl'][itemSlotID] = ilvl
 							
-							if isArtifactEqipped > 0 then
-								if itemSlotID == 16 then
-									ArtifactIlvlSlot1 = ilvl
-								else
-									ArtifactIlvlSlot2 = ilvl
-								end
+							if itemSlotID == 16 then
+								mainHandSlot = ilvl
+								ArtifactIlvlSlot1 = ilvl
+							elseif itemSlotID == 17 then
+								offHandSlot = ilvl
+								ArtifactIlvlSlot2 = ilvl
 							end
 						end
 						
@@ -8736,8 +8749,12 @@ do
 		end
 		if isArtifactEqipped > 0 then
 			inspectData['ilvl'] = inspectData['ilvl'] - ArtifactIlvlSlot1 - ArtifactIlvlSlot2 + max(ArtifactIlvlSlot1,ArtifactIlvlSlot2) * 2
+			
+		elseif mainHandSlot > 0 and offHandSlot == 0 then
+			inspectData['ilvl'] = inspectData['ilvl'] + mainHandSlot
 		end
-		inspectData['ilvl'] = inspectData['ilvl'] / ((inspectData['items'][17] or isArtifactEqipped > 0) and 16 or 15)
+		inspectData['ilvl'] = inspectData['ilvl'] / 16
+		
 
 		--------> ExCD2
 		for tierUID,count in pairs(inspectData['tiersets']) do

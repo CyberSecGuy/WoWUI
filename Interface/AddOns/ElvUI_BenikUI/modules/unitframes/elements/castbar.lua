@@ -5,13 +5,15 @@ local UF = E:GetModule('UnitFrames');
 local LSM = LibStub("LibSharedMedia-3.0");
 
 --[[
-
 	CREDIT:
-	This module is based on Blazeflack's ElvUI_CastBarPowerOverlay ==> http://www.tukui.org/addons/index.php?act=view&id=62
+	This module is based on Blazeflack's ElvUI_CastBarPowerOverlay
+	Castbar Backdrop Color. Credit: Blazeflack - Taken from ElvUI CustomTweaks
 	Edited for BenikUI under Blaze's permission. Many thanks :)
 ]]
 
 local _G = _G
+
+local units = {"Player", "Target", "Focus", "Pet"}
 
 -- GLOBALS: hooksecurefunc
 
@@ -144,10 +146,65 @@ function BUIC:PostCast(unit, unitframe)
 		self.Text:SetTextColor(tr, tg, tb, ta)
 		self.Time:SetTextColor(tr, tg, tb, ta)	
 	end
+
+	if not E.db.benikui.unitframes.castbarColor.enable then return; end
+	local color = E.db.benikui.unitframes.castbarColor.castbarBackdropColor
+	local r, g, b, a = color.r, color.g, color.b, color.a
+
+	if self.bg and self.bg:IsShown() then
+		self.bg:SetColorTexture(r, g, b)
+	else
+		if self.backdrop then
+			if self.backdrop.backdropTexture then
+				self.backdrop.backdropTexture:SetVertexColor(r, g, b)
+				self.backdrop.backdropTexture:SetAlpha(a)
+			end
+			r, g, b = self.backdrop:GetBackdropColor()
+			self.backdrop:SetBackdropColor(r, g, b, a)
+		end
+	end
+end
+
+function BUIC:PostCastInterruptible(unit, unitframe)
+	if unit == "vehicle" or unit == "player" then return end
+	
+	local db = E.db.benikui.unitframes.castbar.text
+
+	local castTexture = LSM:Fetch("statusbar", E.db.benikui.unitframes.textures.castbar)
+	local pr, pg, pb, pa = BUI:unpackColor(db.player.textColor)
+	local tr, tg, tb, ta = BUI:unpackColor(db.target.textColor)
+
+	if not self.isTransparent then
+		self:SetStatusBarTexture(castTexture)
+	end
+
+	if unit == 'player' then
+		self.Text:SetTextColor(pr, pg, pb, pa)
+		self.Time:SetTextColor(pr, pg, pb, pa)
+	elseif unit == 'target' then
+		self.Text:SetTextColor(tr, tg, tb, ta)
+		self.Time:SetTextColor(tr, tg, tb, ta)	
+	end
+
+	if not E.db.benikui.unitframes.castbarColor.enable then return; end
+	local color = E.db.benikui.unitframes.castbarColor.castbarBackdropColor
+	local r, g, b, a = color.r, color.g, color.b, color.a
+
+	if self.bg and self.bg:IsShown() then
+		self.bg:SetColorTexture(r, g, b)
+	else
+		if self.backdrop then
+			if self.backdrop.backdropTexture then
+				self.backdrop.backdropTexture:SetVertexColor(r, g, b)
+				self.backdrop.backdropTexture:SetAlpha(a)
+			end
+			r, g, b = self.backdrop:GetBackdropColor()
+			self.backdrop:SetBackdropColor(r, g, b, a)
+		end
+	end
 end
 
 function BUIC:CastBarHooks()
-	local units = {"Player", "Target", "Focus", "Pet"}
 	for _, unit in pairs(units) do
 		local unitframe = _G["ElvUF_"..unit];
 		local castbar = unitframe and unitframe.Castbar
@@ -157,7 +214,7 @@ function BUIC:CastBarHooks()
 				castbar.ButtonIcon.bg:CreateSoftShadow()
 			end
 			hooksecurefunc(castbar, "PostCastStart", BUIC.PostCast)
-			hooksecurefunc(castbar, "PostCastInterruptible", BUIC.PostCast)
+			hooksecurefunc(castbar, "PostCastInterruptible", BUIC.PostCastInterruptible)
 			hooksecurefunc(castbar, "PostChannelStart", BUIC.PostCast)
 		end
 	end
@@ -170,7 +227,7 @@ function BUIC:CastBarHooks()
 				castbar.ButtonIcon.bg:CreateSoftShadow()
 			end
 			hooksecurefunc(castbar, "PostCastStart", BUIC.PostCast)
-			hooksecurefunc(castbar, "PostCastInterruptible", BUIC.PostCast)
+			hooksecurefunc(castbar, "PostCastInterruptible", BUIC.PostCastInterruptible)
 			hooksecurefunc(castbar, "PostChannelStart", BUIC.PostCast)
 		end
 	end
@@ -183,7 +240,7 @@ function BUIC:CastBarHooks()
 				castbar.ButtonIcon.bg:CreateSoftShadow()
 			end
 			hooksecurefunc(castbar, "PostCastStart", BUIC.PostCast)
-			hooksecurefunc(castbar, "PostCastInterruptible", BUIC.PostCast)
+			hooksecurefunc(castbar, "PostCastInterruptible", BUIC.PostCastInterruptible)
 			hooksecurefunc(castbar, "PostChannelStart", BUIC.PostCast)
 		end
 	end

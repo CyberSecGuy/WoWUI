@@ -4,24 +4,27 @@ WeakAurasSaved = {
 		["Lightning Shield"] = {
 			[192106] = 136051,
 		},
-		["Earth Shield"] = {
-			[974] = 136089,
-		},
 		["Cold Blood"] = {
 			[213981] = 135988,
 		},
+		["Earth Shield"] = {
+			[974] = 136089,
+		},
+		["Stealth"] = {
+			[1784] = 132320,
+		},
 	},
-	["login_squelch_time"] = 10,
+	["editor_theme"] = "Monokai",
 	["displays"] = {
-		["Flametounge"] = {
+		["Lightning Shield"] = {
 			["text2Point"] = "CENTER",
 			["text1FontSize"] = 12,
 			["cooldownTextEnabled"] = true,
 			["yOffset"] = 0,
 			["anchorPoint"] = "CENTER",
-			["activeTriggerMode"] = -10,
 			["customTextUpdate"] = "update",
 			["icon"] = true,
+			["useglowColor"] = false,
 			["text1Enabled"] = true,
 			["keepAspectRatio"] = false,
 			["animation"] = {
@@ -38,20 +41,458 @@ WeakAurasSaved = {
 					["duration_type"] = "seconds",
 				},
 			},
-			["trigger"] = {
-				["type"] = "aura",
-				["subeventSuffix"] = "_CAST_START",
-				["event"] = "Health",
-				["subeventPrefix"] = "SPELL",
-				["spellIds"] = {
+			["desaturate"] = false,
+			["glowColor"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
+			["text1Point"] = "CENTER",
+			["text2FontFlags"] = "OUTLINE",
+			["height"] = 60,
+			["load"] = {
+				["use_class"] = true,
+				["spec"] = {
+					["multi"] = {
+					},
 				},
-				["buffShowOn"] = "showOnActive",
-				["names"] = {
+				["class"] = {
+					["single"] = "SHAMAN",
+					["multi"] = {
+					},
 				},
-				["unit"] = "player",
-				["debuffType"] = "HELPFUL",
+				["size"] = {
+					["multi"] = {
+					},
+				},
+			},
+			["anchorFrameType"] = "SCREEN",
+			["xOffset"] = 0,
+			["text1Containment"] = "INSIDE",
+			["text2Containment"] = "INSIDE",
+			["glowType"] = "buttonOverlay",
+			["text1Color"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
+			["triggers"] = {
+				{
+					["trigger"] = {
+						["type"] = "aura",
+						["subeventSuffix"] = "_CAST_START",
+						["ownOnly"] = true,
+						["event"] = "Health",
+						["subeventPrefix"] = "SPELL",
+						["spellIds"] = {
+							192106, -- [1]
+						},
+						["buffShowOn"] = "showOnActive",
+						["names"] = {
+							"Lightning Shield", -- [1]
+						},
+						["unit"] = "player",
+						["debuffType"] = "HELPFUL",
+					},
+					["untrigger"] = {
+					},
+				}, -- [1]
+				["activeTriggerMode"] = -10,
+			},
+			["text1Font"] = "Friz Quadrata TT",
+			["text2Color"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
+			["regionType"] = "icon",
+			["parent"] = "Enhance Shaman",
+			["text1FontFlags"] = "OUTLINE",
+			["text2FontSize"] = 24,
+			["text2Font"] = "Friz Quadrata TT",
+			["text1"] = "%s",
+			["frameStrata"] = 1,
+			["stickyDuration"] = false,
+			["zoom"] = 0,
+			["auto"] = true,
+			["text2Enabled"] = false,
+			["id"] = "Lightning Shield",
+			["text2"] = "%p",
+			["alpha"] = 1,
+			["width"] = 60,
+			["glow"] = false,
+			["color"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
+			["inverse"] = false,
+			["actions"] = {
+				["start"] = {
+				},
+				["init"] = {
+				},
+				["finish"] = {
+				},
+			},
+			["conditions"] = {
+			},
+			["selfPoint"] = "CENTER",
+			["internalVersion"] = 9,
+		},
+		["Cold Blood Buff"] = {
+			["text2Point"] = "CENTER",
+			["text1FontSize"] = 18,
+			["color"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
+			["yOffset"] = 0,
+			["anchorPoint"] = "CENTER",
+			["customTextUpdate"] = "update",
+			["actions"] = {
+				["start"] = {
+					["do_glow"] = false,
+					["glow_action"] = "show",
+				},
+				["finish"] = {
+				},
+				["init"] = {
+					["do_custom"] = false,
+				},
+			},
+			["useglowColor"] = false,
+			["internalVersion"] = 9,
+			["keepAspectRatio"] = false,
+			["animation"] = {
+				["start"] = {
+					["type"] = "none",
+					["duration_type"] = "seconds",
+				},
+				["main"] = {
+					["type"] = "preset",
+					["duration_type"] = "seconds",
+					["preset"] = "pulse",
+				},
+				["finish"] = {
+					["type"] = "none",
+					["duration_type"] = "seconds",
+				},
+			},
+			["text1Containment"] = "OUTSIDE",
+			["glowColor"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
+			["text1Point"] = "TOP",
+			["text2FontFlags"] = "OUTLINE",
+			["height"] = 64,
+			["load"] = {
+				["use_class"] = true,
+				["use_warmode"] = true,
+				["pvptalent"] = {
+					["single"] = 13,
+					["multi"] = {
+						[13] = true,
+					},
+				},
+				["use_spec"] = true,
+				["use_pvptalent"] = true,
+				["spec"] = {
+					["single"] = 3,
+					["multi"] = {
+					},
+				},
+				["class"] = {
+					["single"] = "ROGUE",
+					["multi"] = {
+					},
+				},
+				["size"] = {
+					["multi"] = {
+					},
+				},
+			},
+			["frameStrata"] = 1,
+			["icon"] = true,
+			["xOffset"] = 0,
+			["text2Containment"] = "INSIDE",
+			["glowType"] = "buttonOverlay",
+			["text1Font"] = "Friz Quadrata TT",
+			["text2Font"] = "Friz Quadrata TT",
+			["desaturate"] = true,
+			["text2Color"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
+			["regionType"] = "icon",
+			["stickyDuration"] = false,
+			["text1FontFlags"] = "OUTLINE",
+			["text2FontSize"] = 24,
+			["selfPoint"] = "CENTER",
+			["text1"] = "MISSING!",
+			["anchorFrameType"] = "SCREEN",
+			["text2Enabled"] = false,
+			["text2"] = "%p",
+			["auto"] = true,
+			["glow"] = false,
+			["id"] = "Cold Blood Buff",
+			["cooldownTextEnabled"] = true,
+			["alpha"] = 1,
+			["width"] = 64,
+			["zoom"] = 0,
+			["uid"] = "7ChM(x)fpxV",
+			["inverse"] = false,
+			["text1Color"] = {
+				1, -- [1]
+				0, -- [2]
+				0.0117647058823529, -- [3]
+				1, -- [4]
+			},
+			["conditions"] = {
+			},
+			["text1Enabled"] = true,
+			["triggers"] = {
+				{
+					["trigger"] = {
+						["type"] = "aura",
+						["subeventSuffix"] = "_CAST_START",
+						["ownOnly"] = true,
+						["event"] = "Health",
+						["names"] = {
+							"Cold Blood", -- [1]
+						},
+						["spellIds"] = {
+							213981, -- [1]
+						},
+						["debuffType"] = "HELPFUL",
+						["unit"] = "player",
+						["subeventPrefix"] = "SPELL",
+						["buffShowOn"] = "showOnMissing",
+					},
+					["untrigger"] = {
+					},
+				}, -- [1]
+				{
+					["trigger"] = {
+						["use_absorbMode"] = true,
+						["type"] = "status",
+						["use_unit"] = true,
+						["use_targetRequired"] = true,
+						["genericShowOn"] = "showOnReady",
+						["duration"] = "1",
+						["event"] = "Cooldown Progress (Spell)",
+						["subeventPrefix"] = "SPELL",
+						["realSpellName"] = "Cold Blood",
+						["use_spellName"] = true,
+						["use_inverse"] = true,
+						["subeventSuffix"] = "_CAST_START",
+						["unevent"] = "auto",
+						["unit"] = "player",
+						["use_genericShowOn"] = true,
+						["spellName"] = 213981,
+					},
+					["untrigger"] = {
+						["genericShowOn"] = "showOnReady",
+						["spellName"] = 213981,
+					},
+				}, -- [2]
+				{
+					["trigger"] = {
+						["type"] = "aura",
+						["subeventSuffix"] = "_CAST_START",
+						["use_absorbMode"] = true,
+						["event"] = "Conditions",
+						["use_unit"] = true,
+						["debuffType"] = "HELPFUL",
+						["unit"] = "player",
+						["spellIds"] = {
+							1784, -- [1]
+						},
+						["names"] = {
+							"Stealth", -- [1]
+						},
+						["subeventPrefix"] = "SPELL",
+						["ownOnly"] = true,
+						["unevent"] = "auto",
+						["buffShowOn"] = "showOnActive",
+					},
+					["untrigger"] = {
+					},
+				}, -- [3]
+				["activeTriggerMode"] = -10,
+			},
+		},
+		["Earth Shield"] = {
+			["text2Point"] = "CENTER",
+			["text1FontSize"] = 12,
+			["parent"] = "Enhance Shaman",
+			["yOffset"] = 0,
+			["anchorPoint"] = "CENTER",
+			["customTextUpdate"] = "update",
+			["icon"] = true,
+			["useglowColor"] = false,
+			["text1Enabled"] = true,
+			["keepAspectRatio"] = false,
+			["animation"] = {
+				["start"] = {
+					["duration_type"] = "seconds",
+					["type"] = "none",
+				},
+				["main"] = {
+					["duration_type"] = "seconds",
+					["type"] = "none",
+				},
+				["finish"] = {
+					["duration_type"] = "seconds",
+					["type"] = "none",
+				},
 			},
 			["desaturate"] = false,
+			["glowColor"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
+			["text1Point"] = "CENTER",
+			["text2FontFlags"] = "OUTLINE",
+			["height"] = 60,
+			["load"] = {
+				["use_class"] = true,
+				["spec"] = {
+					["multi"] = {
+					},
+				},
+				["class"] = {
+					["single"] = "SHAMAN",
+					["multi"] = {
+					},
+				},
+				["size"] = {
+					["multi"] = {
+					},
+				},
+			},
+			["width"] = 60,
+			["actions"] = {
+				["start"] = {
+				},
+				["finish"] = {
+				},
+				["init"] = {
+				},
+			},
+			["text2Font"] = "Friz Quadrata TT",
+			["text2Containment"] = "INSIDE",
+			["glowType"] = "buttonOverlay",
+			["text1Color"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
+			["internalVersion"] = 9,
+			["triggers"] = {
+				{
+					["trigger"] = {
+						["type"] = "aura",
+						["subeventSuffix"] = "_CAST_START",
+						["ownOnly"] = true,
+						["event"] = "Health",
+						["subeventPrefix"] = "SPELL",
+						["spellIds"] = {
+							974, -- [1]
+						},
+						["debuffType"] = "HELPFUL",
+						["unit"] = "player",
+						["names"] = {
+							"Earth Shield", -- [1]
+						},
+						["buffShowOn"] = "showOnActive",
+					},
+					["untrigger"] = {
+					},
+				}, -- [1]
+				["activeTriggerMode"] = -10,
+			},
+			["text1FontFlags"] = "OUTLINE",
+			["regionType"] = "icon",
+			["selfPoint"] = "CENTER",
+			["text2Color"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
+			["text2FontSize"] = 24,
+			["color"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
+			["text1"] = "%s",
+			["alpha"] = 1,
+			["glow"] = false,
+			["text2"] = "%p",
+			["auto"] = true,
+			["text2Enabled"] = false,
+			["id"] = "Earth Shield",
+			["zoom"] = 0,
+			["frameStrata"] = 1,
+			["anchorFrameType"] = "SCREEN",
+			["stickyDuration"] = false,
+			["cooldownTextEnabled"] = true,
+			["inverse"] = false,
+			["text1Font"] = "Friz Quadrata TT",
+			["conditions"] = {
+			},
+			["text1Containment"] = "INSIDE",
+			["xOffset"] = 0,
+		},
+		["Flametounge"] = {
+			["text2Point"] = "CENTER",
+			["text1FontSize"] = 12,
+			["cooldownTextEnabled"] = true,
+			["yOffset"] = 0,
+			["anchorPoint"] = "CENTER",
+			["customTextUpdate"] = "update",
+			["icon"] = true,
+			["useglowColor"] = false,
+			["text1Enabled"] = true,
+			["keepAspectRatio"] = false,
+			["animation"] = {
+				["start"] = {
+					["type"] = "none",
+					["duration_type"] = "seconds",
+				},
+				["main"] = {
+					["type"] = "none",
+					["duration_type"] = "seconds",
+				},
+				["finish"] = {
+					["type"] = "none",
+					["duration_type"] = "seconds",
+				},
+			},
+			["desaturate"] = false,
+			["glowColor"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
 			["text1Point"] = "BOTTOMRIGHT",
 			["text2FontFlags"] = "OUTLINE",
 			["height"] = 64,
@@ -71,452 +512,79 @@ WeakAurasSaved = {
 					},
 				},
 			},
-			["untrigger"] = {
-			},
+			["text2Font"] = "Friz Quadrata TT",
+			["internalVersion"] = 9,
 			["text1Containment"] = "INSIDE",
 			["text2Containment"] = "INSIDE",
-			["parent"] = "Enhance Shaman",
+			["glowType"] = "buttonOverlay",
 			["text1Color"] = {
 				1, -- [1]
 				1, -- [2]
 				1, -- [3]
 				1, -- [4]
-			},
-			["internalVersion"] = 6,
-			["text1Font"] = "Friz Quadrata TT",
-			["text2Color"] = {
-				1, -- [1]
-				1, -- [2]
-				1, -- [3]
-				1, -- [4]
-			},
-			["regionType"] = "icon",
-			["inverse"] = false,
-			["text1FontFlags"] = "OUTLINE",
-			["text2FontSize"] = 24,
-			["text2Font"] = "Friz Quadrata TT",
-			["anchorFrameType"] = "SCREEN",
-			["text1"] = "%s",
-			["frameStrata"] = 1,
-			["stickyDuration"] = false,
-			["text2"] = "%p",
-			["auto"] = true,
-			["text2Enabled"] = false,
-			["id"] = "Flametounge",
-			["zoom"] = 0,
-			["alpha"] = 1,
-			["width"] = 64,
-			["glow"] = false,
-			["color"] = {
-				1, -- [1]
-				1, -- [2]
-				1, -- [3]
-				1, -- [4]
-			},
-			["numTriggers"] = 1,
-			["selfPoint"] = "CENTER",
-			["conditions"] = {
-			},
-			["xOffset"] = 0,
-			["actions"] = {
-				["start"] = {
-				},
-				["init"] = {
-				},
-				["finish"] = {
-				},
-			},
-		},
-		["Earth Shield"] = {
-			["text2Point"] = "CENTER",
-			["text1FontSize"] = 12,
-			["parent"] = "Enhance Shaman",
-			["untrigger"] = {
-			},
-			["anchorPoint"] = "CENTER",
-			["activeTriggerMode"] = -10,
-			["customTextUpdate"] = "update",
-			["icon"] = true,
-			["text1Enabled"] = true,
-			["keepAspectRatio"] = false,
-			["animation"] = {
-				["start"] = {
-					["duration_type"] = "seconds",
-					["type"] = "none",
-				},
-				["main"] = {
-					["duration_type"] = "seconds",
-					["type"] = "none",
-				},
-				["finish"] = {
-					["duration_type"] = "seconds",
-					["type"] = "none",
-				},
-			},
-			["trigger"] = {
-				["type"] = "aura",
-				["subeventSuffix"] = "_CAST_START",
-				["ownOnly"] = true,
-				["event"] = "Health",
-				["subeventPrefix"] = "SPELL",
-				["spellIds"] = {
-					974, -- [1]
-				},
-				["debuffType"] = "HELPFUL",
-				["unit"] = "player",
-				["names"] = {
-					"Earth Shield", -- [1]
-				},
-				["buffShowOn"] = "showOnActive",
-			},
-			["desaturate"] = false,
-			["text1Point"] = "CENTER",
-			["text2FontFlags"] = "OUTLINE",
-			["height"] = 60,
-			["load"] = {
-				["use_class"] = true,
-				["spec"] = {
-					["multi"] = {
-					},
-				},
-				["class"] = {
-					["single"] = "SHAMAN",
-					["multi"] = {
-					},
-				},
-				["size"] = {
-					["multi"] = {
-					},
-				},
-			},
-			["text2Font"] = "Friz Quadrata TT",
-			["internalVersion"] = 6,
-			["text2Containment"] = "INSIDE",
-			["text1Color"] = {
-				1, -- [1]
-				1, -- [2]
-				1, -- [3]
-				1, -- [4]
-			},
-			["text1Font"] = "Friz Quadrata TT",
-			["yOffset"] = 0,
-			["selfPoint"] = "CENTER",
-			["text1FontFlags"] = "OUTLINE",
-			["regionType"] = "icon",
-			["numTriggers"] = 1,
-			["text2Color"] = {
-				1, -- [1]
-				1, -- [2]
-				1, -- [3]
-				1, -- [4]
-			},
-			["text2FontSize"] = 24,
-			["color"] = {
-				1, -- [1]
-				1, -- [2]
-				1, -- [3]
-				1, -- [4]
-			},
-			["width"] = 60,
-			["text1"] = "%s",
-			["alpha"] = 1,
-			["glow"] = false,
-			["zoom"] = 0,
-			["auto"] = true,
-			["text2Enabled"] = false,
-			["id"] = "Earth Shield",
-			["text2"] = "%p",
-			["frameStrata"] = 1,
-			["anchorFrameType"] = "SCREEN",
-			["stickyDuration"] = false,
-			["cooldownTextEnabled"] = true,
-			["inverse"] = false,
-			["text1Containment"] = "INSIDE",
-			["conditions"] = {
-			},
-			["actions"] = {
-				["start"] = {
-				},
-				["finish"] = {
-				},
-				["init"] = {
-				},
-			},
-			["xOffset"] = 0,
-		},
-		["Lightning Shield"] = {
-			["text2Point"] = "CENTER",
-			["text1FontSize"] = 12,
-			["cooldownTextEnabled"] = true,
-			["yOffset"] = 0,
-			["anchorPoint"] = "CENTER",
-			["activeTriggerMode"] = -10,
-			["customTextUpdate"] = "update",
-			["icon"] = true,
-			["text1Enabled"] = true,
-			["keepAspectRatio"] = false,
-			["animation"] = {
-				["start"] = {
-					["type"] = "none",
-					["duration_type"] = "seconds",
-				},
-				["main"] = {
-					["type"] = "none",
-					["duration_type"] = "seconds",
-				},
-				["finish"] = {
-					["type"] = "none",
-					["duration_type"] = "seconds",
-				},
-			},
-			["trigger"] = {
-				["type"] = "aura",
-				["subeventSuffix"] = "_CAST_START",
-				["ownOnly"] = true,
-				["event"] = "Health",
-				["subeventPrefix"] = "SPELL",
-				["spellIds"] = {
-					192106, -- [1]
-				},
-				["buffShowOn"] = "showOnActive",
-				["names"] = {
-					"Lightning Shield", -- [1]
-				},
-				["unit"] = "player",
-				["debuffType"] = "HELPFUL",
-			},
-			["desaturate"] = false,
-			["text1Point"] = "CENTER",
-			["text2FontFlags"] = "OUTLINE",
-			["height"] = 60,
-			["load"] = {
-				["use_class"] = true,
-				["spec"] = {
-					["multi"] = {
-					},
-				},
-				["class"] = {
-					["single"] = "SHAMAN",
-					["multi"] = {
-					},
-				},
-				["size"] = {
-					["multi"] = {
-					},
-				},
 			},
 			["parent"] = "Enhance Shaman",
-			["untrigger"] = {
-			},
-			["text2Containment"] = "INSIDE",
-			["text1Containment"] = "INSIDE",
-			["text1Color"] = {
-				1, -- [1]
-				1, -- [2]
-				1, -- [3]
-				1, -- [4]
-			},
-			["xOffset"] = 0,
-			["text1Font"] = "Friz Quadrata TT",
-			["text2Color"] = {
-				1, -- [1]
-				1, -- [2]
-				1, -- [3]
-				1, -- [4]
-			},
-			["regionType"] = "icon",
-			["inverse"] = false,
-			["text1FontFlags"] = "OUTLINE",
-			["text2FontSize"] = 24,
-			["text2Font"] = "Friz Quadrata TT",
-			["anchorFrameType"] = "SCREEN",
-			["text1"] = "%s",
-			["frameStrata"] = 1,
-			["stickyDuration"] = false,
-			["text2"] = "%p",
-			["auto"] = true,
-			["text2Enabled"] = false,
-			["id"] = "Lightning Shield",
-			["zoom"] = 0,
-			["alpha"] = 1,
-			["width"] = 60,
-			["glow"] = false,
-			["color"] = {
-				1, -- [1]
-				1, -- [2]
-				1, -- [3]
-				1, -- [4]
-			},
-			["numTriggers"] = 1,
-			["selfPoint"] = "CENTER",
-			["conditions"] = {
-			},
-			["actions"] = {
-				["start"] = {
-				},
-				["init"] = {
-				},
-				["finish"] = {
-				},
-			},
-			["internalVersion"] = 6,
-		},
-		["Cold Blood Buff"] = {
-			["text2Point"] = "CENTER",
-			["text1FontSize"] = 18,
-			["color"] = {
-				1, -- [1]
-				1, -- [2]
-				1, -- [3]
-				1, -- [4]
-			},
-			["yOffset"] = 0,
-			["anchorPoint"] = "CENTER",
-			["activeTriggerMode"] = -10,
-			["customTextUpdate"] = "update",
-			["actions"] = {
-				["start"] = {
-					["do_glow"] = false,
-					["glow_action"] = "show",
-				},
-				["finish"] = {
-				},
-				["init"] = {
-					["do_custom"] = false,
-				},
-			},
-			["internalVersion"] = 6,
-			["keepAspectRatio"] = false,
-			["animation"] = {
-				["start"] = {
-					["type"] = "none",
-					["duration_type"] = "seconds",
-				},
-				["main"] = {
-					["type"] = "preset",
-					["duration_type"] = "seconds",
-					["preset"] = "pulse",
-				},
-				["finish"] = {
-					["type"] = "none",
-					["duration_type"] = "seconds",
-				},
-			},
-			["trigger"] = {
-				["type"] = "aura",
-				["subeventSuffix"] = "_CAST_START",
-				["ownOnly"] = true,
-				["event"] = "Health",
-				["names"] = {
-					"Cold Blood", -- [1]
-				},
-				["spellIds"] = {
-					213981, -- [1]
-				},
-				["subeventPrefix"] = "SPELL",
-				["unit"] = "player",
-				["debuffType"] = "HELPFUL",
-				["buffShowOn"] = "showOnMissing",
-			},
-			["text1Containment"] = "OUTSIDE",
-			["text1Point"] = "TOP",
-			["text2FontFlags"] = "OUTLINE",
-			["height"] = 64,
-			["load"] = {
-				["use_class"] = true,
-				["use_warmode"] = true,
-				["pvptalent"] = {
-					["single"] = 13,
-					["multi"] = {
-						[13] = true,
-					},
-				},
-				["use_spec"] = true,
-				["use_pvptalent"] = true,
-				["class"] = {
-					["single"] = "ROGUE",
-					["multi"] = {
-					},
-				},
-				["spec"] = {
-					["single"] = 3,
-					["multi"] = {
-					},
-				},
-				["size"] = {
-					["multi"] = {
-					},
-				},
-			},
-			["anchorFrameType"] = "SCREEN",
-			["xOffset"] = 0,
-			["text1Font"] = "Friz Quadrata TT",
-			["text2Containment"] = "INSIDE",
-			["text1FontFlags"] = "OUTLINE",
-			["text1Color"] = {
-				1, -- [1]
-				0, -- [2]
-				0.0117647058823529, -- [3]
-				1, -- [4]
-			},
-			["inverse"] = false,
-			["text2Font"] = "Friz Quadrata TT",
-			["text2Color"] = {
-				1, -- [1]
-				1, -- [2]
-				1, -- [3]
-				1, -- [4]
-			},
-			["regionType"] = "icon",
-			["stickyDuration"] = false,
-			["selfPoint"] = "CENTER",
-			["text2FontSize"] = 24,
-			["text2Enabled"] = false,
-			["zoom"] = 0,
-			["text1"] = "MISSING!",
-			["frameStrata"] = 1,
-			["glow"] = false,
-			["text2"] = "%p",
-			["auto"] = true,
-			["cooldownTextEnabled"] = true,
-			["id"] = "Cold Blood Buff",
-			["additional_triggers"] = {
+			["triggers"] = {
 				{
 					["trigger"] = {
-						["type"] = "status",
-						["use_absorbMode"] = true,
-						["unevent"] = "auto",
-						["use_genericShowOn"] = true,
-						["use_inverse"] = true,
-						["event"] = "Cooldown Progress (Spell)",
-						["subeventPrefix"] = "SPELL",
-						["realSpellName"] = "Cold Blood",
-						["use_spellName"] = true,
-						["use_targetRequired"] = true,
+						["type"] = "aura",
 						["subeventSuffix"] = "_CAST_START",
-						["genericShowOn"] = "showOnReady",
+						["event"] = "Health",
+						["subeventPrefix"] = "SPELL",
+						["spellIds"] = {
+						},
+						["buffShowOn"] = "showOnActive",
+						["names"] = {
+						},
 						["unit"] = "player",
-						["use_unit"] = true,
-						["spellName"] = 213981,
+						["debuffType"] = "HELPFUL",
 					},
 					["untrigger"] = {
-						["genericShowOn"] = "showOnReady",
-						["spellName"] = 213981,
 					},
 				}, -- [1]
+				["activeTriggerMode"] = -10,
 			},
+			["text2Color"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
+			["regionType"] = "icon",
+			["text1Font"] = "Friz Quadrata TT",
+			["color"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
+			["text2FontSize"] = 24,
+			["text1FontFlags"] = "OUTLINE",
+			["text1"] = "%s",
+			["anchorFrameType"] = "SCREEN",
+			["frameStrata"] = 1,
+			["zoom"] = 0,
+			["auto"] = true,
+			["stickyDuration"] = false,
+			["id"] = "Flametounge",
+			["text2Enabled"] = false,
 			["alpha"] = 1,
 			["width"] = 64,
-			["untrigger"] = {
-			},
-			["uid"] = "7ChM(x)fpxV",
-			["numTriggers"] = 2,
-			["text1Enabled"] = true,
-			["init_started"] = 1,
+			["text2"] = "%p",
+			["glow"] = false,
+			["inverse"] = false,
+			["xOffset"] = 0,
 			["conditions"] = {
 			},
-			["icon"] = true,
-			["desaturate"] = true,
+			["selfPoint"] = "CENTER",
+			["actions"] = {
+				["start"] = {
+				},
+				["init"] = {
+				},
+				["finish"] = {
+				},
+			},
 		},
 		["Enhance Shaman"] = {
 			["grow"] = "RIGHT",
@@ -528,16 +596,14 @@ WeakAurasSaved = {
 				"Flametounge", -- [5]
 			},
 			["animate"] = false,
-			["anchorPoint"] = "CENTER",
 			["xOffset"] = -145,
-			["yOffset"] = -300,
-			["border"] = "None",
-			["untrigger"] = {
-			},
-			["regionType"] = "dynamicgroup",
 			["expanded"] = false,
+			["border"] = "None",
+			["yOffset"] = -300,
+			["anchorPoint"] = "CENTER",
+			["rotation"] = 0,
 			["sort"] = "none",
-			["internalVersion"] = 6,
+			["selfPoint"] = "LEFT",
 			["space"] = 2,
 			["background"] = "None",
 			["actions"] = {
@@ -548,10 +614,28 @@ WeakAurasSaved = {
 				["finish"] = {
 				},
 			},
-			["constantFactor"] = "RADIUS",
-			["selfPoint"] = "LEFT",
+			["triggers"] = {
+				{
+					["trigger"] = {
+						["names"] = {
+						},
+						["type"] = "aura",
+						["spellIds"] = {
+						},
+						["subeventSuffix"] = "_CAST_START",
+						["unit"] = "player",
+						["subeventPrefix"] = "SPELL",
+						["event"] = "Health",
+						["debuffType"] = "HELPFUL",
+					},
+					["untrigger"] = {
+					},
+				}, -- [1]
+				["activeTriggerMode"] = -10,
+			},
+			["regionType"] = "dynamicgroup",
+			["internalVersion"] = 9,
 			["backgroundInset"] = 0,
-			["id"] = "Enhance Shaman",
 			["animation"] = {
 				["start"] = {
 					["type"] = "none",
@@ -567,25 +651,13 @@ WeakAurasSaved = {
 				},
 			},
 			["align"] = "CENTER",
-			["rotation"] = 0,
+			["id"] = "Enhance Shaman",
 			["frameStrata"] = 1,
 			["anchorFrameType"] = "SCREEN",
 			["stagger"] = 0,
 			["borderOffset"] = 16,
-			["numTriggers"] = 1,
-			["trigger"] = {
-				["names"] = {
-				},
-				["type"] = "aura",
-				["spellIds"] = {
-				},
-				["subeventSuffix"] = "_CAST_START",
-				["unit"] = "player",
-				["subeventPrefix"] = "SPELL",
-				["event"] = "Health",
-				["debuffType"] = "HELPFUL",
-			},
 			["radius"] = 200,
+			["constantFactor"] = "RADIUS",
 			["conditions"] = {
 			},
 			["load"] = {
@@ -616,29 +688,19 @@ WeakAurasSaved = {
 			},
 			["yOffset"] = 0,
 			["anchorPoint"] = "CENTER",
-			["activeTriggerMode"] = -10,
 			["customTextUpdate"] = "update",
 			["icon"] = true,
+			["useglowColor"] = false,
 			["text2Font"] = "Friz Quadrata TT",
 			["keepAspectRatio"] = false,
 			["selfPoint"] = "CENTER",
-			["trigger"] = {
-				["type"] = "aura",
-				["subeventSuffix"] = "_CAST_START",
-				["ownOnly"] = true,
-				["event"] = "Health",
-				["subeventPrefix"] = "SPELL",
-				["spellIds"] = {
-					974, -- [1]
-				},
-				["buffShowOn"] = "showOnMissing",
-				["names"] = {
-					"Earth Shield", -- [1]
-				},
-				["unit"] = "player",
-				["debuffType"] = "HELPFUL",
-			},
 			["desaturate"] = true,
+			["glowColor"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
 			["text1Point"] = "CENTER",
 			["text2FontFlags"] = "OUTLINE",
 			["height"] = 60,
@@ -658,11 +720,24 @@ WeakAurasSaved = {
 					},
 				},
 			},
-			["parent"] = "Enhance Shaman",
-			["untrigger"] = {
+			["anchorFrameType"] = "SCREEN",
+			["animation"] = {
+				["start"] = {
+					["type"] = "none",
+					["duration_type"] = "seconds",
+				},
+				["main"] = {
+					["type"] = "none",
+					["duration_type"] = "seconds",
+				},
+				["finish"] = {
+					["type"] = "none",
+					["duration_type"] = "seconds",
+				},
 			},
-			["text2Containment"] = "INSIDE",
 			["xOffset"] = 0,
+			["text2Containment"] = "INSIDE",
+			["glowType"] = "buttonOverlay",
 			["text1Font"] = "Friz Quadrata TT",
 			["actions"] = {
 				["start"] = {
@@ -673,14 +748,14 @@ WeakAurasSaved = {
 				},
 			},
 			["text1Enabled"] = true,
+			["text1FontFlags"] = "OUTLINE",
+			["regionType"] = "icon",
 			["text2Color"] = {
 				1, -- [1]
 				1, -- [2]
 				1, -- [3]
 				1, -- [4]
 			},
-			["regionType"] = "icon",
-			["inverse"] = false,
 			["text1Containment"] = "INSIDE",
 			["text2FontSize"] = 24,
 			["text1Color"] = {
@@ -689,7 +764,6 @@ WeakAurasSaved = {
 				1, -- [3]
 				1, -- [4]
 			},
-			["anchorFrameType"] = "SCREEN",
 			["text1"] = "%s",
 			["frameStrata"] = 1,
 			["cooldownTextEnabled"] = true,
@@ -702,36 +776,44 @@ WeakAurasSaved = {
 			["width"] = 60,
 			["stickyDuration"] = false,
 			["glow"] = false,
-			["numTriggers"] = 1,
-			["text1FontFlags"] = "OUTLINE",
+			["inverse"] = false,
+			["parent"] = "Enhance Shaman",
 			["conditions"] = {
 			},
-			["animation"] = {
-				["start"] = {
-					["type"] = "none",
-					["duration_type"] = "seconds",
-				},
-				["main"] = {
-					["type"] = "none",
-					["duration_type"] = "seconds",
-				},
-				["finish"] = {
-					["type"] = "none",
-					["duration_type"] = "seconds",
-				},
+			["triggers"] = {
+				{
+					["trigger"] = {
+						["type"] = "aura",
+						["subeventSuffix"] = "_CAST_START",
+						["ownOnly"] = true,
+						["event"] = "Health",
+						["subeventPrefix"] = "SPELL",
+						["spellIds"] = {
+							974, -- [1]
+						},
+						["buffShowOn"] = "showOnMissing",
+						["names"] = {
+							"Earth Shield", -- [1]
+						},
+						["unit"] = "player",
+						["debuffType"] = "HELPFUL",
+					},
+					["untrigger"] = {
+					},
+				}, -- [1]
+				["activeTriggerMode"] = -10,
 			},
-			["internalVersion"] = 6,
+			["internalVersion"] = 9,
 		},
 		["Lightning Shield - Missing"] = {
 			["text2Point"] = "CENTER",
 			["text1FontSize"] = 12,
 			["parent"] = "Enhance Shaman",
-			["untrigger"] = {
-			},
+			["yOffset"] = 0,
 			["anchorPoint"] = "CENTER",
-			["activeTriggerMode"] = -10,
 			["customTextUpdate"] = "update",
 			["icon"] = true,
+			["useglowColor"] = false,
 			["text1Enabled"] = true,
 			["keepAspectRatio"] = false,
 			["animation"] = {
@@ -748,23 +830,13 @@ WeakAurasSaved = {
 					["type"] = "none",
 				},
 			},
-			["trigger"] = {
-				["type"] = "aura",
-				["subeventSuffix"] = "_CAST_START",
-				["ownOnly"] = true,
-				["event"] = "Health",
-				["subeventPrefix"] = "SPELL",
-				["spellIds"] = {
-					192106, -- [1]
-				},
-				["debuffType"] = "HELPFUL",
-				["unit"] = "player",
-				["names"] = {
-					"Lightning Shield", -- [1]
-				},
-				["buffShowOn"] = "showOnMissing",
-			},
 			["desaturate"] = true,
+			["glowColor"] = {
+				1, -- [1]
+				1, -- [2]
+				1, -- [3]
+				1, -- [4]
+			},
 			["text1Point"] = "CENTER",
 			["text2FontFlags"] = "OUTLINE",
 			["height"] = 60,
@@ -784,21 +856,29 @@ WeakAurasSaved = {
 					},
 				},
 			},
+			["width"] = 60,
+			["actions"] = {
+				["start"] = {
+				},
+				["finish"] = {
+				},
+				["init"] = {
+				},
+			},
 			["text2Font"] = "Friz Quadrata TT",
-			["internalVersion"] = 6,
 			["text2Containment"] = "INSIDE",
+			["glowType"] = "buttonOverlay",
 			["text1Color"] = {
 				1, -- [1]
 				1, -- [2]
 				1, -- [3]
 				1, -- [4]
 			},
-			["text1Font"] = "Friz Quadrata TT",
+			["internalVersion"] = 9,
 			["text1Containment"] = "INSIDE",
-			["selfPoint"] = "CENTER",
 			["text1FontFlags"] = "OUTLINE",
 			["regionType"] = "icon",
-			["numTriggers"] = 1,
+			["selfPoint"] = "CENTER",
 			["text2Color"] = {
 				1, -- [1]
 				1, -- [2]
@@ -812,41 +892,58 @@ WeakAurasSaved = {
 				1, -- [3]
 				1, -- [4]
 			},
-			["width"] = 60,
 			["text1"] = "%s",
 			["alpha"] = 1,
 			["glow"] = false,
-			["zoom"] = 0,
+			["text2"] = "%p",
 			["auto"] = true,
 			["text2Enabled"] = false,
 			["id"] = "Lightning Shield - Missing",
-			["text2"] = "%p",
+			["zoom"] = 0,
 			["frameStrata"] = 1,
 			["anchorFrameType"] = "SCREEN",
 			["stickyDuration"] = false,
 			["cooldownTextEnabled"] = true,
 			["inverse"] = false,
-			["yOffset"] = 0,
+			["text1Font"] = "Friz Quadrata TT",
 			["conditions"] = {
 			},
-			["actions"] = {
-				["start"] = {
-				},
-				["finish"] = {
-				},
-				["init"] = {
-				},
+			["triggers"] = {
+				{
+					["trigger"] = {
+						["type"] = "aura",
+						["subeventSuffix"] = "_CAST_START",
+						["ownOnly"] = true,
+						["event"] = "Health",
+						["subeventPrefix"] = "SPELL",
+						["spellIds"] = {
+							192106, -- [1]
+						},
+						["debuffType"] = "HELPFUL",
+						["unit"] = "player",
+						["names"] = {
+							"Lightning Shield", -- [1]
+						},
+						["buffShowOn"] = "showOnMissing",
+					},
+					["untrigger"] = {
+					},
+				}, -- [1]
+				["activeTriggerMode"] = -10,
 			},
 			["xOffset"] = 0,
 		},
 	},
 	["registered"] = {
 	},
+	["login_squelch_time"] = 10,
 	["frame"] = {
 		["xOffset"] = -1297.50042724609,
 		["width"] = 630,
 		["height"] = 492,
 		["yOffset"] = -173.166625976563,
 	},
-	["editor_theme"] = "Monokai",
+	["minimap"] = {
+		["hide"] = false,
+	},
 }

@@ -105,7 +105,7 @@ local talentCooldowns = {
 		addMod(info.guid, 22842, 0, 1) -- Frenzied Regeneration
 	end,
 	[21713] = function(info) -- Guardian: Survival of the Fittest
-		addMod(info.guid, 22812, 20) -- Barkskin
+		addMod(info.guid, 22812, 30) -- Barkskin
 		addMod(info.guid, 61336, 60) -- Survival Instincts
 	end,
 	[21716] = function(info) -- Restoration: Inner Peace
@@ -113,6 +113,16 @@ local talentCooldowns = {
 	end,
 	[18585] = function(info) -- Restoration: Stonebark
 		addMod(info.guid, 102342, 15) -- Ironbark
+	end,
+	-- Guardian: Increase Barkskin 60s->90s from checking first tier talents
+	[22419] = function(info) -- Brambles
+		addMod(info.guid, 22812, -30) -- Barkskin
+	end,
+	[22418] = function(info) -- Blood Frenzy
+		addMod(info.guid, 22812, -30) -- Barkskin
+	end,
+	[22420] = function(info) -- Bristling Fur
+		addMod(info.guid, 22812, -30) -- Barkskin
 	end,
 
 	-- Hunter
@@ -313,7 +323,7 @@ local spells = {
 		[198793] = {25, 1, 577}, -- Vengeful Retreat
 		[196718] = {180, 100, 577}, -- Darkness
 		[202137] = {60, 101, 581}, -- Sigil of Silence
-		[183752] = {10, 103}, -- Consume Magic
+		[278326] = {10, 103}, -- Consume Magic
 		[207684] = {60, 105, 581}, -- Sigil of Misery
 
 		[258925] = {60, 102, 577, 9}, -- Fel Barrage
@@ -328,7 +338,7 @@ local spells = {
 	DRUID = {
 		[1850] = {120, 8, nil, -4}, -- Dash
 		[5217] = {30, 13, 103}, -- Tiger's Fury
-		[22812] = {60, 26, {102, 104, 105}}, -- Barkskin
+		[22812] = {60, 26, {102, 104, 105}}, -- Barkskin XXX Guardian CD is 90s (hacked in via talents)
 		[99] = {30, 28, 104, -5}, -- Incapacitating Roar
 		[61336] = {180, 36, {103, 104}}, -- Survival Instincts (2 charges)
 		[106951] = {180, 40, 103, -15}, -- Berserk
@@ -625,6 +635,7 @@ local spells = {
 	WARLOCK = {
 		[19647] = {24, 35}, -- Spell Lock (Felhunter)
 		[119910] = 19647, -- Spell Lock (Command Demon)
+		[132409] = 19647, -- Spell Lock (Command Demon, sacrificed)
 		[80240] = {30, 40, 267}, -- Havoc
 		[698] = {120, 42}, -- Ritual of Summoning
 		[20707] = {600, 44}, -- Soulstone

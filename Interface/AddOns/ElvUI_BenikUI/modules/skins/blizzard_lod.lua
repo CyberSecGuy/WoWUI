@@ -65,6 +65,24 @@ local function style_AzeriteUI()
 end
 S:AddCallbackForAddon("Blizzard_AzeriteUI", "BenikUI_AzeriteUI", style_AzeriteUI)
 
+-- AzeriteRespecFrame
+local function style_AzeriteRespecUI()
+	if E.private.skins.blizzard.AzeriteRespec ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
+
+	local frame = _G["AzeriteRespecFrame"]
+	frame.backdrop:Style('Outside')
+	frame:SetClipsChildren(false)
+
+	local bg = select(23, frame:GetRegions())
+	bg:SetTexture(nil)
+
+	AzeriteRespecFrameTopTileStreaks:Hide()
+
+	frame.ButtonFrame.AzeriteRespecButton:ClearAllPoints()
+	frame.ButtonFrame.AzeriteRespecButton:Point('TOP', frame.ItemSlot, 'BOTTOM', 0, -20)
+end
+S:AddCallbackForAddon("Blizzard_AzeriteRespecUI", "BenikUI_AzeriteRespecUI", style_AzeriteRespecUI)
+
 -- BarbershopUI
 local function style_BarbershopUI()
 	if E.private.skins.blizzard.barber ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
@@ -273,6 +291,18 @@ local function style_GuildControlUI()
 	_G["GuildControlUI"]:Style('Outside')
 end
 S:AddCallbackForAddon("Blizzard_GuildControlUI", "BenikUI_GuildControlUI", style_GuildControlUI)
+
+-- IslandsQueueUI
+local function style_IslandsQueueUI()
+	if E.private.skins.blizzard.IslandQueue ~= true or E.private.skins.blizzard.enable ~= true or E.db.benikui.general.benikuiStyle ~= true then return end
+
+	_G["IslandsQueueFrame"].backdrop:Style('Outside')
+
+	-- tooltip
+	if E.private.skins.blizzard.tooltip ~= true then return end
+	_G["IslandsQueueFrameTooltip"]:GetParent():GetParent():HookScript("OnShow", function(self) if not self.style then self:Style('Outside') end end)
+end
+S:AddCallbackForAddon("Blizzard_IslandsQueueUI", "BenikUI_IslandsQueueUI", style_IslandsQueueUI)
 
 -- InspectUI
 local function style_InspectUI()

@@ -3,8 +3,9 @@ DeathNoteDB = {
 	["profileKeys"] = {
 		["Fiber - Stormrage"] = "Fiber - Stormrage",
 		["Phiber - Stormrage"] = "Phiber - Stormrage",
-		["Fiberoptic - Aggramar"] = "Fiberoptic - Aggramar",
 		["Voidbro - Stormrage"] = "Voidbro - Stormrage",
+		["Fiberoptic - Aggramar"] = "Fiberoptic - Aggramar",
+		["Fibur - Stormrage"] = "Fibur - Stormrage",
 		["Fiberboi - Sargeras"] = "Fiberboi - Sargeras",
 	},
 	["profiles"] = {
@@ -12,9 +13,11 @@ DeathNoteDB = {
 		},
 		["Phiber - Stormrage"] = {
 		},
+		["Voidbro - Stormrage"] = {
+		},
 		["Fiberoptic - Aggramar"] = {
 		},
-		["Voidbro - Stormrage"] = {
+		["Fibur - Stormrage"] = {
 		},
 		["Fiberboi - Sargeras"] = {
 		},

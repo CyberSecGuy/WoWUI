@@ -53,6 +53,7 @@ end
 -- ============================================================================
 
 function private.CreateMainFrame()
+	TSM.Analytics.PageView("crafting")
 	local frame = TSMAPI_FOUR.UI.NewElement("LargeApplicationFrame", "base")
 		:SetParent(UIParent)
 		:SetMinResize(MIN_FRAME_SIZE.width, MIN_FRAME_SIZE.height)
@@ -108,6 +109,7 @@ function private.FSMCreate()
 
 	local fsmContext = {
 		frame = nil,
+		openedTime = 0,
 	}
 	local function DefaultFrameOnHide()
 		private.fsm:ProcessEvent("EV_FRAME_HIDE")
@@ -185,6 +187,7 @@ function private.FSMCreate()
 					context.frame:GetElement("titleFrame.switchBtn"):Hide()
 				end
 				context.frame:Draw()
+				context.openedTime = GetTime()
 				private.isVisible = true
 			end)
 			:SetOnExit(function(context)
@@ -207,6 +210,9 @@ function private.FSMCreate()
 			:AddEvent("EV_TRADE_SKILL_CLOSED", function(context)
 				context.frame:GetElement("titleFrame.switchBtn"):Hide()
 				context.frame:GetElement("titleFrame"):Draw()
+				if context.openedTime > GetTime() - 2 then
+					return "ST_CLOSED"
+				end
 			end)
 			:AddEvent("EV_SWITCH_BTN_CLICKED", function()
 				return "ST_DEFAULT_OPEN"

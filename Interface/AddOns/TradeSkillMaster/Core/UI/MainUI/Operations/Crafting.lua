@@ -67,7 +67,7 @@ function private.GetCraftingOperationSettings(operationName)
 						:SetStyle("textColor", "#ffffff")
 						:SetDisabled((operation.relationships.minProfit and true or false) or operation.minProfit == "")
 						:SetSettingInfo(operation, "minProfit", TSM.MainUI.Operations.CheckCustomPrice)
-						:SetText(TSM.Money.ToString(operation.minProfit) or operation.minProfit or "")
+						:SetText(TSM.Money.ToString(operation.minProfit) or operation.minProfit)
 					)
 				)
 			)
@@ -140,7 +140,7 @@ end
 
 function private.MinProfitToggleOnValueChanged(toggle, value)
 	local operation = TSM.Operations.GetSettings("Crafting", private.currentOperationName)
-	operation.minProfit = value and TSM.Operations.GetSettingDefault("Crafting", "minProfit")
+	operation.minProfit = value and TSM.Operations.GetSettingDefault("Crafting", "minProfit") or ""
 	local settingsFrame = toggle:GetParentElement():GetParentElement():GetParentElement()
 	settingsFrame:GetElement("minProfitInputFrame.minProfit.left.linkBtn")
 		:SetStyle("backgroundVertexColor", value and "#ffffff" or "#424242")
@@ -149,7 +149,7 @@ function private.MinProfitToggleOnValueChanged(toggle, value)
 		:SetStyle("textColor", value and "#e2e2e2" or "#424242")
 	settingsFrame:GetElement("minProfitInputFrame.minProfit.input")
 		:SetDisabled(not value)
-		:SetText(TSM.Money.ToString(operation.minProfit) or operation.minProfit or "")
+		:SetText(TSM.Money.ToString(operation.minProfit) or operation.minProfit)
 	settingsFrame:Draw()
 end
 

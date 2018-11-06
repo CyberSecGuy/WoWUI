@@ -18,7 +18,7 @@ function AS:CheckOption(optionName, ...)
 	for i = 1, select('#', ...) do
 		local addon = select(i, ...)
 		if not addon then break end
-		if not IsAddOnLoaded(addon) then return false end
+		if not AS:CheckAddOn(addon) then return false end
 	end
 
 	return self.db[optionName]
@@ -26,9 +26,13 @@ end
 
 function AS:SetOption(optionName, value)
 	self.db[optionName] = value
+
+	if AddOnSkinsDS[AS.Version] and AddOnSkinsDS[AS.Version][optionName] == true then
+		AddOnSkinsDS[AS.Version][optionName] = nil
+	end
 end
 
-function AS:Color(name)
+function AS:GetColor(name)
 	local color = '|cff1784d1%s|r'
 	return (color):format(name)
 end
@@ -170,19 +174,19 @@ function AS:RegisterSkinForPreload(addonName, skinFunc, addon1)
 end
 
 function AS:RunPreload(addonName)
-	if AS:CheckAddOn(addonName) and AS:CheckOption(addonName) and AS.preload[addonName] then
+	if AS:CheckOption(addonName, addonName) and AS.preload[addonName] then
 		pcall(AS.preload[addonName].func, self, 'ADDON_LOADED', AS.preload[addonName].addon or addonName)
 	end
 end
 
 local function errorhandler(err)
-	return geterrorhandler()(err);
+	return geterrorhandler()(err)
 end
 
 function AS:CallSkin(addonName, func, event, ...)
 	if (AS:CheckOption('SkinDebug')) then
-		local args = {...};
-		xpcall(function() func(self, event, unpack(args)) end, errorhandler);
+		local args = {...}
+		xpcall(function() func(self, event, unpack(args)) end, errorhandler)
 	else
 		local pass, error = pcall(func, self, event, ...)
 		if not pass then
@@ -206,22 +210,26 @@ end
 function AS:UnregisterSkinEvent(addonName, event)
 	if not AS.events[event] then return end
 	if not AS.events[event][addonName] then return end
+
 	AS.events[event][addonName] = nil
+
 	for addon, _ in pairs(AS.events[event]) do
 		if addon then
 			return
 		end
 	end
+
 	AS:UnregisterEvent(event)
 end
 
 function AS:StartSkinning(event)
 	AS:UnregisterEvent(event)
 
-	AS:UpdateMedia()
-
+	AS.Color = AS:CheckOption('ClassColor') and AS.ClassColor or { 0, 0.44, .87, 1 }
 	AS.Mult = 768 / AS.ScreenHeight / UIParent:GetScale()
 	AS.ParchmentEnabled = AS:CheckOption('Parchment')
+
+	AS:UpdateMedia()
 
 	for addonName, alldata in pairs(AS.register) do
 		for _, data in pairs(alldata) do
@@ -242,6 +250,15 @@ function AS:StartSkinning(event)
 		end
 	end
 
+	-- Check forced Blizzard AddOns
+	for addonName, funcs in AS:OrderedPairs(AS.skins) do
+		if AS:CheckOption(addonName) and strfind(addonName, 'Blizzard_') and IsAddOnLoaded(addonName) then
+			for _, func in ipairs(funcs) do
+				AS:CallSkin(addonName, func, 'ADDON_LOADED', addonName)
+			end
+		end
+	end
+
 	for addonName, funcs in AS:OrderedPairs(AS.skins) do
 		if AS:CheckAddOn('ElvUI') and AS:GetElvUIBlizzardSkinOption(addonName) then
 			AS:SetOption(addonName, false)
@@ -252,6 +269,10 @@ function AS:StartSkinning(event)
 				AS:CallSkin(addonName, func, event)
 			end
 		end
+	end
+
+	if AS:CheckOption('LoginMsg') then
+		AS:Print(format("Version: |cFF1784D1%s|r Loaded!", AS.Version))
 	end
 
 	if AS:CheckAddOn('AddonLoader') then
@@ -286,10 +307,6 @@ function AS:Init(event, addon)
 		AS.EP = LibStub('LibElvUIPlugin-1.0', true)
 		if AS.EP then
 			AS.EP:RegisterPlugin(AddOnName, AS.GetOptions)
-		end
-
-		if AS:CheckOption('LoginMsg') then
-			AS:Print(format("Version: |cFF1784D1%s|r Loaded!", AS.Version))
 		end
 
 		AS:RegisterEvent('PET_BATTLE_CLOSE', 'AddNonPetBattleFrames')

@@ -96,16 +96,19 @@ function AS:BuildProfile()
 			['HideChatFrame'] = 'NONE',
 			['Parchment'] = false,
 			['SkinDebug'] = false,
-			['LoginMsg'] = true,
+			['LoginMsg'] = false,
 			['EmbedSystemMessage'] = true,
-			['ElvUISkinModule'] = false,
+			['ElvUIStyle'] = false,
 			['ThinBorder'] = true,
+			['ClassColor'] = false,
+			['BackgroundTexture'] = 'Blizzard Raid Bar',
+			['StatusBarTexture'] = 'Blizzard Raid Bar',
+			['BackdropColor'] = { .5, .5, .5, .8 },
+			['BorderColor'] = { 0, 0, 0 },
+			['HighlightColor'] = { 1, .8, .1 },
+			['SelectedColor'] = { 0, 0.44, .87 },
 		},
 	}
-
-	if AS:CheckAddOn('ElvUI_MerathilisUI') then
-		Defaults.profile['MerathilisUIStyling'] = false;
-	end
 
 	for skin in pairs(AS.register) do
 		if AS:CheckAddOn('ElvUI') and strfind(skin, 'Blizzard_') then
@@ -141,7 +144,6 @@ function AS:BuildOptions()
 			type = 'toggle',
 			name = text,
 			order = order,
-			desc = ASL.OptionsPanel.SkinDesc,
 		}
 		if AS:CheckAddOn('ElvUI') and strfind(skinName, 'Blizzard_') then
 			options.set = function(info, value) AS:SetOption(info[#info], value) AS:SetElvUIBlizzardSkinOption(info[#info], not value) AS.NeedReload = true end
@@ -155,6 +157,110 @@ function AS:BuildOptions()
 		name = AS.Title,
 		childGroups = 'tab',
 		args = {
+			general = {
+				type = 'group',
+				name = GENERAL,
+				order = 0,
+				get = function(info) return AS:CheckOption(info[#info]) end,
+				set = function(info, value) AS:SetOption(info[#info], value) AS.NeedReload = true end,
+				args = {
+					Header = {
+						order = 0,
+						type = 'header',
+						name = AS:GetColor(GENERAL),
+					},
+					LoginMsg = {
+						type = 'toggle',
+						name = ASL['Login Message'],
+						order = 1,
+					},
+					SkinDebug = {
+						type = 'toggle',
+						name = ASL['Enable Skin Debugging'],
+						order = 2,
+					},
+					Parchment = {
+						type = 'toggle',
+						name = ASL['Parchment']..' (WIP)', -- This doesn't need localized. Once I'm done doing the extra skinning I'll remove it.
+						order = 3,
+					},
+					ThinBorder = {
+						name = 'Thin Border',
+						order = 4,
+						type = 'toggle',
+					},
+					SkinTemplate = {
+						name = ASL['Skin Template'],
+						order = 6,
+						type = 'select',
+						values = {
+							['ClassColor'] = 'Class Color',
+							['Custom'] = 'Custom',
+							['Default'] = 'Default',
+							['Transparent'] = 'Transparent',
+						}
+					},
+					Textures = {
+						type = 'group',
+						name = 'Textures',
+						guiInline = true,
+						order = 7,
+						get = function(info) return AS:CheckOption(info[#info]) end,
+						set = function(info, value) AS:SetOption(info[#info], value) AS.NeedReload = true end,
+						args = {
+							BackgroundTexture = {
+								type = 'select',
+								dialogControl = 'LSM30_Statusbar',
+								order = 1,
+								name = 'Background Texture',
+								values = AS.LSM:HashTable('statusbar'),
+							},
+							StatusBarTexture = {
+								type = 'select',
+								dialogControl = 'LSM30_Statusbar',
+								order = 2,
+								name = 'StatusBar Texture',
+								values = AS.LSM:HashTable('statusbar'),
+							},
+						},
+					},
+					Colors = {
+						type = 'group',
+						name = 'Colors',
+						guiInline = true,
+						order = 8,
+						get = function(info) return unpack(AS:CheckOption(info[#info])) end,
+						set = function(info, r, g, b, a) AS:SetOption(info[#info], { r, g, b, a }) end,
+						args = {
+							BackdropColor = {
+								type = 'color',
+								order = 1,
+								hasAlpha = true,
+								name = 'Backdrop Color',
+								desc = 'Only Available with Custom Template',
+								disabled = function() return (AS:CheckOption('SkinTemplate') ~= 'Custom' and not AS:CheckOption('ElvUIStyle')) end,
+							},
+							BorderColor = {
+								type = 'color',
+								order = 2,
+								name = 'Border Color',
+								desc = 'Only Available with Custom Template',
+								disabled = function() return (AS:CheckOption('SkinTemplate') ~= 'Custom' and not AS:CheckOption('ElvUIStyle')) end,
+							},
+							HighlightColor = {
+								type = 'color',
+								order = 3,
+								name = 'Highlight',
+							},
+							SelectedColor = {
+								type = 'color',
+								order = 4,
+								name = 'Selected / Checked',
+							},
+						},
+					},
+				},
+			},
 			addons = {
 				order = 1,
 				type = 'group',
@@ -181,7 +287,7 @@ function AS:BuildOptions()
 					BossModHeader = {
 						order = 0,
 						type = 'header',
-						name = AS:Color(ASL['BossMod Options']),
+						name = AS:GetColor(ASL['BossMod Options']),
 					},
 					DBMFont = {
 						type = 'select', dialogControl = 'LSM30_Font',
@@ -229,7 +335,7 @@ function AS:BuildOptions()
 					EmbedHeader = {
 						order = 0,
 						type = 'header',
-						name = AS:Color(ASL['Embed Settings']),
+						name = AS:GetColor(ASL['Embed Settings']),
 					},
 					desc = {
 						type = 'description',
@@ -393,37 +499,13 @@ function AS:BuildOptions()
 					MiscHeader = {
 						order = 0,
 						type = 'header',
-						name = AS:Color(MISCELLANEOUS),
-					},
-					SkinTemplate = {
-						name = ASL['Skin Template'],
-						order = 1,
-						type = 'select',
-						values = {
-							['Transparent'] = 'Transparent',
-							['Default'] = 'Default',
-						}
+						name = AS:GetColor(MISCELLANEOUS),
 					},
 					WeakAuraAuraBar = {
 						type = 'toggle',
 						name = ASL['WeakAura AuraBar'],
-						order = 2,
-						disabled = function() return not AS:CheckOption('WeakAuras', 'WeakAuras') end,
-					},
-					Parchment = {
-						type = 'toggle',
-						name = ASL['Parchment'],
 						order = 3,
-					},
-					SkinDebug = {
-						type = 'toggle',
-						name = ASL['Enable Skin Debugging'],
-						order = 4,
-					},
-					LoginMsg = {
-						type = 'toggle',
-						name = ASL['Login Message'],
-						order = 5,
+						disabled = function() return not AS:CheckOption('WeakAuras', 'WeakAuras') end,
 					},
 				},
 			},
@@ -435,7 +517,7 @@ function AS:BuildOptions()
 					FAQHeader = {
 						order = 0,
 						type = 'header',
-						name = AS:Color(ASL["FAQ's"]),
+						name = AS:GetColor(ASL["FAQ's"]),
 					},
 					question1 = {
 						type = 'description',
@@ -530,14 +612,6 @@ function AS:BuildOptions()
 		},
 	}
 
-	if AS:CheckAddOn("ElvUI_MerathilisUI") then
-		AS.Options.args.misc.args.MerathilisUIStyling = {
-			type = 'toggle',
-			name = ASL["|cffff7d0aMerathilisUI|r Styling"],
-			order = 6
-		}
-	end
-
 	local order, blizzorder = 1, 1
 	local skins = {}
 
@@ -558,7 +632,7 @@ function AS:BuildOptions()
 		else
 			AS.Options.args.addons.args.description = {
 				type = 'header',
-				name = AS:Color(ASL['AddOn Skins']),
+				name = AS:GetColor(ASL['AddOn Skins']),
 				order = 0,
 			}
 			AS.Options.args.addons.args[skinName] = GenerateOptionTable(skinName, order)
@@ -569,7 +643,7 @@ function AS:BuildOptions()
 	if AS:CheckAddOn('ElvUI') then
 		AS.Options.args.blizzard.args.description = {
 			type = 'header',
-			name = AS:Color(ASL['Blizzard Skins']),
+			name = AS:GetColor(ASL['Blizzard Skins']),
 			order = 0,
 		}
 
@@ -580,19 +654,19 @@ function AS:BuildOptions()
 			disabled = function() return not AS:CheckOption('WeakAuras', 'WeakAuras') end,
 		}
 
-		AS.Options.args.misc.args.ElvUISkinModule = {
+		AS.Options.args.general.args.ElvUIStyle = {
 			type = 'toggle',
-			name = 'Use ElvUI Skin Styling',
+			name = 'ElvUI Style',
 			order = 5,
 		}
-	end
 
-	if not AS:CheckAddOn('ElvUI') then
-		AS.Options.args.misc.args.ThinBorder = {
-			name = 'Thin Border',
-			order = 1,
-			type = 'toggle',
-		}
+		if AS:CheckAddOn('ElvUI_MerathilisUI') then
+			AS.Options.args.general.args.SkinTemplate.values['MerathilisUI'] = 'MerathilisUI'
+		end
+
+		if AS:CheckAddOn('ElvUI_KlixUI') then
+			AS.Options.args.general.args.SkinTemplate.values['KlixUI'] = 'KlixUI'
+		end
 	end
 end
 
