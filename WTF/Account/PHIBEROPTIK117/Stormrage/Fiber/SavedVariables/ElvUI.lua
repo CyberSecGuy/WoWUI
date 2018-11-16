@@ -6,6 +6,11 @@ ElvCharacterDB = {
 		"/wa", -- [3]
 		"/p [WeakAuras: Fiber-Stormrage - Cold Blood Buff]", -- [4]
 		"/quit", -- [5]
+		"/who Paladin", -- [6]
+		"/cw Decher were you looking for guild sigs?", -- [7]
+		"/cw Decher i'm in stormwind", -- [8]
+		"/cw Decher ty", -- [9]
+		"/cw Decher-Stormrage heading back to main, gl hf", -- [10]
 	},
 	["ChatHistoryLog"] = {
 		{
@@ -74,5 +79,203 @@ ElvCharacterDB = {
 			[51] = 1535233561,
 			[50] = "CHAT_MSG_PARTY",
 		}, -- [3]
+		{
+			"were you looking for guild sigs?", -- [1]
+			"Decher", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Decher", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			924, -- [11]
+			"Player-60-0B1C2A1D", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfff48cbaDecher|r",
+			[51] = 1541545413,
+			[50] = "CHAT_MSG_WHISPER_INFORM",
+		}, -- [4]
+		{
+			"yep", -- [1]
+			"Decher-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Decher", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			925, -- [11]
+			"Player-60-0B1C2A1D", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfff48cbaDecher|r",
+			[51] = 1541545422,
+			[50] = "CHAT_MSG_WHISPER",
+		}, -- [5]
+		{
+			"need 4", -- [1]
+			"Decher-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Decher", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			926, -- [11]
+			"Player-60-0B1C2A1D", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfff48cbaDecher|r",
+			[51] = 1541545428,
+			[50] = "CHAT_MSG_WHISPER",
+		}, -- [6]
+		{
+			"i'm in stormwind", -- [1]
+			"Decher-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Decher", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			931, -- [11]
+			"Player-60-0B1C2A1D", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfff48cbaDecher|r",
+			[51] = 1541545436,
+			[50] = "CHAT_MSG_WHISPER_INFORM",
+		}, -- [7]
+		{
+			"i dont see you", -- [1]
+			"Decher-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Decher", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			962, -- [11]
+			"Player-60-0B1C2A1D", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfff48cbaDecher|r",
+			[51] = 1541545480,
+			[50] = "CHAT_MSG_PARTY_LEADER",
+		}, -- [8]
+		{
+			"nvm", -- [1]
+			"Decher-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Decher", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			967, -- [11]
+			"Player-60-0B1C2A1D", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfff48cbaDecher|r",
+			[51] = 1541545486,
+			[50] = "CHAT_MSG_PARTY_LEADER",
+		}, -- [9]
+		{
+			"ty", -- [1]
+			"Decher-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Decher", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			980, -- [11]
+			"Player-60-0B1C2A1D", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfff48cbaDecher|r",
+			[51] = 1541545524,
+			[50] = "CHAT_MSG_WHISPER_INFORM",
+		}, -- [10]
+		{
+			"ty", -- [1]
+			"Decher-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Decher", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			981, -- [11]
+			"Player-60-0B1C2A1D", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfff48cbaDecher|r",
+			[51] = 1541545525,
+			[50] = "CHAT_MSG_PARTY_LEADER",
+		}, -- [11]
+		{
+			"heading back to main, gl hf", -- [1]
+			"Decher-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Decher", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			989, -- [11]
+			"Player-60-0B1C2A1D", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cfff48cbaDecher|r",
+			[51] = 1541545549,
+			[50] = "CHAT_MSG_WHISPER_INFORM",
+		}, -- [12]
 	},
 }

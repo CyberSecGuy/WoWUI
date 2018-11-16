@@ -16,6 +16,14 @@ oRA3DB = {
 		["Promote"] = {
 		},
 		["Cooldowns"] = {
+			["global"] = {
+				["spellsOnCooldown"] = {
+					[119381] = {
+						["Player-69-0BC339D7"] = 1189474.851,
+					},
+				},
+				["lastTime"] = 1206861.355,
+			},
 			["profiles"] = {
 				["Default"] = {
 					["spells"] = {
@@ -32,6 +40,11 @@ oRA3DB = {
 			},
 		},
 		["Difficulty"] = {
+			["profiles"] = {
+				["Default"] = {
+					["prevRaidDifficulty"] = 16,
+				},
+			},
 		},
 		["Consumables"] = {
 		},
@@ -41,7 +54,9 @@ oRA3DB = {
 	["profileKeys"] = {
 		["Fiber - Stormrage"] = "Default",
 		["Phiber - Stormrage"] = "Default",
+		["Onedemonboi - Stormrage"] = "Default",
 		["Voidbro - Stormrage"] = "Default",
+		["Deafnight - Stormrage"] = "Default",
 		["Fiberoptic - Aggramar"] = "Default",
 		["Fibur - Stormrage"] = "Default",
 		["Fiberboi - Sargeras"] = "Default",
@@ -63,6 +78,10 @@ oRA3DB = {
 					["Width"] = 140.000045776367,
 				},
 				["oRA3ReadyCheck"] = {
+					["Height"] = 182.999923706055,
+					["PosX"] = 1079.46661649704,
+					["PosY"] = 409.813350214958,
+					["Width"] = 320.000061035156,
 				},
 			},
 			["lastSelectedPanel"] = "Cooldowns",

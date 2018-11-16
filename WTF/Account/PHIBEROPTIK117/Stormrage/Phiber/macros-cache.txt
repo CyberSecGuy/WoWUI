@@ -15,6 +15,10 @@ VER 3 0100000000000016 "Earf Shield" "INV_MISC_QUESTIONMARK"
 /cast [@mouseover,help] Earth Shield
 /cast [target=noexists, @player] Earth Shield
 END
+VER 3 010000000000001B "Earth Quake" "INV_MISC_QUESTIONMARK"
+#show
+/cast [@cursor] Earthquake
+END
 VER 3 0100000000000019 "Earthbind" "INV_MISC_QUESTIONMARK"
 #show
 /cast [@cursor] Earthbind Totem
@@ -41,6 +45,10 @@ END
 VER 3 0100000000000006 "Lightning Rod" "INV_MISC_QUESTIONMARK"
 #showtooltip
 /cast [talent:1/2] Liquid Magma Totem; Ascendance
+END
+VER 3 010000000000001C "Magma" "INV_MISC_QUESTIONMARK"
+#show
+/cast [@cursor] Liquid Magma Totem
 END
 VER 3 0100000000000011 "Purge" "INV_MISC_QUESTIONMARK"
 #show

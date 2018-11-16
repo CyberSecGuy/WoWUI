@@ -15,8 +15,10 @@ end
 -- AddonSkins WeakAuras
 local function WeakAurasShadows()
 	local function Skin_WeakAuras(frame, ftype)
-		if not frame.Backdrop.shadow then
-			frame.Backdrop:CreateSoftShadow()
+		if frame.Backdrop then
+			if not frame.Backdrop.shadow then
+				frame.Backdrop:CreateSoftShadow()
+			end
 		end
 	end
 
@@ -146,5 +148,5 @@ function mod:AddonSkins()
 		mod:DBMShadows()
 	end
 
-	if AS:CheckAddOn('WeakAuras') then AS:RegisterSkin('WeakAuras', WeakAurasShadows, 2) end
+	if AS:CheckAddOn('WeakAuras') then AS:RegisterSkin('WeakAuras', WeakAurasShadows, 'ADDON_LOADED') end
 end

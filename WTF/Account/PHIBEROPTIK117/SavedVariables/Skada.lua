@@ -7,7 +7,9 @@ SkadaDB = {
 	["profileKeys"] = {
 		["Fiber - Stormrage"] = "BenikUI",
 		["Phiber - Stormrage"] = "BenikUI",
+		["Onedemonboi - Stormrage"] = "Default",
 		["Voidbro - Stormrage"] = "BenikUI",
+		["Deafnight - Stormrage"] = "Default",
 		["Fiberoptic - Aggramar"] = "BenikUI",
 		["Fibur - Stormrage"] = "|cff00c0faBenikUI |rFibur - Stormrage",
 		["Fiberboi - Sargeras"] = "BenikUI",
@@ -17,34 +19,34 @@ SkadaDB = {
 			["windows"] = {
 				{
 					["barheight"] = 14,
+					["classicons"] = false,
+					["barslocked"] = true,
+					["background"] = {
+						["strata"] = "LOW",
+						["height"] = 123,
+						["bordertexture"] = "None",
+					},
+					["y"] = 4.5,
+					["barfont"] = "Expressway",
+					["title"] = {
+						["font"] = "Expressway",
+						["fontsize"] = 11,
+						["height"] = 18,
+					},
+					["point"] = "TOPRIGHT",
+					["classcolortext"] = true,
 					["barcolor"] = {
 						["r"] = 1,
 						["g"] = 0.5,
 						["b"] = 0,
 					},
 					["barfontsize"] = 10,
-					["classicons"] = false,
-					["barslocked"] = true,
 					["mode"] = "Damage",
 					["spark"] = false,
 					["bartexture"] = "BuiOnePixel",
 					["barwidth"] = 196.000061035156,
-					["y"] = 4.5,
-					["barfont"] = "Expressway",
-					["title"] = {
-						["height"] = 18,
-						["font"] = "Expressway",
-						["fontsize"] = 11,
-					},
 					["classcolorbars"] = false,
 					["x"] = 1719.83367919922,
-					["point"] = "TOPRIGHT",
-					["classcolortext"] = true,
-					["background"] = {
-						["height"] = 122,
-						["strata"] = "LOW",
-						["bordertexture"] = "None",
-					},
 				}, -- [1]
 				{
 					["titleset"] = true,
@@ -95,7 +97,7 @@ SkadaDB = {
 					["background"] = {
 						["strata"] = "LOW",
 						["borderthickness"] = 0,
-						["height"] = 122,
+						["height"] = 123,
 						["color"] = {
 							["a"] = 0.2,
 							["b"] = 0.5,
@@ -160,37 +162,45 @@ SkadaDB = {
 			},
 		},
 		["|cff00c0faBenikUI |rFibur - Stormrage"] = {
+			["modeclicks"] = {
+				["Friendly Fire"] = 1,
+				["DPS"] = 1,
+			},
+			["ffoptions"] = {
+				["ignoreability"] = false,
+				["ignoredefensive"] = true,
+			},
 			["windows"] = {
 				{
 					["barheight"] = 14,
-					["classicons"] = false,
-					["barslocked"] = true,
-					["y"] = 4.5,
-					["barfont"] = "Expressway",
-					["title"] = {
-						["font"] = "Expressway",
-						["fontsize"] = 11,
-						["height"] = 18,
-					},
-					["x"] = 1719.83367919922,
-					["classcolortext"] = true,
 					["barcolor"] = {
 						["b"] = 0,
 						["g"] = 0.5,
 						["r"] = 1,
 					},
 					["barfontsize"] = 10,
-					["mode"] = "Damage",
+					["classicons"] = false,
+					["barslocked"] = true,
+					["mode"] = "DPS",
 					["spark"] = false,
 					["bartexture"] = "BuiOnePixel",
 					["barwidth"] = 196.000061035156,
+					["y"] = 4.5,
+					["barfont"] = "Expressway",
+					["title"] = {
+						["height"] = 18,
+						["font"] = "Expressway",
+						["fontsize"] = 11,
+					},
 					["classcolorbars"] = false,
-					["point"] = "TOPRIGHT",
 					["background"] = {
-						["strata"] = "LOW",
 						["height"] = 123,
+						["strata"] = "LOW",
 						["bordertexture"] = "None",
 					},
+					["point"] = "TOPRIGHT",
+					["classcolortext"] = true,
+					["x"] = 1719.83367919922,
 				}, -- [1]
 				{
 					["titleset"] = true,
@@ -282,9 +292,12 @@ SkadaDB = {
 				["1.6.4"] = true,
 				["1.6.3"] = true,
 			},
-			["ffoptions"] = {
-				["ignoreability"] = false,
-				["ignoredefensive"] = true,
+			["icon"] = {
+				["hide"] = true,
+			},
+			["report"] = {
+				["channel"] = "guild",
+				["mode"] = "Friendly Fire",
 			},
 		},
 	},

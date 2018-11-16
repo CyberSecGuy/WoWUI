@@ -203,7 +203,11 @@ function VAT:UpdateAura(button, index)
 			local color = E.db.VAT.staticColor
 			r, g, b = VAT:GetStaticColor(color.r, color.g, color.b) --Checks for class color match
 		else
-			r, g, b = ElvUF.ColorGradient(timeLeft, duration or 0, 0.8,0,0,0.8,0.8,0,0,0.8,0)
+			if tonumber(E.version) and tonumber(E.version) < 10.83 then
+				r, g, b = ElvUF.ColorGradient(timeLeft, duration or 0, 0.8,0,0,0.8,0.8,0,0,0.8,0)
+			else
+				r, g, b = ElvUF:ColorGradient(timeLeft, duration or 0, 0.8,0,0,0.8,0.8,0,0,0.8,0)
+			end
 		end
 		button.Bar:SetStatusBarColor(r, g, b)
 	end
@@ -218,7 +222,7 @@ function VAT:UpdateTempEnchant(button, index)
 	local offset = 2
 	local weapon = button:GetName():sub(-1)
 	if weapon:match("2") then
-		offset = 5
+		offset = 6
 	end
 
 	local expirationTime = select(offset, GetWeaponEnchantInfo())
@@ -317,7 +321,11 @@ function VAT:UpdateTempEnchant(button, index)
 				local color = E.db.VAT.staticColor
 				r, g, b = VAT:GetStaticColor(color.r, color.g, color.b) --Checks for class color match
 			else
-				r, g, b = ElvUF.ColorGradient(timeLeft, duration or 0, 0.8,0,0,0.8,0.8,0,0,0.8,0)
+				if tonumber(E.version) and tonumber(E.version) < 10.83 then
+					r, g, b = ElvUF:ColorGradient(timeLeft, duration or 0, 0.8,0,0,0.8,0.8,0,0,0.8,0)
+				else
+					r, g, b = ElvUF:ColorGradient(timeLeft, duration or 0, 0.8,0,0,0.8,0.8,0,0,0.8,0)
+				end
 			end
 			button.Bar:SetStatusBarColor(r, g, b)
 			local quality = GetInventoryItemQuality("player", index)

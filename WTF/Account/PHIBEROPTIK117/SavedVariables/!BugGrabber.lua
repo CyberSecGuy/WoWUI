@@ -1,6 +1,6 @@
 
 BugGrabberDB = {
-	["session"] = 42,
+	["session"] = 80,
 	["lastSanitation"] = 3,
 	["errors"] = {
 		{
@@ -347,23 +347,63 @@ BugGrabberDB = {
 			["counter"] = 1,
 		}, -- [45]
 		{
-			["message"] = "hopFramebuttonHop: Couldn't find relative frame: $parentDetails",
-			["session"] = 42,
-			["time"] = "2018/08/16 13:50:49",
-			["counter"] = 18,
+			["message"] = "[ADDON_ACTION_BLOCKED] AddOn 'ElvUI' tried to call the protected function 'ElvUI_NamePlate_Player:SetSize()'.",
+			["time"] = "2018/11/06 19:25:44",
+			["locals"] = "InCombatSkipped",
+			["stack"] = "Interface\\AddOns\\!BugGrabber\\BugGrabber.lua:519: in function <Interface\\AddOns\\!BugGrabber\\BugGrabber.lua:519>\n[C]: in function `SetSize'\n...rface\\AddOns\\ElvUI\\Modules\\nameplates\\nameplates.lua:614: in function `SetBaseNamePlateSize'\n...rface\\AddOns\\ElvUI\\Modules\\nameplates\\nameplates.lua:136: in function <...rface\\AddOns\\ElvUI\\Modules\\nameplates\\nameplates.lua:133>\n[C]: in function `UpdateNamePlateOptions'\nInterface\\FrameXML\\InterfaceOptionsPanels.lua:1324: in function `setFunc'\nInterface\\FrameXML\\InterfaceOptionsPanels.lua:87: in function <Interface\\FrameXML\\InterfaceOptionsPanels.lua:83>\n[C]: in function `pcall'\nInterface\\FrameXML\\InterfaceOptionsFrame.lua:217: in function <Interface\\FrameXML\\InterfaceOptionsFrame.lua:216>\n[C]: in function `securecall'\nInterface\\FrameXML\\InterfaceOptionsFrame.lua:252: in function <Interface\\FrameXML\\InterfaceOptionsFrame.lua:248>\n[C]: in function `Click'\nInterface\\FrameXML\\UIParent.lua:3959: in function `ToggleGameMenu'\n[string \"TOGGLEGAMEMENU\"]:1: in function <[string \"TOGGLEGAMEMENU\"]:1>",
+			["session"] = 47,
+			["counter"] = 1,
 		}, -- [46]
 		{
-			["message"] = "Couldn't open Interface\\AddOns\\SquareMinimapButtons\\",
-			["session"] = 42,
-			["time"] = "2018/08/16 13:50:49",
-			["counter"] = 96,
+			["message"] = "[ADDON_ACTION_BLOCKED] AddOn 'Clique' tried to call the protected function 'CompactRaidFrameContainer:Hide()'.",
+			["time"] = "2018/11/06 19:25:44",
+			["locals"] = "InCombatSkipped",
+			["stack"] = "Interface\\AddOns\\!BugGrabber\\BugGrabber.lua:519: in function <Interface\\AddOns\\!BugGrabber\\BugGrabber.lua:519>\n[C]: in function `Hide'\n...mpactRaidFrames\\Blizzard_CompactRaidFrameManager.lua:527: in function `CompactRaidFrameManager_UpdateContainerVisibility'\n...mpactRaidFrames\\Blizzard_CompactRaidFrameManager.lua:472: in function <...mpactRaidFrames\\Blizzard_CompactRaidFrameManager.lua:461>\n...mpactRaidFrames\\Blizzard_CompactRaidFrameManager.lua:511: in function `CompactRaidFrameManager_SetSetting'\n...rd_CUFProfiles\\Blizzard_CompactUnitFrameProfiles.lua:606: in function `func'\n...rd_CUFProfiles\\Blizzard_CompactUnitFrameProfiles.lua:583: in function `CompactUnitFrameProfiles_ApplyProfile'\n...rd_CUFProfiles\\Blizzard_CompactUnitFrameProfiles.lua:176: in function `CompactUnitFrameProfiles_ApplyCurrentSettings'\n...rd_CUFProfiles\\Blizzard_CompactUnitFrameProfiles.lua:85: in function `CompactUnitFrameProfiles_CancelChanges'\n...rd_CUFProfiles\\Blizzard_CompactUnitFrameProfiles.lua:78: in function <...rd_CUFProfiles\\Blizzard_CompactUnitFrameProfiles.lua:76>\n[C]: in function `pcall'\nInterface\\FrameXML\\InterfaceOptionsFrame.lua:217: in function <Interface\\FrameXML\\InterfaceOptionsFrame.lua:216>\n[C]: in function `securecall'\nInterface\\FrameXML\\InterfaceOptionsFrame.lua:252: in function <Interface\\FrameXML\\InterfaceOptionsFrame.lua:248>\n[C]: in function `Click'\nInterface\\FrameXML\\UIParent.lua:3959: in function `ToggleGameMenu'\n[string \"TOGGLEGAMEMENU\"]:1: in function <[string \"TOGGLEGAMEMENU\"]:1>",
+			["session"] = 47,
+			["counter"] = 1,
 		}, -- [47]
+		{
+			["message"] = "Interface\\AddOns\\Azeroth Auto Pilot\\QuestParser.lua:2159: Usage: TakeTaxiNode(slot)",
+			["time"] = "2018/11/08 17:10:18",
+			["locals"] = "(*temporary) = nil\n",
+			["stack"] = "[C]: in function `TakeTaxiNode'\nInterface\\AddOns\\Azeroth Auto Pilot\\QuestParser.lua:2159: in function <Interface\\AddOns\\Azeroth Auto Pilot\\QuestParser.lua:1785>",
+			["session"] = 61,
+			["counter"] = 1,
+		}, -- [48]
+		{
+			["message"] = "[ADDON_ACTION_BLOCKED] AddOn 'ElvUI' tried to call the protected function 'MainMenuBar:SetPoint()'.",
+			["time"] = "2018/11/13 20:43:05",
+			["locals"] = "InCombatSkipped",
+			["stack"] = "Interface\\AddOns\\!BugGrabber\\BugGrabber.lua:519: in function <Interface\\AddOns\\!BugGrabber\\BugGrabber.lua:519>\n[C]: in function `SetPoint'\nInterface\\FrameXML\\UIParent.lua:2946: in function `UIParentManageFramePositions'\nInterface\\FrameXML\\UIParent.lua:2329: in function <Interface\\FrameXML\\UIParent.lua:2316>\n[C]: in function `SetAttribute'\nInterface\\FrameXML\\UIParent.lua:3118: in function <Interface\\FrameXML\\UIParent.lua:3116>\n[C]: in function `UIParent_ManageFramePositions'\n...ns\\Blizzard_TalkingHeadUI\\Blizzard_TalkingHeadUI.lua:16: in function <...ns\\Blizzard_TalkingHeadUI\\Blizzard_TalkingHeadUI.lua:15>\n[C]: in function `Show'\n...ns\\Blizzard_TalkingHeadUI\\Blizzard_TalkingHeadUI.lua:155: in function <...ns\\Blizzard_TalkingHeadUI\\Blizzard_TalkingHeadUI.lua:121>\n[C]: in function `TalkingHeadFrame_PlayCurrent'\n...ns\\Blizzard_TalkingHeadUI\\Blizzard_TalkingHeadUI.lua:25: in function <...ns\\Blizzard_TalkingHeadUI\\Blizzard_TalkingHeadUI.lua:23>",
+			["session"] = 70,
+			["counter"] = 1,
+		}, -- [49]
+		{
+			["message"] = "hopFramebuttonHop: Couldn't find relative frame: $parentDetails",
+			["session"] = 80,
+			["time"] = "2018/08/16 13:50:49",
+			["counter"] = 56,
+		}, -- [50]
+		{
+			["message"] = "Couldn't open Interface\\AddOns\\SquareMinimapButtons\\",
+			["session"] = 80,
+			["time"] = "2018/08/16 13:50:49",
+			["counter"] = 324,
+		}, -- [51]
 		{
 			["message"] = "Interface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: Usage: NewModule(name, [prototype, [lib, lib, lib, ...]): 'name' - Module 'Friendly Fire' already exists.",
 			["time"] = "2018/04/08 20:30:37",
 			["stack"] = "[C]: ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:270: in function `NewModule'\nInterface\\AddOns\\Skada\\modules\\FriendlyFire.lua:4: in function `?'\nInterface\\AddOns\\Skada\\Skada-1.7.2.lua:2907: in function <Interface\\AddOns\\Skada\\Skada.lua:2884>\n(tail call): ?\n[C]: ?\n[string \"safecall Dispatcher[1]\"]:9: in function <[string \"safecall Dispatcher[1]\"]:5>\n(tail call): ?\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:558: in function `EnableAddon'\n...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0-12.lua:651: in function <...AddOns\\ElvUI\\Libraries\\AceAddon-3.0\\AceAddon-3.0.lua:636>\n[C]: in function `LoadAddOn'\nInterface\\FrameXML\\UIParent.lua:429: in function `UIParentLoadAddOn'\nInterface\\FrameXML\\UIParent.lua:528: in function `TimeManager_LoadUI'\nInterface\\FrameXML\\UIParent.lua:1114: in function <Interface\\FrameXML\\UIParent.lua:1011>",
-			["session"] = 42,
-			["counter"] = 42,
-		}, -- [48]
+			["session"] = 80,
+			["counter"] = 80,
+		}, -- [52]
+		{
+			["message"] = "[ADDON_ACTION_BLOCKED] AddOn 'Azeroth Auto Pilot' tried to call the protected function 'EditMacro()'.",
+			["time"] = "2018/11/15 20:38:42",
+			["locals"] = "InCombatSkipped",
+			["stack"] = "Interface\\AddOns\\!BugGrabber\\BugGrabber.lua:519: in function <Interface\\AddOns\\!BugGrabber\\BugGrabber.lua:519>\n[C]: in function `EditMacro'\nInterface\\AddOns\\Azeroth Auto Pilot\\Core.lua:202: in function `MacroUpdater'\nInterface\\AddOns\\Azeroth Auto Pilot\\QuestParser.lua:643: in function `QuestPartStep'\nInterface\\AddOns\\Azeroth Auto Pilot\\Core.lua:805: in function <Interface\\AddOns\\Azeroth Auto Pilot\\Core.lua:776>",
+			["session"] = 80,
+			["counter"] = 1,
+		}, -- [53]
 	},
 }

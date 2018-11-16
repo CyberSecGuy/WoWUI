@@ -1,9 +1,12 @@
 # BigWigs
 
-## [v121.3](https://github.com/BigWigsMods/BigWigs/tree/v121.3) (2018-10-24)
-[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v121.2...v121.3)
+## [v121.4](https://github.com/BigWigsMods/BigWigs/tree/v121.4) (2018-11-08)
+[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v121.3...v121.4)
 
-- BattleOfDazaralor/Mekkatorque: Drycode  
-- BattleOfDazaralor/Rastakhan: Drycode  
-- Uldir/Mother: Don't trigger a beam timer update in the first room  
-- Uldir/Mythrax: Change proximity check to 5 yards (#565)  
+- BattleOfDazaralor/GrongHorde: Updates for Mythic testing  
+- BattleOfDazaralor/Mekkatorque: Minor fixes for Mythic testing  
+- BattleOfDazaralor/Council: Initial updates with Aspect abilities  
+- BattleOfDazaralor/Grimfang: update for Mythic testing and fix an error in the horde equivalent  
+- BattleOfDazaralor/Flamefist: Update for Mythic testing  
+- BattleOfDazaralor/Frida & Kanae: Updates for Mythic testing  
+- BattleOfDazaralor/Blockade: PTR Updates  

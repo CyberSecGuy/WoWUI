@@ -1,976 +1,28 @@
 
 ElvCharacterDB = {
 	["ChatEditHistory"] = {
-		"/s Your husband left you because of this.", -- [1]
-		"/s Your kids go to bed every night hungry.", -- [2]
-		"/s You're a failure as a woman, mother, and wife.", -- [3]
-		"/s I'm a witch, fuck you.", -- [4]
-		"/g that's it? i'll take 4", -- [5]
-		"/cw Anzuresu-Sargeras able to figure it out?", -- [6]
-		"/cw Anzuresu-Sargeras cool beans, have a good one", -- [7]
-		"/wa", -- [8]
-		"/quit", -- [9]
-		"/cw Lyhnn-Stormrage Sure, mind if I bring a rogue friend, we're leveling together.", -- [10]
-		"/cw Lyhnn-Stormrage REEE! lol", -- [11]
-		"/g Hit ALT+F4 for a quick overview", -- [12]
-		"/laugh", -- [13]
-		" REEEEEEEEEEEEEEEEEEEEEEEEEEEEEE", -- [14]
-		"/p ez", -- [15]
-		"/i kick the rogue", -- [16]
-		"/i he's a piece of shit", -- [17]
-		"/i HE'S A ROUGE IN DISGUISE!", -- [18]
-		"/skada reset", -- [19]
-		"/g War, war never changes. Except cyber wars, those change every 10 seconds.", -- [20]
+		"/i kick the rogue", -- [1]
+		"/i he's a piece of shit", -- [2]
+		"/i HE'S A ROUGE IN DISGUISE!", -- [3]
+		"/skada reset", -- [4]
+		"/g War, war never changes. Except cyber wars, those change every 10 seconds.", -- [5]
+		"/gquit", -- [6]
+		"/cw remainz ayy", -- [7]
+		"/logout", -- [8]
+		"/aap", -- [9]
+		"/elvui", -- [10]
+		"/macro", -- [11]
+		"/cast Lightning Shield", -- [12]
+		"/cast Heroism", -- [13]
+		"/i my b", -- [14]
+		"/i yeah", -- [15]
+		"/i gotta run AFK for just a moment", -- [16]
+		"/i sorry brb", -- [17]
+		"/i lol sorry", -- [18]
+		"/aap reset", -- [19]
+		"/quit", -- [20]
 	},
 	["ChatHistoryLog"] = {
-		{
-			"neine", -- [1]
-			"Abbywynn-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			154, -- [11]
-			"Player-60-0B1CED9A", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc41e3aAbbywynn|r",
-			[51] = 1534981136,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [1]
-		{
-			"shieza", -- [1]
-			"Loroh-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			157, -- [11]
-			"Player-60-0A873ADC", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc69b6dLoroh|r",
-			[51] = 1534981143,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [2]
-		{
-			"working on it", -- [1]
-			"Abbywynn-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			159, -- [11]
-			"Player-60-0B1CED9A", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc41e3aAbbywynn|r",
-			[51] = 1534981145,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [3]
-		{
-			"that and kings", -- [1]
-			"Abbywynn-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			165, -- [11]
-			"Player-60-0B1CED9A", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc41e3aAbbywynn|r",
-			[51] = 1534981167,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [4]
-		{
-			"how do you get kings", -- [1]
-			"Loroh-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			171, -- [11]
-			"Player-60-0A873ADC", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc69b6dLoroh|r",
-			[51] = 1534981182,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [5]
-		{
-			"7th legion to a certain rep/basically finish warfront", -- [1]
-			"Abbywynn-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			176, -- [11]
-			"Player-60-0B1CED9A", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc41e3aAbbywynn|r",
-			[51] = 1534981197,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [6]
-		{
-			"ok cool", -- [1]
-			"Loroh-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			182, -- [11]
-			"Player-60-0A873ADC", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc69b6dLoroh|r",
-			[51] = 1534981217,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [7]
-		{
-			"iirc its like 7500 honored with 7th", -- [1]
-			"Abbywynn-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			189, -- [11]
-			"Player-60-0B1CED9A", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc41e3aAbbywynn|r",
-			[51] = 1534981239,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [8]
-		{
-			"%s has earned the achievement |cffffff00|Hachievement:12831:Player-60-0B687743:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Freehold]|h|r!", -- [1]
-			"Pyrael-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Pyrael", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			331, -- [11]
-			"Player-60-0B687743", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cfff48cbaPyrael|r",
-			[51] = 1534981748,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [9]
-		{
-			"%s has earned the achievement |cffffff00|Hachievement:12826:Player-60-0B79BF26:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Mythic: Atal'Dazar]|h|r!", -- [1]
-			"Psuedolumina-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Psuedolumina", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			333, -- [11]
-			"Player-60-0B79BF26", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cfff48cbaPsuedolumina|r",
-			[51] = 1534981748,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [10]
-		{
-			"%s has earned the achievement |cffffff00|Hachievement:12826:Player-60-0B6AEF03:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Mythic: Atal'Dazar]|h|r!", -- [1]
-			"Luxilock-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Luxilock", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			334, -- [11]
-			"Player-60-0B6AEF03", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff8787edLuxilock|r",
-			[51] = 1534981748,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [11]
-		{
-			"%s has earned the achievement |cffffff00|Hachievement:12825:Player-60-0B6AEF03:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Heroic: Atal'Dazar]|h|r!", -- [1]
-			"Luxilock-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Luxilock", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			335, -- [11]
-			"Player-60-0B6AEF03", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff8787edLuxilock|r",
-			[51] = 1534981748,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [12]
-		{
-			"%s has earned the achievement |cffffff00|Hachievement:12807:Player-60-0B6AEF03:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Battle for Azeroth Dungeon Hero]|h|r!", -- [1]
-			"Luxilock-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Luxilock", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			336, -- [11]
-			"Player-60-0B6AEF03", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff8787edLuxilock|r",
-			[51] = 1534981749,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [13]
-		{
-			"\"Nymeria\" has earned the achievement |cffffff00|Hachievement:13002:0000000000000000:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Mythic: Atal'Dazar Guild Run]|h|r!", -- [1]
-			"Nymeria", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			338, -- [11]
-			false, -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "Nymeria",
-			[51] = 1534981754,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [14]
-		{
-			"grats guys", -- [1]
-			"Milenkõ-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			339, -- [11]
-			"Player-60-0B68AB2C", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffaad372Milenkõ|r",
-			[51] = 1534981761,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [15]
-		{
-			"nj grats", -- [1]
-			"Leonclamps-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			340, -- [11]
-			"Player-60-0AF1F96C", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffffffffLeonclamps|r",
-			[51] = 1534981764,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [16]
-		{
-			"soloed it boom", -- [1]
-			"Edîrian-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			341, -- [11]
-			"Player-60-0BAD95D2", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffff7c0aEdîrian|r",
-			[51] = 1534981764,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [17]
-		{
-			"Grats guildies", -- [1]
-			"Haeven-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			344, -- [11]
-			"Player-60-0B863E9A", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffffffffHaeven|r",
-			[51] = 1534981765,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [18]
-		{
-			"grasts!", -- [1]
-			"Abbywynn-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			345, -- [11]
-			"Player-60-0B1CED9A", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc41e3aAbbywynn|r",
-			[51] = 1534981766,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [19]
-		{
-			"jk lol NJ guys", -- [1]
-			"Edîrian-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			348, -- [11]
-			"Player-60-0BAD95D2", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffff7c0aEdîrian|r",
-			[51] = 1534981769,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [20]
-		{
-			"(<Nuaar) woot", -- [1]
-			"Nuaar-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			352, -- [11]
-			"Player-60-0B33C6C1", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cfff48cbaNuaar|r",
-			[51] = 1534981781,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [21]
-		{
-			"%s has earned the achievement |cffffff00|Hachievement:12838:Player-60-0BB618FF:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Mythic: Shrine of the Storm]|h|r!", -- [1]
-			"Syçlone-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Syçlone", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			372, -- [11]
-			"Player-60-0BB618FF", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff0070ddSyçlone|r",
-			[51] = 1534981845,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [22]
-		{
-			"%s has earned the achievement |cffffff00|Hachievement:13126:Player-60-0BAD95D2:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Give Me The Energy]|h|r!", -- [1]
-			"Edîrian-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Edîrian", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			449, -- [11]
-			"Player-60-0BAD95D2", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffff7c0aEdîrian|r",
-			[51] = 1534982234,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [23]
-		{
-			"Anyone for mythic atal", -- [1]
-			"Loroh-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			472, -- [11]
-			"Player-60-0A873ADC", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc69b6dLoroh|r",
-			[51] = 1534982354,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [24]
-		{
-			"need a tank?", -- [1]
-			"Wrathy-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			481, -- [11]
-			"Player-60-0B7A6708", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc69b6dWrathy|r",
-			[51] = 1534982388,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [25]
-		{
-			"need all", -- [1]
-			"Loroh-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			483, -- [11]
-			"Player-60-0A873ADC", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc69b6dLoroh|r",
-			[51] = 1534982394,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [26]
-		{
-			"yeah ill go", -- [1]
-			"Wrathy-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			491, -- [11]
-			"Player-60-0B7A6708", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc69b6dWrathy|r",
-			[51] = 1534982400,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [27]
-		{
-			"o.o", -- [1]
-			"Kurumû-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			494, -- [11]
-			"Player-60-0BA3B0C7", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff3fc6eaKurumû|r",
-			[51] = 1534982410,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [28]
-		{
-			"need a dps for it?", -- [1]
-			"Kurumû-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			495, -- [11]
-			"Player-60-0BA3B0C7", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff3fc6eaKurumû|r",
-			[51] = 1534982422,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [29]
-		{
-			"2 sec, i'll have to switch back to abby", -- [1]
-			"Kurumû-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			498, -- [11]
-			"Player-60-0BA3B0C7", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff3fc6eaKurumû|r",
-			[51] = 1534982442,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [30]
-		{
-			"cool", -- [1]
-			"Loroh-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			499, -- [11]
-			"Player-60-0A873ADC", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc69b6dLoroh|r",
-			[51] = 1534982448,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [31]
-		{
-			"kk all good", -- [1]
-			"Abbywynn-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			516, -- [11]
-			"Player-60-0B1CED9A", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc41e3aAbbywynn|r",
-			[51] = 1534982532,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [32]
-		{
-			"%s has earned the achievement |cffffff00|Hachievement:13111:Player-60-0BAD95D2:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Verdant Wilds]|h|r!", -- [1]
-			"Edîrian-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Edîrian", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			519, -- [11]
-			"Player-60-0BAD95D2", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffff7c0aEdîrian|r",
-			[51] = 1534982576,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [33]
-		{
-			"%s has earned the achievement |cffffff00|Hachievement:13123:Player-60-0BAD95D2:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[My Dubs]|h|r!", -- [1]
-			"Edîrian-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Edîrian", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			568, -- [11]
-			"Player-60-0BAD95D2", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffff7c0aEdîrian|r",
-			[51] = 1534982706,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [34]
-		{
-			"%s has earned the achievement |cffffff00|Hachievement:13058:Player-60-0BAC2597:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Kul Tiran Up the Dance Floor]|h|r!", -- [1]
-			"Geelat-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Geelat", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			571, -- [11]
-			"Player-60-0BAC2597", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff8787edGeelat|r",
-			[51] = 1534982741,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [35]
-		{
-			"%s has earned the achievement |cffffff00|Hachievement:13144:Player-60-0A96E094:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Wide World of Quests]|h|r!", -- [1]
-			"Bewbytrap-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Bewbytrap", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			612, -- [11]
-			"Player-60-0A96E094", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffaad372Bewbytrap|r",
-			[51] = 1534982760,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [36]
-		{
-			"%s has earned the achievement |cffffff00|Hachievement:12510:Player-60-0BABECFE:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Ready for War]|h|r!", -- [1]
-			"Grindolson-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Grindolson", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			620, -- [11]
-			"Player-60-0BABECFE", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cfff48cbaGrindolson|r",
-			[51] = 1534982792,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [37]
-		{
-			"(<Nuaar) grats", -- [1]
-			"Nuaar-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			624, -- [11]
-			"Player-60-0B33C6C1", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cfff48cbaNuaar|r",
-			[51] = 1534982802,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [38]
-		{
-			"ty", -- [1]
-			"Grindolson-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			628, -- [11]
-			"Player-60-0BABECFE", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cfff48cbaGrindolson|r",
-			[51] = 1534982809,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [39]
-		{
-			"How's Leveling?", -- [1]
-			"|Kf4|k000000000|k", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			647, -- [11]
-			false, -- [12]
-			4, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffaad372MilkSteak|r",
-			[51] = 1534982954,
-			[50] = "CHAT_MSG_BN_WHISPER",
-			[53] = "MilkSteak",
-		}, -- [40]
-		{
-			"%s has earned the achievement |cffffff00|Hachievement:12497:Player-60-0B4ACBB1:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Drust Do It.]|h|r!", -- [1]
-			"Phiber-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"Phiber", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			654, -- [11]
-			"Player-60-0B4ACBB1", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff0070ddPhiber|r",
-			[51] = 1534982968,
-			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [41]
-		{
-			"REEEEEEEEEEEEEEEEEEEEEEEEEEEEEE", -- [1]
-			"|Kf4|k000000000|k", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			663, -- [11]
-			false, -- [12]
-			4, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffaad372MilkSteak|r",
-			[51] = 1534982982,
-			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
-			[53] = "MilkSteak",
-		}, -- [42]
-		{
-			"Grats Phiber", -- [1]
-			"Wrathy-Stormrage", -- [2]
-			"", -- [3]
-			"", -- [4]
-			"", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			664, -- [11]
-			"Player-60-0B7A6708", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffc69b6dWrathy|r",
-			[51] = 1534982984,
-			[50] = "CHAT_MSG_GUILD",
-		}, -- [43]
 		{
 			"apt...apt description", -- [1]
 			"|Kf4|k000000000|k", -- [2]
@@ -993,7 +45,7 @@ ElvCharacterDB = {
 			[51] = 1534983048,
 			[50] = "CHAT_MSG_BN_WHISPER",
 			[53] = "MilkSteak",
-		}, -- [44]
+		}, -- [1]
 		{
 			"Unstable Runic Mark on Bishwhippzz", -- [1]
 			"Bishwhippzz-Sargeras", -- [2]
@@ -1015,7 +67,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Bishwhippzz-Sargeras|r",
 			[51] = 1534983254,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [45]
+		}, -- [2]
 		{
 			"Unstable Runic Mark on Sévén", -- [1]
 			"Sévén-AeriePeak", -- [2]
@@ -1037,7 +89,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edSévén-AeriePeak|r",
 			[51] = 1534983255,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [46]
+		}, -- [3]
 		{
 			"%s has earned the achievement |cffffff00|Hachievement:13103:Player-60-0BAD95D2:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Rotting Mire]|h|r!", -- [1]
 			"Edîrian-Stormrage", -- [2]
@@ -1059,7 +111,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aEdîrian|r",
 			[51] = 1534983264,
 			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [47]
+		}, -- [4]
 		{
 			"%s has earned the achievement |cffffff00|Hachievement:13142:Player-60-0BAD95D2:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Archipelago Explorer]|h|r!", -- [1]
 			"Edîrian-Stormrage", -- [2]
@@ -1081,7 +133,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aEdîrian|r",
 			[51] = 1534983264,
 			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [48]
+		}, -- [5]
 		{
 			"Unstable Runic Mark on Bishwhippzz", -- [1]
 			"Bishwhippzz-Sargeras", -- [2]
@@ -1103,7 +155,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Bishwhippzz-Sargeras|r",
 			[51] = 1534983267,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [49]
+		}, -- [6]
 		{
 			"Unstable Runic Mark on Sévén", -- [1]
 			"Sévén-AeriePeak", -- [2]
@@ -1125,7 +177,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edSévén-AeriePeak|r",
 			[51] = 1534983267,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [50]
+		}, -- [7]
 		{
 			"grats", -- [1]
 			"Leonclamps-Stormrage", -- [2]
@@ -1147,7 +199,7 @@ ElvCharacterDB = {
 			[52] = "|cffffffffLeonclamps|r",
 			[51] = 1534983275,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [51]
+		}, -- [8]
 		{
 			"ez", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -1169,7 +221,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1534983294,
 			[50] = "CHAT_MSG_PARTY",
-		}, -- [52]
+		}, -- [9]
 		{
 			"gg lol sorry for pulling extra", -- [1]
 			"Bishwhippzz-Sargeras", -- [2]
@@ -1191,7 +243,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Bishwhippzz-Sargeras|r",
 			[51] = 1534983301,
 			[50] = "CHAT_MSG_INSTANCE_CHAT_LEADER",
-		}, -- [53]
+		}, -- [10]
 		{
 			"%s has earned the achievement |cffffff00|Hachievement:12582:Player-60-0B71175F:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Come Sail Away]|h|r!", -- [1]
 			"Rizenbuule-Stormrage", -- [2]
@@ -1213,7 +265,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaRizenbuule|r",
 			[51] = 1534983306,
 			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [54]
+		}, -- [11]
 		{
 			"kick the rogue", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -1235,7 +287,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1534983311,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [55]
+		}, -- [12]
 		{
 			"he's a piece of shit", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -1257,7 +309,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1534983314,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [56]
+		}, -- [13]
 		{
 			"Yeah fucken rogue", -- [1]
 			"Bishwhippzz-Sargeras", -- [2]
@@ -1279,7 +331,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Bishwhippzz-Sargeras|r",
 			[51] = 1534983355,
 			[50] = "CHAT_MSG_INSTANCE_CHAT_LEADER",
-		}, -- [57]
+		}, -- [14]
 		{
 			"HE'S A ROUGE IN DISGUISE!", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -1301,7 +353,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1534983367,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [58]
+		}, -- [15]
 		{
 			"%s has earned the achievement |cffffff00|Hachievement:13144:Player-60-0B6AEF03:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Wide World of Quests]|h|r!", -- [1]
 			"Luxilock-Stormrage", -- [2]
@@ -1323,7 +375,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edLuxilock|r",
 			[51] = 1534983998,
 			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [59]
+		}, -- [16]
 		{
 			"woo grats on 120 Salbutral", -- [1]
 			"Lyhnn-Stormrage", -- [2]
@@ -1345,7 +397,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aLyhnn|r",
 			[51] = 1534984229,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [60]
+		}, -- [17]
 		{
 			"Virulent Pathogen", -- [1]
 			"Bishwhippzz-Sargeras", -- [2]
@@ -1367,7 +419,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Bishwhippzz-Sargeras|r",
 			[51] = 1534984237,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [61]
+		}, -- [18]
 		{
 			"hiya lyhnn", -- [1]
 			"Nixia-Stormrage", -- [2]
@@ -1389,7 +441,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Nixia|r",
 			[51] = 1534984243,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [62]
+		}, -- [19]
 		{
 			"(<Nuaar) grats", -- [1]
 			"Nuaar-Stormrage", -- [2]
@@ -1411,7 +463,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNuaar|r",
 			[51] = 1534984248,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [63]
+		}, -- [20]
 		{
 			"Hiya all!", -- [1]
 			"Lyhnn-Stormrage", -- [2]
@@ -1433,7 +485,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aLyhnn|r",
 			[51] = 1534984248,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [64]
+		}, -- [21]
 		{
 			"Ty Lyhnn :D", -- [1]
 			"Salbutral-Stormrage", -- [2]
@@ -1455,7 +507,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddSalbutral|r",
 			[51] = 1534984254,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [65]
+		}, -- [22]
 		{
 			"(<Nuaar) supp", -- [1]
 			"Nuaar-Stormrage", -- [2]
@@ -1477,7 +529,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNuaar|r",
 			[51] = 1534984260,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [66]
+		}, -- [23]
 		{
 			"running dungeons?", -- [1]
 			"Lyhnn-Stormrage", -- [2]
@@ -1499,7 +551,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aLyhnn|r",
 			[51] = 1534984357,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [67]
+		}, -- [24]
 		{
 			"%s has earned the achievement |cffffff00|Hachievement:12561:Player-60-0BAD95D2:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Explore Nazmir]|h|r!", -- [1]
 			"Edîrian-Stormrage", -- [2]
@@ -1521,7 +573,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aEdîrian|r",
 			[51] = 1534984371,
 			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [68]
+		}, -- [25]
 		{
 			"(<Nuaar) trying to unlock siege", -- [1]
 			"Nuaar-Stormrage", -- [2]
@@ -1543,7 +595,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNuaar|r",
 			[51] = 1534984374,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [69]
+		}, -- [26]
 		{
 			"%s has earned the achievement |cffffff00|Hachievement:12483:Player-60-0B4ACBB1:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Waycrest Manor]|h|r!", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -1565,7 +617,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1534984393,
 			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [70]
+		}, -- [27]
 		{
 			"woo Phiber and Edirian!", -- [1]
 			"Lyhnn-Stormrage", -- [2]
@@ -1587,7 +639,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aLyhnn|r",
 			[51] = 1534984407,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [71]
+		}, -- [28]
 		{
 			"Thanks all", -- [1]
 			"Sévén-AeriePeak", -- [2]
@@ -1609,7 +661,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edSévén-AeriePeak|r",
 			[51] = 1534984416,
 			[50] = "CHAT_MSG_INSTANCE_CHAT",
-		}, -- [72]
+		}, -- [29]
 		{
 			"%s has earned the achievement |cffffff00|Hachievement:12559:Player-60-0BAD95D2:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Explore Zuldazar]|h|r!", -- [1]
 			"Edîrian-Stormrage", -- [2]
@@ -1631,7 +683,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aEdîrian|r",
 			[51] = 1534984806,
 			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [73]
+		}, -- [30]
 		{
 			"GRATS!", -- [1]
 			"Lyhnn-Stormrage", -- [2]
@@ -1653,7 +705,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aLyhnn|r",
 			[51] = 1534984818,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [74]
+		}, -- [31]
 		{
 			"caps XD Still excited for you tho hah", -- [1]
 			"Lyhnn-Stormrage", -- [2]
@@ -1675,7 +727,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aLyhnn|r",
 			[51] = 1534984826,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [75]
+		}, -- [32]
 		{
 			"%s has earned the achievement |cffffff00|Hachievement:12502:Player-60-0BAA47FF:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Mythic: Underrot]|h|r!", -- [1]
 			"Udonsoup-Stormrage", -- [2]
@@ -1697,7 +749,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Udonsoup|r",
 			[51] = 1534984841,
 			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [76]
+		}, -- [33]
 		{
 			"%s has earned the achievement |cffffff00|Hachievement:12731:Player-60-0B33C6C1:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Professional Kul Tiran Master]|h|r!", -- [1]
 			"Nuaar-Stormrage", -- [2]
@@ -1719,7 +771,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNuaar|r",
 			[51] = 1534984935,
 			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [77]
+		}, -- [34]
 		{
 			"%s has earned the achievement |cffffff00|Hachievement:12483:Player-60-0B71175F:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Waycrest Manor]|h|r!", -- [1]
 			"Rizenbuule-Stormrage", -- [2]
@@ -1741,7 +793,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaRizenbuule|r",
 			[51] = 1534984977,
 			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [78]
+		}, -- [35]
 		{
 			"this is so dumb", -- [1]
 			"Wrathy-Stormrage", -- [2]
@@ -1763,7 +815,7 @@ ElvCharacterDB = {
 			[52] = "|cffc69b6dWrathy|r",
 			[51] = 1534985102,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [79]
+		}, -- [36]
 		{
 			"felt like we had no dps", -- [1]
 			"Wrathy-Stormrage", -- [2]
@@ -1785,7 +837,7 @@ ElvCharacterDB = {
 			[52] = "|cffc69b6dWrathy|r",
 			[51] = 1534985135,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [80]
+		}, -- [37]
 		{
 			"What's going on?", -- [1]
 			"Bewbytrap-Stormrage", -- [2]
@@ -1807,7 +859,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Bewbytrap|r",
 			[51] = 1534985148,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [81]
+		}, -- [38]
 		{
 			"%s has earned the achievement |cffffff00|Hachievement:12557:Player-60-0BAD95D2:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Explore Drustvar]|h|r!", -- [1]
 			"Edîrian-Stormrage", -- [2]
@@ -1829,7 +881,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aEdîrian|r",
 			[51] = 1534985170,
 			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [82]
+		}, -- [39]
 		{
 			"%s has earned the achievement |cffffff00|Hachievement:12988:Player-60-0BAD95D2:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Battle for Azeroth Explorer]|h|r!", -- [1]
 			"Edîrian-Stormrage", -- [2]
@@ -1851,7 +903,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aEdîrian|r",
 			[51] = 1534985170,
 			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
-		}, -- [83]
+		}, -- [40]
 		{
 			"(<Nuaar) grats", -- [1]
 			"Nuaar-Stormrage", -- [2]
@@ -1873,7 +925,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNuaar|r",
 			[51] = 1534985197,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [84]
+		}, -- [41]
 		{
 			"bad mythic group", -- [1]
 			"Wrathy-Stormrage", -- [2]
@@ -1895,7 +947,7 @@ ElvCharacterDB = {
 			[52] = "|cffc69b6dWrathy|r",
 			[51] = 1534985211,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [85]
+		}, -- [42]
 		{
 			"oh god no, im stuck in an instance again", -- [1]
 			"Abbywynn-Stormrage", -- [2]
@@ -1917,7 +969,7 @@ ElvCharacterDB = {
 			[52] = "|cffc41e3aAbbywynn|r",
 			[51] = 1534985263,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [86]
+		}, -- [43]
 		{
 			"it happens", -- [1]
 			"Loroh-Stormrage", -- [2]
@@ -1939,7 +991,7 @@ ElvCharacterDB = {
 			[52] = "|cffc69b6dLoroh|r",
 			[51] = 1534985348,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [87]
+		}, -- [44]
 		{
 			"the cat is back", -- [1]
 			"Syçlone-Stormrage", -- [2]
@@ -1961,7 +1013,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddSyçlone|r",
 			[51] = 1534985662,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [88]
+		}, -- [45]
 		{
 			"haha", -- [1]
 			"Milenkõ-Stormrage", -- [2]
@@ -1983,7 +1035,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Milenkõ|r",
 			[51] = 1534985670,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [89]
+		}, -- [46]
 		{
 			"comes up trying to sharpen its teeth with my toe", -- [1]
 			"Syçlone-Stormrage", -- [2]
@@ -2005,7 +1057,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddSyçlone|r",
 			[51] = 1534985691,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [90]
+		}, -- [47]
 		{
 			"lol ouch", -- [1]
 			"Milenkõ-Stormrage", -- [2]
@@ -2027,7 +1079,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Milenkõ|r",
 			[51] = 1534985698,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [91]
+		}, -- [48]
 		{
 			"thats what i said", -- [1]
 			"Syçlone-Stormrage", -- [2]
@@ -2049,7 +1101,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddSyçlone|r",
 			[51] = 1534985710,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [92]
+		}, -- [49]
 		{
 			"well actualy what i said was wtf bitch and shood off with a little nudge in the butt", -- [1]
 			"Syçlone-Stormrage", -- [2]
@@ -2071,7 +1123,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddSyçlone|r",
 			[51] = 1534985730,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [93]
+		}, -- [50]
 		{
 			"cuz it bit me good", -- [1]
 			"Syçlone-Stormrage", -- [2]
@@ -2093,7 +1145,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddSyçlone|r",
 			[51] = 1534985738,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [94]
+		}, -- [51]
 		{
 			"lol", -- [1]
 			"Milenkõ-Stormrage", -- [2]
@@ -2115,7 +1167,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Milenkõ|r",
 			[51] = 1534985740,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [95]
+		}, -- [52]
 		{
 			"re the warfront battles out yet", -- [1]
 			"Grindolson-Stormrage", -- [2]
@@ -2137,7 +1189,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaGrindolson|r",
 			[51] = 1534985748,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [96]
+		}, -- [53]
 		{
 			"are*", -- [1]
 			"Grindolson-Stormrage", -- [2]
@@ -2159,7 +1211,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaGrindolson|r",
 			[51] = 1534985751,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [97]
+		}, -- [54]
 		{
 			"no ", -- [1]
 			"Nixia-Stormrage", -- [2]
@@ -2181,7 +1233,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Nixia|r",
 			[51] = 1534985830,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [98]
+		}, -- [55]
 		{
 			"damn people want 340+ for mythics?", -- [1]
 			"Milenkõ-Stormrage", -- [2]
@@ -2203,7 +1255,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Milenkõ|r",
 			[51] = 1534985843,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [99]
+		}, -- [56]
 		{
 			"already elitist", -- [1]
 			"Loroh-Stormrage", -- [2]
@@ -2225,7 +1277,7 @@ ElvCharacterDB = {
 			[52] = "|cffc69b6dLoroh|r",
 			[51] = 1534985856,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [100]
+		}, -- [57]
 		{
 			"love it lol", -- [1]
 			"Loroh-Stormrage", -- [2]
@@ -2247,7 +1299,7 @@ ElvCharacterDB = {
 			[52] = "|cffc69b6dLoroh|r",
 			[51] = 1534985859,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [101]
+		}, -- [58]
 		{
 			"i'm 321 but taking forever to get up there", -- [1]
 			"Milenkõ-Stormrage", -- [2]
@@ -2269,7 +1321,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Milenkõ|r",
 			[51] = 1534985892,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [102]
+		}, -- [59]
 		{
 			"i'm working on getting that Demon goat", -- [1]
 			"Milenkõ-Stormrage", -- [2]
@@ -2291,7 +1343,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Milenkõ|r",
 			[51] = 1534985915,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [103]
+		}, -- [60]
 		{
 			"@ 331 ^_^", -- [1]
 			"Abbywynn-Stormrage", -- [2]
@@ -2313,7 +1365,7 @@ ElvCharacterDB = {
 			[52] = "|cffc41e3aAbbywynn|r",
 			[51] = 1534985918,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [104]
+		}, -- [61]
 		{
 			"nice", -- [1]
 			"Milenkõ-Stormrage", -- [2]
@@ -2335,7 +1387,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Milenkõ|r",
 			[51] = 1534985922,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [105]
+		}, -- [62]
 		{
 			"o.O demon goat", -- [1]
 			"Nixia-Stormrage", -- [2]
@@ -2357,7 +1409,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Nixia|r",
 			[51] = 1534985924,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [106]
+		}, -- [63]
 		{
 			"(<Nuaar) anyone have glider that they can put in the bank", -- [1]
 			"Nuaar-Stormrage", -- [2]
@@ -2379,7 +1431,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNuaar|r",
 			[51] = 1534985925,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [107]
+		}, -- [64]
 		{
 			"yeeeeas that demon goat looks sic", -- [1]
 			"Abbywynn-Stormrage", -- [2]
@@ -2401,7 +1453,7 @@ ElvCharacterDB = {
 			[52] = "|cffc41e3aAbbywynn|r",
 			[51] = 1534985929,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [108]
+		}, -- [65]
 		{
 			"o.o", -- [1]
 			"Nixia-Stormrage", -- [2]
@@ -2423,7 +1475,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Nixia|r",
 			[51] = 1534985934,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [109]
+		}, -- [66]
 		{
 			"(<Nuaar) war crates in a damn tree", -- [1]
 			"Nuaar-Stormrage", -- [2]
@@ -2445,7 +1497,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNuaar|r",
 			[51] = 1534985934,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [110]
+		}, -- [67]
 		{
 			"lol that sucks", -- [1]
 			"Milenkõ-Stormrage", -- [2]
@@ -2467,7 +1519,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Milenkõ|r",
 			[51] = 1534985942,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [111]
+		}, -- [68]
 		{
 			"i can put some in there for you", -- [1]
 			"Milenkõ-Stormrage", -- [2]
@@ -2489,7 +1541,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Milenkõ|r",
 			[51] = 1534985959,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [112]
+		}, -- [69]
 		{
 			"(<Nuaar) please lol", -- [1]
 			"Nuaar-Stormrage", -- [2]
@@ -2511,7 +1563,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNuaar|r",
 			[51] = 1534985968,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [113]
+		}, -- [70]
 		{
 			"trying to put them in tab 1 but its not working", -- [1]
 			"Milenkõ-Stormrage", -- [2]
@@ -2533,7 +1585,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Milenkõ|r",
 			[51] = 1534986037,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [114]
+		}, -- [71]
 		{
 			"War, war never changes. Except cyber wars, those change every 10 seconds.", -- [1]
 			"Phiber-Stormrage", -- [2]
@@ -2555,7 +1607,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddPhiber|r",
 			[51] = 1534986050,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [115]
+		}, -- [72]
 		{
 			"(<Nuaar) nvm priest helping me", -- [1]
 			"Nuaar-Stormrage", -- [2]
@@ -2577,7 +1629,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNuaar|r",
 			[51] = 1534986077,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [116]
+		}, -- [73]
 		{
 			"ok sorry", -- [1]
 			"Milenkõ-Stormrage", -- [2]
@@ -2599,7 +1651,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Milenkõ|r",
 			[51] = 1534986082,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [117]
+		}, -- [74]
 		{
 			"(<Nuaar) all good its gone and gbank sucks atm", -- [1]
 			"Nuaar-Stormrage", -- [2]
@@ -2621,7 +1673,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNuaar|r",
 			[51] = 1534986130,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [118]
+		}, -- [75]
 		{
 			"where is the emmisary for champions of azeroth wqs", -- [1]
 			"Syçlone-Stormrage", -- [2]
@@ -2643,7 +1695,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddSyçlone|r",
 			[51] = 1534986146,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [119]
+		}, -- [76]
 		{
 			"(<Nuaar) sithlus", -- [1]
 			"Nuaar-Stormrage", -- [2]
@@ -2665,7 +1717,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNuaar|r",
 			[51] = 1534986153,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [120]
+		}, -- [77]
 		{
 			"(<Nuaar) at the crater", -- [1]
 			"Nuaar-Stormrage", -- [2]
@@ -2687,7 +1739,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNuaar|r",
 			[51] = 1534986160,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [121]
+		}, -- [78]
 		{
 			"thats crazy ok", -- [1]
 			"Syçlone-Stormrage", -- [2]
@@ -2709,7 +1761,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddSyçlone|r",
 			[51] = 1534986168,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [122]
+		}, -- [79]
 		{
 			"no wonder i couldnt find it", -- [1]
 			"Syçlone-Stormrage", -- [2]
@@ -2731,7 +1783,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddSyçlone|r",
 			[51] = 1534986174,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [123]
+		}, -- [80]
 		{
 			"theres a portal in boralus", -- [1]
 			"Playzz-Stormrage", -- [2]
@@ -2753,7 +1805,7 @@ ElvCharacterDB = {
 			[52] = "|cffc69b6dPlayzz|r",
 			[51] = 1534986179,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [124]
+		}, -- [81]
 		{
 			"this is so messed up like a group up 40 horde guarding this spot lmao", -- [1]
 			"Syçlone-Stormrage", -- [2]
@@ -2775,7 +1827,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddSyçlone|r",
 			[51] = 1534986278,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [125]
+		}, -- [82]
 		{
 			"geeze", -- [1]
 			"Milenkõ-Stormrage", -- [2]
@@ -2797,7 +1849,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Milenkõ|r",
 			[51] = 1534986293,
 			[50] = "CHAT_MSG_GUILD",
-		}, -- [126]
+		}, -- [83]
 		{
 			"%s has earned the achievement |cffffff00|Hachievement:12546:Player-60-0A96E094:1:8:22:18:4294967295:4294967295:4294967295:4294967295|h[Superior]|h|r!", -- [1]
 			"Bewbytrap-Stormrage", -- [2]
@@ -2818,6 +1870,952 @@ ElvCharacterDB = {
 			false, -- [17]
 			[52] = "|cffaad372Bewbytrap|r",
 			[51] = 1534986306,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [84]
+		{
+			"ayy", -- [1]
+			"Remainz", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Remainz", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			375, -- [11]
+			"Player-60-0BD53936", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffa330c9Remainz|r",
+			[51] = 1541692472,
+			[50] = "CHAT_MSG_WHISPER_INFORM",
+		}, -- [85]
+		{
+			"my b", -- [1]
+			"Phiber-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Phiber", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			816, -- [11]
+			"Player-60-0B4ACBB1", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff0070ddPhiber|r",
+			[51] = 1542309691,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [86]
+		{
+			"everytime :@", -- [1]
+			"Krazydist-Gallywix", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Krazydist-Gallywix", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			933, -- [11]
+			"Player-3234-0BD29630", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffaad372Krazydist-Gallywix|r",
+			[51] = 1542310140,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [87]
+		{
+			"ress pls", -- [1]
+			"Krazydist-Gallywix", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Krazydist-Gallywix", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			937, -- [11]
+			"Player-3234-0BD29630", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffaad372Krazydist-Gallywix|r",
+			[51] = 1542310165,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [88]
+		{
+			"thx", -- [1]
+			"Krazydist-Gallywix", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Krazydist-Gallywix", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			938, -- [11]
+			"Player-3234-0BD29630", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffaad372Krazydist-Gallywix|r",
+			[51] = 1542310168,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [89]
+		{
+			"someone have the mont to fix itens?", -- [1]
+			"Krazydist-Gallywix", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Krazydist-Gallywix", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1003, -- [11]
+			"Player-3234-0BD29630", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffaad372Krazydist-Gallywix|r",
+			[51] = 1542310327,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [90]
+		{
+			"yeah", -- [1]
+			"Phiber-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Phiber", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1006, -- [11]
+			"Player-60-0B4ACBB1", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff0070ddPhiber|r",
+			[51] = 1542310342,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [91]
+		{
+			"need fix item", -- [1]
+			"Krazydist-Gallywix", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Krazydist-Gallywix", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1079, -- [11]
+			"Player-3234-0BD29630", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffaad372Krazydist-Gallywix|r",
+			[51] = 1542310645,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [92]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:12835:Player-60-0B4ACBB1:1:11:15:18:4294967295:4294967295:4294967295:4294967295|h[Shrine of the Storm]|h|r!", -- [1]
+			"Phiber-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Phiber", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1117, -- [11]
+			"Player-60-0B4ACBB1", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff0070ddPhiber|r",
+			[51] = 1542310912,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [93]
+		{
+			"thx", -- [1]
+			"Krazydist-Gallywix", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Krazydist-Gallywix", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1130, -- [11]
+			"Player-3234-0BD29630", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffaad372Krazydist-Gallywix|r",
+			[51] = 1542310918,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [94]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:12953:Player-60-0BD705D5:1:11:15:18:4294967295:4294967295:4294967295:4294967295|h[Storm's Wake]|h|r!", -- [1]
+			"Varthum", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Varthum", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1283, -- [11]
+			"Player-60-0BD705D5", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaVarthum|r",
+			[51] = 1542316376,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [95]
+		{
+			"gotta run AFK for just a moment", -- [1]
+			"Phiber-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Phiber", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1450, -- [11]
+			"Player-60-0B4ACBB1", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff0070ddPhiber|r",
+			[51] = 1542317592,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [96]
+		{
+			"sorry brb", -- [1]
+			"Phiber-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Phiber", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1452, -- [11]
+			"Player-60-0B4ACBB1", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff0070ddPhiber|r",
+			[51] = 1542317595,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [97]
+		{
+			"boss time ", -- [1]
+			"Coldfen-Doomhammer", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Coldfen-Doomhammer", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1453, -- [11]
+			"Player-1190-07497BE3", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc41e3aColdfen-Doomhammer|r",
+			[51] = 1542317618,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [98]
+		{
+			"when he gets back", -- [1]
+			"Coldfen-Doomhammer", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Coldfen-Doomhammer", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1455, -- [11]
+			"Player-1190-07497BE3", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc41e3aColdfen-Doomhammer|r",
+			[51] = 1542317625,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [99]
+		{
+			"I'", -- [1]
+			"Gdurken-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Gdurken", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1456, -- [11]
+			"Player-60-0BB75EDB", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaGdurken|r",
+			[51] = 1542317639,
+			[50] = "CHAT_MSG_INSTANCE_CHAT_LEADER",
+		}, -- [100]
+		{
+			"*I'm a mage, we can 4 man :P", -- [1]
+			"Gdurken-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Gdurken", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1457, -- [11]
+			"Player-60-0BB75EDB", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaGdurken|r",
+			[51] = 1542317646,
+			[50] = "CHAT_MSG_INSTANCE_CHAT_LEADER",
+		}, -- [101]
+		{
+			"kk", -- [1]
+			"Coldfen-Doomhammer", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Coldfen-Doomhammer", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1461, -- [11]
+			"Player-1190-07497BE3", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc41e3aColdfen-Doomhammer|r",
+			[51] = 1542317655,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [102]
+		{
+			"mistake", -- [1]
+			"Desaa-Garrosh", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Desaa-Garrosh", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1462, -- [11]
+			"Player-3677-077CFFBD", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffffffffDesaa-Garrosh|r",
+			[51] = 1542317666,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [103]
+		{
+			"Role Playing  0:14", -- [1]
+			"Coldfen-Doomhammer", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Coldfen-Doomhammer", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1517, -- [11]
+			"Player-1190-07497BE3", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc41e3aColdfen-Doomhammer|r",
+			[51] = 1542318061,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [104]
+		{
+			"Role Playing  0:05", -- [1]
+			"Coldfen-Doomhammer", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Coldfen-Doomhammer", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1519, -- [11]
+			"Player-1190-07497BE3", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc41e3aColdfen-Doomhammer|r",
+			[51] = 1542318070,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [105]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:12831:Player-60-0B4ACBB1:1:11:15:18:4294967295:4294967295:4294967295:4294967295|h[Freehold]|h|r!", -- [1]
+			"Phiber-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Phiber", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1566, -- [11]
+			"Player-60-0B4ACBB1", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff0070ddPhiber|r",
+			[51] = 1542318444,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [106]
+		{
+			"ty all", -- [1]
+			"Coldfen-Doomhammer", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Coldfen-Doomhammer", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1581, -- [11]
+			"Player-1190-07497BE3", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc41e3aColdfen-Doomhammer|r",
+			[51] = 1542318454,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [107]
+		{
+			"bro where tf are you going", -- [1]
+			"Vamôose-Arthas", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Vamôose-Arthas", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1774, -- [11]
+			"Player-69-0BC339D7", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff00ff96Vamôose-Arthas|r",
+			[51] = 1542320127,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [108]
+		{
+			"lol sorry", -- [1]
+			"Phiber-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Phiber", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1894, -- [11]
+			"Player-60-0B4ACBB1", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff0070ddPhiber|r",
+			[51] = 1542320513,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [109]
+		{
+			"fkn stack dude", -- [1]
+			"Vamôose-Arthas", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Vamôose-Arthas", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1990, -- [11]
+			"Player-69-0BC339D7", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff00ff96Vamôose-Arthas|r",
+			[51] = 1542321016,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [110]
+		{
+			"they'll come down ehre", -- [1]
+			"Vren-EmeraldDream", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Vren-EmeraldDream", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1991, -- [11]
+			"Player-162-055E0758", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffff7c0aVren-EmeraldDream|r",
+			[51] = 1542321017,
+			[50] = "CHAT_MSG_INSTANCE_CHAT_LEADER",
+		}, -- [111]
+		{
+			"just stack and kill ffs", -- [1]
+			"Vamôose-Arthas", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Vamôose-Arthas", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			1997, -- [11]
+			"Player-69-0BC339D7", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff00ff96Vamôose-Arthas|r",
+			[51] = 1542321030,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [112]
+		{
+			"hero", -- [1]
+			"Vamôose-Arthas", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Vamôose-Arthas", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			2006, -- [11]
+			"Player-69-0BC339D7", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff00ff96Vamôose-Arthas|r",
+			[51] = 1542321059,
+			[50] = "CHAT_MSG_INSTANCE_CHAT",
+		}, -- [113]
+		{
+			"yo yo", -- [1]
+			"|Kf3|k000|k", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			2895, -- [11]
+			false, -- [12]
+			5, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc69b6dGotcha7790|r",
+			[51] = 1542324620,
+			[50] = "CHAT_MSG_BN_WHISPER",
+		}, -- [114]
+		{
+			"Ayy whats good", -- [1]
+			"|Kf3|k000|k", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			3013, -- [11]
+			false, -- [12]
+			5, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc69b6dGotcha7790|r",
+			[51] = 1542324724,
+			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
+		}, -- [115]
+		{
+			"wanted to make sure all you want are the pops", -- [1]
+			"|Kf3|k000|k", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			3078, -- [11]
+			false, -- [12]
+			5, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc69b6dGotcha7790|r",
+			[51] = 1542324780,
+			[50] = "CHAT_MSG_BN_WHISPER",
+		}, -- [116]
+		{
+			"Yeah just the pops", -- [1]
+			"|Kf3|k000|k", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			3083, -- [11]
+			false, -- [12]
+			5, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc69b6dGotcha7790|r",
+			[51] = 1542324792,
+			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
+		}, -- [117]
+		{
+			"Had a snow day today", -- [1]
+			"|Kf3|k000|k", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			3087, -- [11]
+			false, -- [12]
+			5, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc69b6dGotcha7790|r",
+			[51] = 1542324802,
+			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
+		}, -- [118]
+		{
+			"kkkkk", -- [1]
+			"|Kf3|k000|k", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			3088, -- [11]
+			false, -- [12]
+			5, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc69b6dGotcha7790|r",
+			[51] = 1542324804,
+			[50] = "CHAT_MSG_BN_WHISPER",
+		}, -- [119]
+		{
+			"Whoop whoop!", -- [1]
+			"|Kf3|k000|k", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			3089, -- [11]
+			false, -- [12]
+			5, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc69b6dGotcha7790|r",
+			[51] = 1542324807,
+			[50] = "CHAT_MSG_BN_WHISPER_INFORM",
+		}, -- [120]
+		{
+			"I kinda did lol", -- [1]
+			"|Kf3|k000|k", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			3090, -- [11]
+			false, -- [12]
+			5, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc69b6dGotcha7790|r",
+			[51] = 1542324807,
+			[50] = "CHAT_MSG_BN_WHISPER",
+		}, -- [121]
+		{
+			"left at 4", -- [1]
+			"|Kf3|k000|k", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			3125, -- [11]
+			false, -- [12]
+			5, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc69b6dGotcha7790|r",
+			[51] = 1542324858,
+			[50] = "CHAT_MSG_BN_WHISPER",
+		}, -- [122]
+		{
+			"coulda left earlier but I had stuff to do", -- [1]
+			"|Kf3|k000|k", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			3138, -- [11]
+			false, -- [12]
+			5, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffc69b6dGotcha7790|r",
+			[51] = 1542324865,
+			[50] = "CHAT_MSG_BN_WHISPER",
+		}, -- [123]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:11159:Player-60-0BD705D5:1:11:15:18:4294967295:4294967295:4294967295:4294967295|h[Friends in a Broken Land]|h|r!", -- [1]
+			"Varthum-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Varthum", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			417, -- [11]
+			"Player-60-0BD705D5", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaVarthum|r",
+			[51] = 1542332132,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [124]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:12292:Player-60-0BD705D5:1:11:15:18:4294967295:4294967295:4294967295:4294967295|h[Highmountain Tribe]|h|r!", -- [1]
+			"Varthum-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Varthum", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			418, -- [11]
+			"Player-60-0BD705D5", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaVarthum|r",
+			[51] = 1542332132,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [125]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:10059:Player-60-0BD705D5:1:11:15:18:4294967295:4294967295:4294967295:4294967295|h[Ain't No Mountain High Enough]|h|r!", -- [1]
+			"Varthum-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Varthum", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			419, -- [11]
+			"Player-60-0BD705D5", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaVarthum|r",
+			[51] = 1542332132,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [126]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:507:Player-60-0B4ACBB1:1:11:15:18:4294967295:4294967295:4294967295:4294967295|h[1000 Quests Completed]|h|r!", -- [1]
+			"Phiber-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Phiber", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			459, -- [11]
+			"Player-60-0B4ACBB1", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff0070ddPhiber|r",
+			[51] = 1542332446,
 			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
 		}, -- [127]
 	},

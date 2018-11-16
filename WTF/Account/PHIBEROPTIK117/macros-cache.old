@@ -1,3 +1,7 @@
+VER 3 000000000000001F "AAP_MACRO" "INV_MISC_QUESTIONMARK"
+#showtooltip
+/use Hearthstone
+END
 VER 3 000000000000001D "adsf" "INV_MISC_QUESTIONMARK"
 /raid Details!: Damage Done for Trash Cleanup [0:16 EF]
 /raid 1. Phiber ...... 32.18 (15.03m, 89.18%)
@@ -32,4 +36,8 @@ VER 3 0000000000000013 "Time Lost" "INV_MISC_QUESTIONMARK"
 /stopmacro [noexists]
 /run RaidNotice_AddMessage(RaidBossEmoteFrame,"THERE IT IS! KILL IT!", ChatTypeInfo["RAID_WARNING"])
 /script PlaySoundFile("Sound\\interface\\RaidWarning.wav")
+END
+VER 3 000000000000001E "TomTom" "INV_MISC_QUESTIONMARK"
+/way Highmountain:Broken Isles 35.6 63.6 Sylvan Falls
+/way Highmountain:Broken Isles 35.2 45.7 Trueshot Lodge
 END

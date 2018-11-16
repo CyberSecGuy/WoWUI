@@ -1,0 +1,5 @@
+VER 3 0100000000000001 "Interrupt" "INV_MISC_QUESTIONMARK"
+#show
+/stopcasting
+/cast [@mouseover] Counterspell
+END

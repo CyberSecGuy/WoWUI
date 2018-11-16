@@ -7,43 +7,45 @@ SkadaDB = {
 	["profileKeys"] = {
 		["Fiber - Stormrage"] = "BenikUI",
 		["Phiber - Stormrage"] = "BenikUI",
+		["Fiberboi - Sargeras"] = "BenikUI",
 		["Fibur - Stormrage"] = "|cff00c0faBenikUI |rFibur - Stormrage",
+		["Deafnight - Stormrage"] = "Default",
 		["Fiberoptic - Aggramar"] = "BenikUI",
 		["Voidbro - Stormrage"] = "BenikUI",
-		["Fiberboi - Sargeras"] = "BenikUI",
+		["Onedemonboi - Stormrage"] = "Default",
 	},
 	["profiles"] = {
 		["BenikUI"] = {
 			["windows"] = {
 				{
 					["barheight"] = 14,
+					["classicons"] = false,
+					["barslocked"] = true,
+					["y"] = 4.5,
+					["barfont"] = "Expressway",
+					["title"] = {
+						["font"] = "Expressway",
+						["fontsize"] = 11,
+						["height"] = 18,
+					},
+					["point"] = "TOPRIGHT",
+					["classcolortext"] = true,
 					["barcolor"] = {
 						["b"] = 0,
 						["g"] = 0.5,
 						["r"] = 1,
 					},
 					["barfontsize"] = 10,
-					["classicons"] = false,
-					["barslocked"] = true,
 					["mode"] = "Damage",
 					["spark"] = false,
 					["bartexture"] = "BuiOnePixel",
 					["barwidth"] = 196.000061035156,
-					["y"] = 4.5,
-					["barfont"] = "Expressway",
-					["title"] = {
-						["height"] = 18,
-						["font"] = "Expressway",
-						["fontsize"] = 11,
-					},
 					["classcolorbars"] = false,
 					["background"] = {
-						["height"] = 122,
 						["strata"] = "LOW",
+						["height"] = 123,
 						["bordertexture"] = "None",
 					},
-					["classcolortext"] = true,
-					["point"] = "TOPRIGHT",
 					["x"] = 1719.83367919922,
 				}, -- [1]
 				{
@@ -119,7 +121,7 @@ SkadaDB = {
 							["g"] = 0,
 							["b"] = 0.5,
 						},
-						["height"] = 122,
+						["height"] = 123,
 						["bordertexture"] = "None",
 						["margin"] = 0,
 						["texture"] = "Solid",
@@ -160,35 +162,43 @@ SkadaDB = {
 			},
 		},
 		["|cff00c0faBenikUI |rFibur - Stormrage"] = {
+			["modeclicks"] = {
+				["DPS"] = 1,
+				["Friendly Fire"] = 1,
+			},
+			["report"] = {
+				["mode"] = "Friendly Fire",
+				["channel"] = "guild",
+			},
 			["windows"] = {
 				{
 					["barheight"] = 14,
-					["classicons"] = false,
-					["barslocked"] = true,
-					["y"] = 4.5,
-					["barfont"] = "Expressway",
-					["title"] = {
-						["font"] = "Expressway",
-						["fontsize"] = 11,
-						["height"] = 18,
-					},
-					["x"] = 1719.83367919922,
-					["point"] = "TOPRIGHT",
 					["barcolor"] = {
 						["r"] = 1,
 						["g"] = 0.5,
 						["b"] = 0,
 					},
 					["barfontsize"] = 10,
-					["mode"] = "Damage",
+					["classicons"] = false,
+					["barslocked"] = true,
+					["mode"] = "DPS",
 					["spark"] = false,
 					["bartexture"] = "BuiOnePixel",
 					["barwidth"] = 196.000061035156,
+					["y"] = 4.5,
+					["barfont"] = "Expressway",
+					["title"] = {
+						["height"] = 18,
+						["font"] = "Expressway",
+						["fontsize"] = 11,
+					},
 					["classcolorbars"] = false,
+					["x"] = 1719.83367919922,
 					["classcolortext"] = true,
+					["point"] = "TOPRIGHT",
 					["background"] = {
-						["strata"] = "LOW",
 						["height"] = 123,
+						["strata"] = "LOW",
 						["bordertexture"] = "None",
 					},
 				}, -- [1]
@@ -281,6 +291,9 @@ SkadaDB = {
 				["1.6.3"] = true,
 				["1.6.4"] = true,
 				["1.6.7"] = true,
+			},
+			["icon"] = {
+				["hide"] = true,
 			},
 			["ffoptions"] = {
 				["ignoredefensive"] = true,
