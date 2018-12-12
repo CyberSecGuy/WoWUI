@@ -1,0 +1,30 @@
+
+ElvCharacterDB = {
+	["ChatEditHistory"] = {
+		"/logout", -- [1]
+	},
+	["ChatHistoryLog"] = {
+		{
+			"932 9/9H Ele Sham LF >>Fri/Sat<< raiding team EST prefered after 8pm. PST with info.", -- [1]
+			"Phiberoptik-Stormrage", -- [2]
+			"", -- [3]
+			"2. Trade - City", -- [4]
+			"Phiberoptik", -- [5]
+			"", -- [6]
+			2, -- [7]
+			2, -- [8]
+			"Trade - City", -- [9]
+			0, -- [10]
+			540, -- [11]
+			"Player-60-0A3960A1", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			true, -- [17]
+			[52] = "|cfff48cbaPhiberoptik|r",
+			[51] = 1542487285,
+			[50] = "CHAT_MSG_CHANNEL",
+		}, -- [1]
+	},
+}

@@ -1,3 +1,0 @@
-
-SGI_BACKUP = {
-}

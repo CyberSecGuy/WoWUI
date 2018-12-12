@@ -1,0 +1,14 @@
+lightweight tag 4a6a3c22df85ce72440eaec1df516bdc3fdac556 v1.10.8
+Author:	Dave Hendler <sollaires@gmail.com>
+Date:	Mon Dec 10 10:51:34 2018 -0800
+
+commit 4a6a3c22df85ce72440eaec1df516bdc3fdac556
+Author: Dave Hendler <sollaires@gmail.com>
+Date:   Mon Dec 10 10:51:34 2018 -0800
+
+    1.10.8 Update
+    
+    * Adds minimap button to open SimC input
+    * Toggle button on/off with /simc minimap
+    * Changes "reforge" to "context" in item strings, remove warning comment
+

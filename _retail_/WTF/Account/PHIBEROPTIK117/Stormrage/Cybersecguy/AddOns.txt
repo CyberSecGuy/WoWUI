@@ -1,0 +1,3 @@
+Azeroth Auto Pilot: disabled
+AngryKeystones: enabled
+AngryAssignments: enabled

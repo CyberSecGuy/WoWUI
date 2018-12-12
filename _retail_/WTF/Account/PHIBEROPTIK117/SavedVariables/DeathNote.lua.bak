@@ -1,0 +1,40 @@
+
+DeathNoteDB = {
+	["profileKeys"] = {
+		["Fiber - Stormrage"] = "Fiber - Stormrage",
+		["Fiberboi - Stormrage"] = "Fiberboi - Stormrage",
+		["Fiberoptic - Aggramar"] = "Fiberoptic - Aggramar",
+		["Fibur - Stormrage"] = "Fibur - Stormrage",
+		["Phiber - Stormrage"] = "Phiber - Stormrage",
+		["Onedemonboi - Stormrage"] = "Onedemonboi - Stormrage",
+		["Ohkaygoogle - Stormrage"] = "Ohkaygoogle - Stormrage",
+		["Deafnight - Stormrage"] = "Deafnight - Stormrage",
+		["Phiberoptik - Stormrage"] = "Phiberoptik - Stormrage",
+		["Voidbro - Stormrage"] = "Voidbro - Stormrage",
+		["Fiberboi - Sargeras"] = "Fiberboi - Sargeras",
+	},
+	["profiles"] = {
+		["Fiber - Stormrage"] = {
+		},
+		["Fiberboi - Stormrage"] = {
+		},
+		["Fiberoptic - Aggramar"] = {
+		},
+		["Fibur - Stormrage"] = {
+		},
+		["Phiber - Stormrage"] = {
+		},
+		["Onedemonboi - Stormrage"] = {
+		},
+		["Ohkaygoogle - Stormrage"] = {
+		},
+		["Deafnight - Stormrage"] = {
+		},
+		["Phiberoptik - Stormrage"] = {
+		},
+		["Voidbro - Stormrage"] = {
+		},
+		["Fiberboi - Sargeras"] = {
+		},
+	},
+}

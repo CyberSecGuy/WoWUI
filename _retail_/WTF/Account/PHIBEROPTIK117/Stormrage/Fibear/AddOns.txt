@@ -1,0 +1,10 @@
+TradeSkillMaster_Accounting: disabled
+TradeSkillMaster_AuctionDB: disabled
+TradeSkillMaster_Auctioning: disabled
+TradeSkillMaster_Crafting: disabled
+TradeSkillMaster_Destroying: disabled
+TradeSkillMaster_Mailing: disabled
+TradeSkillMaster_Shopping: disabled
+Azeroth Auto Pilot: disabled
+AngryKeystones: enabled
+AngryAssignments: enabled

@@ -1,0 +1,838 @@
+
+SkadaPerCharDB = {
+	["sets"] = {
+		{
+			["healingabsorbed"] = 0,
+			["dispells"] = 0,
+			["ffdamagedone"] = 0,
+			["time"] = 35,
+			["interrupts"] = 0,
+			["mobdone"] = 76414,
+			["power"] = {
+				[0] = 0,
+			},
+			["mobtaken"] = 29973,
+			["damage"] = 29973,
+			["players"] = {
+				{
+					["last"] = 1544065198,
+					["healingabsorbed"] = 0,
+					["class"] = "SHAMAN",
+					["damaged"] = {
+						["MOTHER"] = 29973,
+					},
+					["auras"] = {
+						["Lava Surge"] = {
+							["name"] = "Lava Surge",
+							["active"] = 0,
+							["school"] = 4,
+							["uptime"] = 12,
+							["auratype"] = "BUFF",
+							["id"] = 77762,
+						},
+						["Flame Shock"] = {
+							["name"] = "Flame Shock",
+							["active"] = 0,
+							["school"] = 4,
+							["uptime"] = 18,
+							["auratype"] = "DEBUFF",
+							["id"] = 188389,
+						},
+						["Natural Harmony: Fire"] = {
+							["name"] = "Natural Harmony: Fire",
+							["active"] = 0,
+							["school"] = 1,
+							["uptime"] = 30,
+							["auratype"] = "BUFF",
+							["id"] = 279028,
+						},
+						["Primal Earth Elemental: Harden Skin"] = {
+							["name"] = "Primal Earth Elemental: Harden Skin",
+							["active"] = 0,
+							["school"] = 8,
+							["uptime"] = 10,
+							["auratype"] = "BUFF",
+							["id"] = 118337,
+						},
+						["Resounding Protection"] = {
+							["name"] = "Resounding Protection",
+							["active"] = 0,
+							["school"] = 1,
+							["uptime"] = 27,
+							["auratype"] = "BUFF",
+							["id"] = 269279,
+						},
+						["Seven of Tides"] = {
+							["name"] = "Seven of Tides",
+							["active"] = 0,
+							["school"] = 1,
+							["uptime"] = 20,
+							["auratype"] = "BUFF",
+							["id"] = 276142,
+						},
+						["Archive of the Titans"] = {
+							["name"] = "Archive of the Titans",
+							["active"] = 0,
+							["school"] = 1,
+							["uptime"] = 31,
+							["auratype"] = "BUFF",
+							["id"] = 280709,
+						},
+						["Ace of Tides"] = {
+							["name"] = "Ace of Tides",
+							["active"] = 0,
+							["school"] = 1,
+							["uptime"] = 6,
+							["auratype"] = "BUFF",
+							["id"] = 276136,
+						},
+					},
+					["role"] = "DAMAGER",
+					["time"] = 34,
+					["interrupts"] = 0,
+					["ffdamagedone"] = 0,
+					["dispells"] = 0,
+					["damage"] = 29973,
+					["damagespells"] = {
+						["Primal Earth Elemental: Attack"] = {
+							["hitmin"] = 653,
+							["criticalamount"] = 1323,
+							["id"] = 6603,
+							["damage"] = 9231,
+							["totalhits"] = 13,
+							["max"] = 1323,
+							["min"] = 653,
+							["criticalmax"] = 1323,
+							["critical"] = 1,
+							["hit"] = 12,
+							["school"] = 1,
+							["hitmax"] = 670,
+							["criticalmin"] = 1323,
+							["hitamount"] = 7908,
+						},
+						["Flame Shock"] = {
+							["hitmin"] = 930,
+							["criticalamount"] = 12817,
+							["id"] = 188389,
+							["damage"] = 19880,
+							["totalhits"] = 11,
+							["max"] = 2590,
+							["min"] = 930,
+							["criticalmax"] = 2590,
+							["critical"] = 5,
+							["hit"] = 6,
+							["school"] = 4,
+							["hitmax"] = 2020,
+							["criticalmin"] = 2551,
+							["hitamount"] = 7063,
+						},
+						["Primal Earth Elemental: Angered Earth"] = {
+							["max"] = 0,
+							["school"] = 4,
+							["id"] = 36213,
+							["IMMUNE"] = 5,
+							["totalhits"] = 5,
+							["damage"] = 0,
+						},
+						["Attack"] = {
+							["hitmin"] = 418,
+							["id"] = 6603,
+							["min"] = 418,
+							["damage"] = 862,
+							["hitmax"] = 444,
+							["hit"] = 2,
+							["school"] = 1,
+							["totalhits"] = 2,
+							["max"] = 444,
+							["hitamount"] = 862,
+						},
+					},
+					["ffdamagedonespells"] = {
+					},
+					["damagetaken"] = 76414,
+					["shielding"] = 10375,
+					["id"] = "Player-60-0B4ACBB1",
+					["first"] = 1544065164,
+					["ffdamagedonetargets"] = {
+					},
+					["damagetakenspells"] = {
+						["Attack"] = {
+							["crushing"] = 0,
+							["id"] = 6603,
+							["damage"] = 76414,
+							["max"] = 46657,
+							["name"] = "Attack",
+							["min"] = 29757,
+							["totalhits"] = 2,
+							["critical"] = 0,
+							["blocked"] = 0,
+							["school"] = 1,
+							["resisted"] = 0,
+							["glancing"] = 0,
+							["absorbed"] = 10375,
+						},
+					},
+					["overhealing"] = 0,
+					["maxhp"] = 115220,
+					["name"] = "Phiber",
+					["healing"] = 33419,
+					["healingspells"] = {
+						["Resounding Protection"] = {
+							["shielding"] = 10375,
+							["id"] = 269279,
+							["healing"] = 10375,
+							["min"] = 10375,
+							["name"] = "Resounding Protection",
+							["hits"] = 1,
+							["overhealing"] = 0,
+							["max"] = 10375,
+							["critical"] = 0,
+							["absorbed"] = 0,
+						},
+						["Nature's Guardian"] = {
+							["shielding"] = 0,
+							["id"] = 31616,
+							["healing"] = 23044,
+							["min"] = 23044,
+							["name"] = "Nature's Guardian",
+							["hits"] = 1,
+							["overhealing"] = 0,
+							["max"] = 23044,
+							["critical"] = 0,
+							["absorbed"] = 0,
+						},
+					},
+					["power"] = {
+						[0] = {
+							["spells"] = {
+								[276142] = 0,
+								[276136] = 0,
+							},
+							["amount"] = 0,
+						},
+					},
+					["healed"] = {
+						["Player-60-0B4ACBB1"] = {
+							["role"] = "DAMAGER",
+							["name"] = "Phiber",
+							["amount"] = 33419,
+							["class"] = "SHAMAN",
+							["shielding"] = 10375,
+						},
+					},
+					["ccbreaks"] = 0,
+				}, -- [1]
+				{
+					["last"] = 1544065165,
+					["healingabsorbed"] = 0,
+					["class"] = "PALADIN",
+					["damaged"] = {
+					},
+					["auras"] = {
+						["Archive of the Titans"] = {
+							["name"] = "Archive of the Titans",
+							["active"] = 0,
+							["school"] = 1,
+							["uptime"] = 34,
+							["auratype"] = "BUFF",
+							["id"] = 280709,
+						},
+					},
+					["role"] = "TANK",
+					["time"] = 0,
+					["interrupts"] = 0,
+					["ffdamagedone"] = 0,
+					["dispells"] = 0,
+					["damage"] = 0,
+					["damagespells"] = {
+					},
+					["ffdamagedonespells"] = {
+					},
+					["damagetaken"] = 0,
+					["shielding"] = 0,
+					["id"] = "Player-60-0BBEFC2C",
+					["first"] = 1544065165,
+					["ffdamagedonetargets"] = {
+					},
+					["damagetakenspells"] = {
+					},
+					["overhealing"] = 0,
+					["maxhp"] = 199200,
+					["name"] = "Jthornn",
+					["healing"] = 0,
+					["healingspells"] = {
+					},
+					["power"] = {
+					},
+					["healed"] = {
+					},
+					["ccbreaks"] = 0,
+				}, -- [2]
+				{
+					["last"] = 1544065172,
+					["healingabsorbed"] = 0,
+					["class"] = "HUNTER",
+					["damaged"] = {
+					},
+					["auras"] = {
+						["Archive of the Titans"] = {
+							["name"] = "Archive of the Titans",
+							["active"] = 0,
+							["school"] = 1,
+							["uptime"] = 27,
+							["auratype"] = "BUFF",
+							["id"] = 280709,
+						},
+					},
+					["role"] = "DAMAGER",
+					["time"] = 0,
+					["interrupts"] = 0,
+					["ffdamagedone"] = 0,
+					["dispells"] = 0,
+					["damage"] = 0,
+					["damagespells"] = {
+					},
+					["ffdamagedonespells"] = {
+					},
+					["damagetaken"] = 0,
+					["shielding"] = 0,
+					["id"] = "Player-60-0B969DB6",
+					["first"] = 1544065172,
+					["ffdamagedonetargets"] = {
+					},
+					["damagetakenspells"] = {
+					},
+					["overhealing"] = 0,
+					["maxhp"] = 142880,
+					["name"] = "Novastrìke",
+					["healing"] = 0,
+					["healingspells"] = {
+					},
+					["power"] = {
+					},
+					["healed"] = {
+					},
+					["ccbreaks"] = 0,
+				}, -- [3]
+				{
+					["last"] = 1544065177,
+					["healingabsorbed"] = 0,
+					["class"] = "HUNTER",
+					["damaged"] = {
+					},
+					["auras"] = {
+					},
+					["role"] = "DAMAGER",
+					["time"] = 0,
+					["interrupts"] = 0,
+					["ffdamagedone"] = 0,
+					["dispells"] = 0,
+					["damage"] = 0,
+					["damagespells"] = {
+					},
+					["ffdamagedonespells"] = {
+					},
+					["damagetaken"] = 25707,
+					["shielding"] = 0,
+					["id"] = "Player-60-0BD9785E",
+					["first"] = 1544065177,
+					["ffdamagedonetargets"] = {
+					},
+					["damagetakenspells"] = {
+						["Purifying Flame"] = {
+							["crushing"] = 0,
+							["id"] = 267803,
+							["damage"] = 25707,
+							["max"] = 25707,
+							["name"] = "Purifying Flame",
+							["min"] = 25707,
+							["totalhits"] = 1,
+							["critical"] = 0,
+							["blocked"] = 0,
+							["school"] = 4,
+							["resisted"] = 0,
+							["glancing"] = 0,
+							["absorbed"] = 0,
+						},
+					},
+					["overhealing"] = 0,
+					["maxhp"] = 143985,
+					["name"] = "Wtfiamhuntin",
+					["healing"] = 0,
+					["healingspells"] = {
+					},
+					["power"] = {
+					},
+					["healed"] = {
+					},
+					["ccbreaks"] = 0,
+				}, -- [4]
+			},
+			["deaths"] = 0,
+			["mobs"] = {
+				["MOTHER"] = {
+					["players"] = {
+						["Phiber"] = {
+							["taken"] = 29973,
+							["done"] = 76414,
+							["class"] = "SHAMAN",
+							["role"] = "DAMAGER",
+						},
+					},
+					["hdone"] = 0,
+					["hdonespell"] = {
+					},
+					["taken"] = 29973,
+					["htakenspell"] = {
+					},
+					["htaken"] = 0,
+					["done"] = 76414,
+				},
+			},
+			["gotboss"] = true,
+			["auras"] = {
+			},
+			["healing"] = 33419,
+			["damagetaken"] = 102121,
+			["shielding"] = 10375,
+			["overhealing"] = 0,
+			["starttime"] = 1544065164,
+			["name"] = "MOTHER",
+			["mobname"] = "MOTHER",
+			["ccbreaks"] = 0,
+			["mobhdone"] = 0,
+			["last_action"] = 1544065164,
+			["endtime"] = 1544065199,
+		}, -- [1]
+	},
+	["total"] = {
+		["healingabsorbed"] = 0,
+		["dispells"] = 0,
+		["ffdamagedone"] = 0,
+		["time"] = 35,
+		["interrupts"] = 0,
+		["damage"] = 29973,
+		["players"] = {
+			{
+				["healingabsorbed"] = 0,
+				["class"] = "SHAMAN",
+				["damaged"] = {
+				},
+				["auras"] = {
+					["Lava Surge"] = {
+						["name"] = "Lava Surge",
+						["active"] = 0,
+						["school"] = 4,
+						["uptime"] = 12,
+						["auratype"] = "BUFF",
+						["id"] = 77762,
+					},
+					["Flame Shock"] = {
+						["name"] = "Flame Shock",
+						["active"] = 0,
+						["school"] = 4,
+						["uptime"] = 18,
+						["auratype"] = "DEBUFF",
+						["id"] = 188389,
+					},
+					["Natural Harmony: Fire"] = {
+						["name"] = "Natural Harmony: Fire",
+						["active"] = 0,
+						["school"] = 1,
+						["uptime"] = 30,
+						["auratype"] = "BUFF",
+						["id"] = 279028,
+					},
+					["Primal Earth Elemental: Harden Skin"] = {
+						["uptime"] = 0,
+						["name"] = "Primal Earth Elemental: Harden Skin",
+						["active"] = 0,
+						["school"] = 8,
+						["auratype"] = "BUFF",
+						["id"] = 118337,
+					},
+					["Resounding Protection"] = {
+						["uptime"] = 0,
+						["name"] = "Resounding Protection",
+						["active"] = 0,
+						["school"] = 1,
+						["auratype"] = "BUFF",
+						["id"] = 269279,
+					},
+					["Seven of Tides"] = {
+						["name"] = "Seven of Tides",
+						["active"] = 0,
+						["school"] = 1,
+						["uptime"] = 20,
+						["auratype"] = "BUFF",
+						["id"] = 276142,
+					},
+					["Archive of the Titans"] = {
+						["uptime"] = 0,
+						["name"] = "Archive of the Titans",
+						["active"] = 0,
+						["school"] = 1,
+						["auratype"] = "BUFF",
+						["id"] = 280709,
+					},
+					["Ace of Tides"] = {
+						["name"] = "Ace of Tides",
+						["active"] = 0,
+						["school"] = 1,
+						["uptime"] = 6,
+						["auratype"] = "BUFF",
+						["id"] = 276136,
+					},
+				},
+				["role"] = "DAMAGER",
+				["time"] = 34,
+				["interrupts"] = 0,
+				["ffdamagedone"] = 0,
+				["dispells"] = 0,
+				["damage"] = 29973,
+				["damagespells"] = {
+					["Primal Earth Elemental: Attack"] = {
+						["hitmin"] = 653,
+						["criticalamount"] = 1323,
+						["id"] = 6603,
+						["damage"] = 9231,
+						["totalhits"] = 13,
+						["max"] = 1323,
+						["min"] = 653,
+						["criticalmax"] = 1323,
+						["critical"] = 1,
+						["hit"] = 12,
+						["school"] = 1,
+						["hitmax"] = 670,
+						["criticalmin"] = 1323,
+						["hitamount"] = 7908,
+					},
+					["Flame Shock"] = {
+						["hitmin"] = 930,
+						["criticalamount"] = 12817,
+						["id"] = 188389,
+						["damage"] = 19880,
+						["totalhits"] = 11,
+						["max"] = 2590,
+						["min"] = 930,
+						["criticalmax"] = 2590,
+						["critical"] = 5,
+						["hit"] = 6,
+						["school"] = 4,
+						["hitmax"] = 2020,
+						["criticalmin"] = 2551,
+						["hitamount"] = 7063,
+					},
+					["Primal Earth Elemental: Angered Earth"] = {
+						["max"] = 0,
+						["school"] = 4,
+						["id"] = 36213,
+						["IMMUNE"] = 5,
+						["totalhits"] = 5,
+						["damage"] = 0,
+					},
+					["Attack"] = {
+						["hitmin"] = 418,
+						["id"] = 6603,
+						["min"] = 418,
+						["damage"] = 862,
+						["hitmax"] = 444,
+						["hit"] = 2,
+						["school"] = 1,
+						["totalhits"] = 2,
+						["max"] = 444,
+						["hitamount"] = 862,
+					},
+				},
+				["ffdamagedonespells"] = {
+				},
+				["damagetaken"] = 76414,
+				["power"] = {
+					[0] = {
+						["spells"] = {
+							[276142] = 0,
+							[276136] = 0,
+						},
+						["amount"] = 0,
+					},
+				},
+				["id"] = "Player-60-0B4ACBB1",
+				["healing"] = 33419,
+				["ffdamagedonetargets"] = {
+				},
+				["damagetakenspells"] = {
+					["Attack"] = {
+						["crushing"] = 0,
+						["id"] = 6603,
+						["damage"] = 76414,
+						["max"] = 46657,
+						["name"] = "Attack",
+						["min"] = 29757,
+						["totalhits"] = 2,
+						["critical"] = 0,
+						["blocked"] = 0,
+						["school"] = 1,
+						["resisted"] = 0,
+						["glancing"] = 0,
+						["absorbed"] = 10375,
+					},
+				},
+				["overhealing"] = 0,
+				["deathlog"] = {
+					{
+						["absorb"] = -10375,
+						["amount"] = -29757,
+						["srcname"] = "MOTHER",
+						["spellid"] = 88163,
+						["hp"] = 115220,
+						["ts"] = 1544065167.912,
+					}, -- [1]
+					{
+						["ts"] = 1544065169.918,
+						["amount"] = -46657,
+						["srcname"] = "MOTHER",
+						["hp"] = 85463,
+						["spellid"] = 88163,
+					}, -- [2]
+					{
+						["absorb"] = 0,
+						["amount"] = 23044,
+						["srcname"] = "Phiber",
+						["spellid"] = 31616,
+						["hp"] = 108507,
+						["ts"] = 1544065169.918,
+					}, -- [3]
+					["pos"] = 4,
+				},
+				["name"] = "Phiber",
+				["maxhp"] = 115220,
+				["shielding"] = 10375,
+				["healed"] = {
+					["Player-60-0B4ACBB1"] = {
+						["role"] = "DAMAGER",
+						["name"] = "Phiber",
+						["amount"] = 33419,
+						["class"] = "SHAMAN",
+						["shielding"] = 10375,
+					},
+				},
+				["healingspells"] = {
+					["Resounding Protection"] = {
+						["shielding"] = 10375,
+						["id"] = 269279,
+						["healing"] = 10375,
+						["min"] = 10375,
+						["name"] = "Resounding Protection",
+						["hits"] = 1,
+						["overhealing"] = 0,
+						["max"] = 10375,
+						["critical"] = 0,
+						["absorbed"] = 0,
+					},
+					["Nature's Guardian"] = {
+						["shielding"] = 0,
+						["id"] = 31616,
+						["healing"] = 23044,
+						["min"] = 23044,
+						["name"] = "Nature's Guardian",
+						["hits"] = 1,
+						["overhealing"] = 0,
+						["max"] = 23044,
+						["critical"] = 0,
+						["absorbed"] = 0,
+					},
+				},
+				["ccbreaks"] = 0,
+			}, -- [1]
+			{
+				["healingabsorbed"] = 0,
+				["class"] = "PALADIN",
+				["damaged"] = {
+				},
+				["auras"] = {
+					["Archive of the Titans"] = {
+						["uptime"] = 0,
+						["name"] = "Archive of the Titans",
+						["active"] = 0,
+						["school"] = 1,
+						["auratype"] = "BUFF",
+						["id"] = 280709,
+					},
+				},
+				["role"] = "TANK",
+				["time"] = 0,
+				["interrupts"] = 0,
+				["ffdamagedone"] = 0,
+				["dispells"] = 0,
+				["damage"] = 0,
+				["damagespells"] = {
+				},
+				["ffdamagedonespells"] = {
+				},
+				["damagetaken"] = 0,
+				["power"] = {
+				},
+				["id"] = "Player-60-0BBEFC2C",
+				["healing"] = 0,
+				["ffdamagedonetargets"] = {
+				},
+				["damagetakenspells"] = {
+				},
+				["overhealing"] = 0,
+				["deathlog"] = {
+				},
+				["name"] = "Jthornn",
+				["maxhp"] = 199200,
+				["shielding"] = 0,
+				["healed"] = {
+				},
+				["healingspells"] = {
+				},
+				["ccbreaks"] = 0,
+			}, -- [2]
+			{
+				["healingabsorbed"] = 0,
+				["class"] = "HUNTER",
+				["damaged"] = {
+				},
+				["auras"] = {
+					["Archive of the Titans"] = {
+						["uptime"] = 0,
+						["name"] = "Archive of the Titans",
+						["active"] = 0,
+						["school"] = 1,
+						["auratype"] = "BUFF",
+						["id"] = 280709,
+					},
+				},
+				["role"] = "DAMAGER",
+				["time"] = 0,
+				["interrupts"] = 0,
+				["ffdamagedone"] = 0,
+				["dispells"] = 0,
+				["damage"] = 0,
+				["damagespells"] = {
+				},
+				["ffdamagedonespells"] = {
+				},
+				["damagetaken"] = 0,
+				["power"] = {
+				},
+				["id"] = "Player-60-0B969DB6",
+				["healing"] = 0,
+				["ffdamagedonetargets"] = {
+				},
+				["damagetakenspells"] = {
+				},
+				["overhealing"] = 0,
+				["deathlog"] = {
+				},
+				["name"] = "Novastrìke",
+				["maxhp"] = 142880,
+				["shielding"] = 0,
+				["healed"] = {
+				},
+				["healingspells"] = {
+				},
+				["ccbreaks"] = 0,
+			}, -- [3]
+			{
+				["healingabsorbed"] = 0,
+				["class"] = "HUNTER",
+				["damaged"] = {
+				},
+				["auras"] = {
+				},
+				["role"] = "DAMAGER",
+				["time"] = 0,
+				["interrupts"] = 0,
+				["ffdamagedone"] = 0,
+				["dispells"] = 0,
+				["damage"] = 0,
+				["damagespells"] = {
+				},
+				["ffdamagedonespells"] = {
+				},
+				["damagetaken"] = 25707,
+				["power"] = {
+				},
+				["id"] = "Player-60-0BD9785E",
+				["healing"] = 0,
+				["ffdamagedonetargets"] = {
+				},
+				["damagetakenspells"] = {
+					["Purifying Flame"] = {
+						["crushing"] = 0,
+						["id"] = 267803,
+						["damage"] = 25707,
+						["max"] = 25707,
+						["name"] = "Purifying Flame",
+						["min"] = 25707,
+						["totalhits"] = 1,
+						["critical"] = 0,
+						["blocked"] = 0,
+						["school"] = 4,
+						["resisted"] = 0,
+						["glancing"] = 0,
+						["absorbed"] = 0,
+					},
+				},
+				["overhealing"] = 0,
+				["deathlog"] = {
+					{
+						["spellid"] = 267803,
+						["ts"] = 1544065177.687,
+						["hp"] = 118278,
+						["amount"] = -25707,
+					}, -- [1]
+					["pos"] = 2,
+				},
+				["name"] = "Wtfiamhuntin",
+				["maxhp"] = 143985,
+				["shielding"] = 0,
+				["healed"] = {
+				},
+				["healingspells"] = {
+				},
+				["ccbreaks"] = 0,
+			}, -- [4]
+		},
+		["deaths"] = 0,
+		["mobs"] = {
+			["MOTHER"] = {
+				["players"] = {
+					["Phiber"] = {
+						["taken"] = 29973,
+						["done"] = 76414,
+						["class"] = "SHAMAN",
+						["role"] = "DAMAGER",
+					},
+				},
+				["hdone"] = 0,
+				["hdonespell"] = {
+				},
+				["taken"] = 29973,
+				["htakenspell"] = {
+				},
+				["htaken"] = 0,
+				["done"] = 76414,
+			},
+		},
+		["mobtaken"] = 29973,
+		["ccbreaks"] = 0,
+		["healing"] = 33419,
+		["damagetaken"] = 102121,
+		["shielding"] = 10375,
+		["auras"] = {
+		},
+		["power"] = {
+			[0] = 0,
+		},
+		["name"] = "Total",
+		["overhealing"] = 0,
+		["starttime"] = 1544064765,
+		["mobhdone"] = 0,
+		["last_action"] = 1544064765,
+		["mobdone"] = 76414,
+	},
+}
