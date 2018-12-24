@@ -11,6 +11,10 @@ AAP.QuestList = {}
 AAP.NPCList = {}
 AAP.Icons = {}
 AAP.ActiveQuests = {}
+AAP.RegisterChat = C_ChatInfo.RegisterAddonMessagePrefix("AAPChat")
+AAP.LastSent = 0
+AAP.GroupListSteps = {}
+AAP.GroupListStepsNr = 1
 AAP.Version = tonumber(GetAddOnMetadata("Azeroth Auto Pilot", "Version"))
 local CoreLoadin = 0
 AAP.AfkTimerVar = 0
@@ -26,6 +30,8 @@ AAP.Dinged80 = 0
 AAP.Dinged80nr = 0
 AAP.Dinged90 = 0
 AAP.Dinged90nr = 0
+AAP.Dinged100 = 0
+AAP.Dinged100nr = 0
 AAP.ArrowActive = 0
 AAP.ArrowActive_X = 0
 AAP.ArrowActive_Y = 0
@@ -301,6 +307,7 @@ AAP.CoreEventFrame:SetScript("OnEvent", function(self, event, ...)
 		if (not AAP1[AAP.Realm][AAP.Name]["BonusSkips"]) then
 			AAP1[AAP.Realm][AAP.Name]["BonusSkips"] = {}
 		end
+		AAP.ZoneQuestOrderList()
 		AAP_LoadInTimer = AAP.CoreEventFrame:CreateAnimationGroup()
 		AAP_LoadInTimer.anim = AAP_LoadInTimer:CreateAnimation()
 		AAP_LoadInTimer.anim:SetDuration(1)
@@ -319,7 +326,7 @@ AAP.CoreEventFrame:SetScript("OnEvent", function(self, event, ...)
 			end
 		end)
 		AAP_LoadInTimer:Play()
-		
+		AAP.RegisterChat = C_ChatInfo.RegisterAddonMessagePrefix("AAPChat")
 		
 		
 		AAP_IconTimer = AAP.CoreEventFrame:CreateAnimationGroup()
@@ -353,6 +360,17 @@ AAP.CoreEventFrame:SetScript("OnEvent", function(self, event, ...)
 				AAP1[AAP.Realm][AAP.Name]["Settings"]["alpha"] = 1
 				AAP1[AAP.Realm][AAP.Name]["Settings"]["arrowleft"] = GetScreenWidth() / 2.05
 				AAP1[AAP.Realm][AAP.Name]["Settings"]["arrowtop"] = -(GetScreenHeight() / 1.5)
+			end
+			if (not AAP1[AAP.Realm][AAP.Name]["Settings"]["ShowQuestListOrder"]) then
+				AAP1[AAP.Realm][AAP.Name]["Settings"]["ShowQuestListOrder"] = 1
+			end
+			if (AAP1[AAP.Realm][AAP.Name]["Settings"]["ShowQuestListOrder"] == 1) then
+				AAP.ZoneQuestOrder:Show()
+			else
+				AAP.ZoneQuestOrder:Hide()
+			end
+			if (not AAP1[AAP.Realm][AAP.Name]["Settings"]["ShowBlobs"]) then
+				AAP1[AAP.Realm][AAP.Name]["Settings"]["ShowBlobs"] = 1
 			end
 			if (not AAP1[AAP.Realm][AAP.Name]["Settings"]["LockArrow"]) then
 				AAP1[AAP.Realm][AAP.Name]["Settings"]["LockArrow"] = 0

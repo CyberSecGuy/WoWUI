@@ -5,12 +5,13 @@ DeathNoteDB = {
 		["Fiberboi - Stormrage"] = "Fiberboi - Stormrage",
 		["Fiberoptic - Aggramar"] = "Fiberoptic - Aggramar",
 		["Fibur - Stormrage"] = "Fibur - Stormrage",
-		["Phiber - Stormrage"] = "Phiber - Stormrage",
 		["Fiberboi - Sargeras"] = "Fiberboi - Sargeras",
+		["Phiber - Stormrage"] = "Phiber - Stormrage",
 		["Voidbro - Stormrage"] = "Voidbro - Stormrage",
-		["Deafnight - Stormrage"] = "Deafnight - Stormrage",
 		["Phiberoptik - Stormrage"] = "Phiberoptik - Stormrage",
+		["Deafnight - Stormrage"] = "Deafnight - Stormrage",
 		["Ohkaygoogle - Stormrage"] = "Ohkaygoogle - Stormrage",
+		["Paladium - Moon Guard"] = "Paladium - Moon Guard",
 		["Onedemonboi - Stormrage"] = "Onedemonboi - Stormrage",
 	},
 	["profiles"] = {
@@ -22,17 +23,19 @@ DeathNoteDB = {
 		},
 		["Fibur - Stormrage"] = {
 		},
-		["Phiber - Stormrage"] = {
-		},
 		["Fiberboi - Sargeras"] = {
+		},
+		["Phiber - Stormrage"] = {
 		},
 		["Voidbro - Stormrage"] = {
 		},
-		["Deafnight - Stormrage"] = {
-		},
 		["Phiberoptik - Stormrage"] = {
 		},
+		["Deafnight - Stormrage"] = {
+		},
 		["Ohkaygoogle - Stormrage"] = {
+		},
+		["Paladium - Moon Guard"] = {
 		},
 		["Onedemonboi - Stormrage"] = {
 		},

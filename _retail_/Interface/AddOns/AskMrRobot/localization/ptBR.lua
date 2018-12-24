@@ -58,16 +58,16 @@ L.StatsShort = {
     ["Versatility"] = "Vers",
     ["BonusArmor"] = "Armad",
     ["Spirit"] = "Espír",
-    ["Dodge"] = "Esquiv",
+    ["Dodge"] = "Esquiva",
     ["Parry"] = "Aparar",
     ["MovementSpeed"] = "Veloc",
     ["Avoidance"] = "Evasão",
     ["Stamina"] = "Estam",
     ["Armor"] = "Armad",
-    ["AttackPower"] = "PodAtaq",
-    ["SpellPower"] = "PodMág",
-    ["PvpResilience"] = "PvPResil",
-    ["PvpPower"] = "PodPvP",
+    ["AttackPower"] = "Pod Ataq",
+    ["SpellPower"] = "Pod Mág",
+    ["PvpResilience"] = "Resil PvP",
+    ["PvpPower"] = "Pod PvP",
 }
 
 L.InstanceNames = {
@@ -75,7 +75,7 @@ L.InstanceNames = {
 }
 
 L.DifficultyNames = {
-	[17] = "LdM",
+	[17] = "LDR",
 	[14] = "Normal",
 	[15] = "Heróico",
 	[16] = "Mítico"
@@ -185,7 +185,7 @@ Ou! Você pode usar linhas de comando:]]
 
 L.GearTipCommands = 
 [[/amr equip [1-4]
-no arg = cycle]]
+sem arg = rotaciona]]
 -- note to translators: the slash commands are literal and should stay as english
 
 
@@ -223,7 +223,7 @@ L.ShopHeaderMaterials = "Materiais de Encantamentos"
 --[[----------------------------------------------------------------------
 Combat Log Tab
 ------------------------------------------------------------------------]]
-L.LogChatStart = "Agora você está logando os combates." -- , and Mr. Robot is logging character data for your raid
+L.LogChatStart = "Agora você está logando os combates." -- , e o Mr. Robot está logando dados dos personagens para sua raid
 L.LogChatStop = "O log de combate foi interrompido."
 
 L.LogChatWipe = function(wipeTime)
@@ -284,7 +284,7 @@ L.OptionsShopAhName = "Mostrar automaticamente a lista de compras na casa de lei
 L.OptionsShopAhDesc = "Sempre que você abrir a casa de leilões, automaticamente será mostrada a janela da lista de compras. Você pode clicar nos itens da lista de compras para procurar rapidamente por eles na casa de leilões."
 
 L.OptionsDisableEmName = "Desligar criação de listas do Gerenciador de Equipamentos"
-L.OptionsDisableEmDesc = "Uma lista no Gerenciador de Equipamentos da Blizzard é criada sempre que você equipa uma lista de equipamentos do AMR. Isso é útil para marcar itens nas suas listas otimizadas. Masque para desligar este padrão, se desejar."
+L.OptionsDisableEmDesc = "Uma lista no Gerenciador de Equipamentos da Blizzard é criada sempre que você equipa uma lista de equipamentos do AMR. Isso é útil para marcar itens nas suas listas otimizadas. Marque para desligar este padrão, se desejar."
 
 L.OptionsUiScaleName = "Escala de tamanho da UI do Ask Mr. Robot"
 L.OptionsUiScaleDesc = "Digite um valor entre 0.5 e 1.5 para trocar a escala de tamanho da interface de usuário do Ask Mr. Robot, pressione Enter, então feche/abra a janela para fazer efeito. Se o posicionamento ficar bagunçado, use o comando /amr reset."

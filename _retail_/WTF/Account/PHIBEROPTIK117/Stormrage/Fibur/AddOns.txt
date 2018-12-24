@@ -10,7 +10,14 @@ BigWigs_Options: enabled
 BigWigs_Plugins: enabled
 ElvUI_EverySecondCounts: disabled
 BigWigs_Uldir: enabled
-Azeroth Auto Pilot: disabled
+Azeroth Auto Pilot: enabled
 BigWigs_Azeroth: enabled
 AngryKeystones: enabled
 AngryAssignments: enabled
+ElvUI: enabled
+ElvUI_Config: enabled
+SquareMinimapButtons: enabled
+ElvUI_BenikUI: enabled
+ElvUI_VisualAuraTimers: enabled
+ElvUI_LocPlus: enabled
+ElvUI_DTColors: enabled

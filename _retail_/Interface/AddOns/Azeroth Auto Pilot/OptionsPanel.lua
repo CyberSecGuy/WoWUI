@@ -617,6 +617,28 @@ function AAP.LoadOptionsFrame()
 	AAP.OptionsFrame.BannerScaleSlider:SetValue(AAP1[AAP.Realm][AAP.Name]["Settings"]["BannerScale"] * 100)
 
 
+	
+	AAP.OptionsFrame.BlobsShowCheckButton = CreateFrame("CheckButton", "AAP_BlobsShowCheckButton", AAP.OptionsFrame.MainFrame.OptionsGeneral, "ChatConfigCheckButtonTemplate");
+	AAP.OptionsFrame.BlobsShowCheckButton:SetPoint("TOPLEFT", AAP.OptionsFrame.MainFrame.OptionsGeneral, "TOPLEFT", 10, -175)
+	if (AAP1[AAP.Realm][AAP.Name]["Settings"]["ShowBlobs"] == 0) then
+		AAP.OptionsFrame.BlobsShowCheckButton:SetChecked(false)
+	else
+		AAP.OptionsFrame.BlobsShowCheckButton:SetChecked(true)
+	end
+	getglobal(AAP.OptionsFrame.BlobsShowCheckButton:GetName() .. 'Text'):SetText(": "..AAP_Locals["ShowBlobs"])
+	getglobal(AAP.OptionsFrame.BlobsShowCheckButton:GetName() .. 'Text'):SetTextColor(1, 1, 1)
+	AAP.OptionsFrame.BlobsShowCheckButton:SetScript("OnClick", function()
+		if (AAP.OptionsFrame.BlobsShowCheckButton:GetChecked() == true) then
+			AAP1[AAP.Realm][AAP.Name]["Settings"]["ShowBlobs"] = 1
+			AAP.PartyList.PartyFrame:Show()
+		else
+			AAP1[AAP.Realm][AAP.Name]["Settings"]["ShowBlobs"] = 0
+			AAP.PartyList.PartyFrame:Hide()
+		end
+	end)
+	
+
+	
 
 
 
@@ -629,6 +651,7 @@ function AAP.LoadOptionsFrame()
 	AAP.OptionsFrame["Button1"]:SetHeight(30)
 	AAP.OptionsFrame["Button1"]:SetText("Close")
 	AAP.OptionsFrame["Button1"]:SetParent(AAP.OptionsFrame.MainFrame)
+	AAP.OptionsFrame.Button1:SetFrameStrata("HIGH")
 	AAP.OptionsFrame.Button1:SetNormalFontObject("GameFontNormal")
 	AAP.OptionsFrame.Button1ntex = AAP.OptionsFrame.Button1:CreateTexture()
 	AAP.OptionsFrame.Button1ntex:SetTexture("Interface/Buttons/UI-Panel-Button-Up")
@@ -659,6 +682,7 @@ function AAP.LoadOptionsFrame()
 	AAP.OptionsFrame["Button2"]:SetHeight(30)
 	AAP.OptionsFrame["Button2"]:SetText(AAP_Locals["Keybinds"])
 	AAP.OptionsFrame["Button2"]:SetParent(AAP.OptionsFrame.MainFrame)
+	AAP.OptionsFrame.Button2:SetFrameStrata("HIGH")
 	AAP.OptionsFrame.Button2:SetNormalFontObject("GameFontNormal")
 	AAP.OptionsFrame.Button2ntex = AAP.OptionsFrame.Button2:CreateTexture()
 	AAP.OptionsFrame.Button2ntex:SetTexture("Interface/Buttons/UI-Panel-Button-Up")
@@ -686,6 +710,7 @@ function AAP.LoadOptionsFrame()
 	AAP.OptionsFrame["Button3"]:SetHeight(30)
 	AAP.OptionsFrame["Button3"]:SetText("Reset")
 	AAP.OptionsFrame["Button3"]:SetParent(AAP.OptionsFrame.MainFrame)
+	AAP.OptionsFrame.Button3:SetFrameStrata("HIGH")
 	AAP.OptionsFrame.Button3:SetNormalFontObject("GameFontNormal")
 	AAP.OptionsFrame.Button3ntex = AAP.OptionsFrame.Button3:CreateTexture()
 	AAP.OptionsFrame.Button3ntex:SetTexture("Interface/Buttons/UI-Panel-Button-Up")
@@ -706,6 +731,34 @@ function AAP.LoadOptionsFrame()
 		AAP.ResetSettings()
 	end)
 
+	AAP.OptionsFrame["Button4"] = CreateFrame("Button", "AAP_OptionsButtons4", AAP.OptionsFrame.MainFrame, "SecureActionButtonTemplate")
+	AAP.OptionsFrame["Button4"]:SetPoint("BOTTOMRIGHT",AAP.OptionsFrame.MainFrame,"BOTTOMRIGHT",-310,5)
+	AAP.OptionsFrame["Button4"]:SetWidth(130)
+	AAP.OptionsFrame["Button4"]:SetHeight(30)
+	AAP.OptionsFrame["Button4"]:SetText("Quest Order List")
+	AAP.OptionsFrame["Button4"]:SetParent(AAP.OptionsFrame.MainFrame)
+	AAP.OptionsFrame.Button4:SetFrameStrata("HIGH")
+	AAP.OptionsFrame.Button4:SetNormalFontObject("GameFontNormal")
+	AAP.OptionsFrame.Button4ntex = AAP.OptionsFrame.Button4:CreateTexture()
+	AAP.OptionsFrame.Button4ntex:SetTexture("Interface/Buttons/UI-Panel-Button-Up")
+	AAP.OptionsFrame.Button4ntex:SetTexCoord(0, 0.625, 0, 0.6875)
+	AAP.OptionsFrame.Button4ntex:SetAllPoints()	
+	AAP.OptionsFrame.Button4:SetNormalTexture(AAP.OptionsFrame.Button4ntex)
+	AAP.OptionsFrame.Button4htex = AAP.OptionsFrame.Button4:CreateTexture()
+	AAP.OptionsFrame.Button4htex:SetTexture("Interface/Buttons/UI-Panel-Button-Highlight")
+	AAP.OptionsFrame.Button4htex:SetTexCoord(0, 0.625, 0, 0.6875)
+	AAP.OptionsFrame.Button4htex:SetAllPoints()
+	AAP.OptionsFrame.Button4:SetHighlightTexture(AAP.OptionsFrame.Button4htex)
+	AAP.OptionsFrame.Button4ptex = AAP.OptionsFrame.Button4:CreateTexture()
+	AAP.OptionsFrame.Button4ptex:SetTexture("Interface/Buttons/UI-Panel-Button-Down")
+	AAP.OptionsFrame.Button4ptex:SetTexCoord(0, 0.625, 0, 0.6875)
+	AAP.OptionsFrame.Button4ptex:SetAllPoints()
+	AAP.OptionsFrame.Button4:SetPushedTexture(AAP.OptionsFrame.Button4ptex)
+	AAP.OptionsFrame["Button4"]:SetScript("OnClick", function(self, arg1)
+		AAP.UpdateZoneQuestOrderList("LoadIn")
+		AAP1[AAP.Realm][AAP.Name]["Settings"]["ShowQuestListOrder"] = 1
+		AAP.ZoneQuestOrder:Show()
+	end)
 
 
 end

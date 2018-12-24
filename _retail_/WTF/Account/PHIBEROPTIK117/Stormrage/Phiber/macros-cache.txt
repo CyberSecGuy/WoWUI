@@ -6,9 +6,13 @@ VER 3 0100000000000018 "BIG FUCKING DICK" "INV_MISC_QUESTIONMARK"
 /use 13
 /use 14
 END
-VER 3 0100000000000004 "Cleanse Spirit" "INV_MISC_QUESTIONMARK"
+VER 3 0100000000000024 "Cap" "INV_MISC_QUESTIONMARK"
 #show
-/cast [@mouseover] Cleanse Spirit
+/cast [@cursor] Capacitor Totem
+END
+VER 3 0100000000000020 "Chain Heal" "INV_MISC_QUESTIONMARK"
+#show
+/cast [@mouseover] Chain Heal
 END
 VER 3 0100000000000016 "Earf Shield" "INV_MISC_QUESTIONMARK"
 #show Earth Shield
@@ -23,14 +27,18 @@ VER 3 0100000000000019 "Earthbind" "INV_MISC_QUESTIONMARK"
 #show
 /cast [@cursor] Earthbind Totem
 END
+VER 3 010000000000001F "Healing Rain" "INV_MISC_QUESTIONMARK"
+#show
+/cast [@cursor] Healing Rain
+END
 VER 3 0100000000000001 "Healing Surge" "INV_MISC_QUESTIONMARK"
 #show Healing Surge
 /cast [@mouseover,help] Healing Surge
 /cast [target=noexists, @player] Healing Surge
 END
-VER 3 0100000000000017 "Hex" "INV_MISC_QUESTIONMARK"
+VER 3 0100000000000023 "Healing Wave" "INV_MISC_QUESTIONMARK"
 #show
-/cast [@mouseover] Hex
+/cast [@mouseover] Healing Wave
 END
 VER 3 0100000000000005 "Interrupt" "INV_MISC_QUESTIONMARK"
 #show Wind Shear
@@ -38,22 +46,26 @@ VER 3 0100000000000005 "Interrupt" "INV_MISC_QUESTIONMARK"
 /cast [target=noexists, @focus] Wind Shear
 /cast [@target] Wind Shear
 END
-VER 3 010000000000001A "LARP" "INV_MISC_QUESTIONMARK"
-#show
-/cast [@focus] Lightning Bolt
-END
-VER 3 0100000000000006 "Lightning Rod" "INV_MISC_QUESTIONMARK"
-#showtooltip
-/cast [talent:1/2] Liquid Magma Totem; Ascendance
-END
-VER 3 010000000000001C "Magma" "INV_MISC_QUESTIONMARK"
-#show
-/cast [@cursor] Liquid Magma Totem
-/cast [@cursor] Totem Mastery
-END
 VER 3 0100000000000011 "Purge" "INV_MISC_QUESTIONMARK"
 #show
 /cast [@mouseover] Purge
+END
+VER 3 0100000000000025 "Purify Spirit" "INV_MISC_QUESTIONMARK"
+#show
+/cast [@mouseover] Purify Spirit
+END
+VER 3 010000000000001E "Riptide" "INV_MISC_QUESTIONMARK"
+#show
+/cast [@mouseover] Riptide
+END
+VER 3 0100000000000022 "Run Heals" "INV_MISC_QUESTIONMARK"
+#show
+/stopcasting
+/cast Spiritwalker's Grace
+END
+VER 3 0100000000000021 "Splink" "INV_MISC_QUESTIONMARK"
+#show
+/cast [@cursor] Spirit Link Totem
 END
 VER 3 010000000000001D "Thor!" "INV_MISC_QUESTIONMARK"
 #show

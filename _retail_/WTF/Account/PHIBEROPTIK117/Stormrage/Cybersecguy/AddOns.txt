@@ -1,3 +1,10 @@
-Azeroth Auto Pilot: disabled
+Azeroth Auto Pilot: enabled
 AngryKeystones: enabled
 AngryAssignments: enabled
+ElvUI: enabled
+ElvUI_Config: enabled
+SquareMinimapButtons: enabled
+ElvUI_BenikUI: enabled
+ElvUI_VisualAuraTimers: enabled
+ElvUI_LocPlus: enabled
+ElvUI_DTColors: enabled

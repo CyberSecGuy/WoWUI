@@ -1,4 +1,4 @@
-local internalVersion = 9;
+local internalVersion = 10;
 
 -- WoW APIs
 local GetTalentInfo, IsAddOnLoaded, InCombatLockdown = GetTalentInfo, IsAddOnLoaded, InCombatLockdown
@@ -1652,10 +1652,7 @@ end
 
 local toLoad = {}
 local toUnload = {};
-function WeakAuras.ScanForLoads(self, event, arg1, ...)
-  if not WeakAuras.IsLoginFinished() then
-    return
-  end
+local function scanForLoadsImpl(self, event, arg1, ...)
   if (WeakAuras.IsOptionsProcessingPaused()) then
     return;
   end
@@ -1797,6 +1794,13 @@ function WeakAuras.ScanForLoads(self, event, arg1, ...)
   wipe(toUnload)
 end
 
+function WeakAuras.ScanForLoads(self, event, arg1, ...)
+  if not WeakAuras.IsLoginFinished() then
+    return
+  end
+  scanForLoadsImpl(self, event, arg1, ...)
+end
+
 local loadFrame = CreateFrame("FRAME");
 WeakAuras.loadFrame = loadFrame;
 WeakAuras.frames["Display Load Handling"] = loadFrame;
@@ -1852,7 +1856,7 @@ end
 
 function WeakAuras.ReloadAll()
   WeakAuras.UnloadAll();
-  WeakAuras.ScanForLoads();
+  scanForLoadsImpl();
 end
 
 function WeakAuras.UnloadAll()
@@ -2718,7 +2722,7 @@ function WeakAuras.Modernize(data)
   -- Version 8 was introduced in September 2018
   -- Changes are in PreAdd
 
-  -- Version 9 was introduced in September 2019
+  -- Version 9 was introduced in September 2018
   if data.internalVersion < 9 then
     local function repairCheck(check)
       if check and check.variable == "buffed" then
@@ -2744,6 +2748,21 @@ function WeakAuras.Modernize(data)
     for _, condition in pairs(data.conditions) do
       repairCheck(condition.check);
       recurseRepairChecks(condition.check.checks);
+    end
+  end
+
+  -- Version 10 was introduced in December 2018
+  if data.internalVersion < 10 then
+    data.uid = data.uid or WeakAuras.GenerateUniqueID()
+    if not data.version and data.url and data.url ~= "" then
+      local slug, version = data.url:match("wago.io/([^/]+)/([0-9]+)")
+      if not slug and not version then
+        slug = data.url:match("wago.io/([^/]+)$")
+        version = 1
+      end
+      if slug then
+        data.version = version
+      end
     end
   end
 
@@ -3170,11 +3189,16 @@ function WeakAuras.SetRegion(data, cloneId)
         if((not regions[id]) or (not regions[id].region) or regions[id].regionType ~= regionType) then
           region = regionTypes[regionType].create(frame, data);
           region.regionType = regionType;
-          region.toShow = true;
           regions[id] = {
             regionType = regionType,
             region = region
           };
+          if regionType ~= "dynamicgroup" and regionType ~= "group" then
+            region.toShow = false
+            region:Hide()
+          else
+            region.toShow = true
+          end
         else
           region = regions[id].region;
         end

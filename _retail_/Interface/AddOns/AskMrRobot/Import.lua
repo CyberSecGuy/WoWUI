@@ -143,11 +143,13 @@ function Amr:ImportCharacter(data, isTest, isChild)
             end
         end
 
-		for i = 1, #specParts do
-			local err = self:ImportCharacter(specParts[i], isTest, true)
-			if err ~= nil then
-				return err
-			end
+        for i = 1, #specParts do
+            if specParts[i] ~= "_bib_" then
+                local err = self:ImportCharacter(specParts[i], isTest, true)
+                if err ~= nil then
+                    return err
+                end
+            end
         end
         
         -- ensure that all BiB setups are sorted to the top

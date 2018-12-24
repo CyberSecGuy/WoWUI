@@ -12,7 +12,7 @@ BINDING_NAME_AngryAssign_LOCK = "Toggle Lock"
 BINDING_NAME_AngryAssign_DISPLAY = "Toggle Display"
 BINDING_NAME_AngryAssign_OUTPUT = "Output Assignment to Chat"
 
-local AngryAssign_Version = 'v1.11.3'
+local AngryAssign_Version = 'v1.11.4'
 local AngryAssign_Timestamp = '20181117155158'
 
 local protocolVersion = 1

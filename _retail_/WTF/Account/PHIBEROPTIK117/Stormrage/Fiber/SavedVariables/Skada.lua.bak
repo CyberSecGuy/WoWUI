@@ -8,9 +8,356 @@ SkadaPerCharDB = {
 		["interrupts"] = 0,
 		["damage"] = 0,
 		["players"] = {
+			{
+				["healingabsorbed"] = 0,
+				["class"] = "ROGUE",
+				["damaged"] = {
+				},
+				["auras"] = {
+					["Sprint"] = {
+						["school"] = 1,
+						["name"] = "Sprint",
+						["active"] = 0,
+						["id"] = 2983,
+						["auratype"] = "BUFF",
+						["uptime"] = 8,
+					},
+					["Vanish"] = {
+						["school"] = 1,
+						["name"] = "Vanish",
+						["active"] = 1,
+						["id"] = 11327,
+						["started"] = 1545603972,
+						["auratype"] = "BUFF",
+						["uptime"] = 0,
+					},
+					["Master Assassin's Initiative"] = {
+						["school"] = 1,
+						["name"] = "Master Assassin's Initiative",
+						["active"] = 1,
+						["id"] = 235027,
+						["started"] = 1545603972,
+						["auratype"] = "BUFF",
+						["uptime"] = 0,
+					},
+				},
+				["healingspells"] = {
+				},
+				["role"] = "NONE",
+				["time"] = 7,
+				["interrupts"] = 0,
+				["ccbreaks"] = 0,
+				["healing"] = 0,
+				["damagetaken"] = 20184,
+				["damage"] = 0,
+				["damagespells"] = {
+				},
+				["deaths"] = {
+					{
+						["ts"] = 1545603986.13011,
+						["maxhp"] = 23860,
+						["log"] = {
+							{
+								["ts"] = 1545603984.12801,
+								["amount"] = -459,
+								["hp"] = 6876,
+								["spellid"] = 88163,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [1]
+							{
+								["ts"] = 1545603984.25802,
+								["amount"] = -394,
+								["hp"] = 6023,
+								["spellid"] = 2818,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [2]
+							{
+								["ts"] = 1545603984.98803,
+								["amount"] = -1996,
+								["hp"] = 4027,
+								["spellid"] = 5374,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [3]
+							{
+								["ts"] = 1545603984.98804,
+								["amount"] = -514,
+								["hp"] = 3513,
+								["spellid"] = 113780,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [4]
+							{
+								["ts"] = 1545603984.98805,
+								["amount"] = -666,
+								["hp"] = 2847,
+								["spellid"] = 27576,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [5]
+							{
+								["ts"] = 1545603984.98806,
+								["amount"] = -342,
+								["hp"] = 2505,
+								["spellid"] = 113780,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [6]
+							{
+								["ts"] = 1545603985.55807,
+								["amount"] = -786,
+								["hp"] = 1719,
+								["spellid"] = 703,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [7]
+							{
+								["ts"] = 1545603985.80908,
+								["amount"] = -760,
+								["hp"] = 959,
+								["spellid"] = 1943,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [8]
+							{
+								["ts"] = 1545603986.03009,
+								["amount"] = -957,
+								["hp"] = 959,
+								["spellid"] = 88163,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [9]
+							{
+								["ts"] = 1545603986.1301,
+								["amount"] = -393,
+								["hp"] = 1,
+								["spellid"] = 2818,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [10]
+							{
+								["ts"] = 1545603986.13011,
+								["spellname"] = "Fiber dies",
+								["hp"] = 0,
+								["spellid"] = 41220,
+							}, -- [11]
+							{
+								["ts"] = 1545603982.98612,
+								["amount"] = -514,
+								["hp"] = 8950,
+								["spellid"] = 113780,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [12]
+							{
+								["ts"] = 1545603983.73613,
+								["amount"] = -786,
+								["hp"] = 8164,
+								["spellid"] = 703,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [13]
+							{
+								["ts"] = 1545603983.96614,
+								["amount"] = -946,
+								["hp"] = 8164,
+								["spellid"] = 88163,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [14]
+							{
+								["ts"] = 1545603983.96615,
+								["amount"] = -342,
+								["hp"] = 7822,
+								["spellid"] = 113780,
+								["srcname"] = "Humblebeast-Trollbane",
+							}, -- [15]
+							["pos"] = 12,
+						},
+					}, -- [1]
+				},
+				["healed"] = {
+				},
+				["power"] = {
+				},
+				["id"] = "Player-60-0B50553F",
+				["shielding"] = 0,
+				["damagetakenspells"] = {
+					["Rupture"] = {
+						["crushing"] = 0,
+						["id"] = 1943,
+						["min"] = 760,
+						["school"] = 1,
+						["critical"] = 0,
+						["glancing"] = 0,
+						["absorbed"] = 0,
+						["name"] = "Rupture",
+						["blocked"] = 0,
+						["totalhits"] = 1,
+						["resisted"] = 0,
+						["max"] = 760,
+						["damage"] = 760,
+					},
+					["Mutilate"] = {
+						["crushing"] = 0,
+						["id"] = 27576,
+						["min"] = 665,
+						["school"] = 1,
+						["critical"] = 2,
+						["glancing"] = 0,
+						["absorbed"] = 0,
+						["name"] = "Mutilate",
+						["blocked"] = 0,
+						["totalhits"] = 6,
+						["resisted"] = 0,
+						["max"] = 1996,
+						["damage"] = 6986,
+					},
+					["Garrote"] = {
+						["crushing"] = 0,
+						["id"] = 703,
+						["min"] = 786,
+						["school"] = 1,
+						["critical"] = 0,
+						["glancing"] = 0,
+						["absorbed"] = 0,
+						["name"] = "Garrote",
+						["blocked"] = 0,
+						["totalhits"] = 2,
+						["resisted"] = 0,
+						["max"] = 786,
+						["damage"] = 1572,
+					},
+					["Deadly Poison"] = {
+						["crushing"] = 0,
+						["id"] = 2818,
+						["min"] = 342,
+						["school"] = 8,
+						["critical"] = 3,
+						["glancing"] = 0,
+						["absorbed"] = 0,
+						["name"] = "Deadly Poison",
+						["blocked"] = 0,
+						["totalhits"] = 7,
+						["resisted"] = 0,
+						["max"] = 590,
+						["damage"] = 3089,
+					},
+					["Attack"] = {
+						["crushing"] = 0,
+						["id"] = 6603,
+						["min"] = 459,
+						["school"] = 1,
+						["critical"] = 1,
+						["glancing"] = 0,
+						["absorbed"] = 0,
+						["name"] = "Attack",
+						["blocked"] = 0,
+						["totalhits"] = 6,
+						["resisted"] = 0,
+						["max"] = 1398,
+						["damage"] = 5177,
+					},
+					["Purge the Wicked"] = {
+						["crushing"] = 0,
+						["id"] = 204213,
+						["min"] = 683,
+						["school"] = 4,
+						["critical"] = 0,
+						["glancing"] = 0,
+						["absorbed"] = 0,
+						["name"] = "Purge the Wicked",
+						["blocked"] = 0,
+						["totalhits"] = 3,
+						["resisted"] = 0,
+						["max"] = 1234,
+						["damage"] = 2600,
+					},
+				},
+				["maxhp"] = 23860,
+				["deathlog"] = {
+				},
+				["name"] = "Fiber",
+				["overhealing"] = 0,
+				["ffdamagedonetargets"] = {
+				},
+				["ffdamagedonespells"] = {
+				},
+				["dispells"] = 0,
+				["ffdamagedone"] = 0,
+			}, -- [1]
 		},
-		["deaths"] = 0,
+		["deaths"] = 1,
 		["mobs"] = {
+			["Humblebeast-Trollbane"] = {
+				["players"] = {
+					["Fiber"] = {
+						["taken"] = 0,
+						["done"] = 17584,
+						["role"] = "NONE",
+						["class"] = "ROGUE",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 0,
+				["done"] = 17584,
+				["htaken"] = 0,
+				["hdonespell"] = {
+				},
+			},
+			["Notholy-Trollbane"] = {
+				["players"] = {
+					["Fiber"] = {
+						["taken"] = 0,
+						["done"] = 2600,
+						["role"] = "NONE",
+						["class"] = "ROGUE",
+					},
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+				},
+				["taken"] = 0,
+				["done"] = 2600,
+				["htaken"] = 0,
+				["hdonespell"] = {
+					["Concentrated Mending"] = {
+						["min"] = 0,
+						["crits"] = 0,
+						["max"] = 0,
+						["healing"] = 0,
+						["overhealing"] = 1867,
+						["hits"] = 1,
+					},
+				},
+			},
+			["Gorechîld-Trollbane"] = {
+				["players"] = {
+				},
+				["hdone"] = 0,
+				["htakenspell"] = {
+					["Vampiric Speed"] = {
+						["min"] = 0,
+						["crits"] = 0,
+						["max"] = 0,
+						["healing"] = 0,
+						["overhealing"] = 5208,
+						["hits"] = 1,
+					},
+					["Concentrated Mending"] = {
+						["min"] = 0,
+						["crits"] = 0,
+						["max"] = 0,
+						["healing"] = 0,
+						["overhealing"] = 1867,
+						["hits"] = 1,
+					},
+				},
+				["taken"] = 0,
+				["done"] = 0,
+				["htaken"] = 0,
+				["hdonespell"] = {
+					["Vampiric Speed"] = {
+						["min"] = 0,
+						["crits"] = 0,
+						["max"] = 0,
+						["healing"] = 0,
+						["overhealing"] = 5208,
+						["hits"] = 1,
+					},
+				},
+			},
 		},
 		["mobtaken"] = 0,
 		["power"] = {
@@ -21,12 +368,12 @@ SkadaPerCharDB = {
 		["ffdamagedone"] = 0,
 		["starttime"] = 1541545447,
 		["name"] = "Total",
-		["damagetaken"] = 0,
+		["damagetaken"] = 20184,
 		["auras"] = {
 		},
 		["mobhdone"] = 0,
 		["last_action"] = 1541545447,
-		["mobdone"] = 0,
+		["mobdone"] = 20184,
 	},
 	["sets"] = {
 	},

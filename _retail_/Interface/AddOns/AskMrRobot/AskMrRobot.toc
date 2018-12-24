@@ -1,7 +1,7 @@
-## Interface: 80000
+## Interface: 80100
 ## Title: Ask Mr. Robot
 ## Author: Team Robot, Inc.
-## Version: 65
+## Version: 69
 ## Notes: Gear import/export, combat logging, and more.
 ## URL: www.askmrrobot.com
 ## SavedVariables: AskMrRobotDb4

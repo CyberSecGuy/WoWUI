@@ -1,0 +1,10 @@
+lightweight tag 2b44a8f86567868d8e4dcd37daf9325ff19a741c 8.0.1-rc2
+Author:	elfmagi <elfmagi@centos>
+Date:	Mon Sep 24 08:54:42 2018 -0500
+
+commit 2b44a8f86567868d8e4dcd37daf9325ff19a741c
+Author: elfmagi <elfmagi@centos>
+Date:   Mon Sep 24 08:54:42 2018 -0500
+
+    Pushing QoL Changes from rodhansen that have been met with good reactions.
+

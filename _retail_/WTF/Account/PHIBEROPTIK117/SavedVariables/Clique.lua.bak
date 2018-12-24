@@ -2,21 +2,29 @@
 CliqueDB = nil
 CliqueDB3 = {
 	["char"] = {
-		["Ohkaygoogle - Stormrage"] = {
-			["spec1_profileKey"] = "Ohkaygoogle - Stormrage",
-			["spec3_profileKey"] = "Ohkaygoogle - Stormrage",
+		["Phiber - Stormrage"] = {
+			["spec1_profileKey"] = "Phiber - Stormrage",
+			["spec3_profileKey"] = "Phiber - Stormrage",
 			["downclick"] = false,
 			["fastooc"] = false,
-			["spec2_profileKey"] = "Ohkaygoogle - Stormrage",
+			["spec2_profileKey"] = "Phiber - Stormrage",
 			["specswap"] = false,
+		},
+		["Ohkaygoogle - Stormrage"] = {
+			["spec1_profileKey"] = "Ohkaygoogle - Stormrage",
+			["specswap"] = false,
+			["downclick"] = false,
+			["fastooc"] = false,
+			["spec3_profileKey"] = "Ohkaygoogle - Stormrage",
+			["spec2_profileKey"] = "Ohkaygoogle - Stormrage",
 		},
 		["Fibur - Stormrage"] = {
 			["spec1_profileKey"] = "Fibur - Stormrage",
-			["specswap"] = false,
+			["spec2_profileKey"] = "Fibur - Stormrage",
 			["downclick"] = false,
 			["fastooc"] = false,
+			["specswap"] = false,
 			["spec3_profileKey"] = "Fibur - Stormrage",
-			["spec2_profileKey"] = "Fibur - Stormrage",
 		},
 	},
 	["profileKeys"] = {
@@ -24,8 +32,9 @@ CliqueDB3 = {
 		["Fiberboi - Stormrage"] = "Fiberboi - Stormrage",
 		["Fiberoptic - Aggramar"] = "Fiberoptic - Aggramar",
 		["Fibur - Stormrage"] = "Fibur - Stormrage",
-		["Phiber - Stormrage"] = "Phiber - Stormrage",
 		["Onedemonboi - Stormrage"] = "Onedemonboi - Stormrage",
+		["Phiber - Stormrage"] = "Phiber - Stormrage",
+		["Paladium - Moon Guard"] = "Paladium - Moon Guard",
 		["Ohkaygoogle - Stormrage"] = "Ohkaygoogle - Stormrage",
 		["Deafnight - Stormrage"] = "Deafnight - Stormrage",
 		["Phiberoptik - Stormrage"] = "Phiberoptik - Stormrage",
@@ -109,6 +118,25 @@ CliqueDB3 = {
 				}, -- [2]
 			},
 		},
+		["Onedemonboi - Stormrage"] = {
+			["bindings"] = {
+				{
+					["sets"] = {
+						["default"] = true,
+					},
+					["type"] = "target",
+					["key"] = "BUTTON1",
+					["unit"] = "mouseover",
+				}, -- [1]
+				{
+					["type"] = "menu",
+					["key"] = "BUTTON2",
+					["sets"] = {
+						["default"] = true,
+					},
+				}, -- [2]
+			},
+		},
 		["Phiber - Stormrage"] = {
 			["bindings"] = {
 				{
@@ -128,7 +156,7 @@ CliqueDB3 = {
 				}, -- [2]
 			},
 		},
-		["Onedemonboi - Stormrage"] = {
+		["Paladium - Moon Guard"] = {
 			["bindings"] = {
 				{
 					["sets"] = {

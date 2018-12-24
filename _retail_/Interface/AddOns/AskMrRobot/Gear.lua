@@ -51,10 +51,10 @@ local function countItemDifferences(item1, item2)
 			aztDiffs = #item2.azerite * 10
 		else
 			-- count up number in item1 but missing from item2
-			for i = 1, #item1.azerite do
-				local missing = false
+			for i = 1, #item1.azerite do				
+				local missing = true
 				for j = 1, #item2.azerite do
-					if item2[j] == item1[i] then
+					if item2.azerite[j] == item1.azerite[i] then
 						missing = false
 					end
 				end
@@ -64,9 +64,9 @@ local function countItemDifferences(item1, item2)
 			end
 			-- count up number in item2 but missing from item1
 			for i = 1, #item2.azerite do
-				local missing = false
+				local missing = true
 				for j = 1, #item1.azerite do
-					if item1[j] == item2[i] then
+					if item1.azerite[j] == item2.azerite[i] then
 						missing = false
 					end
 				end
@@ -288,7 +288,16 @@ local function renderGear(setupId, container)
 			-- see if item is currently equipped, is false if don't have any item for that slot (e.g. OH for a 2-hander)
 			local isEquipped = false			
 			if equippedItem and optimalItem and Amr.GetItemUniqueId(equippedItem, false, true) == Amr.GetItemUniqueId(optimalItem, false, true) then
-				isEquipped = true
+
+				if slotId == 1 or slotId == 3 or slotId == 5 then
+					-- show the item as not equipped if azerite doesn't match... might mean they have to switch to another version of same item
+					local aztDiff = countItemDifferences(equippedItem, optimalItem)
+					if aztDiff == 0 then
+						isEquipped = true
+					end
+				else
+					isEquipped = true
+				end
 			end
 
 			local isAzerite = optimalItem and C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItemByID(optimalItem.id)
@@ -671,24 +680,12 @@ local function findCurrentGearOpItem()
 	return bestItem, bestDiff, bestLink
 end
 
--- on completion, create an equipment manager set if desired
-local function onEquipGearSetComplete()
-	if Amr.db.profile.options.disableEm then return end
-	
-	-- create an equipment manager set
+local function createAmrEquipmentSet()
 
-	-- note: ignore slots and/or saveset need to be called twice
-    -- for some reason, the slot is treated as blank if you try to ignore once on the first load of the equipment manager
- 
-    -- clear any currently ignored slots
-    --C_EquipmentSet.ClearIgnoredSlotsForSave()
-    --C_EquipmentSet.ClearIgnoredSlotsForSave()
- 
-    -- ignore shirt and tabard
+	-- clear any currently ignored slots, ignore shirt and tabard
+    C_EquipmentSet.ClearIgnoredSlotsForSave()
     C_EquipmentSet.IgnoreSlotForSave(INVSLOT_BODY) -- shirt
     C_EquipmentSet.IgnoreSlotForSave(INVSLOT_TABARD)
-    C_EquipmentSet.IgnoreSlotForSave(INVSLOT_BODY) -- shirt
-	C_EquipmentSet.IgnoreSlotForSave(INVSLOT_TABARD)
 		
 	-- for now use icon of the spec
 	local _, specName, _, setIcon = GetSpecializationInfo(GetSpecialization())
@@ -710,10 +707,25 @@ local function onEquipGearSetComplete()
 	local setname = setup.Label -- "AMR " .. specName
 	local setid = C_EquipmentSet.GetEquipmentSetID(setname)
 	if setid then
+		local oldName, oldIcon = C_EquipmentSet.GetEquipmentSetInfo(setid)
+		setIcon = oldIcon
 		C_EquipmentSet.SaveEquipmentSet(setid, setIcon)
 	else
 		C_EquipmentSet.CreateEquipmentSet(setname, setIcon)
 	end
+end
+
+-- on completion, create an equipment manager set if desired
+local function onEquipGearSetComplete()
+	if Amr.db.profile.options.disableEm then return end
+	
+	-- create an equipment manager set
+	createAmrEquipmentSet()
+
+	-- need to call it twice because on first load the WoW equipment manager just doesn't work
+	Amr.Wait(1, function()
+		createAmrEquipmentSet()
+	end)
 end
 
 -- stop any currently in-progress gear swapping operation and clean up
@@ -1041,22 +1053,12 @@ function beginEquipGearSet(setupId, passes)
 					remaining = remaining + 1
 				end
 			else
+
 				-- find the best matching item anywhere in the player's gear
 				local bestItem, bestDiff = Amr:FindMatchingItem(new, player, usedItems)
 				new = bestItem
 
-				local diff = countItemDifferences(old, new)
-
-				--[[
-				if diff > 0 and diff < 1000 then
-					-- same item, see if inventory has one that is closer (e.g. a duplicate item with correct enchants/gems)
-					local bestItem, bestDiff = Amr:FindMatchingItem(new, player, usedItems)
-					if bestDiff and bestDiff < diff then
-						new = bestItem
-						diff = bestDiff
-					end
-				end
-				]]
+				local diff = countItemDifferences(old, new)				
 
 				if diff > 0 then	
 					list[slotId] = new

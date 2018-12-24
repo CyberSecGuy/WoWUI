@@ -2696,6 +2696,7 @@ AAP.QuestStepList = {
 			["PosY"] = 71.1,
 			["ETA"] = 47,
 			["TaxiNodes"] = 29,
+			["Name"] = "Port of Zandalar, Zuldazar",
 			["TT"] = {
 				["y"] = -1035.4,
 				["x"] = 751.1,
@@ -4197,24 +4198,10 @@ AAP.QuestStepList = {
 			["PosX"] = 58.3,
 			["PosY"] = 61,
 			["ETA"] = 71,
+			["Name"] = "The Great Seal",
 			["TaxiNr"] = 6,
 			["TaxiNodes"] = 29,
 		}, -- [50]
-------- special
-		{
-			["TT"] = {
-				["y"] = -1949,
-				["x"] = 748.1,
-			},
-			["SpecialifSkip"] = 49283,
-			["UseFlightPath"] = 50881,
-			["PosX"] = 58.3,
-			["PosY"] = 61,
-			["ETA"] = 60,
-			["TaxiNr"] = 6,
-			["TaxiNodes"] = 29,
-		}, -- [50]
-------- special
 		{
 			["Trigger"] = {
 				["y"] = -1046.8,
@@ -6131,6 +6118,7 @@ AAP.QuestStepList = {
 			["ETA"] = 46,
 			["PosX"] = 58.3,
 			["PosY"] = 61,
+			["Name"] = "The Great Seal",
 			["TaxiNr"] = 6,
 			["TaxiNodes"] = 29,
 
@@ -7427,23 +7415,6 @@ AAP.QuestStepList = {
 			},
 		}, -- [6]
 		{
-			["ExtraLine"] = 9,
-			["Trigger"] = {
-				["y"] = -430.9,
-				["x"] = 1580.9,
-			},
-			["Qpart"] = {
-				[474401] = {
-					["1"] = "1",
-				},
-			},
-			["Range"] = 0.01,
-			["TT"] = {
-				["y"] = -430.9,
-				["x"] = 1580.9,
-			},
-		}, -- [6]
-		{
 			["TT"] = {
 				["y"] = -430.8,
 				["x"] = 1613,
@@ -7815,18 +7786,6 @@ AAP.QuestStepList = {
 				["x"] = 1558.2,
 			},
 		}, -- [12]
---		{
---			["TaxiNr"] = 25,
---			["TaxiNodes"] = 29,
---			["UseFlightPath"] = 49768,
---			["PosX"] = 65.9,
---			["PosY"] = 52.9,
---			["ETA"] = 64,
---			["TT"] = {
---				["y"] = -102.5,
---				["x"] = 1503.2,
---			},
---		}, -- [13]
 		{
 			["GroupTask"] = 51091,
 			["QaskPopup"] = 51091,
@@ -9416,6 +9375,7 @@ AAP.QuestStepList = {
 			["TaxiNr"] = 6,
 			["PosX"] = 58.3,
 			["PosY"] = 61,
+			["Name"] = "The Great Seal",
 			["TaxiNodes"] = 29,
 			["ETA"] = 1,
 		}, -- [1]
@@ -9936,6 +9896,7 @@ AAP.QuestStepList = {
 			["TaxiNr"] = 5,
 			["PosX"] = 58.4,
 			["PosY"] = 71.1,
+			["Name"] = "Port of Zandalar, Zuldazar",
 			["TaxiNodes"] = 29,
 			["TT"] = {
 				["y"] = -1035.4,
@@ -23015,6 +22976,7 @@ AAP.QuestStepList = {
 			["UseFlightPath"] = 51985,
 			["PosX"] = 25.4,
 			["PosY"] = 65.4,
+			["Name"] = "Anyport, Dustvar",
 			["TaxiNr"] = 9,
 			["TaxiNodes"] = 21,
 			["ETA"] = 52,

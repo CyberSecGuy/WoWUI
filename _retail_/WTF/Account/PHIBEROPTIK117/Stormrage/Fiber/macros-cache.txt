@@ -19,6 +19,9 @@ VER 3 0100000000000005 "Grappling Hook" "INV_MISC_QUESTIONMARK"
 #show
 /cast [@cursor] Grappling Hook
 END
+VER 3 010000000000000B "Guild Recruit" "134331"
+/2 <Implying We Care> is looking for active players, we focus on PVE and hanging out on Discord. Raids will be Friday/Saturday. No pressure raid enviornment, perfect for new players or casual raiders. Social Fun Raid Progression is our motto. PST for inv.
+END
 VER 3 0100000000000001 "Marked for Death" "INV_MISC_QUESTIONMARK"
 #show
 /script SetRaidTarget("target",8);

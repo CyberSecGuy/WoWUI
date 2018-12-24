@@ -1,0 +1,68 @@
+**VERSION 8.0.1R1.33 DATE: December 15th 2018**
+
+*NOTE! The !note feature has been removed. One, it was mostly redundant, since Blizzard introduced the ability for people to edit their own notes only. But two, in 8.1 Blizz broke it anyway and it can no longer be used. Blizz "protected" all chat streams now, from guilds and communities, since they are now stored. Apparently this was in an effort to prevent addon developers from attempting to use custom channels as exotic database storage (which I was funny enough, considering lol). The downside is it KILLS the feature.*
+
+***NEW FEATURES***
+
+**BIRTHDAYS**
+
+* *That's right! You can now input players birthdays. They are linked to the alt grouping. I have made this as simple as possible and automatic to use. Here are some details:*
+
+* 1) Completely optional. You can disable this in the settings. Both the ability to store birthdays as well as even see it in the options are configurable.
+
+* 2) The date is linked to the alt grouping as it is assumed that the birthday will be the same for all players in the grouping as it is based on RL birthdays
+
+* 3) This linking will be automatic. If an alt does not have a birthday set, but is added to a grouping of alts that does, then I will auto-set the birthday. All the nuances of this are extremely tedious to iron out to automate this all. Example, what if two toons not grouped have different dates set, but you try to add one to the other, which date takes priorty? Well, I look at if one is listed as main. Well, what if neither are. What if both are? What if one player is part of a group of alts, with no one listed as main, and no birthday, but then you add one player who is a main and already has a date? Does it override all the others? What if not a main, but it has a date? What if the large grouping has a date set, but the main does not? You can begin to see how there can be a large divere group of things to consider. I ironed out every last one to automate this for the smartest efficiency.
+
+* 4) It only stores the day and the month. I avoid allowing the addon users to ask for the year. I do this on purpose. Some people don't feel comfortable giving their age. Not that it is likely a big deal for 95% of the community, but this spares you leaders the awkwardness of bothering with asking. It is not necessary anyway, just the day and the month is important.
+
+* 5) These birthday events will auto-trigger to be added to the calendar as they approach as well. I HIGHLY recommend having the box checked to only announce the "mains"
+
+* 6) Data is completely syncable and sharable. This also takes advantage of a new algorithm I am implementeing a little here and there for sync efficiency. It takes a while so one thing at a time. It is speedy, but is still extra, new data.
+
+**GUILD REP**
+
+* *Yup! For some reason it is hard to determine player's guild rep now without opening the /groster old window. It will now be visible and properly colored based on rank in the top right for each player. It is fully localized*
+
+* 1) This also is completely optional, and you can disable it in the new UI panel of the options.
+
+**--------------**
+**QUALITY OF LIFE**
+**--------------**
+
+* QoL1: While not necessarily obvious to the user, I place this as number 1 because of the extensive backend cleanup on the process of scanning the database for events to announce to be added to calendar. I also converted the database from the use of strings in many areas to ints, thus removing the need of any string parsing when checking events. This is enormously more efficient now.
+
+* QoL2: Cleaned up a bit of the Alt alignment, some auto controlling the font size to fit, even if a player bumps font size to 125% (in some fonts this may make the "main" alt seem a bit small.
+
+* QoL3: A bit cleaner backend method on detecting player rank permissions in chat. The older method was a bit tedious, but it was necessary after the odd changes in patch 7.3. Well, 8.1 reverted a few of those and they are actually easier to use now and better than ever before! Sometimes they get things right!
+
+* QoL4: Custom note sync rank filter tooltip is more obvious now what it is and how it is unique for that toon only.
+
+* QoL5: ESC key used a bit more logically and cleanly when jumping through frames you had open.
+
+**--------------**
+**BUGS AND BUGS!**
+**--------------**
+
+* BUG1: Fixed an issue that could cause disconnects in some circumstances during a sync. I am not certain this fixes ALL issues for all players, but this definitely will resolve it for many that possibly had issues.
+
+* BUG2: Tightened the sync process a bit further as well to prevent a bulk sync that overlaps or I should say, comes to close to the server throttle cutoff. This will likely help some people who had disconnects.
+
+* BUG3: Sync disconnect fix 3! Additional protections added to people with low FPS when first logging in to prevent a bulk sync, or throttle down to match FPS a bit (interestingly FPS does affect throttle rate).
+
+* BUG4: Fixed an issue that can cause a protection error when trying to mass invite people from the guild recruitment window with GuildInvite lua script. Blizzard seems to have protected it so it cannot be looped, it can only run once per click without tainting. As such I have implemented the macro strategy, where I create a premade macro with all the /ginvite (name) on each line, and with a simple hot-key press it mass invites, if you wish.
+
+* BUG5: Fixed a rejoin bug issue where if a player quits the guild, deletes a toon, makes a new toon with the same name, it counts it as a rejoin. It should now properly only rely on GUID data, not name comparisons. Oops!
+
+* BUG6: Found some issues that could cause problems for people whose database had been upgraded/converted after a long time of not updating the addon, and then they used the backup recoverty tool.
+
+* Bug7: Fixed some bugs around updating from VERY old versions of the addon.
+
+* Bug8: Fixed an issue where the "Anniversary!" was not translating properly in some circumstances on non-English versions of the addon.
+
+* Bug9: Fixed an issue that good mingle alt groups incorrectly when adding one from two groups listed with a main, from a toon that was not a main in the grouping.
+
+* Bug10: Addon should no longer randomly announce "XXX player is already listed as an alt" erroneously.
+
+* Bug11: Fixed an issue with ban list syncing. - It only addresses one issue, however, this is still bugged and doesn't always sync the ban lists properly.
+

@@ -13,10 +13,3 @@ X: 0
 Y: 0
 W: 365
 H: 240
-Frame: AAP_OptionsMainFrame
-FrameLevel: 1
-Anchor: CENTER
-X: -402
-Y: 87
-W: 450
-H: 360

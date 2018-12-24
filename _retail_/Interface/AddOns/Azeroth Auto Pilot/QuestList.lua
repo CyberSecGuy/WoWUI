@@ -1,4 +1,124 @@
 local function AAP_CreateQuestList()
+	if (not AAP1[AAP.Realm][AAP.Name]["Settings"]["Partyleft"]) then
+		AAP1[AAP.Realm][AAP.Name]["Settings"]["Partyleft"] = GetScreenWidth() / 2.5
+	end
+	if (not AAP1[AAP.Realm][AAP.Name]["Settings"]["Partytop"]) then
+		AAP1[AAP.Realm][AAP.Name]["Settings"]["Partytop"] = -(GetScreenHeight() / 4)
+	end
+	if (not AAP.PartyList) then
+		AAP.PartyList = {}
+	end
+	AAP.PartyList.PartyFrame = {}
+	AAP.PartyList.PartyFrame = CreateFrame("frame", "AAP_PartyListFrame1", UIParent)
+	AAP.PartyList.PartyFrame:SetWidth(1)
+	AAP.PartyList.PartyFrame:SetHeight(1)
+	AAP.PartyList.PartyFrame:SetMovable(true)
+	AAP.PartyList.PartyFrame:EnableMouse(true)
+	AAP.PartyList.PartyFrame:SetFrameStrata("LOW")
+	AAP.PartyList.PartyFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", AAP1[AAP.Realm][AAP.Name]["Settings"]["Partyleft"], AAP1[AAP.Realm][AAP.Name]["Settings"]["Partytop"])
+
+
+	AAP.PartyList.PartyFrames = {}
+	AAP.PartyList.PartyFrames2 = {}
+	AAP.PartyList.PartyFramesFS1 = {}
+	AAP.PartyList.PartyFramesFS2 = {}
+	local CLi
+	for CLi = 1, 5 do
+		AAP.PartyList.PartyFrames[CLi] = CreateFrame("frame", "CLQaaListF"..CLi, AAP.PartyList.PartyFrame)
+		AAP.PartyList.PartyFrames[CLi]:SetWidth(120)
+
+		AAP.PartyList.PartyFrames[CLi]:SetHeight(25)
+		AAP.PartyList.PartyFrames[CLi]:SetPoint("BOTTOMLEFT", AAP.PartyList.PartyFrame, "BOTTOMLEFT",40,-((25*CLi)-25))
+		AAP.PartyList.PartyFrames[CLi]:Hide()
+		AAP.PartyList.PartyFrames[CLi]:SetBackdrop( { 
+			bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", 
+			edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+			tile = true, tileSize = 10, edgeSize = 10, insets = { left = 2, right = 2, top = 2, bottom = 2 }
+		});
+		AAP.PartyList.PartyFrames[CLi]:SetScript("OnMouseDown", function(self, button)
+			if button == "LeftButton" and AAP1[AAP.Realm][AAP.Name]["Settings"]["Lock"] == 0 then
+				AAP.PartyList.PartyFrame:StartMoving();
+				AAP.PartyList.PartyFrame.isMoving = true;
+			end
+		end)
+		AAP.PartyList.PartyFrames[CLi]:SetScript("OnMouseUp", function(self, button)
+			if button == "LeftButton" and AAP.PartyList.PartyFrame.isMoving then
+				AAP.PartyList.PartyFrame:StopMovingOrSizing();
+				AAP.PartyList.PartyFrame.isMoving = false;
+				AAP1[AAP.Realm][AAP.Name]["Settings"]["Partyleft"] = AAP.PartyList.PartyFrame:GetLeft()
+				AAP1[AAP.Realm][AAP.Name]["Settings"]["Partytop"] = AAP.PartyList.PartyFrame:GetTop() - GetScreenHeight()
+				AAP.PartyList.PartyFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", AAP1[AAP.Realm][AAP.Name]["Settings"]["Partyleft"], AAP1[AAP.Realm][AAP.Name]["Settings"]["Partytop"])
+			end
+		end)
+		AAP.PartyList.PartyFrames[CLi]:SetScript("OnHide", function(self)
+			if ( AAP.PartyList.PartyFrame.isMoving ) then
+				AAP.PartyList.PartyFrame:StopMovingOrSizing();
+				AAP.PartyList.PartyFrame.isMoving = false;
+				AAP1[AAP.Realm][AAP.Name]["Settings"]["Partyleft"] = AAP.PartyList.PartyFrame:GetLeft()
+				AAP1[AAP.Realm][AAP.Name]["Settings"]["Partytop"] = AAP.PartyList.PartyFrame:GetTop() - GetScreenHeight()
+				AAP.PartyList.PartyFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", AAP1[AAP.Realm][AAP.Name]["Settings"]["Partyleft"], AAP1[AAP.Realm][AAP.Name]["Settings"]["Partytop"])
+			end
+		end)
+		
+		AAP.PartyList.PartyFramesFS1[CLi] = AAP.PartyList.PartyFrames[CLi]:CreateFontString("CLQaasFS1","ARTWORK", "ChatFontNormal")
+		AAP.PartyList.PartyFramesFS1[CLi]:SetParent(AAP.PartyList.PartyFrames[CLi])
+		AAP.PartyList.PartyFramesFS1[CLi]:SetPoint("LEFT",AAP.PartyList.PartyFrames[CLi],"LEFT",5,0)
+		AAP.PartyList.PartyFramesFS1[CLi]:SetWidth(300)
+		AAP.PartyList.PartyFramesFS1[CLi]:SetHeight(38)
+		AAP.PartyList.PartyFramesFS1[CLi]:SetJustifyH("LEFT")
+		AAP.PartyList.PartyFramesFS1[CLi]:SetFontObject("GameFontNormalLarge")
+		AAP.PartyList.PartyFramesFS1[CLi]:SetText("Name")
+		AAP.PartyList.PartyFramesFS1[CLi]:SetTextColor(1, 1, 0)
+
+
+		AAP.PartyList.PartyFrames2[CLi] = CreateFrame("frame", "CLQaListF"..CLi, AAP.PartyList.PartyFrame)
+		AAP.PartyList.PartyFrames2[CLi]:SetWidth(40)
+
+		AAP.PartyList.PartyFrames2[CLi]:SetHeight(25)
+		AAP.PartyList.PartyFrames2[CLi]:SetPoint("BOTTOMLEFT", AAP.PartyList.PartyFrame, "BOTTOMLEFT",0,-((25*CLi)-25))
+		AAP.PartyList.PartyFrames2[CLi]:Hide()
+		AAP.PartyList.PartyFrames2[CLi]:SetBackdrop( { 
+			bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", 
+			edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+			tile = true, tileSize = 10, edgeSize = 10, insets = { left = 2, right = 2, top = 2, bottom = 2 }
+		});
+		AAP.PartyList.PartyFrames2[CLi]:SetScript("OnMouseDown", function(self, button)
+			if button == "LeftButton" and AAP1[AAP.Realm][AAP.Name]["Settings"]["Lock"] == 0 then
+				AAP.PartyList.PartyFrame:StartMoving();
+				AAP.PartyList.PartyFrame.isMoving = true;
+			end
+		end)
+		AAP.PartyList.PartyFrames2[CLi]:SetScript("OnMouseUp", function(self, button)
+			if button == "LeftButton" and AAP.PartyList.PartyFrame.isMoving then
+				AAP.PartyList.PartyFrame:StopMovingOrSizing();
+				AAP.PartyList.PartyFrame.isMoving = false;
+				AAP1[AAP.Realm][AAP.Name]["Settings"]["Partyleft"] = AAP.PartyList.PartyFrame:GetLeft()
+				AAP1[AAP.Realm][AAP.Name]["Settings"]["Partytop"] = AAP.PartyList.PartyFrame:GetTop() - GetScreenHeight()
+				AAP.PartyList.PartyFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", AAP1[AAP.Realm][AAP.Name]["Settings"]["Partyleft"], AAP1[AAP.Realm][AAP.Name]["Settings"]["Partytop"])
+			end
+		end)
+		AAP.PartyList.PartyFrames2[CLi]:SetScript("OnHide", function(self)
+			if ( AAP.PartyList.PartyFrame.isMoving ) then
+				AAP.PartyList.PartyFrame:StopMovingOrSizing();
+				AAP.PartyList.PartyFrame.isMoving = false;
+				AAP1[AAP.Realm][AAP.Name]["Settings"]["Partyleft"] = AAP.PartyList.PartyFrame:GetLeft()
+				AAP1[AAP.Realm][AAP.Name]["Settings"]["Partytop"] = AAP.PartyList.PartyFrame:GetTop() - GetScreenHeight()
+				AAP.PartyList.PartyFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", AAP1[AAP.Realm][AAP.Name]["Settings"]["Partyleft"], AAP1[AAP.Realm][AAP.Name]["Settings"]["Partytop"])
+			end
+		end)
+
+		AAP.PartyList.PartyFramesFS2[CLi] = AAP.PartyList.PartyFrames2[CLi]:CreateFontString("CLQaasFS1","ARTWORK", "ChatFontNormal")
+		AAP.PartyList.PartyFramesFS2[CLi]:SetParent(AAP.PartyList.PartyFrames[CLi])
+		AAP.PartyList.PartyFramesFS2[CLi]:SetPoint("CENTER",AAP.PartyList.PartyFrames2[CLi],"CENTER",0,0)
+		AAP.PartyList.PartyFramesFS2[CLi]:SetWidth(40)
+		AAP.PartyList.PartyFramesFS2[CLi]:SetHeight(38)
+		AAP.PartyList.PartyFramesFS2[CLi]:SetJustifyH("CENTER")
+		AAP.PartyList.PartyFramesFS2[CLi]:SetFontObject("GameFontNormalLarge")
+		AAP.PartyList.PartyFramesFS2[CLi]:SetText("123")
+		AAP.PartyList.PartyFramesFS2[CLi]:SetTextColor(1, 1, 0)
+
+
+	end
 	AAP.QuestList.SugQuestFrame = {}
 	AAP.QuestList.SugQuestFrame = CreateFrame("frame", "AAP_SugQuestFrameFrame", UIParent)
 	AAP.QuestList.SugQuestFrame:SetWidth(300)
@@ -273,14 +393,37 @@ local function AAP_CreateQuestList()
 	AAP.QuestList.ButtonParent:SetScale(AAP1[AAP.Realm][AAP.Name]["Settings"]["Scale"])
 	AAP.QuestList.QuestFrames = {}
 	AAP.QuestList2 = {}
+
+	AAP.QuestList.QuestFrames["MyProgress"] = CreateFrame("frame", "CLQListMyProgress", AAP.QuestList.ListFrame)
+	AAP.QuestList.QuestFrames["MyProgress"]:SetWidth(150)
+	AAP.QuestList.QuestFrames["MyProgress"]:SetHeight(22)
+	AAP.QuestList.QuestFrames["MyProgress"]:SetPoint("BOTTOMLEFT", AAP.QuestList.ListFrame, "BOTTOMLEFT",0,0)
+	AAP.QuestList.QuestFrames["MyProgress"]:SetBackdrop( { 
+		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", 
+		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+		tile = true, tileSize = 10, edgeSize = 10, insets = { left = 2, right = 2, top = 2, bottom = 2 }
+	});
+	AAP.QuestList.QuestFrames["MyProgressFS"] = AAP.QuestList.ListFrame:CreateFontString("CLQFSProgR","ARTWORK", "ChatFontNormal")
+	AAP.QuestList.QuestFrames["MyProgressFS"]:SetParent(AAP.QuestList.QuestFrames["MyProgress"])
+	AAP.QuestList.QuestFrames["MyProgressFS"]:SetPoint("BOTTOMLEFT",AAP.QuestList.QuestFrames["MyProgress"],"BOTTOMLEFT",0,2)
+	AAP.QuestList.QuestFrames["MyProgressFS"]:SetWidth(150)
+	AAP.QuestList.QuestFrames["MyProgressFS"]:SetHeight(18)
+	AAP.QuestList.QuestFrames["MyProgressFS"]:SetJustifyH("CENTER")
+	AAP.QuestList.QuestFrames["MyProgressFS"]:SetFontObject("GameFontNormalSmall")
+	AAP.QuestList.QuestFrames["MyProgressFS"]:SetText("")
+	AAP.QuestList.QuestFrames["MyProgressFS"]:SetTextColor(1, 1, 0)
+	if (AAP1[AAP.Realm][AAP.Name]["Settings"]["ShowQList"] == 0) then
+		AAP.QuestList.QuestFrames["MyProgress"]:Hide()
+	end
+	
 	local CLi
 	for CLi = 1, 20 do
 	
 		AAP["Icons"][CLi] = CreateFrame("Frame",nil,UIParent)
-		AAP["Icons"][CLi]:SetFrameStrata("BACKGROUND")
+		AAP["Icons"][CLi]:SetFrameStrata("HIGH")
 		AAP["Icons"][CLi]:SetWidth(5) -- Set these to whatever height/width is needed 
 		AAP["Icons"][CLi]:SetHeight(5) -- for your Texture
-		local t = 	AAP["Icons"][CLi]:CreateTexture(nil,"BACKGROUND")
+		local t = 	AAP["Icons"][CLi]:CreateTexture(nil,"HIGH")
 		t:SetTexture("Interface\\Addons\\Azeroth Auto Pilot\\Img\\Icon.blp")
 		t:SetAllPoints(AAP["Icons"][CLi])
 		AAP["Icons"][CLi].texture = t
@@ -368,7 +511,7 @@ local function AAP_CreateQuestList()
 		AAP.QuestList.QuestFrames["FS"..CLi]["Button"]:Hide()
 
 
-		AAP.QuestList2["BF"..CLi] = CreateFrame("frame", "CLQListF2"..CLi, AAP.QuestList21)
+		AAP.QuestList2["BF"..CLi] = CreateFrame("frame", "CLQListF2z"..CLi, AAP.QuestList21)
 		AAP.QuestList2["BF"..CLi]:SetWidth(410)
 		AAP.QuestList2["BF"..CLi]:SetHeight(38)
 		AAP.QuestList2["BF"..CLi]:SetPoint("BOTTOMLEFT", AAP.QuestList21, "BOTTOMLEFT",0,0)

@@ -10,7 +10,7 @@
 -- @submodule Item
 
 local _, TSM = ...
-local private = { bonusIdCache = {}, bonusIdTemp = {}, itemStringCache = {}, filteredItemStringCache = {} }
+local private = { bonusIdCache = {}, bonusIdTemp = {}, itemStringCache = {}, filteredItemStringCache = {}, baseItemStringCache = {} }
 local ITEM_UPGRADE_VALUE_SHIFT = 1000000
 
 
@@ -50,9 +50,22 @@ end
 
 --- Converts the parameter into a base itemString.
 -- @tparam string item An item to get the base itemString of
+-- @treturn string The base itemString
+function TSMAPI_FOUR.Item.ToBaseItemStringFast(itemString)
+	if not itemString then
+		return nil
+	end
+	if not private.baseItemStringCache[itemString] then
+		private.baseItemStringCache[itemString] = strmatch(itemString, "([ip]:%d+)")
+	end
+	return private.baseItemStringCache[itemString]
+end
+
+--- Converts the parameter into a base itemString.
+-- @tparam string item An item to get the base itemString of
 -- @tparam[opt=false] boolean doGroupLookup If true, will decide whether or not to convert to a baseItemString based on
 -- whether or not this specific item is in a group (preserve the full itemString) or not (convert to a baseItemString)
--- @treturn number The base itemString
+-- @treturn string The base itemString
 function TSMAPI_FOUR.Item.ToBaseItemString(item, doGroupLookup)
 	-- make sure it's a valid itemString
 	local itemString = TSMAPI_FOUR.Item.ToItemString(item)
@@ -121,14 +134,14 @@ function private.ToItemString(item)
 
 	-- test if it's already (likely) an item string or battle pet string
 	local result = nil
-	if strmatch(item, "^p:([0-9%-:]+)$") then
+	if strmatch(item, "^i:([0-9%-:]+)$") then
+		return private.FixItemString(item)
+	elseif strmatch(item, "^p:([0-9%-:]+)$") then
 		result = strjoin(":", strmatch(item, "^(p):(%d+:%d+:%d+)"))
 		if result then
 			return result
 		end
 		return item
-	elseif strmatch(item, "^i:([0-9%-:]+)$") then
-		return private.FixItemString(item)
 	end
 
 	result = strmatch(item, "^\124cff[0-9a-z]+\124[Hh](.+)\124h%[.+%]\124h\124r$")
@@ -181,37 +194,47 @@ end
 function private.FixItemString(itemString)
 	itemString = gsub(itemString, ":0:", "::")-- remove 0s which are in the middle
 	itemString = private.RemoveExtra(itemString)
-	-- make sure we have the correct number of bonusIds
-	-- get the number of bonusIds (plus one for the count)
-	local numParts = select("#", (":"):split(itemString)) - 3
-	if numParts > 0 then
-		-- get the number of extra parts we have
-		local count = select(4, (":"):split(itemString))
-		count = tonumber(count) or 0
-		local numExtraParts = numParts - 1 - count
-		local lastExtraPart = tonumber(strmatch(itemString, ":([0-9]+)$"))
-		for _ = 1, numExtraParts do
-			itemString = gsub(itemString, ":[0-9]*$", "")
-		end
-		-- we might have already applied the upgrade value shift
-		if numExtraParts == 1 and (lastExtraPart >= 98 and lastExtraPart <= MAX_PLAYER_LEVEL) or (lastExtraPart - ITEM_UPGRADE_VALUE_SHIFT >= 90 and lastExtraPart - ITEM_UPGRADE_VALUE_SHIFT <= MAX_PLAYER_LEVEL) then
-			-- this extra part is likely the upgradeValue which we want to keep so increase it by UPGRADE_VALUE_SHIFT
-			if lastExtraPart < ITEM_UPGRADE_VALUE_SHIFT then
-				lastExtraPart = lastExtraPart + ITEM_UPGRADE_VALUE_SHIFT
-			end
-			itemString = itemString..":"..lastExtraPart
-		end
-		itemString = private.RemoveExtra(itemString)
-		itemString = private.FilterBonusIds(itemString, TSM.CONST.ALL_BONUS_ID_MAP)
+	return private.CheckBonusIds(itemString, strsplit(":", itemString))
+end
+
+function private.CheckBonusIds(itemString, _, _, _, count, ...)
+	if not count then
+		return itemString
 	end
+
+	-- make sure we have the correct number of bonusIds
+	count = tonumber(count) or 0
+	local numParts = select("#", ...)
+	local numExtraParts = numParts - count
+	local lastExtraPart = select(numParts, ...)
+	lastExtraPart = tonumber(lastExtraPart)
+	for _ = 1, numExtraParts do
+		itemString = gsub(itemString, ":[0-9]*$", "")
+	end
+
+	-- we might have already applied the upgrade value shift
+	if numExtraParts == 1 and ((lastExtraPart >= 98 and lastExtraPart <= MAX_PLAYER_LEVEL) or (lastExtraPart - ITEM_UPGRADE_VALUE_SHIFT >= 90 and lastExtraPart - ITEM_UPGRADE_VALUE_SHIFT <= MAX_PLAYER_LEVEL)) then
+		-- this extra part is likely the upgradeValue which we want to keep so increase it by UPGRADE_VALUE_SHIFT
+		if lastExtraPart < ITEM_UPGRADE_VALUE_SHIFT then
+			lastExtraPart = lastExtraPart + ITEM_UPGRADE_VALUE_SHIFT
+		end
+		itemString = itemString..":"..lastExtraPart
+	end
+
+	itemString = private.RemoveExtra(itemString)
+	itemString = private.FilterBonusIds(itemString, TSM.CONST.ALL_BONUS_ID_MAP)
 	return itemString
 end
 
 function private.FilterBonusIds(itemString, map)
-	local itemId, rand, bonusIds = strmatch(itemString, "i:([0-9]+):([0-9%-]*):[0-9]*:(.+)$")
-	if not bonusIds then return itemString end
-	local cacheKey = bonusIds..tostring(map)
-	if not private.bonusIdCache[cacheKey] then
+	local itemStringPrefix, bonusIds = strmatch(itemString, "(i:[0-9]+:[0-9%-]*):[0-9]*:(.+)$")
+	if not bonusIds then
+		return itemString
+	end
+	private.bonusIdCache[map] = private.bonusIdCache[map] or {}
+	private.bonusIdCache[map][bonusIds] = private.bonusIdCache[map][bonusIds] or {}
+	local cache = private.bonusIdCache[map][bonusIds]
+	if not cache.num then
 		wipe(private.bonusIdTemp)
 		local adjust = 0
 		for id in gmatch(bonusIds, "[0-9]+") do
@@ -229,16 +252,22 @@ function private.FilterBonusIds(itemString, map)
 			end
 		end
 		sort(private.bonusIdTemp)
-		private.bonusIdCache[cacheKey] = { num = #private.bonusIdTemp - adjust, value = strjoin(":", unpack(private.bonusIdTemp)) }
+		cache.num = #private.bonusIdTemp - adjust
+		cache.bonusIds = table.concat(private.bonusIdTemp, ":")
+		cache.value = strjoin(":", "", cache.num, cache.bonusIds)
 	end
-	if private.bonusIdCache[cacheKey].num == 0 then
-		if rand == "" or tonumber(rand) == 0 then
-			return strjoin(":", "i", itemId)
+	if cache.num == 0 then
+		local baseItemString, rand = strmatch(itemString, "(i:[0-9]+)(:[0-9%-]*)")
+		rand = rand and rand ~= "" and rand ~= ":" and tonumber(rand) or 0
+		if rand == 0 then
+			return baseItemString
 		else
-			return strjoin(":", "i", itemId, rand)
+			return baseItemString..rand
 		end
+	elseif cache.bonusIds == bonusIds then
+		return itemString
 	else
-		return strjoin(":", "i", itemId, rand, private.bonusIdCache[cacheKey].num, private.bonusIdCache[cacheKey].value)
+		return itemStringPrefix..cache.value
 	end
 end
 

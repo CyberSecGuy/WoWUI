@@ -161,16 +161,19 @@ local function upgradeFromOld()
 
 	local currentVersion = tonumber(GetAddOnMetadata(Amr.ADDON_NAME, "Version"))
 	if Amr.db.char.LastVersion < 65 then
-		for i = 1,GetNumSpecializations() do
-			local _, specName = GetSpecializationInfo(i)
-			if specName then
-				print("AMR " .. specName)
-				local setid = C_EquipmentSet.GetEquipmentSetID("AMR " .. specName)
-				if setid then
-					C_EquipmentSet.DeleteEquipmentSet(setid)
+
+		if not Amr.db.profile.options.disableEm then
+			for i = 1,GetNumSpecializations() do
+				local _, specName = GetSpecializationInfo(i)
+				if specName then
+					local setid = C_EquipmentSet.GetEquipmentSetID("AMR " .. specName)
+					if setid then
+						C_EquipmentSet.DeleteEquipmentSet(setid)
+					end
 				end
 			end
 		end
+		
 	end
 	Amr.db.char.LastVersion = currentVersion
 
@@ -184,7 +187,7 @@ local function finishInitialize()
 	-- make sure that some initialization is deferred until after PLAYER_ENTERING_WORLD event so that data we need is available;
 	-- also delay this initialization for a few extra seconds to deal with some event spam that is otherwise hard to identify and ignore when a player logs in
 	Amr.Wait(5, function()
-		Amr:InitializeVersions()
+		--Amr:InitializeVersions()
 		Amr:InitializeGear()
 		Amr:InitializeExport()
 		Amr:InitializeCombatLog()

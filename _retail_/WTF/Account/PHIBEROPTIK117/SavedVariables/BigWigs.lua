@@ -1,9 +1,10 @@
 
 BigWigs3DB = {
 	["profileKeys"] = {
+		["Paladium - Moon Guard"] = "|cff00c0faBenikUI |r",
 		["Phiberoptik - Stormrage"] = "|cff00c0faBenikUI |r",
 		["Fiberboi - Stormrage"] = "|cff00c0faBenikUI |r",
-		["Phiber - Stormrage"] = "Default",
+		["Phiber - Stormrage"] = "|cff00c0faBenikUI |r",
 		["Ohkaygoogle - Stormrage"] = "|cff00c0faBenikUI |r",
 		["Voidbro - Stormrage"] = "|cff00c0faBenikUI |r",
 		["Onedemonboi - Stormrage"] = "|cff00c0faBenikUI |r",
@@ -17,18 +18,11 @@ BigWigs3DB = {
 	["namespaces"] = {
 		["BigWigs_Plugins_Victory"] = {
 		},
-		["BigWigs_Plugins_BossBlock"] = {
+		["BigWigs_Plugins_Raid Icons"] = {
 		},
 		["BigWigs_Plugins_Colors"] = {
 		},
-		["BigWigs_Plugins_Alt Power"] = {
-			["profiles"] = {
-				["|cff00c0faBenikUI |r"] = {
-					["fontsize"] = 11,
-					["fontName"] = "Expressway",
-					["fontOutline"] = "",
-				},
-			},
+		["BigWigs_Plugins_Wipe"] = {
 		},
 		["LibDualSpec-1.0"] = {
 		},
@@ -41,10 +35,13 @@ BigWigs3DB = {
 					["BigWigsAnchor_height"] = 15.9999876022339,
 				},
 				["|cff00c0faBenikUI |r"] = {
-					["BigWigsAnchor_width"] = 199.999908447266,
 					["barStyle"] = "AddOnSkins Half-Bar",
-					["fontName"] = "Expressway",
+					["BigWigsEmphasizeAnchor_height"] = 21.9999752044678,
 					["texture"] = "BuiFlat",
+					["BigWigsAnchor_width"] = 199.999877929688,
+					["BigWigsEmphasizeAnchor_width"] = 320.000061035156,
+					["fontName"] = "Expressway",
+					["BigWigsAnchor_height"] = 15.9999876022339,
 				},
 			},
 		},
@@ -59,10 +56,14 @@ BigWigs3DB = {
 		},
 		["BigWigs_Plugins_Sounds"] = {
 		},
+		["BigWigs_Plugins_BossBlock"] = {
+		},
 		["BigWigs_Plugins_Proximity"] = {
 			["profiles"] = {
 				["Default"] = {
 					["height"] = 119.999977111816,
+					["posy"] = 359.466788840291,
+					["posx"] = 1065.06614806892,
 					["width"] = 140.00016784668,
 				},
 				["|cff00c0faBenikUI |r"] = {
@@ -74,15 +75,12 @@ BigWigs3DB = {
 				},
 			},
 		},
-		["BigWigs_Plugins_Wipe"] = {
-		},
 		["BigWigs_Plugins_AutoReply"] = {
 		},
 		["BigWigs_Plugins_Messages"] = {
 			["profiles"] = {
 				["|cff00c0faBenikUI |r"] = {
 					["fontName"] = "Expressway",
-					["fontSize"] = 20,
 				},
 			},
 		},
@@ -90,7 +88,13 @@ BigWigs3DB = {
 		},
 		["BigWigs_Plugins_Pull"] = {
 		},
-		["BigWigs_Plugins_Raid Icons"] = {
+		["BigWigs_Plugins_Alt Power"] = {
+			["profiles"] = {
+				["|cff00c0faBenikUI |r"] = {
+					["fontsize"] = 11,
+					["fontName"] = "Expressway",
+				},
+			},
 		},
 	},
 	["wipe80"] = true,
@@ -144,21 +148,12 @@ BigWigsStatsDB = {
 				["best"] = 464.55700000003,
 				["kills"] = 2,
 			},
+			["heroic"] = {
+				["wipes"] = 2,
+			},
 			["LFR"] = {
 				["best"] = 249.518999999971,
 				["kills"] = 4,
-			},
-		},
-		[2167] = {
-			["normal"] = {
-				["kills"] = 2,
-				["best"] = 309.829,
-				["wipes"] = 3,
-			},
-			["LFR"] = {
-				["kills"] = 5,
-				["best"] = 249.522999999579,
-				["wipes"] = 1,
 			},
 		},
 		[2195] = {
@@ -171,6 +166,21 @@ BigWigsStatsDB = {
 				["kills"] = 3,
 				["wipes"] = 2,
 				["best"] = 236.751999999862,
+			},
+		},
+		[2167] = {
+			["normal"] = {
+				["kills"] = 2,
+				["best"] = 309.829,
+				["wipes"] = 3,
+			},
+			["heroic"] = {
+				["wipes"] = 3,
+			},
+			["LFR"] = {
+				["kills"] = 5,
+				["best"] = 249.522999999579,
+				["wipes"] = 1,
 			},
 		},
 		[2194] = {
@@ -210,7 +220,9 @@ BigWigsStatsDB = {
 				["kills"] = 3,
 			},
 			["heroic"] = {
+				["kills"] = 1,
 				["wipes"] = 4,
+				["best"] = 325.94200000001,
 			},
 			["LFR"] = {
 				["best"] = 261.062000000384,

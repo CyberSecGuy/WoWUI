@@ -1,402 +1,28 @@
 
 ElvCharacterDB = {
 	["ChatEditHistory"] = {
-		"/g yeah", -- [1]
-		"/g that's amazing", -- [2]
-		"/cw Remainz-Stormrage did they assign anything to me?", -- [3]
-		"/cw Remainz-Stormrage how the fuck long have we been sitting here?", -- [4]
-		"/cw Remainz-Stormrage i've watched 3 youtube videos since we got to this room", -- [5]
-		"/cw Remainz-Stormrage they're like 10 minutes each", -- [6]
-		"/cw Remainz-Stormrage \"Can you repeat the part about the stuff for the boss?\"", -- [7]
-		"/cw Remainz-Stormrage So... I'm a bit disappointed in myself", -- [8]
-		"/cw Remainz-Stormrage it wasn't until this boss that I realized", -- [9]
-		"/cw Remainz-Stormrage I didn't have my pet out the whole time", -- [10]
-		"/cw Remainz-Stormrage lol fuckin real", -- [11]
-		"/roll", -- [12]
-		"/raid low wins right?", -- [13]
-		"/s You die in that hole?", -- [14]
-		"/s Say no more fam.", -- [15]
-		"/raid ty for the run", -- [16]
-		"/quit", -- [17]
-		"/cw Remainz-Stormrage night", -- [18]
-		"/raidinfo", -- [19]
-		"/logout", -- [20]
+		"/g that's amazing", -- [1]
+		"/cw Remainz-Stormrage did they assign anything to me?", -- [2]
+		"/cw Remainz-Stormrage how the fuck long have we been sitting here?", -- [3]
+		"/cw Remainz-Stormrage i've watched 3 youtube videos since we got to this room", -- [4]
+		"/cw Remainz-Stormrage they're like 10 minutes each", -- [5]
+		"/cw Remainz-Stormrage \"Can you repeat the part about the stuff for the boss?\"", -- [6]
+		"/cw Remainz-Stormrage So... I'm a bit disappointed in myself", -- [7]
+		"/cw Remainz-Stormrage it wasn't until this boss that I realized", -- [8]
+		"/cw Remainz-Stormrage I didn't have my pet out the whole time", -- [9]
+		"/cw Remainz-Stormrage lol fuckin real", -- [10]
+		"/roll", -- [11]
+		"/raid low wins right?", -- [12]
+		"/s You die in that hole?", -- [13]
+		"/s Say no more fam.", -- [14]
+		"/raid ty for the run", -- [15]
+		"/quit", -- [16]
+		"/cw Remainz-Stormrage night", -- [17]
+		"/raidinfo", -- [18]
+		"/logout", -- [19]
+		"/cw Novastrìke It's free real estate", -- [20]
 	},
 	["ChatHistoryLog"] = {
-		{
-			"2", -- [1]
-			"Fibur-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Fibur", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3016, -- [11]
-			"Player-60-0B505562", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff3fc6eaFibur|r",
-			[51] = 1542255117,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [1]
-		{
-			"1", -- [1]
-			"Fibur-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Fibur", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3017, -- [11]
-			"Player-60-0B505562", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff3fc6eaFibur|r",
-			[51] = 1542255118,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [2]
-		{
-			"Explosive Corruption on Sillykinz", -- [1]
-			"Sillykinz-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Sillykinz", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3019, -- [11]
-			"Player-60-0BB8BF99", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffaad372Sillykinz|r",
-			[51] = 1542255130,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [3]
-		{
-			"3", -- [1]
-			"Sillykinz-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Sillykinz", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3020, -- [11]
-			"Player-60-0BB8BF99", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffaad372Sillykinz|r",
-			[51] = 1542255131,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [4]
-		{
-			"2", -- [1]
-			"Sillykinz-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Sillykinz", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3021, -- [11]
-			"Player-60-0BB8BF99", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffaad372Sillykinz|r",
-			[51] = 1542255132,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [5]
-		{
-			"1", -- [1]
-			"Sillykinz-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Sillykinz", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3022, -- [11]
-			"Player-60-0BB8BF99", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffaad372Sillykinz|r",
-			[51] = 1542255133,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [6]
-		{
-			"Explosive Corruption on Nitebright", -- [1]
-			"Nitebright-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Nitebright", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3029, -- [11]
-			"Player-60-0BD71D11", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cfff48cbaNitebright|r",
-			[51] = 1542255145,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [7]
-		{
-			"Explosive Corruption on Fibur", -- [1]
-			"Fibur-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Fibur", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3031, -- [11]
-			"Player-60-0B505562", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff3fc6eaFibur|r",
-			[51] = 1542255146,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [8]
-		{
-			"Explosive Corruption on Zaraqt", -- [1]
-			"Zaraqt-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Zaraqt", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3032, -- [11]
-			"Player-60-0BCDE989", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff3fc6eaZaraqt|r",
-			[51] = 1542255146,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [9]
-		{
-			"3", -- [1]
-			"Nitebright-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Nitebright", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3034, -- [11]
-			"Player-60-0BD71D11", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cfff48cbaNitebright|r",
-			[51] = 1542255147,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [10]
-		{
-			"3", -- [1]
-			"Fibur-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Fibur", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3035, -- [11]
-			"Player-60-0B505562", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff3fc6eaFibur|r",
-			[51] = 1542255147,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [11]
-		{
-			"3", -- [1]
-			"Zaraqt-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Zaraqt", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3036, -- [11]
-			"Player-60-0BCDE989", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff3fc6eaZaraqt|r",
-			[51] = 1542255147,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [12]
-		{
-			"2", -- [1]
-			"Fibur-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Fibur", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3037, -- [11]
-			"Player-60-0B505562", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff3fc6eaFibur|r",
-			[51] = 1542255148,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [13]
-		{
-			"1", -- [1]
-			"Fibur-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Fibur", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3038, -- [11]
-			"Player-60-0B505562", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cff3fc6eaFibur|r",
-			[51] = 1542255149,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [14]
-		{
-			"Explosive Corruption on Oliveowl", -- [1]
-			"Oliveowl-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Oliveowl", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3044, -- [11]
-			"Player-60-0BCE94A0", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffff7c0aOliveowl|r",
-			[51] = 1542255231,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [15]
-		{
-			"Explosive Corruption on Sillykinz", -- [1]
-			"Sillykinz-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Sillykinz", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3045, -- [11]
-			"Player-60-0BB8BF99", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffaad372Sillykinz|r",
-			[51] = 1542255231,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [16]
-		{
-			"3", -- [1]
-			"Oliveowl-Stormrage", -- [2]
-			"Common", -- [3]
-			"", -- [4]
-			"Oliveowl", -- [5]
-			"", -- [6]
-			0, -- [7]
-			0, -- [8]
-			"", -- [9]
-			0, -- [10]
-			3046, -- [11]
-			"Player-60-0BCE94A0", -- [12]
-			0, -- [13]
-			false, -- [14]
-			false, -- [15]
-			false, -- [16]
-			false, -- [17]
-			[52] = "|cffff7c0aOliveowl|r",
-			[51] = 1542255232,
-			[50] = "CHAT_MSG_SAY",
-		}, -- [17]
 		{
 			"3", -- [1]
 			"Sillykinz-Stormrage", -- [2]
@@ -418,7 +44,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Sillykinz|r",
 			[51] = 1542255232,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [18]
+		}, -- [1]
 		{
 			"2", -- [1]
 			"Sillykinz-Stormrage", -- [2]
@@ -440,7 +66,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Sillykinz|r",
 			[51] = 1542255233,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [19]
+		}, -- [2]
 		{
 			"1", -- [1]
 			"Sillykinz-Stormrage", -- [2]
@@ -462,7 +88,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Sillykinz|r",
 			[51] = 1542255234,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [20]
+		}, -- [3]
 		{
 			"Explosive Corruption on Jbjonez", -- [1]
 			"Jbjonez-Stormrage", -- [2]
@@ -484,7 +110,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Jbjonez|r",
 			[51] = 1542255247,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [21]
+		}, -- [4]
 		{
 			"3", -- [1]
 			"Jbjonez-Stormrage", -- [2]
@@ -506,7 +132,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Jbjonez|r",
 			[51] = 1542255248,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [22]
+		}, -- [5]
 		{
 			"Explosive Corruption on Jbjonez", -- [1]
 			"Jbjonez-Stormrage", -- [2]
@@ -528,7 +154,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Jbjonez|r",
 			[51] = 1542255264,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [23]
+		}, -- [6]
 		{
 			"3", -- [1]
 			"Jbjonez-Stormrage", -- [2]
@@ -550,7 +176,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Jbjonez|r",
 			[51] = 1542255265,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [24]
+		}, -- [7]
 		{
 			"2", -- [1]
 			"Oliveowl-Stormrage", -- [2]
@@ -572,7 +198,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aOliveowl|r",
 			[51] = 1542255280,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [25]
+		}, -- [8]
 		{
 			"1", -- [1]
 			"Oliveowl-Stormrage", -- [2]
@@ -594,7 +220,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aOliveowl|r",
 			[51] = 1542255281,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [26]
+		}, -- [9]
 		{
 			"Explosive Corruption on Fibur", -- [1]
 			"Fibur-Stormrage", -- [2]
@@ -616,7 +242,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaFibur|r",
 			[51] = 1542255293,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [27]
+		}, -- [10]
 		{
 			"3", -- [1]
 			"Fibur-Stormrage", -- [2]
@@ -638,7 +264,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaFibur|r",
 			[51] = 1542255294,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [28]
+		}, -- [11]
 		{
 			"2", -- [1]
 			"Fibur-Stormrage", -- [2]
@@ -660,7 +286,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaFibur|r",
 			[51] = 1542255295,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [29]
+		}, -- [12]
 		{
 			"1", -- [1]
 			"Fibur-Stormrage", -- [2]
@@ -682,7 +308,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaFibur|r",
 			[51] = 1542255296,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [30]
+		}, -- [13]
 		{
 			"Explosive Corruption on Jbjonez", -- [1]
 			"Jbjonez-Stormrage", -- [2]
@@ -704,7 +330,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Jbjonez|r",
 			[51] = 1542255310,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [31]
+		}, -- [14]
 		{
 			"3", -- [1]
 			"Jbjonez-Stormrage", -- [2]
@@ -726,7 +352,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Jbjonez|r",
 			[51] = 1542255311,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [32]
+		}, -- [15]
 		{
 			"2", -- [1]
 			"Jbjonez-Stormrage", -- [2]
@@ -748,7 +374,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Jbjonez|r",
 			[51] = 1542255312,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [33]
+		}, -- [16]
 		{
 			"1", -- [1]
 			"Jbjonez-Stormrage", -- [2]
@@ -770,7 +396,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Jbjonez|r",
 			[51] = 1542255313,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [34]
+		}, -- [17]
 		{
 			"lol fuckin real", -- [1]
 			"Remainz-Stormrage", -- [2]
@@ -792,7 +418,7 @@ ElvCharacterDB = {
 			[52] = "|cffa330c9Remainz|r",
 			[51] = 1542255320,
 			[50] = "CHAT_MSG_WHISPER_INFORM",
-		}, -- [35]
+		}, -- [18]
 		{
 			"lol", -- [1]
 			"Remainz-Stormrage", -- [2]
@@ -814,7 +440,7 @@ ElvCharacterDB = {
 			[52] = "|cffa330c9Remainz|r",
 			[51] = 1542255324,
 			[50] = "CHAT_MSG_WHISPER",
-		}, -- [36]
+		}, -- [19]
 		{
 			"if I had a better main hander we would have had it.....", -- [1]
 			"Nitebright-Stormrage", -- [2]
@@ -836,7 +462,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNitebright|r",
 			[51] = 1542255460,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [37]
+		}, -- [20]
 		{
 			"lol", -- [1]
 			"Nougat-Stormrage", -- [2]
@@ -858,7 +484,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edNougat|r",
 			[51] = 1542255466,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [38]
+		}, -- [21]
 		{
 			"olive should go with cyro", -- [1]
 			"Noxinard-Stormrage", -- [2]
@@ -880,7 +506,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edNoxinard|r",
 			[51] = 1542255514,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [39]
+		}, -- [22]
 		{
 			"just in case", -- [1]
 			"Noxinard-Stormrage", -- [2]
@@ -902,7 +528,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edNoxinard|r",
 			[51] = 1542255522,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [40]
+		}, -- [23]
 		{
 			"^", -- [1]
 			"Nougat-Stormrage", -- [2]
@@ -924,7 +550,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edNougat|r",
 			[51] = 1542255523,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [41]
+		}, -- [24]
 		{
 			"ill go on first one too", -- [1]
 			"Quarkyguy-Stormrage", -- [2]
@@ -946,7 +572,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddQuarkyguy|r",
 			[51] = 1542255531,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [42]
+		}, -- [25]
 		{
 			"what about charge leap charge?", -- [1]
 			"Noxinard-Stormrage", -- [2]
@@ -968,7 +594,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edNoxinard|r",
 			[51] = 1542255679,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [43]
+		}, -- [26]
 		{
 			"probably", -- [1]
 			"Linang-Stormrage", -- [2]
@@ -990,7 +616,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Linang|r",
 			[51] = 1542255695,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [44]
+		}, -- [27]
 		{
 			"im pretty sure anything works", -- [1]
 			"Linang-Stormrage", -- [2]
@@ -1012,7 +638,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Linang|r",
 			[51] = 1542255701,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [45]
+		}, -- [28]
 		{
 			"After raid I want everyone to analyze their gameplay and get back to me or another officer about what they need to improve upon whether it's gear, experience or rotation, we wanna get ", -- [1]
 			"Liqueur-Stormrage", -- [2]
@@ -1034,7 +660,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaLiqueur|r",
 			[51] = 1542255726,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [46]
+		}, -- [29]
 		{
 			"everyone up to where they need to be. :)", -- [1]
 			"Liqueur-Stormrage", -- [2]
@@ -1056,7 +682,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaLiqueur|r",
 			[51] = 1542255734,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [47]
+		}, -- [30]
 		{
 			"really need a smoke", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -1078,7 +704,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542255879,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [48]
+		}, -- [31]
 		{
 			"Explosive Corruption on Tyrienn", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -1100,7 +726,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542255891,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [49]
+		}, -- [32]
 		{
 			"3", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -1122,7 +748,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542255892,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [50]
+		}, -- [33]
 		{
 			"2", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -1144,7 +770,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542255893,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [51]
+		}, -- [34]
 		{
 			"Explosive Corruption on Tyrienn", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -1166,7 +792,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542255971,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [52]
+		}, -- [35]
 		{
 			"3", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -1188,7 +814,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542255972,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [53]
+		}, -- [36]
 		{
 			"2", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -1210,7 +836,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542255973,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [54]
+		}, -- [37]
 		{
 			"Explosive Corruption on Nitebright", -- [1]
 			"Nitebright-Stormrage", -- [2]
@@ -1232,7 +858,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNitebright|r",
 			[51] = 1542256038,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [55]
+		}, -- [38]
 		{
 			"Explosive Corruption on Oliveowl", -- [1]
 			"Oliveowl-Stormrage", -- [2]
@@ -1254,7 +880,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aOliveowl|r",
 			[51] = 1542256039,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [56]
+		}, -- [39]
 		{
 			"3", -- [1]
 			"Nitebright-Stormrage", -- [2]
@@ -1276,7 +902,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNitebright|r",
 			[51] = 1542256039,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [57]
+		}, -- [40]
 		{
 			"3", -- [1]
 			"Oliveowl-Stormrage", -- [2]
@@ -1298,7 +924,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aOliveowl|r",
 			[51] = 1542256040,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [58]
+		}, -- [41]
 		{
 			"2", -- [1]
 			"Oliveowl-Stormrage", -- [2]
@@ -1320,7 +946,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aOliveowl|r",
 			[51] = 1542256041,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [59]
+		}, -- [42]
 		{
 			"Explosive Corruption on Nitebright", -- [1]
 			"Nitebright-Stormrage", -- [2]
@@ -1342,7 +968,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNitebright|r",
 			[51] = 1542256053,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [60]
+		}, -- [43]
 		{
 			"Explosive Corruption on Noxinard", -- [1]
 			"Noxinard-Stormrage", -- [2]
@@ -1364,7 +990,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edNoxinard|r",
 			[51] = 1542256054,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [61]
+		}, -- [44]
 		{
 			"3", -- [1]
 			"Nitebright-Stormrage", -- [2]
@@ -1386,7 +1012,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNitebright|r",
 			[51] = 1542256055,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [62]
+		}, -- [45]
 		{
 			"3", -- [1]
 			"Noxinard-Stormrage", -- [2]
@@ -1408,7 +1034,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edNoxinard|r",
 			[51] = 1542256055,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [63]
+		}, -- [46]
 		{
 			"3", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -1430,7 +1056,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542256071,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [64]
+		}, -- [47]
 		{
 			"3", -- [1]
 			"Mykro-Stormrage", -- [2]
@@ -1452,7 +1078,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaMykro|r",
 			[51] = 1542256086,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [65]
+		}, -- [48]
 		{
 			"2", -- [1]
 			"Mykro-Stormrage", -- [2]
@@ -1474,7 +1100,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaMykro|r",
 			[51] = 1542256087,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [66]
+		}, -- [49]
 		{
 			"1", -- [1]
 			"Mykro-Stormrage", -- [2]
@@ -1496,7 +1122,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaMykro|r",
 			[51] = 1542256088,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [67]
+		}, -- [50]
 		{
 			"Explosive Corruption on Asquirtle", -- [1]
 			"Asquirtle-Stormrage", -- [2]
@@ -1518,7 +1144,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaAsquirtle|r",
 			[51] = 1542256102,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [68]
+		}, -- [51]
 		{
 			"3", -- [1]
 			"Asquirtle-Stormrage", -- [2]
@@ -1540,7 +1166,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaAsquirtle|r",
 			[51] = 1542256103,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [69]
+		}, -- [52]
 		{
 			"Explosive Corruption on Nitebright", -- [1]
 			"Nitebright-Stormrage", -- [2]
@@ -1562,7 +1188,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNitebright|r",
 			[51] = 1542256133,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [70]
+		}, -- [53]
 		{
 			"Explosive Corruption on Asquirtle", -- [1]
 			"Asquirtle-Stormrage", -- [2]
@@ -1584,7 +1210,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaAsquirtle|r",
 			[51] = 1542256133,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [71]
+		}, -- [54]
 		{
 			"Explosive Corruption on Jbjonez", -- [1]
 			"Jbjonez-Stormrage", -- [2]
@@ -1606,7 +1232,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Jbjonez|r",
 			[51] = 1542256133,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [72]
+		}, -- [55]
 		{
 			"3", -- [1]
 			"Nitebright-Stormrage", -- [2]
@@ -1628,7 +1254,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNitebright|r",
 			[51] = 1542256134,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [73]
+		}, -- [56]
 		{
 			"3", -- [1]
 			"Asquirtle-Stormrage", -- [2]
@@ -1650,7 +1276,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaAsquirtle|r",
 			[51] = 1542256134,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [74]
+		}, -- [57]
 		{
 			"2", -- [1]
 			"Nitebright-Stormrage", -- [2]
@@ -1672,7 +1298,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNitebright|r",
 			[51] = 1542256135,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [75]
+		}, -- [58]
 		{
 			"3", -- [1]
 			"Jbjonez-Stormrage", -- [2]
@@ -1694,7 +1320,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Jbjonez|r",
 			[51] = 1542256135,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [76]
+		}, -- [59]
 		{
 			"2", -- [1]
 			"Jbjonez-Stormrage", -- [2]
@@ -1716,7 +1342,7 @@ ElvCharacterDB = {
 			[52] = "|cfffff468Jbjonez|r",
 			[51] = 1542256136,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [77]
+		}, -- [60]
 		{
 			"Explosive Corruption on Quarkyguy", -- [1]
 			"Quarkyguy-Stormrage", -- [2]
@@ -1738,7 +1364,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddQuarkyguy|r",
 			[51] = 1542256149,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [78]
+		}, -- [61]
 		{
 			"3", -- [1]
 			"Quarkyguy-Stormrage", -- [2]
@@ -1760,7 +1386,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddQuarkyguy|r",
 			[51] = 1542256150,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [79]
+		}, -- [62]
 		{
 			"2", -- [1]
 			"Quarkyguy-Stormrage", -- [2]
@@ -1782,7 +1408,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddQuarkyguy|r",
 			[51] = 1542256151,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [80]
+		}, -- [63]
 		{
 			"Explosive Corruption on Shyllae", -- [1]
 			"Shyllae-Stormrage", -- [2]
@@ -1804,7 +1430,7 @@ ElvCharacterDB = {
 			[52] = "|cffffffffShyllae|r",
 			[51] = 1542256165,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [81]
+		}, -- [64]
 		{
 			"3", -- [1]
 			"Shyllae-Stormrage", -- [2]
@@ -1826,7 +1452,7 @@ ElvCharacterDB = {
 			[52] = "|cffffffffShyllae|r",
 			[51] = 1542256166,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [82]
+		}, -- [65]
 		{
 			"2", -- [1]
 			"Shyllae-Stormrage", -- [2]
@@ -1848,7 +1474,7 @@ ElvCharacterDB = {
 			[52] = "|cffffffffShyllae|r",
 			[51] = 1542256167,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [83]
+		}, -- [66]
 		{
 			"1", -- [1]
 			"Shyllae-Stormrage", -- [2]
@@ -1870,7 +1496,7 @@ ElvCharacterDB = {
 			[52] = "|cffffffffShyllae|r",
 			[51] = 1542256168,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [84]
+		}, -- [67]
 		{
 			"Explosive Corruption on Sillykinz", -- [1]
 			"Sillykinz-Stormrage", -- [2]
@@ -1892,7 +1518,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Sillykinz|r",
 			[51] = 1542256224,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [85]
+		}, -- [68]
 		{
 			"Explosive Corruption on Tyrienn", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -1914,7 +1540,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542256225,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [86]
+		}, -- [69]
 		{
 			"3", -- [1]
 			"Sillykinz-Stormrage", -- [2]
@@ -1936,7 +1562,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Sillykinz|r",
 			[51] = 1542256225,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [87]
+		}, -- [70]
 		{
 			"3", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -1958,7 +1584,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542256226,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [88]
+		}, -- [71]
 		{
 			"2", -- [1]
 			"Sillykinz-Stormrage", -- [2]
@@ -1980,7 +1606,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Sillykinz|r",
 			[51] = 1542256226,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [89]
+		}, -- [72]
 		{
 			"2", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -2002,7 +1628,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542256227,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [90]
+		}, -- [73]
 		{
 			"1", -- [1]
 			"Sillykinz-Stormrage", -- [2]
@@ -2024,7 +1650,7 @@ ElvCharacterDB = {
 			[52] = "|cffaad372Sillykinz|r",
 			[51] = 1542256227,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [91]
+		}, -- [74]
 		{
 			"1", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -2046,7 +1672,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542256228,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [92]
+		}, -- [75]
 		{
 			"Explosive Corruption on Tyrienn", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -2068,7 +1694,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542256241,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [93]
+		}, -- [76]
 		{
 			"Explosive Corruption on Asquirtle", -- [1]
 			"Asquirtle-Stormrage", -- [2]
@@ -2090,7 +1716,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaAsquirtle|r",
 			[51] = 1542256241,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [94]
+		}, -- [77]
 		{
 			"3", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -2112,7 +1738,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542256242,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [95]
+		}, -- [78]
 		{
 			"3", -- [1]
 			"Asquirtle-Stormrage", -- [2]
@@ -2134,7 +1760,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaAsquirtle|r",
 			[51] = 1542256242,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [96]
+		}, -- [79]
 		{
 			"2", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -2156,7 +1782,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542256243,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [97]
+		}, -- [80]
 		{
 			"2", -- [1]
 			"Asquirtle-Stormrage", -- [2]
@@ -2178,7 +1804,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaAsquirtle|r",
 			[51] = 1542256243,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [98]
+		}, -- [81]
 		{
 			"1", -- [1]
 			"Tyrienn-Stormrage", -- [2]
@@ -2200,7 +1826,7 @@ ElvCharacterDB = {
 			[52] = "|cff00ff96Tyrienn|r",
 			[51] = 1542256244,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [99]
+		}, -- [82]
 		{
 			"1", -- [1]
 			"Asquirtle-Stormrage", -- [2]
@@ -2222,7 +1848,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaAsquirtle|r",
 			[51] = 1542256244,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [100]
+		}, -- [83]
 		{
 			"Explosive Corruption on Oliveowl", -- [1]
 			"Oliveowl-Stormrage", -- [2]
@@ -2244,7 +1870,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aOliveowl|r",
 			[51] = 1542256257,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [101]
+		}, -- [84]
 		{
 			"3", -- [1]
 			"Oliveowl-Stormrage", -- [2]
@@ -2266,7 +1892,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aOliveowl|r",
 			[51] = 1542256258,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [102]
+		}, -- [85]
 		{
 			"2", -- [1]
 			"Oliveowl-Stormrage", -- [2]
@@ -2288,7 +1914,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aOliveowl|r",
 			[51] = 1542256259,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [103]
+		}, -- [86]
 		{
 			"Explosive Corruption on Quarkyguy", -- [1]
 			"Quarkyguy-Stormrage", -- [2]
@@ -2310,7 +1936,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddQuarkyguy|r",
 			[51] = 1542256303,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [104]
+		}, -- [87]
 		{
 			"3", -- [1]
 			"Quarkyguy-Stormrage", -- [2]
@@ -2332,7 +1958,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddQuarkyguy|r",
 			[51] = 1542256304,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [105]
+		}, -- [88]
 		{
 			"2", -- [1]
 			"Quarkyguy-Stormrage", -- [2]
@@ -2354,7 +1980,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddQuarkyguy|r",
 			[51] = 1542256305,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [106]
+		}, -- [89]
 		{
 			"1", -- [1]
 			"Quarkyguy-Stormrage", -- [2]
@@ -2376,7 +2002,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddQuarkyguy|r",
 			[51] = 1542256306,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [107]
+		}, -- [90]
 		{
 			"3", -- [1]
 			"Raithlin-Stormrage", -- [2]
@@ -2398,7 +2024,7 @@ ElvCharacterDB = {
 			[52] = "|cffc41e3aRaithlin|r",
 			[51] = 1542256319,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [108]
+		}, -- [91]
 		{
 			"Explosive Corruption on Quarkyguy", -- [1]
 			"Quarkyguy-Stormrage", -- [2]
@@ -2420,7 +2046,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddQuarkyguy|r",
 			[51] = 1542256320,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [109]
+		}, -- [92]
 		{
 			"3", -- [1]
 			"Quarkyguy-Stormrage", -- [2]
@@ -2442,7 +2068,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddQuarkyguy|r",
 			[51] = 1542256321,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [110]
+		}, -- [93]
 		{
 			"2", -- [1]
 			"Quarkyguy-Stormrage", -- [2]
@@ -2464,7 +2090,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddQuarkyguy|r",
 			[51] = 1542256322,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [111]
+		}, -- [94]
 		{
 			"1", -- [1]
 			"Quarkyguy-Stormrage", -- [2]
@@ -2486,7 +2112,7 @@ ElvCharacterDB = {
 			[52] = "|cff0070ddQuarkyguy|r",
 			[51] = 1542256323,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [112]
+		}, -- [95]
 		{
 			"Resurrecting Sillykinz!", -- [1]
 			"Oliveowl-Stormrage", -- [2]
@@ -2508,7 +2134,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aOliveowl|r",
 			[51] = 1542256329,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [113]
+		}, -- [96]
 		{
 			"Casting mass resurrection!", -- [1]
 			"Oliveowl-Stormrage", -- [2]
@@ -2530,7 +2156,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aOliveowl|r",
 			[51] = 1542256345,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [114]
+		}, -- [97]
 		{
 			"well, no shield", -- [1]
 			"Nitebright-Stormrage", -- [2]
@@ -2552,7 +2178,7 @@ ElvCharacterDB = {
 			[52] = "|cfff48cbaNitebright|r",
 			[51] = 1542256349,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [115]
+		}, -- [98]
 		{
 			"|cffa335ee|Hitem:160690::::::::120:105::3:3:4798:1482:4783:::|h[Heptavium, Staff of Torturous Knowledge]|h|r roll", -- [1]
 			"Oliveowl-Stormrage", -- [2]
@@ -2574,7 +2200,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aOliveowl|r",
 			[51] = 1542256374,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [116]
+		}, -- [99]
 		{
 			"low wins right?", -- [1]
 			"Fibur-Stormrage", -- [2]
@@ -2596,7 +2222,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaFibur|r",
 			[51] = 1542256402,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [117]
+		}, -- [100]
 		{
 			"in golf.. but this isn't golf", -- [1]
 			"Nougat-Stormrage", -- [2]
@@ -2618,7 +2244,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edNougat|r",
 			[51] = 1542256413,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [118]
+		}, -- [101]
 		{
 			"|cffa335ee|Hitem:160726::::::::120:105::3:3:4822:1477:4786:::|h[Amice of Corrupting Horror]|h|r roll", -- [1]
 			"Oliveowl-Stormrage", -- [2]
@@ -2640,7 +2266,7 @@ ElvCharacterDB = {
 			[52] = "|cffff7c0aOliveowl|r",
 			[51] = 1542256417,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [119]
+		}, -- [102]
 		{
 			"You die in that hole?", -- [1]
 			"Fibur-Stormrage", -- [2]
@@ -2662,7 +2288,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaFibur|r",
 			[51] = 1542256451,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [120]
+		}, -- [103]
 		{
 			"<3", -- [1]
 			"Asquirtle-Stormrage", -- [2]
@@ -2684,7 +2310,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaAsquirtle|r",
 			[51] = 1542256453,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [121]
+		}, -- [104]
 		{
 			"Say no more fam.", -- [1]
 			"Fibur-Stormrage", -- [2]
@@ -2706,7 +2332,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaFibur|r",
 			[51] = 1542256454,
 			[50] = "CHAT_MSG_SAY",
-		}, -- [122]
+		}, -- [105]
 		{
 			"he needs a chalkboard", -- [1]
 			"Noxinard-Stormrage", -- [2]
@@ -2728,7 +2354,7 @@ ElvCharacterDB = {
 			[52] = "|cff8787edNoxinard|r",
 			[51] = 1542256521,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [123]
+		}, -- [106]
 		{
 			"ty for the run", -- [1]
 			"Fibur-Stormrage", -- [2]
@@ -2750,7 +2376,7 @@ ElvCharacterDB = {
 			[52] = "|cff3fc6eaFibur|r",
 			[51] = 1542256539,
 			[50] = "CHAT_MSG_RAID",
-		}, -- [124]
+		}, -- [107]
 		{
 			"night", -- [1]
 			"Remainz-Stormrage", -- [2]
@@ -2772,7 +2398,7 @@ ElvCharacterDB = {
 			[52] = "|cffa330c9Remainz|r",
 			[51] = 1542256542,
 			[50] = "CHAT_MSG_WHISPER_INFORM",
-		}, -- [125]
+		}, -- [108]
 		{
 			"night man", -- [1]
 			"Remainz-Stormrage", -- [2]
@@ -2794,7 +2420,7 @@ ElvCharacterDB = {
 			[52] = "|cffa330c9Remainz|r",
 			[51] = 1542256555,
 			[50] = "CHAT_MSG_WHISPER",
-		}, -- [126]
+		}, -- [109]
 		{
 			"thanks for ocming", -- [1]
 			"Remainz-Stormrage", -- [2]
@@ -2816,6 +2442,380 @@ ElvCharacterDB = {
 			[52] = "|cffa330c9Remainz|r",
 			[51] = 1542256560,
 			[50] = "CHAT_MSG_WHISPER",
+		}, -- [110]
+		{
+			"casually tosses his |Hitem:36862|h|cFFFFFFFF[Worn Troll Dice]|r|h.", -- [1]
+			"Krankeii-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Krankeii-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			377, -- [11]
+			"Player-60-0AC40A29", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffffffffKrankeii|r",
+			[51] = 1545527883,
+			[50] = "CHAT_MSG_EMOTE",
+		}, -- [111]
+		{
+			"casually tosses his |Hitem:36862|h|cFFFFFFFF[Worn Troll Dice]|r|h.", -- [1]
+			"Krankeii-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Krankeii-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			392, -- [11]
+			"Player-60-0AC40A29", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffffffffKrankeii|r",
+			[51] = 1545527905,
+			[50] = "CHAT_MSG_EMOTE",
+		}, -- [112]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:6109:Player-60-0B505562:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Heroic: Morchok]|h|r!", -- [1]
+			"Fibur-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Fibur-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			457, -- [11]
+			"Player-60-0B505562", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaFibur|r",
+			[51] = 1545528198,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [113]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:6174:Player-60-0B505562:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Don't Stand So Close to Me]|h|r!", -- [1]
+			"Fibur-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Fibur-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			458, -- [11]
+			"Player-60-0B505562", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaFibur|r",
+			[51] = 1545528198,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [114]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:6110:Player-60-0B505562:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Heroic: Warlord Zon'ozz]|h|r!", -- [1]
+			"Fibur-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Fibur-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			483, -- [11]
+			"Player-60-0B505562", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaFibur|r",
+			[51] = 1545528262,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [115]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:6111:Player-60-0B505562:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Heroic: Yor'sahj the Unsleeping]|h|r!", -- [1]
+			"Fibur-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Fibur-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			504, -- [11]
+			"Player-60-0B505562", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaFibur|r",
+			[51] = 1545528366,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [116]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:6106:Player-60-0B505562:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Siege of Wyrmrest Temple]|h|r!", -- [1]
+			"Fibur-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Fibur-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			540, -- [11]
+			"Player-60-0B505562", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaFibur|r",
+			[51] = 1545528545,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [117]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:6112:Player-60-0B505562:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Heroic: Hagara the Stormbinder]|h|r!", -- [1]
+			"Fibur-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Fibur-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			541, -- [11]
+			"Player-60-0B505562", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaFibur|r",
+			[51] = 1545528545,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [118]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:6084:Player-60-0B505562:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Minutes to Midnight]|h|r!", -- [1]
+			"Fibur-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Fibur-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			573, -- [11]
+			"Player-60-0B505562", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaFibur|r",
+			[51] = 1545528891,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [119]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:6113:Player-60-0B505562:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Heroic: Ultraxion]|h|r!", -- [1]
+			"Fibur-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Fibur-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			574, -- [11]
+			"Player-60-0B505562", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaFibur|r",
+			[51] = 1545528891,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [120]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:6114:Player-60-0B505562:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Heroic: Warmaster Blackhorn]|h|r!", -- [1]
+			"Fibur-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Fibur-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			629, -- [11]
+			"Player-60-0B505562", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaFibur|r",
+			[51] = 1545529291,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [121]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:6115:Player-60-0B505562:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Heroic: Spine of Deathwing]|h|r!", -- [1]
+			"Fibur-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Fibur-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			777, -- [11]
+			"Player-60-0B505562", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaFibur|r",
+			[51] = 1545529681,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [122]
+		{
+			"It's free real estate", -- [1]
+			"Novastrìke-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Novastrìke-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			789, -- [11]
+			"Player-60-0B969DB6", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cffaad372Novastrìke|r",
+			[51] = 1545529716,
+			[50] = "CHAT_MSG_WHISPER_INFORM",
+		}, -- [123]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:12848:Player-60-0BBE9498:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Kings' Rest]|h|r!", -- [1]
+			"Juicecup-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Juicecup-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			792, -- [11]
+			"Player-60-0BBE9498", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaJuicecup|r",
+			[51] = 1545529748,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [124]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:6107:Player-60-0B505562:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Fall of Deathwing]|h|r!", -- [1]
+			"Fibur-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Fibur-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			824, -- [11]
+			"Player-60-0B505562", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaFibur|r",
+			[51] = 1545529844,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [125]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:6116:Player-60-0B505562:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Heroic: Madness of Deathwing]|h|r!", -- [1]
+			"Fibur-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Fibur-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			825, -- [11]
+			"Player-60-0B505562", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaFibur|r",
+			[51] = 1545529844,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
+		}, -- [126]
+		{
+			"%s has earned the achievement |cffffff00|Hachievement:6177:Player-60-0B505562:1:12:22:18:4294967295:4294967295:4294967295:4294967295|h[Destroyer's End]|h|r!", -- [1]
+			"Fibur-Stormrage", -- [2]
+			"", -- [3]
+			"", -- [4]
+			"Fibur-Stormrage", -- [5]
+			"", -- [6]
+			0, -- [7]
+			0, -- [8]
+			"", -- [9]
+			0, -- [10]
+			826, -- [11]
+			"Player-60-0B505562", -- [12]
+			0, -- [13]
+			false, -- [14]
+			false, -- [15]
+			false, -- [16]
+			false, -- [17]
+			[52] = "|cff3fc6eaFibur|r",
+			[51] = 1545529844,
+			[50] = "CHAT_MSG_GUILD_ACHIEVEMENT",
 		}, -- [127]
 	},
 }

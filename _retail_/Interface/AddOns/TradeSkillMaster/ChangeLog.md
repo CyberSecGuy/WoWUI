@@ -1,5 +1,5 @@
-## v4.6.8 Changes
+## v4.6.13 Changes
 
-* Fixed an issue with some players getting errors on login from many auction expire / cancel records. TSM now clears out expire / cancel records more than 1 year old to avoid excessive load times.
+* Fixed error when viewing the Crafting Reports UI.
 
 [Known Issues](http://support.tradeskillmaster.com/display/KB/TSM4+Currently+Known+Issues)

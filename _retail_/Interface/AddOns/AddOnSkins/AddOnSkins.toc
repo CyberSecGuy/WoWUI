@@ -1,9 +1,9 @@
-## Interface: 80000
+## Interface: 80100
 ## Title: |cff1784d1AddOnSkins|r
-## Version: 4.04
+## Version: 4.07
 ## Author: Azilroka, Whiro
 ## SavedVariables: AddOnSkinsDB, AddOnSkinsDS
-## OptionalDeps: ProjectAzilroka, ElvUI, Tukui
+## OptionalDeps: ElvUI, Tukui
 ## X-Tukui-ProjectID: 3
 ## X-Tukui-ProjectFolders: AddOnSkins
 

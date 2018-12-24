@@ -16,20 +16,6 @@ oRA3DB = {
 		["Promote"] = {
 		},
 		["Cooldowns"] = {
-			["global"] = {
-				["spellsOnCooldown"] = {
-					[192249] = {
-						["Player-60-0B4ACBB1"] = 952783.75,
-					},
-					[32182] = {
-						["Player-60-0B4ACBB1"] = 952865.013,
-					},
-					[20608] = {
-						["Player-60-0B4ACBB1"] = 953924.685,
-					},
-				},
-				["lastTime"] = 952691.003,
-			},
 			["profiles"] = {
 				["Default"] = {
 					["spells"] = {
@@ -52,7 +38,7 @@ oRA3DB = {
 		["Difficulty"] = {
 			["profiles"] = {
 				["Default"] = {
-					["prevRaidDifficulty"] = 16,
+					["prevRaidDifficulty"] = 15,
 				},
 			},
 		},
@@ -62,12 +48,13 @@ oRA3DB = {
 		["Fiberboi - Stormrage"] = "Default",
 		["Fiberoptic - Aggramar"] = "Default",
 		["Fibur - Stormrage"] = "Default",
-		["Phiber - Stormrage"] = "Default",
 		["Fiberboi - Sargeras"] = "Default",
+		["Phiber - Stormrage"] = "Default",
 		["Voidbro - Stormrage"] = "Default",
-		["Deafnight - Stormrage"] = "Default",
 		["Phiberoptik - Stormrage"] = "Default",
+		["Deafnight - Stormrage"] = "Default",
 		["Ohkaygoogle - Stormrage"] = "Default",
+		["Paladium - Moon Guard"] = "Default",
 		["Onedemonboi - Stormrage"] = "Default",
 	},
 	["profiles"] = {
@@ -87,10 +74,10 @@ oRA3DB = {
 					["PosX"] = 190.933901982295,
 				},
 				["oRA3ReadyCheck"] = {
-					["Height"] = 182.999923706055,
+					["Height"] = 169.000015258789,
 					["Width"] = 320.000061035156,
-					["PosY"] = 409.813350214958,
-					["PosX"] = 1079.46661649704,
+					["PosY"] = 237.546811096665,
+					["PosX"] = 1082.66661642551,
 				},
 			},
 			["lastSelectedPanel"] = "Cooldowns",

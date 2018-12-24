@@ -5952,10 +5952,9 @@ AAP.QuestStepList = {
 			},
 			["UseFlightPath"] = 50814,
 			["ETA"] = 1,
-			["PosX"] = 51.2,
-			["PosY"] = 26.4,
-			["TaxiNr"] = 25,
-			["TaxiNodes"] = 39,
+			["PosX"] = 50.5,
+			["PosY"] = 28.1,
+			["Name"] = "Deadwash, Stormsong Valley",
 		}, -- [28]
 		{
 			["TT"] = {
@@ -7277,16 +7276,15 @@ AAP.QuestStepList = {
 		}, -- [93]
 		{
 			["TT"] = {
-				["y"] = 2493.6,
-				["x"] = -45.5,
+				["y"] = 3751.6,
+				["x"] = 1071.3,
 			},
 			["UseFlightPath"] = 49818,
 			["ETA"] = 1,
-			["PosX"] = 51.2,
-			["PosY"] = 26.4,
-			["TaxiNr"] = 25,
-			["TaxiNodes"] = 39,
-		}, -- [94]
+			["PosX"] = 50.5,
+			["PosY"] = 28.1,
+			["Name"] = "Deadwash, Stormsong Valley",
+		}, -- [28]
 		{
 			["PickUp"] = {
 				51218, -- [1]
@@ -8857,10 +8855,9 @@ AAP.QuestStepList = {
 				["x"] = -45.3,
 			},
 			["UseFlightPath"] = 1234561234,
-			["TaxiNr"] = 17,
-			["PosX"] = 62.1,
-			["PosY"] = 47.6,
-			["TaxiNodes"] = 39,
+			["PosX"] = 61.1,
+			["PosY"] = 49.2,
+			["Name"] = "Tradewinds Market, Tiragarde Sound",
 			["ETA"] = 51,
 		}, -- [1]
 		{
@@ -11526,11 +11523,9 @@ AAP.QuestStepList = {
 		}, -- [39]
 		{
 			["UseFlightPath"] = 51402,
-			["TaxiNodes"] = 17,
 			["PosX"] = 62.1,
 			["PosY"] = 47.6,
 			["ETA"] = 52,
-			["TaxiNr"] = 8,
 			["TT"] = {
 				["y"] = 2049.1,
 				["x"] = 4807.2,
@@ -11806,11 +11801,10 @@ AAP.QuestStepList = {
 			},
 			["UseFlightPath"] = 50542,
 			["ETA"] = 100,
-			["PosX"] = 58.1,
-			["PosY"] = 62.6,
-			["TaxiNr"] = 10,
+			["PosX"] = 57,
+			["PosY"] = 64,
 			["Boat"] = 1,
-			["TaxiNodes"] = 39,
+			["Name"] = "Southwind Station, Tiragarde Sound",
 		}, -- [9]
 ---------------- Fizzspring Resort
 		{
@@ -12041,11 +12035,10 @@ AAP.QuestStepList = {
 			},
 			["UseFlightPath"] = 48540,
 			["ETA"] = 144,
-			["PosX"] = 43.8,
-			["PosY"] = 51.8,
-			["TaxiNr"] = 7,
+			["PosX"] = 43.2,
+			["PosY"] = 53.3,
 			["Boat"] = 1,
-			["TaxiNodes"] = 39,
+			["Name"] = "Anglepoint Wharf, Tiragarde Sound",
 		}, -- [9]
 ---------------- Anglepoint to north
 		{
@@ -13862,11 +13855,10 @@ AAP.QuestStepList = {
 			},
 			["UseFlightPath"] = 49225,
 			["ETA"] = 53,
-			["PosX"] = 56.4,
-			["PosY"] = 51.7,
-			["TaxiNr"] = 9,
+			["PosX"] = 55.6,
+			["PosY"] = 53.2,
 			["Boat"] = 1,
-			["TaxiNodes"] = 39,
+			["Name"] = "Firebreaker Expedition, Tiragarde Sound",
 		}, -- [9]
 ---------------- Firebreak exp
 		{
@@ -16381,11 +16373,10 @@ AAP.QuestStepList = {
 			},
 			["UseFlightPath"] = 47485,
 			["ETA"] = 76,
-			["PosX"] = 62.4,
-			["PosY"] = 59.5,
-			["TaxiNr"] = 28,
+			["PosX"] = 62,
+			["PosY"] = 50.5,
 			["Boat"] = 1,
-			["TaxiNodes"] = 39,
+			["Name"] = "Tradewinds Market, Tiragarde Sound",
 		}, -- [9]
 		{
 			["Done"] = {
@@ -17995,10 +17986,9 @@ AAP.QuestStepList = {
 				["x"] = -696.3,
 			},
 			["UseFlightPath"] = 47489,
-			["TaxiNr"] = 14,
-			["PosX"] = 63.4,
-			["PosY"] = 62,
-			["TaxiNodes"] = 39,
+			["PosX"] = 62.4,
+			["PosY"] = 63.4,
+			["Name"] = "Bridgeport, Tiragarde Sound",
 			["ETA"] = 34,
 		}, -- [1]
 ----------------------------
@@ -23898,11 +23888,10 @@ AAP.QuestStepList = {
 				["x"] = 1276.2,
 			},
 			["UseFlightPath"] = 48538,
-			["PosX"] = 48.8,
-			["PosY"] = 64.3,
-			["TaxiNr"] = 3,
-			["TaxiNodes"] = 39,
+			["PosX"] = 48.1,
+			["PosY"] = 65.8,
 			["ETA"] = 1,
+			["Name"] = "Hangman's Point, Drustvar",
 		}, -- [1]
 		{
 			["TT"] = {
@@ -28667,11 +28656,10 @@ AAP.QuestStepList = {
 				["x"] = 3828.1,
 			},
 			["UseFlightPath"] = 50763,
-			["PosX"] = 31.1,
-			["PosY"] = 59.8,
-			["TaxiNr"] = 32,
-			["TaxiNodes"] = 39,
+			["PosX"] = 30.8,
+			["PosY"] = 61.2,
 			["ETA"] = 27,
+			["Name"] = "Watchman's Rise, Drustvar",
 		}, -- [1]
 		{
 			["Done"] = {
@@ -29027,11 +29015,11 @@ AAP.QuestStepList = {
 				["x"] = 2141.3,
 			},
 			["UseFlightPath"] = 50639,
-			["PosX"] = 63,
-			["PosY"] = 48.9,
-			["TaxiNr"] = 17,
-			["TaxiNodes"] = 39,
+			["PosX"] = 61.1,
+			["PosY"] = 49.2,
+			["Name"] = "Tradewinds Market, Tiragarde Sound",
 			["ETA"] = 107,
+
 		}, -- [1]
 		{
 			["ZoneDone"] = 1243211,

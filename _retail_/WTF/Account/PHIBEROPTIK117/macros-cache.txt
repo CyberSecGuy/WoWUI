@@ -1,6 +1,6 @@
 VER 3 000000000000001F "AAP_MACRO" "INV_MISC_QUESTIONMARK"
 #showtooltip
-/use Antidote Salve
+/click ExtraActionButton1
 END
 VER 3 000000000000001D "adsf" "INV_MISC_QUESTIONMARK"
 /raid Details!: Damage Done for Trash Cleanup [0:16 EF]
@@ -13,12 +13,30 @@ END
 VER 3 000000000000001B "Guild" "134331"
 /2 955 1/11M Ele Sham LF weekend raid team Fri/Sat/Sun.
 END
+VER 3 0000000000000021 "Hivemind" "INV_MISC_QUESTIONMARK"
+/run local a,b=IsQuestFlaggedCompleted,{40397,40314,40404,40252,40293,40288,50187,50181} for i=1,#b do print((i==8 and "Gift: " or "Letter #"..i..": ")..tostring(a(b[i]))) end
+END
+VER 3 0000000000000025 "Hop" "133784"
+/run ServerHop_HopForward()
+END
+VER 3 0000000000000024 "Lucid" "252267"
+/run local N,t,d={"DAL","ULD","AQ","DEEP","GNOMER","VAL","MAZE","MOUNT"},{47826,47837,47841,47850,47852,47863,47881,47885} for s,k in pairs(N)do d=IsQuestFlaggedCompleted(t[s]) print(k,"=",d and "\124cFF00FF00" or "\124cFFFF0000NOT","DONE")end
+END
 VER 3 0000000000000020 "Prospect" "INV_MISC_QUESTIONMARK"
 #show
 /cast Prospecting
 /use Iron Ore
 /use Storm Silver Ore
 /use Monelite Ore
+END
+VER 3 0000000000000023 "Puzzle Advt" "INV_MISC_QUESTIONMARK"
+/1 Send me a PM if you need Yellow done! Chest is open and ready for looting! (Free, tips appreciated.)
+END
+VER 3 0000000000000022 "Puzzle Spam" "INV_MISC_QUESTIONMARK"
+/p If you're in the dungeon, exit and re-enter. Follow dungeon past the first dead boss and into the elevator room! Hearth or drop group after looting. -- MAKE SURE YOU HAVE YOUR NECK ON, and PLEASE be careful to not reset the puzzle, Loot from the side!
+END
+VER 3 0000000000000026 "Rukhmar" "133732"
+/tar Rukhmar
 END
 VER 3 000000000000001A "Skull" "132097"
 /script SetRaidTarget("target",8);

@@ -5,7 +5,7 @@ SkadaPerCharDB = {
 	["total"] = {
 		["healingabsorbed"] = 0,
 		["dispells"] = 0,
-		["ccbreaks"] = 0,
+		["ffdamagedone"] = 0,
 		["time"] = 0,
 		["interrupts"] = 0,
 		["damage"] = 0,
@@ -15,19 +15,19 @@ SkadaPerCharDB = {
 		["mobs"] = {
 		},
 		["mobtaken"] = 0,
+		["ccbreaks"] = 0,
+		["healing"] = 0,
+		["damagetaken"] = 0,
+		["shielding"] = 0,
+		["starttime"] = 1545686079,
+		["overhealing"] = 0,
+		["name"] = "Total",
 		["power"] = {
 		},
-		["healing"] = 0,
-		["overhealing"] = 0,
-		["shielding"] = 0,
 		["auras"] = {
 		},
-		["damagetaken"] = 0,
-		["name"] = "Total",
-		["starttime"] = 1541545447,
-		["ffdamagedone"] = 0,
 		["mobhdone"] = 0,
-		["last_action"] = 1541545447,
+		["last_action"] = 1545686079,
 		["mobdone"] = 0,
 	},
 }

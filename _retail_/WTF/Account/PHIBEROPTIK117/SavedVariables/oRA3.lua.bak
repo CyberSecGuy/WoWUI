@@ -34,7 +34,7 @@ oRA3DB = {
 		["Difficulty"] = {
 			["profiles"] = {
 				["Default"] = {
-					["prevRaidDifficulty"] = 16,
+					["prevRaidDifficulty"] = 15,
 				},
 			},
 		},
@@ -48,8 +48,9 @@ oRA3DB = {
 		["Fiberboi - Stormrage"] = "Default",
 		["Fiberoptic - Aggramar"] = "Default",
 		["Fibur - Stormrage"] = "Default",
-		["Phiber - Stormrage"] = "Default",
 		["Onedemonboi - Stormrage"] = "Default",
+		["Phiber - Stormrage"] = "Default",
+		["Paladium - Moon Guard"] = "Default",
 		["Ohkaygoogle - Stormrage"] = "Default",
 		["Deafnight - Stormrage"] = "Default",
 		["Phiberoptik - Stormrage"] = "Default",
@@ -73,9 +74,9 @@ oRA3DB = {
 					["Width"] = 140.000045776367,
 				},
 				["oRA3ReadyCheck"] = {
-					["Height"] = 182.999923706055,
-					["PosX"] = 1079.46661649704,
-					["PosY"] = 409.813350214958,
+					["Height"] = 169.000015258789,
+					["PosX"] = 1082.66661642551,
+					["PosY"] = 237.546811096665,
 					["Width"] = 320.000061035156,
 				},
 			},

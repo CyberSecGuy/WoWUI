@@ -1,0 +1,21 @@
+## Interface: 80000
+## Author: Janniie - Stormreaver EU
+## Updated by: Snowenn - Zul'jin US
+## Title: Super Guild Invite Reborn
+## Notes: Version 8.0.0
+## Version: 8.0.0
+## SavedVariables: SGI_DATA
+## SavedVariablesPerCharacter: SGI_BACKUP
+embeds.xml
+
+core\SGI_Constants.lua
+core\SGI_Core.lua
+
+core\SGI_Blacklist.lua
+core\SGI_AddOn_Message.lua
+core\SGI_Filter.lua
+core\SuperScan.lua
+core\SGI_System_Message.lua
+core\SGI_Events.lua
+
+core\SGI_GUI.xml
