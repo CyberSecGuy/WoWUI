@@ -1,9 +1,0 @@
-VER 3 0100000000000002 "Blizzard" "INV_MISC_QUESTIONMARK"
-#show
-/cast [@cursor] Blizzard
-END
-VER 3 0100000000000001 "Interrupt" "INV_MISC_QUESTIONMARK"
-#show
-/stopcasting
-/cast [@mouseover] Counterspell
-END
